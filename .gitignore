@@ -42,6 +42,10 @@ exports/
 output/
 generated/
 
+# Agent runtime state (prompts and contracts are tracked; runtime state is not)
+.agent/state/
+.agent/prompts/temp-*.md
+
 # OS / editor
 .DS_Store
 .vscode/
