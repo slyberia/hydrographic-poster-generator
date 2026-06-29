@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Python / FastAPI
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Data files
+data/raw/
+data/import/
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.sbn
+*.sbx
+*.gpkg
+*.gdb/
+*.geojson
+*.fgb
+*.zip
+
+# Generated exports
+exports/
+output/
+generated/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
