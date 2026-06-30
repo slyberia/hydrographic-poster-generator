@@ -24,6 +24,7 @@ build/
 # Data files
 data/raw/
 data/import/
+data/boundaries/
 *.shp
 *.shx
 *.dbf
