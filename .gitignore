@@ -9,6 +9,7 @@ __pycache__/
 .env
 .env.local
 .env.*.local
+backend/.env
 
 # Build outputs
 .next/
@@ -24,6 +25,7 @@ build/
 # Data files
 data/raw/
 data/import/
+data/boundaries/
 *.shp
 *.shx
 *.dbf

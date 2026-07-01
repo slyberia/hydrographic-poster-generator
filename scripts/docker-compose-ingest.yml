@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  ingest:
+    build:
+      context: .
+      dockerfile: Dockerfile.ingest
+    volumes:
+      - .:/app/scripts
+      - ../data:/app/data
+      - ../frontend/.env.local:/app/.env
+      # Mount the large spatial data directory located at the same level as the project directory
+      - ../../hydro spatial data files:/app/hydro_spatial_data_files
+    env_file:
+      - ../frontend/.env.local
+    command: tail -f /dev/null # Keep container running for exec
