@@ -95,6 +95,47 @@ async def get_geography(geography_id: str, pool: asyncpg.Pool = Depends(get_db_p
         raise HTTPException(status_code=400, detail="Invalid geography ID format")
 
 
+@router.get("/{geography_id}/children", response_model=List[GeographyDetail])
+async def list_geography_children(geography_id: str,
+                                  pool: asyncpg.Pool = Depends(get_db_pool)):
+    """
+    Returns the direct child boundaries of a geography (e.g. Admin 1 areas of
+    a country). Returns an empty list when no children have been imported —
+    the frontend uses this to decide whether to render deeper pickers.
+    """
+    query = """
+        SELECT
+            id, name, country, country_code, admin_level, parent_id, region_code,
+            ST_XMin(geom) as min_lon,
+            ST_YMin(geom) as min_lat,
+            ST_XMax(geom) as max_lon,
+            ST_YMax(geom) as max_lat
+        FROM admin_boundaries
+        WHERE parent_id = $1
+        ORDER BY name;
+    """
+
+    try:
+        async with pool.acquire() as conn:
+            rows = await conn.fetch(query, geography_id)
+    except asyncpg.exceptions.DataError:
+        raise HTTPException(status_code=400, detail="Invalid geography ID format")
+
+    return [
+        GeographyDetail(
+            id=str(row['id']),
+            name=row['name'],
+            country=row['country'],
+            country_code=row['country_code'],
+            admin_level=row['admin_level'],
+            parent_id=str(row['parent_id']) if row['parent_id'] else None,
+            region_code=row['region_code'],
+            bbox=[row['min_lon'], row['min_lat'], row['max_lon'], row['max_lat']]
+        )
+        for row in rows
+    ]
+
+
 @router.get("/search/", response_model=List[GeographyDetail])
 async def search_geographies(q: str, pool: asyncpg.Pool = Depends(get_db_pool)):
     """

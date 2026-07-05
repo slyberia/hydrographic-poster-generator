@@ -1,17 +1,33 @@
-FROM python:3.12-slim
+FROM python:3.11-slim
+
+# CairoSVG system dependencies (docs/PROJECTION_SCALEBAR_NOTES.md §11.3)
+# plus fontconfig for font registration/inspection.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libcairo2 \
+        libpango-1.0-0 \
+        libpangocairo-1.0-0 \
+        libgdk-pixbuf2.0-0 \
+        libffi-dev \
+        shared-mime-info \
+        fontconfig \
+    && rm -rf /var/lib/apt/lists/*
+
+# Poster typography faces (Inter, Roboto Mono, Outfit) as system fonts.
+# CairoSVG ignores the SVG's Google-Fonts @import; without these installed,
+# exported text silently falls back and text metrics are wrong (§11.3).
+COPY fonts/*.ttf /usr/local/share/fonts/hydro/
+RUN fc-cache -f
 
 WORKDIR /app
 
-# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
 COPY app/ app/
 
-# Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
+EXPOSE 8080
 
-# Run the FastAPI application
-CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
+# DATABASE_URL is read from the environment at startup (app/settings.py).
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}"]
