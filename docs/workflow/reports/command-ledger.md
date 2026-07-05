@@ -5,5 +5,6 @@
 
 | Phase | Subphase | Timestamp | Executor | Commands Used | Mutations | Status | Notes |
 | :---- | :------- | :-------- | :------- | :------------ | :-------- | :----- | :---- |
-
-*No entries recorded yet.*
+| 1.0 | Data Import Pipeline | 2026-06-29T20:43:12 | The Specialist | git commit | scripts/import_boundaries.py, scripts/import_hydrorivers.py, scripts/requirements-scripts.txt | pass | Implemented Python CLI scripts to import HydroRIVERS and admin boundaries data into PostGIS. |
+| 1.0 | Frontend Scaffold | 2026-06-29T22:35:27 | The Specialist | npx create-next-app, npm install, git add, git commit | frontend/src/app/page.tsx, frontend/src/utils/supabase/server.ts, frontend/src/utils/supabase/client.ts, frontend/src/utils/supabase/middleware.ts, frontend/.env.local | pass | Successfully scaffolded Next.js frontend and configured Supabase connection helpers. |
+| 1.0 | Documentation | 2026-06-29T23:16:10 | Assistant Coach | git commit | docs/ROADMAP.md | pass | Added project development roadmap to guide the remaining MVP implementation. |

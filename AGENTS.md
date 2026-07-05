@@ -479,3 +479,13 @@ Recommended models: Gemini Flash, Gemini Pro (Low), Claude Haiku, GPT-4o-mini
 Build the MVP in accordance with the product spec, but treat unresolved technical items as investigation checkpoints rather than opportunities to improvise wildly.
 
 When in doubt, preserve the MVP scope, explain the tradeoff, and recommend the next safest step.
+
+---
+
+## Test Failure Workflow (Diagnostic Coach Protocol)
+
+If `npm run validate` or any automated testing script returns an exit code of 1:
+1. Catch the error and capture the stderr output.
+2. Automatically generate a prompt that includes the error log and the last modified file.
+3. Treat this prompt as a directive to yourself: act as the "Diagnostic Coach". Analyze the error log and provide a strict sequence of commands to fix the bug in the chat. Do not write the code directly; output a plan.
+4. Pause for Human-in-the-loop approval before executing the fix.
