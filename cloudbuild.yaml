@@ -15,6 +15,16 @@
 # export raster is ~206 MiB before Cairo working copies (expect 2-3x peak),
 # and export is CPU-bound single-request work — hence 2 GiB memory and
 # concurrency 2. Do not raise concurrency without raising memory.
+#
+# Image tag uses $BUILD_ID (always populated) rather than $COMMIT_SHA, so a
+# manual `gcloud builds submit --config cloudbuild.yaml` works without a
+# connected repo trigger — $COMMIT_SHA is empty on manual submits and would
+# yield an invalid `image:` tag (trailing colon).
+
+options:
+  # Works with both the default and a user-specified Cloud Build service
+  # account (the latter otherwise requires an explicit logs bucket).
+  logging: CLOUD_LOGGING_ONLY
 
 substitutions:
   _REGION: us-central1
@@ -32,14 +42,14 @@ steps:
     args:
       - build
       - -t
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$COMMIT_SHA
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID
       - backend
 
   - id: push-backend
     name: gcr.io/cloud-builders/docker
     args:
       - push
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$COMMIT_SHA
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID
 
   - id: deploy-backend
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
@@ -48,7 +58,7 @@ steps:
       - run
       - deploy
       - ${_BACKEND_SERVICE}
-      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$COMMIT_SHA
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID
       - --region=${_REGION}
       - --platform=managed
       - --port=8080
@@ -66,7 +76,7 @@ steps:
     args:
       - build
       - -t
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$COMMIT_SHA
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$BUILD_ID
       - --build-arg
       - NEXT_PUBLIC_API_URL=${_NEXT_PUBLIC_API_URL}
       - frontend
@@ -75,7 +85,7 @@ steps:
     name: gcr.io/cloud-builders/docker
     args:
       - push
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$COMMIT_SHA
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$BUILD_ID
 
   - id: deploy-frontend
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
@@ -84,7 +94,7 @@ steps:
       - run
       - deploy
       - ${_FRONTEND_SERVICE}
-      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$COMMIT_SHA
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$BUILD_ID
       - --region=${_REGION}
       - --platform=managed
       - --port=3000
@@ -92,5 +102,5 @@ steps:
       - --allow-unauthenticated
 
 images:
-  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$COMMIT_SHA
-  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$COMMIT_SHA
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$BUILD_ID
