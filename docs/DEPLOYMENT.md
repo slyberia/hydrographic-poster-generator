@@ -121,6 +121,53 @@ concurrency.
 
 ---
 
+## 4b. Alternative: deploy the Dockerfiles directly (no cloudbuild.yaml)
+
+The two Dockerfiles are self-contained, so you can build and deploy each
+service by hand without `cloudbuild.yaml`. Two equivalent options:
+
+**Option A — `gcloud run deploy --source`** (Cloud Build builds the
+Dockerfile for you, no local Docker needed):
+
+```bash
+# Backend
+gcloud run deploy hydro-backend --source backend \
+  --region us-central1 --port 8080 \
+  --memory 2Gi --cpu 2 --concurrency 2 --timeout 300 \
+  --set-secrets DATABASE_URL=hydro-database-url:latest \
+  --set-env-vars CORS_ORIGINS=https://YOUR-FRONTEND.run.app \
+  --allow-unauthenticated
+
+# Frontend (NEXT_PUBLIC_API_URL must be baked at build time)
+gcloud run deploy hydro-frontend --source frontend \
+  --region us-central1 --port 3000 --memory 512Mi --allow-unauthenticated \
+  --build-env-vars NEXT_PUBLIC_API_URL=https://YOUR-BACKEND.run.app
+```
+
+**Option B — local `docker build` → push → deploy:**
+
+```bash
+REPO=us-central1-docker.pkg.dev/$PROJECT_ID/hydro
+
+docker build -t $REPO/hydro-backend:latest backend
+docker push  $REPO/hydro-backend:latest
+gcloud run deploy hydro-backend --image $REPO/hydro-backend:latest \
+  --region us-central1 --port 8080 --memory 2Gi --cpu 2 --concurrency 2 \
+  --set-secrets DATABASE_URL=hydro-database-url:latest --allow-unauthenticated
+
+docker build --build-arg NEXT_PUBLIC_API_URL=https://YOUR-BACKEND.run.app \
+  -t $REPO/hydro-frontend:latest frontend
+docker push $REPO/hydro-frontend:latest
+gcloud run deploy hydro-frontend --image $REPO/hydro-frontend:latest \
+  --region us-central1 --port 3000 --memory 512Mi --allow-unauthenticated
+```
+
+`cloudbuild.yaml` just automates Option B for both services in one run.
+Whichever path you use, the frontend's backend URL is a **build-time** arg
+(`NEXT_PUBLIC_API_URL` / `--build-env-vars`), not a runtime env var.
+
+---
+
 ## 5. Production Checklist
 
 - [ ] `DATABASE_URL` comes from Secret Manager, not env-var plaintext
