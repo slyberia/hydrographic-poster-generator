@@ -57,10 +57,10 @@ NEXT_PUBLIC_API_URL=http://localhost:8000 npm run dev
 
 ## 3. Backend Image Notes
 
-`backend/Dockerfile` (python:3.11-slim):
+`backend/Dockerfile` (python:3.11-slim-bookworm):
 
 - Installs the CairoSVG system libraries (`libcairo2`, `libpango-1.0-0`,
-  `libpangocairo-1.0-0`, `libgdk-pixbuf2.0-0`, `libffi-dev`,
+  `libpangocairo-1.0-0`, `libgdk-pixbuf-2.0-0`, `libffi-dev`,
   `shared-mime-info`).
 - Installs **Inter, Roboto Mono, and Outfit as system fonts** from
   `backend/fonts/` and runs `fc-cache`. This is a correctness dependency,
@@ -76,6 +76,19 @@ NEXT_PUBLIC_API_URL=http://localhost:8000 npm run dev
 `frontend/Dockerfile` is a three-stage build (deps → builder → runner)
 using Next.js `output: 'standalone'`; the runner stage contains only the
 traced server bundle and static assets and runs as a non-root user.
+
+### Base image pinning policy
+
+Every `FROM` line in this repo pins an explicit OS release
+(`python:3.11-slim-bookworm`, `node:22-alpine3.22`) rather than a floating
+tag (`python:3.11-slim`, `node:22-alpine`). Floating tags re-point to each
+new Debian/Alpine release, which changes apt/apk package availability,
+system library versions, and font rendering under us with no repo change —
+this broke the backend build when `python:3.11-slim` moved from Debian 12
+(bookworm) to Debian 13 (trixie) and trixie dropped the transitional
+`libgdk-pixbuf2.0-0` package. OS upgrades should be deliberate commits:
+bump the `FROM` suffix, rebuild, and re-verify the production checklist
+(especially the font check and a real export) before deploying.
 
 ---
 
