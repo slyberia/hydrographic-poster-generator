@@ -32,8 +32,8 @@ substitutions:
   _BACKEND_SERVICE: hydro-backend
   _FRONTEND_SERVICE: hydro-frontend
   _DB_SECRET: hydro-database-url
-  _NEXT_PUBLIC_API_URL: http://localhost:8000
-  _CORS_ORIGINS: http://localhost:3000
+  _NEXT_PUBLIC_API_URL: https://hydro-backend-54n4ik523a-uc.a.run.app
+  _CORS_ORIGINS: "https://hydro-frontend-54n4ik523a-uc.a.run.app,http://localhost:3000"
 
 steps:
   # ---- backend ----
