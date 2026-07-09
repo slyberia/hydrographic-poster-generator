@@ -67,7 +67,7 @@ steps:
       - --concurrency=2
       - --timeout=300
       - --set-secrets=DATABASE_URL=${_DB_SECRET}:latest
-      - --set-env-vars=CORS_ORIGINS=${_CORS_ORIGINS}
+      - --set-env-vars=^@@^CORS_ORIGINS=${_CORS_ORIGINS}
       - --allow-unauthenticated
 
   # ---- frontend ----
