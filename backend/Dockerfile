@@ -1,4 +1,7 @@
-FROM python:3.11-slim
+# Pinned to an explicit Debian release: the floating `-slim` tag re-points to
+# each new Debian stable, silently changing apt package availability, library
+# versions, and font rendering/text metrics under us. Bump deliberately.
+FROM python:3.11-slim-bookworm
 
 # CairoSVG system dependencies (docs/PROJECTION_SCALEBAR_NOTES.md §11.3)
 # plus fontconfig for font registration/inspection.
@@ -6,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libcairo2 \
         libpango-1.0-0 \
         libpangocairo-1.0-0 \
-        libgdk-pixbuf2.0-0 \
+        libgdk-pixbuf-2.0-0 \
         libffi-dev \
         shared-mime-info \
         fontconfig \
