@@ -27,12 +27,29 @@ async def generate_preview(request: RenderRequest,
     except ValueError as exc:  # unknown geography or density preset
         raise HTTPException(status_code=404, detail=str(exc))
 
-    svg = renderer.generate_svg(clip_result)
+    svg = renderer.generate_svg(
+        clip_result=clip_result,
+        palette_id=request.palette,
+        typography_id=request.typography,
+        title=request.title,
+        subtitle=request.subtitle,
+        canvas_width=2400, # preview dims
+        canvas_height=3600
+    )
+    
+    import json
+    from collections import Counter
+    class_counts = Counter(
+        f.get("properties", {}).get("display_class", "unknown")
+        for f in clip_result.features
+    )
+    
     return Response(
         content=svg,
         media_type="image/svg+xml",
         headers={
             "X-River-Count": str(clip_result.metadata.river_count),
             "X-Geography-Name": clip_result.metadata.geography_name,
+            "X-Feature-Summary": json.dumps(dict(class_counts)),
         },
     )

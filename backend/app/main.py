@@ -12,6 +12,8 @@ from app.routers import geographies, clip, presets, preview, export
 async def lifespan(app: FastAPI):
     # Startup
     await db.connect()
+    from app.services.rules_service import rules_service
+    await rules_service.load(db.pool)
     yield
     # Shutdown
     await db.disconnect()
@@ -38,6 +40,12 @@ app.include_router(presets.router, prefix="/presets", tags=["Presets"])
 app.include_router(clip.router, tags=["Spatial Processing"])
 app.include_router(preview.router, tags=["Render Pipeline"])
 app.include_router(export.router, tags=["Export Pipeline"])
+
+from app.routers import admin
+app.include_router(admin.router, prefix="/admin", tags=["Admin"])
+
+from app.routers import debug
+app.include_router(debug.router, prefix="/debug", tags=["Debug"])
 
 @app.get("/health", tags=["Health"])
 async def health_check():

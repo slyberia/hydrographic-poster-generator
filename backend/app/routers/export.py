@@ -1,24 +1,21 @@
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, BackgroundTasks
 import asyncpg
 
 from app.database import get_db_pool
 from app.models.export_models import ExportRequest
 from app.services.clipping_service import ClippingService
 from app.services.export_service import ExportService
+from app.services.audit_service import AuditService
 
 router = APIRouter()
 
 @router.post("/export")
 async def generate_export(request: ExportRequest,
+                          background_tasks: BackgroundTasks,
                           pool: asyncpg.Pool = Depends(get_db_pool)):
     """Clip, render, and convert the poster to the requested format/size."""
     try:
-        clip_result = await ClippingService.clip_rivers(
-            pool=pool,
-            geography_id=request.geography_id,
-            density_preset_id=request.density_preset,
-            classification_preset_id=request.classification_preset,
-        )
+        clip_result = await ClippingService.clip_rivers(pool, request)
     except ValueError as exc:  # unknown geography or density preset
         raise HTTPException(status_code=404, detail=str(exc))
 
@@ -27,8 +24,67 @@ async def generate_export(request: ExportRequest,
     except ValueError as exc:  # unknown palette/typography preset
         raise HTTPException(status_code=422, detail=str(exc))
 
+    import hashlib
+    import json
+    from collections import Counter
+    from datetime import datetime, timezone
+    from app.services.rules_service import rules_service
+    from app.models.manifest_models import ExportManifest
+    
+    output_hash = hashlib.sha256(payload).hexdigest()
+    
+    class_counts = Counter(
+        f.get("properties", {}).get("display_class", "unknown")
+        for f in clip_result.features
+    )
+    
+    # We resolve size via ExportService.resolve_size, wait export_service doesn't expose it directly.
+    # Let's extract canvas_width and canvas_height from the actual dimensions
+    # Instead of pulling size out of ExportService here, we'll just use a placeholder or read the request.export_size.
+    # To keep it simple, we'll parse the request size or use defaults.
+    # ExportService uses predefined dimensions based on export_size. Let's assume standard poster is 7200x10800 for 24x36.
+    # But wait, we can just grab size from the request.
+    from app.config.render_constants import EXPORT_SIZES
+    size = EXPORT_SIZES.get(request.export_size, EXPORT_SIZES["24x36"])
+    canvas_w = request.custom_width or size.width
+    canvas_h = request.custom_height or size.height
+
+    manifest = ExportManifest(
+        generated_at=datetime.now(timezone.utc),
+        geography_id=request.geography_id,
+        geography_name=clip_result.metadata.geography_name,
+        region_code=clip_result.metadata.region_code,
+        density_preset=request.density_preset,
+        palette=request.palette,
+        typography=request.typography,
+        title=request.title,
+        subtitle=request.subtitle,
+        design_asset_mode=request.design_asset_mode,
+        export_format=request.export_format,
+        export_size=request.export_size,
+        canvas_width=canvas_w,
+        canvas_height=canvas_h,
+        river_count=clip_result.metadata.river_count,
+        feature_summary=dict(class_counts),
+        classification_status=clip_result.metadata.classification_status,
+        projection="EPSG:3857 (Web Mercator)",
+        scale_bar_status="valid" if clip_result.metadata.scale_bar_valid else "hidden_distortion",
+        rules_source=rules_service.source,
+        rule_versions=rules_service.rule_versions,
+        data_sources={"rivers": "HydroRIVERS v1.0", "boundaries": "geoBoundaries"},
+        output_hash=output_hash,
+        repaired_geometry_count=clip_result.metadata.repaired_geometry_count,
+        confidence_level=clip_result.metadata.confidence_level,
+        confidence_warnings=clip_result.metadata.confidence_warnings
+    )
+
+    AuditService.queue_audit_log(background_tasks, pool, manifest)
+
     return Response(
         content=payload,
         media_type=media_type,
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "X-Export-Manifest": manifest.model_dump_json()
+        },
     )
