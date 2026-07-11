@@ -15,7 +15,7 @@ from app.config import render_constants as rc
 from app.models.clip_models import ClipResult
 from app.models.render_models import RenderRequest
 from app.services.coordinate_projector import CoordinateProjector
-from app.services.presets_service import get_palette_preset, get_typography_preset
+from app.services.rules_service import rules_service
 
 DISPLAY_CLASSES = ["major", "primary", "secondary", "minor", "headwater"]
 
@@ -40,7 +40,7 @@ class SVGRenderer:
         # Style lengths (strokes, type) scale off the reference canvas (§10).
         self.s_style = min(self.canvas_w / rc.CANVAS_W, self.canvas_h / rc.CANVAS_H)
 
-        palette = get_palette_preset(request.palette)
+        palette = rules_service.get_palette_preset(request.palette)
         self.tokens = palette.tokens.model_dump()
         # Palette fallbacks: presets define 8 tokens; layout chrome maps onto
         # them rather than extending the preset schema (§ review decision).
@@ -48,7 +48,7 @@ class SVGRenderer:
         self.tokens.setdefault("scale_bar", self.tokens["text_secondary"])
         self.tokens.setdefault("metadata", self.tokens["text_secondary"])
 
-        self.typography = get_typography_preset(request.typography)
+        self.typography = rules_service.get_typography_preset(request.typography)
 
         if request.design_asset_mode:
             m = rc.ASSET_MARGIN_F * min(self.canvas_w, self.canvas_h)
@@ -83,7 +83,7 @@ class SVGRenderer:
             if self.request.show_legend:
                 parts.append(self._render_legend(clip_result))
             if self.request.show_metadata:
-                parts.append(self._render_metadata_and_scale(projector))
+                parts.append(self._render_metadata_and_scale(projector, clip_result))
         parts.append("</svg>")
         return "\n".join(p for p in parts if p)
 
@@ -162,8 +162,21 @@ class SVGRenderer:
             cls = feature.get("properties", {}).get("display_class", "minor")
             if cls not in DISPLAY_CLASSES:
                 cls = "minor"
-            # One <path> per feature, subpath per line (§5.2).
-            paths.append(f'<path class="river {cls}" d="{" ".join(subpaths)}"/>')
+            
+            props = feature.get("properties", {})
+            hr_id = props.get("hydrorivers_id", "")
+            s_order = props.get("stream_order", "")
+            up_area = props.get("upstream_area", "")
+            length = props.get("length_km", "")
+            paths.append(
+                f'<path class="river {cls}" '
+                f'data-river-id="{hr_id}" '
+                f'data-stream-order="{s_order}" '
+                f'data-upstream-area="{up_area}" '
+                f'data-length-km="{length}" '
+                f'data-display-class="{cls}" '
+                f'd="{" ".join(subpaths)}"/>'
+            )
         return f'<g id="rivers">{"".join(paths)}</g>'
 
     def _render_title_block(self) -> str:
@@ -213,7 +226,7 @@ class SVGRenderer:
             )
         return f'<g id="legend">{"".join(rows)}</g>'
 
-    def _render_metadata_and_scale(self, projector: CoordinateProjector) -> str:
+    def _render_metadata_and_scale(self, projector: CoordinateProjector, clip_result: ClipResult) -> str:
         right = self.canvas_w - 300 * self.s_style
         y0 = self.canvas_h - 700 * self.s_style
         step = 70 * self.s_style
@@ -224,11 +237,18 @@ class SVGRenderer:
             f"Projection: {rc.PROJECTION_LABEL}",
             f"Generated: {date.today().isoformat()}",
         ]
+        
+        if clip_result.metadata.distortion_warning:
+            lines.append("Scale varies across map")
+            
+        if clip_result.metadata.confidence_level == "low":
+            lines.append("Warning: High volume of repaired data")
+
         scale_bar_svg = ""
 
         # Scale bar honesty rule (§6.2): omit when distortion spread > 1.20.
-        if projector.latitude_spread() > rc.SCALE_BAR_MAX_SPREAD:
-            lines.append("Scale varies across map")
+        if not clip_result.metadata.scale_bar_valid:
+            pass # Scale bar hidden, warning already added to metadata block
         else:
             # ground_meters_per_px is already in actual-canvas px (§6.1);
             # only the target bar length scales with the canvas.

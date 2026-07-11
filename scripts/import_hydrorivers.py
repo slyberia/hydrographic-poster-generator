@@ -61,6 +61,10 @@ def main():
     features_read = 0
     features_imported = 0
     features_skipped = 0
+    
+    import_batch_id = f"hr_{args.region_code}_{time.strftime('%Y%m%d_%H%M%S')}"
+    features_quarantined = 0
+    features_repaired = 0
 
     print(f"Opening source file: {args.source_path}")
     try:
@@ -69,6 +73,18 @@ def main():
             print(f"Found {total_features} features. Starting import...")
 
             batch = []
+            quarantine_batch = []
+            
+            def flush_quarantine():
+                if not quarantine_batch:
+                    return
+                q_insert_query = """
+                    INSERT INTO geometry_quarantine (
+                        source_table, source_id, region_code, rejection_reason, raw_geom_wkt, import_batch_id
+                    ) VALUES %s
+                """
+                execute_values(cursor, q_insert_query, quarantine_batch)
+                quarantine_batch.clear()
             
             # Using tqdm for progress bar
             for feature in tqdm(source, total=total_features, desc="Importing"):
@@ -81,6 +97,33 @@ def main():
 
                 # Ensure it's a MultiLineString for the database
                 geom = shape(feature["geometry"])
+                
+                # Validate geometry
+                from shapely.validation import explain_validity
+                if not geom.is_valid:
+                    reason = explain_validity(geom)
+                    # Attempt repair
+                    from shapely.validation import make_valid
+                    try:
+                        geom = make_valid(geom)
+                        features_repaired += 1
+                        geom_repaired = True
+                    except Exception:
+                        # Quarantine: record the bad geometry and skip
+                        quarantine_batch.append((
+                            'hydro_rivers', 
+                            get_field_value(feature, FIELD_MAP["hydrorivers_id"]), 
+                            args.region_code,
+                            f"Invalid geometry: {reason}",
+                            geom.wkt[:5000],  # truncate massive WKTs
+                            import_batch_id
+                        ))
+                        features_quarantined += 1
+                        features_skipped += 1
+                        continue
+                else:
+                    geom_repaired = False
+
                 if geom.geom_type == 'LineString':
                     # WKT representation for EWKT insertion
                     geom_wkt = f"SRID=4326;MULTILINESTRING(({', '.join([f'{c[0]} {c[1]}' for c in geom.coords])}))"
@@ -110,12 +153,16 @@ def main():
                     up_area,
                     len_km,
                     "unclassified", # Default display_class
-                    geom_wkt
+                    geom_wkt,
+                    True, # geom_valid
+                    geom_repaired,
+                    import_batch_id
                 )
                 batch.append(record)
 
                 if len(batch) >= args.batch_size:
                     insert_batch(cursor, batch)
+                    flush_quarantine()
                     conn.commit()
                     features_imported += len(batch)
                     batch = []
@@ -123,8 +170,25 @@ def main():
             # Insert remaining
             if batch:
                 insert_batch(cursor, batch)
+                flush_quarantine()
                 conn.commit()
                 features_imported += len(batch)
+            if quarantine_batch:
+                flush_quarantine()
+                conn.commit()
+                
+            # Log batch summary
+            cursor.execute("""
+                INSERT INTO import_batches (
+                    id, source_table, region_code, source_file, 
+                    total_features_read, total_features_imported, 
+                    total_features_quarantined, total_features_repaired, completed_at
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
+            """, (
+                import_batch_id, 'hydro_rivers', args.region_code, args.source_path,
+                features_read, features_imported, features_quarantined, features_repaired
+            ))
+            conn.commit()
 
     except Exception as e:
         print(f"\nError during import: {e}")
@@ -140,13 +204,16 @@ def main():
     print(f"Features read: {features_read}")
     print(f"Features imported: {features_imported}")
     print(f"Features skipped/errored: {features_skipped}")
+    print(f"Features repaired: {features_repaired}")
+    print(f"Features quarantined: {features_quarantined}")
     print(f"Duration: {duration:.2f} seconds")
 
 def insert_batch(cursor, batch):
     insert_query = """
         INSERT INTO hydro_rivers (
             region_code, source_dataset, source_version, hydrorivers_id,
-            stream_order, upstream_area, length_km, display_class, geom
+            stream_order, upstream_area, length_km, display_class, geom,
+            geom_valid, geom_repaired, import_batch_id
         ) VALUES %s
         ON CONFLICT (hydrorivers_id, region_code) 
         DO UPDATE SET
