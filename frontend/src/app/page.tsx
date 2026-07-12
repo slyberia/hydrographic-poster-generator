@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 
 import ControlPanel, {
   type ExportSettings,
@@ -185,13 +186,21 @@ export default function Page() {
   return (
     <main className="flex h-screen bg-slate-950 text-slate-100">
       <aside className="flex w-80 shrink-0 flex-col border-r border-slate-800 bg-slate-900/40 lg:w-96">
-        <header className="border-b border-slate-800 px-4 py-3">
-          <h1 className="text-base font-semibold">
-            Hydrographic Poster Generator
-          </h1>
-          <p className="text-xs text-slate-400">
-            Preset-driven river network posters
-          </p>
+        <header className="border-b border-slate-800 px-4 py-3 flex justify-between items-start">
+          <div>
+            <h1 className="text-base font-semibold">
+              Hydrographic Poster Generator
+            </h1>
+            <p className="text-xs text-slate-400">
+              Preset-driven river network posters
+            </p>
+          </div>
+          <Link
+            href="/docs"
+            className="text-xs text-blue-400 hover:text-blue-300 underline underline-offset-2"
+          >
+            Docs
+          </Link>
         </header>
 
         {bootError ? (
