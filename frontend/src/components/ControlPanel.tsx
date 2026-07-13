@@ -290,7 +290,7 @@ export default function ControlPanel({
           {settings.custom_colors && Object.keys(settings.custom_colors).length > 0 && (
             <button
               onClick={() => onSettingsChange({ custom_colors: {} })}
-              className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-white transition-colors"
+              className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-[var(--foreground)] transition-colors"
             >
               Reset to Preset
             </button>
@@ -311,11 +311,11 @@ export default function ControlPanel({
             return (
               <>
                 <div className="mb-2">
-                  <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1">Canvas</p>
+                  <p className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/40 mb-1">Canvas</p>
                   <ColorPicker label="Background" value={getColor("background")} onChange={(v) => handleColorChange("background", v)} />
                 </div>
                 <div className="mb-2">
-                  <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1">Rivers</p>
+                  <p className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/40 mb-1">Rivers</p>
                   <ColorPicker label="Major" value={getColor("feature_major")} onChange={(v) => handleColorChange("feature_major", v)} />
                   <ColorPicker label="Primary" value={getColor("feature_primary")} onChange={(v) => handleColorChange("feature_primary", v)} />
                   <ColorPicker label="Secondary" value={getColor("feature_secondary")} onChange={(v) => handleColorChange("feature_secondary", v)} />
@@ -323,7 +323,7 @@ export default function ControlPanel({
                   <ColorPicker label="Headwater" value={getColor("feature_headwater")} onChange={(v) => handleColorChange("feature_headwater", v)} />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1">Text</p>
+                  <p className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/40 mb-1">Text</p>
                   <ColorPicker label="Primary Text" value={getColor("text_primary")} onChange={(v) => handleColorChange("text_primary", v)} />
                   <ColorPicker label="Secondary Text" value={getColor("text_secondary")} onChange={(v) => handleColorChange("text_secondary", v)} />
                 </div>
@@ -382,7 +382,7 @@ export default function ControlPanel({
                 onSettingsChange({ show_legend: e.target.checked })
               }
             />
-            <span className="transition-colors duration-200 group-hover:text-white">
+            <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
               Legend
             </span>
           </label>
@@ -396,7 +396,7 @@ export default function ControlPanel({
                 onSettingsChange({ show_metadata: e.target.checked })
               }
             />
-            <span className="transition-colors duration-200 group-hover:text-white">
+            <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
               Metadata &amp; scale bar
             </span>
           </label>
@@ -409,7 +409,7 @@ export default function ControlPanel({
                 onSettingsChange({ design_asset_mode: e.target.checked })
               }
             />
-            <span className="transition-colors duration-200 group-hover:text-white">
+            <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
               Design asset mode
             </span>
           </label>

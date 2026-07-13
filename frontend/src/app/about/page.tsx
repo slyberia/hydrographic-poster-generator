@@ -23,7 +23,7 @@ export default function AboutPage() {
         <div className="flex items-baseline gap-4">
           <Link
             href="/"
-            className="text-sm font-semibold tracking-tight text-white hover:text-[var(--accent)] transition-colors duration-300"
+            className="text-sm font-semibold tracking-tight text-[var(--foreground)] hover:text-[var(--accent)] transition-colors duration-300"
             style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
           >
             Hydro Poster
@@ -32,7 +32,7 @@ export default function AboutPage() {
         </div>
         <Link
           href="/"
-          className="text-xs tracking-wider uppercase text-[var(--accent)] hover:text-white transition-colors duration-300"
+          className="text-xs tracking-wider uppercase text-[var(--accent)] hover:text-[var(--foreground)] transition-colors duration-300"
         >
           &larr; Back to Studio
         </Link>
@@ -45,7 +45,7 @@ export default function AboutPage() {
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center animate-fade-in">
           <div className="lg:col-span-7 flex flex-col gap-6">
             <h1 
-              className="font-semibold leading-[1.1] tracking-tight text-white"
+              className="font-semibold leading-[1.1] tracking-tight text-[var(--foreground)]"
               style={{ 
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                 fontSize: "clamp(3rem, 6vw, 5.5rem)"
@@ -77,7 +77,7 @@ export default function AboutPage() {
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start">
           <div className="lg:col-span-4 lg:col-start-2 pt-4">
             <h2 
-              className="font-medium text-white tracking-tight"
+              className="font-medium text-[var(--foreground)] tracking-tight"
               style={{ 
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                 fontSize: "clamp(2rem, 3vw, 2.5rem)"
@@ -88,7 +88,7 @@ export default function AboutPage() {
           </div>
           <div className="lg:col-span-6 flex flex-col gap-8">
             <p className="text-lg leading-relaxed text-[var(--foreground)]">
-              Behind the glassmorphic controls lies a heavy-duty spatial engine. We use PostgreSQL and PostGIS to query and dynamically clip the massive <span className="text-white font-medium">HydroRIVERS dataset</span> — mapping over 32 million kilometers of global river networks.
+              Behind the glassmorphic controls lies a heavy-duty spatial engine. We use PostgreSQL and PostGIS to query and dynamically clip the massive <span className="text-[var(--foreground)] font-medium">HydroRIVERS dataset</span> — mapping over 32 million kilometers of global river networks.
             </p>
             <p className="text-[var(--foreground-muted)] leading-relaxed">
               When you select a geography, the engine isn't just loading a static image. It is executing complex spatial intersections in real-time, calculating upstream areas, and assigning cartographic display classes to raw geometric data before translating it into vector art.
@@ -100,7 +100,7 @@ export default function AboutPage() {
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
            <div className="lg:col-span-4 lg:col-start-2 pt-4">
             <h2 
-              className="font-medium text-white tracking-tight"
+              className="font-medium text-[var(--foreground)] tracking-tight"
               style={{ 
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                 fontSize: "clamp(2rem, 3vw, 2.5rem)"
@@ -111,21 +111,21 @@ export default function AboutPage() {
           </div>
           <div className="lg:col-span-6 flex flex-col gap-12">
             <div className="flex flex-col gap-3">
-              <h3 className="text-xl text-white font-medium">Cartographic Posters</h3>
+              <h3 className="text-xl text-[var(--foreground)] font-medium">Cartographic Posters</h3>
               <p className="text-[var(--foreground-muted)] leading-relaxed">
                 Export high-resolution PDF or PNG posters for physical printing or digital display. The rigid typographic rules ensure the output always feels like a gallery piece.
               </p>
             </div>
             
             <div className="flex flex-col gap-3">
-              <h3 className="text-xl text-white font-medium">Design Assets</h3>
+              <h3 className="text-xl text-[var(--foreground)] font-medium">Design Assets</h3>
               <p className="text-[var(--foreground-muted)] leading-relaxed">
                 Switch to "Design Asset Mode" to strip away the background, text, and metadata. Export the raw, transparent SVG river network to incorporate real spatial data into your own Adobe Illustrator or Figma workflows.
               </p>
             </div>
 
             <div className="flex flex-col gap-3">
-              <h3 className="text-xl text-white font-medium">Data Visualization</h3>
+              <h3 className="text-xl text-[var(--foreground)] font-medium">Data Visualization</h3>
               <p className="text-[var(--foreground-muted)] leading-relaxed">
                 Communicate the density, scale, and beauty of watersheds and river basins instantly, without the steep learning curve of traditional GIS software.
               </p>
@@ -137,7 +137,7 @@ export default function AboutPage() {
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start">
            <div className="lg:col-span-4 lg:col-start-2 pt-4">
             <h2 
-              className="font-medium text-white tracking-tight"
+              className="font-medium text-[var(--foreground)] tracking-tight"
               style={{ 
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                 fontSize: "clamp(2rem, 3vw, 2.5rem)"

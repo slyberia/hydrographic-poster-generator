@@ -14,21 +14,21 @@ export default function DocsPage() {
       <div className="max-w-6xl mx-auto">
         <header className="mb-12 flex items-center justify-between border-b border-neutral-800 pb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">API Documentation & Glossary</h1>
+            <h1 className="text-3xl font-bold text-[var(--foreground)] mb-2">API Documentation & Glossary</h1>
             <p className="text-neutral-400">
               Reference for the Hydrographic Poster Generator FastAPI backend.
             </p>
           </div>
           <Link
             href="/"
-            className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded transition-colors"
+            className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-[var(--foreground)] rounded transition-colors"
           >
             &larr; Back to App
           </Link>
         </header>
 
         <section className="mb-16">
-          <h2 className="text-2xl font-semibold text-white mb-6">Glossary</h2>
+          <h2 className="text-2xl font-semibold text-[var(--foreground)] mb-6">Glossary</h2>
           <div className="bg-neutral-800 rounded-lg p-6 overflow-hidden">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -60,16 +60,16 @@ export default function DocsPage() {
         </section>
 
         <section className="mb-16">
-          <h2 className="text-2xl font-semibold text-white mb-6">FAQ</h2>
+          <h2 className="text-2xl font-semibold text-[var(--foreground)] mb-6">FAQ</h2>
           <div className="space-y-6">
             <div className="bg-neutral-800 rounded-lg p-6">
-              <h3 className="text-lg font-medium text-white mb-2">How are geometries repaired?</h3>
+              <h3 className="text-lg font-medium text-[var(--foreground)] mb-2">How are geometries repaired?</h3>
               <p className="text-neutral-400">
                 During the clipping process, PostGIS runs <code>ST_MakeValid</code> to fix self-intersecting or malformed river polygons. If more than 5% of a map's features required active repair, a confidence warning is automatically attached to the export metadata.
               </p>
             </div>
             <div className="bg-neutral-800 rounded-lg p-6">
-              <h3 className="text-lg font-medium text-white mb-2">What is Design Asset Mode?</h3>
+              <h3 className="text-lg font-medium text-[var(--foreground)] mb-2">What is Design Asset Mode?</h3>
               <p className="text-neutral-400">
                 Enabling Design Asset Mode strips all background colors, metadata, scale bars, and legends from the generated SVG. The result is a pure vector network on a transparent background, ready for importing into design software like Illustrator.
               </p>
@@ -78,7 +78,7 @@ export default function DocsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-white mb-6">Interactive API Schema</h2>
+          <h2 className="text-2xl font-semibold text-[var(--foreground)] mb-6">Interactive API Schema</h2>
           <div className="bg-white rounded-lg p-4">
             <SwaggerUI url={`${API_BASE}/openapi.json`} />
           </div>

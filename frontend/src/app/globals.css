@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  /* ── Cinematic Dark Palette (UI/UX Pro Max: Modern Dark Cinema) ── */
-  --bg-deep: #020203;
-  --bg-base: #050506;
-  --bg-elevated: #0a0a0c;
-  --surface: rgba(255, 255, 255, 0.05);
-  --surface-hover: rgba(255, 255, 255, 0.08);
-  --foreground: #EDEDEF;
-  --foreground-muted: #8A8F98;
-  --accent: #5E6AD2;
-  --accent-hover: #7B85E0;
-  --accent-glow: rgba(94, 106, 210, 0.25);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(94, 106, 210, 0.5);
+  /* ── Light Vibrant Palette (Based on User Screenshot) ── */
+  --bg-deep: #FAFAFA;
+  --bg-base: #FFFFFF;
+  --bg-elevated: #F3F4F6;
+  --surface: rgba(0, 0, 0, 0.03);
+  --surface-hover: rgba(0, 0, 0, 0.06);
+  --foreground: #111827;
+  --foreground-muted: #4B5563;
+  --accent: #017AFF;
+  --accent-hover: #6C47FF;
+  --accent-glow: rgba(1, 122, 255, 0.25);
+  --border: rgba(0, 0, 0, 0.1);
+  --border-focus: rgba(1, 122, 255, 0.5);
   --radius: 12px;
   --radius-lg: 16px;
   --easing: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ── Glass variables ── */
   --glass-blur: 15px;
-  --glass-opacity: 0.06;
-  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-opacity: 0.8;
+  --glass-border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 @theme inline {
@@ -53,17 +53,18 @@ body {
 /* ── Cinematic gradient backdrop ── */
 .cinematic-bg {
   background:
-    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(94, 106, 210, 0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(94, 106, 210, 0.04) 0%, transparent 70%),
-    linear-gradient(180deg, #0a0a0f 0%, var(--bg-deep) 100%);
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(57, 192, 200, 0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(249, 99, 0, 0.1) 0%, transparent 70%),
+    linear-gradient(180deg, #FFFFFF 0%, var(--bg-deep) 100%);
 }
 
 /* ── Glassmorphic panel ── */
 .glass-panel {
-  background: rgba(10, 10, 12, 0.75);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border-right: var(--glass-border);
+  box-shadow: 2px 0 10px rgba(0,0,0,0.02);
 }
 
 /* ── Glassmorphic card ── */
@@ -85,15 +86,16 @@ body {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.08;
+  opacity: 0.15;
   pointer-events: none;
   animation: blob-drift 20s ease-in-out infinite;
+  mix-blend-mode: multiply;
 }
 
 .ambient-blob-1 {
   width: 400px;
   height: 400px;
-  background: var(--accent);
+  background: var(--color-turquoise);
   top: 15%;
   right: 10%;
   animation-delay: 0s;
@@ -102,7 +104,7 @@ body {
 .ambient-blob-2 {
   width: 300px;
   height: 300px;
-  background: #8B5CF6;
+  background: var(--color-amber);
   bottom: 20%;
   left: 15%;
   animation-delay: -7s;
@@ -120,22 +122,16 @@ body {
 
 /* ── Pulse ring (premium loading indicator) ── */
 @keyframes pulse-ring {
-  0% {
-    box-shadow: 0 0 0 0 rgba(94, 106, 210, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 14px rgba(94, 106, 210, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(94, 106, 210, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(1, 122, 255, 0.3); }
+  70% { box-shadow: 0 0 0 14px rgba(1, 122, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(1, 122, 255, 0); }
 }
 
 .pulse-ring {
   animation: pulse-ring 1.8s var(--easing) infinite;
 }
 
-/* ── Spin animation (retained for loading states) ── */
+/* ── Spin animation ── */
 @keyframes spin-smooth {
   to { transform: rotate(360deg); }
 }
@@ -148,7 +144,7 @@ body {
 .section-header {
   font-family: 'Inter', sans-serif;
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--foreground-muted);
@@ -159,8 +155,8 @@ body {
 .glass-input {
   width: 100%;
   border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.02);
   padding: 0.5rem 0.75rem;
   font-size: 0.8125rem;
   color: var(--foreground);
@@ -170,25 +166,25 @@ body {
 
 .glass-select:hover,
 .glass-input:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
 .glass-select:focus,
 .glass-input:focus {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.15);
-  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(1, 122, 255, 0.15);
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .glass-select:disabled,
 .glass-input:disabled {
-  opacity: 0.35;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .glass-select option {
-  background: var(--bg-elevated);
+  background: var(--bg-base);
   color: var(--foreground);
 }
 
@@ -198,8 +194,8 @@ body {
   width: 1rem;
   height: 1rem;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.04);
   cursor: pointer;
   transition: all 0.2s var(--easing);
   position: relative;
@@ -224,11 +220,11 @@ body {
 }
 
 .glass-checkbox:hover {
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(0, 0, 0, 0.4);
 }
 
 .glass-checkbox:disabled {
-  opacity: 0.35;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
@@ -259,7 +255,7 @@ body {
 }
 
 .btn-primary:disabled {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.1);
   color: var(--foreground-muted);
   cursor: not-allowed;
   box-shadow: none;
@@ -270,16 +266,16 @@ body {
   display: block;
   margin-bottom: 0.25rem;
   font-size: 0.6875rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--foreground-muted);
 }
 
 /* ── QA status pills ── */
-.qa-pass { color: #34D399; }
-.qa-warning { color: #FBBF24; }
-.qa-block { color: #F87171; }
+.qa-pass { color: #10B981; }
+.qa-warning { color: #F59E0B; }
+.qa-block { color: #EF4444; }
 
 /*
  * Preview display contract (docs/PROJECTION_SCALEBAR_NOTES.md §14):
@@ -296,10 +292,10 @@ body {
 /* Checkerboard backdrop so design-asset transparency is visible. */
 .preview-checkerboard {
   background-image:
-    linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.03) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.03) 75%);
+    linear-gradient(45deg, rgba(0, 0, 0, 0.05) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(0, 0, 0, 0.05) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%);
   background-size: 24px 24px;
   background-position: 0 0, 0 12px, 12px -12px, -12px 0;
   background-color: var(--bg-elevated);
@@ -315,10 +311,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.25);
 }
