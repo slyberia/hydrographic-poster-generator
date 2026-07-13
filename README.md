@@ -1,101 +1,69 @@
-# Hydrographic Poster Generator
+# Hydrographic Poster Generator: The Architecture of Aesthetics
 
-## Overview
+<div align="center">
+  <!-- TODO: Replace the path below with a screenshot of the app or a generated poster -->
+  <img src="docs/assets/hero-placeholder.png" alt="Hydrographic Poster Generator" width="100%" />
+</div>
 
-Hydrographic Poster Generator is a standalone MVP web app for generating minimalist hydrographic poster maps from HydroRIVERS regional datasets.
+<br />
 
-The MVP clips river networks to selected administrative boundaries, applies preset cartographic protocols, and exports high-resolution poster outputs or transparent design assets.
+A protocol-driven cartography engine that leverages **PostgreSQL** and **PostGIS** to transform the massive, global [HydroRIVERS dataset](https://www.hydrosheds.org/products/hydrorivers) into minimalist, high-resolution poster art and transparent vector design assets.
 
-## MVP Scope
+## The Concept
 
-The MVP focuses on:
+Traditional Geographic Information Systems (GIS) software is built for deep analysis, often presenting a steep learning curve for users who simply want to visualize data beautifully. 
 
-- HydroRIVERS regional datasets for South America and North/Central America
-- Country, Admin 1, and Admin 2 boundary selection
-- PostGIS-backed dynamic clipping
-- Preset-driven density, classification, palette, typography, and layout rules
-- SVG-first rendering
-- PNG, SVG, and PDF export
-- Transparent river-network design asset export
-- Basic QA checks before export
+**Hydrographic Poster Generator** shifts the paradigm by utilizing heavy-duty spatial engines not for traditional analysis, but for **generative graphic design**. By placing a highly constrained, preset-driven UI over a powerful PostgreSQL/PostGIS backbone, this tool empowers anyone to dynamically clip, classify, and render millions of kilometers of river networks into stunning, gallery-ready cartographic art.
 
-## Tech Stack
+## Key Features
 
-- Frontend: Next.js / React
-- Backend: FastAPI / Python
-- Database: Supabase PostgreSQL with PostGIS
-- Spatial Processing: PostGIS
-- Rendering: SVG-first export pipeline
-- Deployment Target: Google Cloud Run
-- Local Development: Docker-supported
+- **Real-Time Spatial Clipping:** The engine uses PostGIS to perform complex spatial intersections on the fly, clipping river networks to specific Countries or Administrative boundaries instantly.
+- **Curated Aesthetics:** No endless sliders. A rigorous set of typography rules, ambient color palettes, and density presets ensure every output meets a premium editorial standard.
+- **Interactive Canvas:** An immersive, fluid workspace allows users to drag, zoom, and frame their geographic subject perfectly before rendering.
+- **Dual Export Pipeline:** 
+  - **Cartographic Posters:** High-resolution PNG and PDF exports complete with dynamic scale bars, metadata, and editorial typography.
+  - **Design Asset Mode:** Export transparent, raw SVG river networks for integration into Adobe Illustrator or Figma workflows.
+
+---
+
+## Technical Architecture
+
+The application is built to handle intensive spatial queries and vector rendering, cleanly separating the interactive frontend from the data-heavy backend.
+
+- **Frontend (`Next.js` / `React`):** A cinematic, glassmorphic UI utilizing CSS container queries and fluid typography for a responsive, app-like experience.
+- **Backend (`FastAPI` / `Python`):** An API layer that orchestrates the complex geometry math, applies cartographic logic based on upstream area/stream order, and generates pure SVGs.
+- **Database (`Supabase PostgreSQL` + `PostGIS`):** The spatial workhorse that holds the multi-gigabyte HydroRIVERS dataset and performs the heavy geometric clipping.
+- **Deployment (`Google Cloud Run`):** Containerized deployment optimized for the high memory and CPU demands of rasterizing dense vector maps.
+
+---
 
 ## Running Locally
 
-### Docker Compose (recommended)
+The easiest way to run the full stack locally is via Docker Compose. 
+
+*(Note: Large source datasets like HydroRIVERS must be ingested into your database first. See the [Data Ingestion Guide](docs/DATA_INGESTION.md) for details.)*
 
 ```bash
+# Recommended: Run via Docker Compose
 DATABASE_URL=postgresql://user:pass@host:5432/db docker compose up --build
 ```
 
-- Frontend: <http://localhost:3000>
-- Backend API docs: <http://localhost:8000/docs>
+- **Frontend:** [http://localhost:3000](http://localhost:3000)
+- **Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 
-`DATABASE_URL` can point at hosted Supabase, a local Supabase CLI stack, or
-a local Docker PostGIS instance — see `docs/DATA_INGESTION.md` for loading
-HydroRIVERS and boundary data.
+For manual installation instructions or environment variable configuration (e.g., pointing `DATABASE_URL` to a hosted Supabase instance), please reference `.env.example`.
 
-### Without Docker
-
-```bash
-# Backend (Python 3.11+)
-cd backend && pip install -r requirements.txt
-DATABASE_URL=... uvicorn app.main:app --reload --port 8000
-
-# Frontend (Node 20+)
-cd frontend && npm install
-NEXT_PUBLIC_API_URL=http://localhost:8000 npm run dev
-```
-
-### Environment Variables
-
-| Variable | Service | Purpose |
-| :--- | :--- | :--- |
-| `DATABASE_URL` | backend | PostGIS connection string (required) |
-| `CORS_ORIGINS` | backend | Allowed browser origins (default `http://localhost:3000`) |
-| `NEXT_PUBLIC_API_URL` | frontend | Backend base URL — inlined at **build** time |
-
-See `.env.example` for the full list.
-
-## Deploying to Google Cloud Run
-
-`cloudbuild.yaml` builds both images and deploys two Cloud Run services
-(`hydro-backend`, `hydro-frontend`). The backend is sized at 2 GiB /
-concurrency 2 because high-resolution raster export is memory- and
-CPU-intensive. Full instructions, one-time setup, and the production
-checklist live in `docs/DEPLOYMENT.md`.
-
-```bash
-gcloud builds submit --config cloudbuild.yaml
-```
+---
 
 ## Documentation
 
-- Product spec: `docs/MVP_FUNCTIONAL_SPEC.md`
-- Math/display contract (projection, scale bar, export, text fit): `docs/PROJECTION_SCALEBAR_NOTES.md`
-- Deployment: `docs/DEPLOYMENT.md`
-- Data ingestion: `docs/DATA_INGESTION.md`
-- Coding-agent instructions: `AGENTS.md` and `CLAUDE.md`
+For a deeper dive into the inner workings of the engine:
 
-## Data Handling Note
+- **[Product Specification](docs/MVP_FUNCTIONAL_SPEC.md):** The core rules and boundaries of the application.
+- **[Data Ingestion](docs/DATA_INGESTION.md):** Scripts and commands for loading the raw geospatial shapefiles into PostGIS.
+- **[Deployment](docs/DEPLOYMENT.md):** Cloud Build and Google Cloud Run setup for production environments.
+- **[Math & Projection Notes](docs/PROJECTION_SCALEBAR_NOTES.md):** Documentation on coordinate conversion, SVG scaling, and dynamic scale bar calculations.
 
-Large HydroRIVERS source datasets should not be committed to this repository.
+---
 
-The repo should contain import scripts, schema definitions, documentation, and configuration examples. Source geospatial data should be stored externally and imported into the PostGIS database through the documented ingestion pipeline.
-
-## Status
-
-MVP feature-complete: backend render/export pipeline (Phases 1–5),
-frontend control panel and preview (Phase 6), and Cloud Run deployment
-configuration (Phase 7). Admin 1/Admin 2 boundary data is not yet imported
-(country level only); the UI reveals deeper pickers automatically once
-child boundaries exist in the database.
+*Note: Source geospatial data (like the HydroRIVERS geodatabases or shapefiles) are strictly stored externally and are not committed to this repository due to their size.*
