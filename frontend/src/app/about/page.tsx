@@ -97,7 +97,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── Best Uses ── */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start">
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
            <div className="lg:col-span-4 lg:col-start-2 pt-4">
             <h2 
               className="font-medium text-white tracking-tight"
