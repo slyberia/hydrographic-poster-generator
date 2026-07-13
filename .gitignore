@@ -52,3 +52,7 @@ generated/
 .DS_Store
 .vscode/
 .idea/
+
+# Secrets / Scratch
+db.txt
+*.txt

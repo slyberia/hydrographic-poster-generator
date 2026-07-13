@@ -6,10 +6,9 @@
 #   - Cloud Build service account roles: run.admin, artifactregistry.writer,
 #     secretmanager.secretAccessor, iam.serviceAccountUser
 #
-# The frontend needs the deployed backend URL at BUILD time (NEXT_PUBLIC_*
-# values are inlined into the client bundle), so set _NEXT_PUBLIC_API_URL to
-# the backend service URL. First deployment: run once, read the backend URL,
-# then run again with the substitution set (or use a custom domain).
+# The pipeline dynamically discovers the Cloud Run URLs to break the circular 
+# dependency between the frontend's build-time API URL requirement and the 
+# backend's runtime CORS requirement.
 #
 # Backend sizing (docs/PROJECTION_SCALEBAR_NOTES.md §13): the worst legal
 # export raster is ~206 MiB before Cairo working copies (expect 2-3x peak),
@@ -32,11 +31,9 @@ substitutions:
   _BACKEND_SERVICE: hydro-backend
   _FRONTEND_SERVICE: hydro-frontend
   _DB_SECRET: hydro-database-url
-  _NEXT_PUBLIC_API_URL: https://hydro-backend-54n4ik523a-uc.a.run.app
-  _CORS_ORIGINS: "https://hydro-frontend-54n4ik523a-uc.a.run.app,https://hydro-frontend-786228485832.us-central1.run.app,http://localhost:3000"
 
 steps:
-  # ---- backend ----
+  # ---- 1. Build Backend ----
   - id: build-backend
     name: gcr.io/cloud-builders/docker
     args:
@@ -45,48 +42,75 @@ steps:
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID
       - backend
 
+  # ---- 2. Push Backend ----
   - id: push-backend
     name: gcr.io/cloud-builders/docker
     args:
       - push
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID
 
+  # ---- 3. Deploy Backend (Best-Effort CORS) ----
   - id: deploy-backend
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
-    entrypoint: gcloud
+    entrypoint: bash
     args:
-      - run
-      - deploy
-      - ${_BACKEND_SERVICE}
-      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID
-      - --region=${_REGION}
-      - --platform=managed
-      - --port=8080
-      - --memory=2Gi
-      - --cpu=2
-      - --concurrency=2
-      - --timeout=300
-      - --set-secrets=DATABASE_URL=${_DB_SECRET}:latest
-      - --set-env-vars=^@@^CORS_ORIGINS=${_CORS_ORIGINS}
-      - --allow-unauthenticated
+      - '-c'
+      - |
+        FRONTEND_URL=$$(gcloud run services describe ${_FRONTEND_SERVICE} --region=${_REGION} --format="value(status.url)" 2>/dev/null || echo "")
+        
+        if [ -n "$$FRONTEND_URL" ]; then
+          CORS="$$FRONTEND_URL,http://localhost:3000"
+          echo "Frontend discovered: $$FRONTEND_URL"
+        else
+          CORS="http://localhost:3000"
+          echo "WARNING: Frontend service not found. Using localhost-only CORS."
+          echo "The patch-backend-cors step will fix this after frontend deploys."
+        fi
+        
+        gcloud run deploy ${_BACKEND_SERVICE} \
+          --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID \
+          --region=${_REGION} \
+          --platform=managed \
+          --port=8080 \
+          --memory=2Gi \
+          --cpu=2 \
+          --concurrency=2 \
+          --timeout=300 \
+          --set-secrets=DATABASE_URL=${_DB_SECRET}:latest \
+          --set-env-vars="CORS_ORIGINS=$$CORS" \
+          --allow-unauthenticated
 
-  # ---- frontend ----
+  # ---- 4. Discover Backend URL ----
+  - id: discover-backend-url
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        gcloud run services describe ${_BACKEND_SERVICE} --region=${_REGION} --format="value(status.url)" > /workspace/backend_url.txt
+
+  # ---- 5. Build Frontend (Injecting Discovered Backend URL) ----
   - id: build-frontend
     name: gcr.io/cloud-builders/docker
+    entrypoint: bash
     args:
-      - build
-      - -t
-      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$BUILD_ID
-      - --build-arg
-      - NEXT_PUBLIC_API_URL=${_NEXT_PUBLIC_API_URL}
-      - frontend
+      - '-c'
+      - |
+        BACKEND_URL=$$(cat /workspace/backend_url.txt)
+        echo "Using API URL: $$BACKEND_URL"
+        docker build \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$BUILD_ID \
+          --build-arg NEXT_PUBLIC_API_URL=$$BACKEND_URL \
+          frontend
 
+  # ---- 6. Push Frontend ----
   - id: push-frontend
     name: gcr.io/cloud-builders/docker
     args:
       - push
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$BUILD_ID
 
+  # ---- 7. Deploy Frontend ----
   - id: deploy-frontend
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     entrypoint: gcloud
@@ -100,6 +124,21 @@ steps:
       - --port=3000
       - --memory=512Mi
       - --allow-unauthenticated
+
+  # ---- 8. Patch Backend CORS (Close the Loop) ----
+  - id: patch-backend-cors
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        FRONTEND_URL=$$(gcloud run services describe ${_FRONTEND_SERVICE} --region=${_REGION} --format="value(status.url)")
+        CORS="$$FRONTEND_URL,http://localhost:3000"
+        echo "Patching backend CORS with: $$CORS"
+        
+        gcloud run services update ${_BACKEND_SERVICE} \
+          --region=${_REGION} \
+          --update-env-vars="CORS_ORIGINS=$$CORS"
 
 images:
   - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID
