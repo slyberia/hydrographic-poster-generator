@@ -5,17 +5,12 @@ import sys
 # Define the regions and their corresponding ISO-3166-1 alpha-3 country codes
 REGIONS = {
     "south_america": [
-        "ARG", "BOL", "BRA", "CHL", "COL", "ECU", "GUF", "GUY", 
-        "PRY", "PER", "SUR", "URY", "VEN"
+        "GUY", "SUR", "ECU", "URY", "PRY", "GUF"
     ],
     "north_central_america": [
-        # North America
-        "CAN", "USA", "MEX",
-        # Central America
-        "BLZ", "CRI", "SLV", "GTM", "HND", "NIC", "PAN",
-        # Caribbean
-        "CUB", "DOM", "HTI", "JAM", "PRI", "TTO", "BHS", 
-        "BRB", "ATG", "KNA", "LCA", "VCT", "GRD", "DMA"
+        "ATG", "BHS", "BRB", "BLZ", "DMA", "GRD", "HTI", "JAM", 
+        "KNA", "LCA", "VCT", "TTO", "CUB", "DOM", "PRI", "CRI", 
+        "SLV", "GTM", "HND", "NIC", "PAN"
     ]
 }
 

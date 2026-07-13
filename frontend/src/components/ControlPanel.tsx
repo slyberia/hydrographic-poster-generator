@@ -12,6 +12,7 @@ import {
 } from "@/lib/api";
 import type { QAItem } from "@/lib/qa";
 import QAChecklist from "./QAChecklist";
+import ColorPicker from "./ColorPicker";
 
 export interface PosterSettings {
   geography_id: string;
@@ -24,6 +25,7 @@ export interface PosterSettings {
   design_asset_mode: boolean;
   show_legend: boolean;
   show_metadata: boolean;
+  custom_colors?: Record<string, string>;
 }
 
 export interface ExportSettings {
@@ -46,12 +48,6 @@ const EXPORT_SIZES: { id: ExportSize; label: string }[] = [
 
 const EXPORT_FORMATS: ExportFormat[] = ["png", "svg", "pdf"];
 
-const selectClass =
-  "w-full rounded-md border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-sm text-slate-100 focus:border-sky-500 focus:outline-none disabled:opacity-50";
-const inputClass = selectClass;
-const labelClass =
-  "mb-1 block text-[11px] font-medium uppercase tracking-wide text-slate-400";
-
 interface ControlPanelProps {
   regions: GeographyRegion[];
   presets: PresetsResponse | null;
@@ -60,9 +56,6 @@ interface ControlPanelProps {
   exportSettings: ExportSettings;
   onExportSettingsChange: (patch: Partial<ExportSettings>) => void;
   qaItems: QAItem[];
-  onExport: () => void;
-  exporting: boolean;
-  exportDisabled: boolean;
 }
 
 export default function ControlPanel({
@@ -73,12 +66,8 @@ export default function ControlPanel({
   exportSettings,
   onExportSettingsChange,
   qaItems,
-  onExport,
-  exporting,
-  exportDisabled,
 }: ControlPanelProps) {
-  // Cascading geography picker state. Deeper pickers render only when the
-  // API actually returns children for the level above them.
+  // Cascading geography picker state.
   const [regionCode, setRegionCode] = useState("");
   const [countryId, setCountryId] = useState("");
   const [admin1Id, setAdmin1Id] = useState("");
@@ -145,18 +134,18 @@ export default function ControlPanel({
   };
 
   return (
-    <div className="flex h-full flex-col gap-5 overflow-y-auto p-4">
-      {/* Geography */}
-      <section>
-        <h2 className="mb-2 text-sm font-semibold text-slate-100">Geography</h2>
+    <div className="flex h-full flex-col gap-5 overflow-y-auto px-5 py-4">
+      {/* ── Geography ── */}
+      <section className="animate-fade-in" style={{ animationDelay: "0.05s" }}>
+        <h2 className="section-header mb-2.5">Geography</h2>
         <div className="space-y-2.5">
           <div>
-            <label htmlFor="region" className={labelClass}>
+            <label htmlFor="region" className="glass-label">
               Region
             </label>
             <select
               id="region"
-              className={selectClass}
+              className="glass-select"
               value={regionCode}
               onChange={(e) => handleRegion(e.target.value)}
             >
@@ -171,12 +160,12 @@ export default function ControlPanel({
 
           {region && (
             <div>
-              <label htmlFor="country" className={labelClass}>
+              <label htmlFor="country" className="glass-label">
                 Country
               </label>
               <select
                 id="country"
-                className={selectClass}
+                className="glass-select"
                 value={countryId}
                 onChange={(e) => handleCountry(e.target.value)}
               >
@@ -192,12 +181,12 @@ export default function ControlPanel({
 
           {admin1Options.length > 0 && (
             <div>
-              <label htmlFor="admin1" className={labelClass}>
+              <label htmlFor="admin1" className="glass-label">
                 State / Province
               </label>
               <select
                 id="admin1"
-                className={selectClass}
+                className="glass-select"
                 value={admin1Id}
                 onChange={(e) => handleAdmin1(e.target.value)}
               >
@@ -213,12 +202,12 @@ export default function ControlPanel({
 
           {admin1Id && admin2Options.length > 0 && (
             <div>
-              <label htmlFor="admin2" className={labelClass}>
+              <label htmlFor="admin2" className="glass-label">
                 County / District
               </label>
               <select
                 id="admin2"
-                className={selectClass}
+                className="glass-select"
                 value={admin2Id}
                 onChange={(e) => handleAdmin2(e.target.value)}
               >
@@ -234,17 +223,17 @@ export default function ControlPanel({
         </div>
       </section>
 
-      {/* Style presets — populated from the live /presets registry */}
-      <section>
-        <h2 className="mb-2 text-sm font-semibold text-slate-100">Style</h2>
+      {/* ── Style presets ── */}
+      <section className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
+        <h2 className="section-header mb-2.5">Style</h2>
         <div className="space-y-2.5">
           <div>
-            <label htmlFor="density" className={labelClass}>
+            <label htmlFor="density" className="glass-label">
               Density
             </label>
             <select
               id="density"
-              className={selectClass}
+              className="glass-select"
               value={settings.density_preset}
               onChange={(e) =>
                 onSettingsChange({ density_preset: e.target.value })
@@ -258,12 +247,12 @@ export default function ControlPanel({
             </select>
           </div>
           <div>
-            <label htmlFor="palette" className={labelClass}>
+            <label htmlFor="palette" className="glass-label">
               Palette
             </label>
             <select
               id="palette"
-              className={selectClass}
+              className="glass-select"
               value={settings.palette}
               onChange={(e) => onSettingsChange({ palette: e.target.value })}
             >
@@ -275,12 +264,12 @@ export default function ControlPanel({
             </select>
           </div>
           <div>
-            <label htmlFor="typography" className={labelClass}>
+            <label htmlFor="typography" className="glass-label">
               Typography
             </label>
             <select
               id="typography"
-              className={selectClass}
+              className="glass-select"
               value={settings.typography}
               onChange={(e) => onSettingsChange({ typography: e.target.value })}
             >
@@ -294,18 +283,68 @@ export default function ControlPanel({
         </div>
       </section>
 
-      {/* Poster text */}
-      <section>
-        <h2 className="mb-2 text-sm font-semibold text-slate-100">Text</h2>
+      {/* ── Custom Colors ── */}
+      <section className="animate-fade-in" style={{ animationDelay: "0.12s" }}>
+        <div className="flex items-center justify-between mb-2.5">
+          <h2 className="section-header !mb-0">Colors</h2>
+          {settings.custom_colors && Object.keys(settings.custom_colors).length > 0 && (
+            <button
+              onClick={() => onSettingsChange({ custom_colors: {} })}
+              className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-white transition-colors"
+            >
+              Reset to Preset
+            </button>
+          )}
+        </div>
+        <div className="space-y-0.5">
+          {(() => {
+            const currentPalette = presets?.palette.find(p => p.id === settings.palette);
+            const tokens = currentPalette?.tokens;
+            const custom = settings.custom_colors || {};
+            
+            const handleColorChange = (key: string, value: string) => {
+              onSettingsChange({ custom_colors: { ...custom, [key]: value } });
+            };
+
+            const getColor = (key: keyof NonNullable<typeof tokens>) => custom[key] ?? tokens?.[key] ?? "#000000";
+
+            return (
+              <>
+                <div className="mb-2">
+                  <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1">Canvas</p>
+                  <ColorPicker label="Background" value={getColor("background")} onChange={(v) => handleColorChange("background", v)} />
+                </div>
+                <div className="mb-2">
+                  <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1">Rivers</p>
+                  <ColorPicker label="Major" value={getColor("feature_major")} onChange={(v) => handleColorChange("feature_major", v)} />
+                  <ColorPicker label="Primary" value={getColor("feature_primary")} onChange={(v) => handleColorChange("feature_primary", v)} />
+                  <ColorPicker label="Secondary" value={getColor("feature_secondary")} onChange={(v) => handleColorChange("feature_secondary", v)} />
+                  <ColorPicker label="Minor" value={getColor("feature_minor")} onChange={(v) => handleColorChange("feature_minor", v)} />
+                  <ColorPicker label="Headwater" value={getColor("feature_headwater")} onChange={(v) => handleColorChange("feature_headwater", v)} />
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1">Text</p>
+                  <ColorPicker label="Primary Text" value={getColor("text_primary")} onChange={(v) => handleColorChange("text_primary", v)} />
+                  <ColorPicker label="Secondary Text" value={getColor("text_secondary")} onChange={(v) => handleColorChange("text_secondary", v)} />
+                </div>
+              </>
+            );
+          })()}
+        </div>
+      </section>
+
+      {/* ── Poster text ── */}
+      <section className="animate-fade-in" style={{ animationDelay: "0.15s" }}>
+        <h2 className="section-header mb-2.5">Text</h2>
         <div className="space-y-2.5">
           <div>
-            <label htmlFor="title" className={labelClass}>
+            <label htmlFor="title" className="glass-label">
               Title
             </label>
             <input
               id="title"
               type="text"
-              className={inputClass}
+              className="glass-input"
               value={settings.title}
               placeholder="FLOWING GUYANA"
               disabled={settings.design_asset_mode}
@@ -313,13 +352,13 @@ export default function ControlPanel({
             />
           </div>
           <div>
-            <label htmlFor="subtitle" className={labelClass}>
+            <label htmlFor="subtitle" className="glass-label">
               Subtitle
             </label>
             <input
               id="subtitle"
               type="text"
-              className={inputClass}
+              className="glass-input"
               value={settings.subtitle}
               placeholder="River Network of Guyana"
               disabled={settings.design_asset_mode}
@@ -329,57 +368,69 @@ export default function ControlPanel({
         </div>
       </section>
 
-      {/* Toggles */}
-      <section>
-        <h2 className="mb-2 text-sm font-semibold text-slate-100">Layers</h2>
-        <div className="space-y-1.5 text-sm text-slate-200">
-          <label className="flex items-center gap-2">
+      {/* ── Toggles ── */}
+      <section className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
+        <h2 className="section-header mb-2.5">Layers</h2>
+        <div className="space-y-2 text-[13px] text-[var(--foreground)]">
+          <label className="flex items-center gap-2.5 cursor-pointer group">
             <input
               type="checkbox"
+              className="glass-checkbox"
               checked={settings.show_legend}
               disabled={settings.design_asset_mode}
               onChange={(e) =>
                 onSettingsChange({ show_legend: e.target.checked })
               }
             />
-            Legend
+            <span className="transition-colors duration-200 group-hover:text-white">
+              Legend
+            </span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2.5 cursor-pointer group">
             <input
               type="checkbox"
+              className="glass-checkbox"
               checked={settings.show_metadata}
               disabled={settings.design_asset_mode}
               onChange={(e) =>
                 onSettingsChange({ show_metadata: e.target.checked })
               }
             />
-            Metadata &amp; scale bar
+            <span className="transition-colors duration-200 group-hover:text-white">
+              Metadata &amp; scale bar
+            </span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2.5 cursor-pointer group">
             <input
               type="checkbox"
+              className="glass-checkbox"
               checked={settings.design_asset_mode}
               onChange={(e) =>
                 onSettingsChange({ design_asset_mode: e.target.checked })
               }
             />
-            Design asset mode (transparent, rivers only)
+            <span className="transition-colors duration-200 group-hover:text-white">
+              Design asset mode
+            </span>
           </label>
         </div>
       </section>
 
-      {/* Export */}
-      <section className="mt-auto border-t border-slate-800 pt-4">
-        <h2 className="mb-2 text-sm font-semibold text-slate-100">Export</h2>
+      {/* ── Export ── */}
+      <section
+        className="mt-auto border-t border-white/[0.06] pt-4 animate-fade-in"
+        style={{ animationDelay: "0.25s" }}
+      >
+        <h2 className="section-header mb-2.5">Export</h2>
         <div className="space-y-2.5">
           <div className="flex gap-2">
             <div className="flex-1">
-              <label htmlFor="export-format" className={labelClass}>
+              <label htmlFor="export-format" className="glass-label">
                 Format
               </label>
               <select
                 id="export-format"
-                className={selectClass}
+                className="glass-select"
                 value={exportSettings.export_format}
                 onChange={(e) =>
                   onExportSettingsChange({
@@ -402,12 +453,12 @@ export default function ControlPanel({
               </select>
             </div>
             <div className="flex-[2]">
-              <label htmlFor="export-size" className={labelClass}>
+              <label htmlFor="export-size" className="glass-label">
                 Size
               </label>
               <select
                 id="export-size"
-                className={selectClass}
+                className="glass-select"
                 value={exportSettings.export_size}
                 onChange={(e) =>
                   onExportSettingsChange({
@@ -427,7 +478,7 @@ export default function ControlPanel({
           {exportSettings.export_size === "custom" && (
             <div className="flex gap-2">
               <div className="flex-1">
-                <label htmlFor="custom-width" className={labelClass}>
+                <label htmlFor="custom-width" className="glass-label">
                   Width (px)
                 </label>
                 <input
@@ -435,7 +486,7 @@ export default function ControlPanel({
                   type="number"
                   min={1000}
                   max={9000}
-                  className={inputClass}
+                  className="glass-input"
                   value={exportSettings.custom_width ?? ""}
                   onChange={(e) =>
                     onExportSettingsChange({
@@ -447,7 +498,7 @@ export default function ControlPanel({
                 />
               </div>
               <div className="flex-1">
-                <label htmlFor="custom-height" className={labelClass}>
+                <label htmlFor="custom-height" className="glass-label">
                   Height (px)
                 </label>
                 <input
@@ -455,7 +506,7 @@ export default function ControlPanel({
                   type="number"
                   min={1000}
                   max={9000}
-                  className={inputClass}
+                  className="glass-input"
                   value={exportSettings.custom_height ?? ""}
                   onChange={(e) =>
                     onExportSettingsChange({
@@ -470,15 +521,6 @@ export default function ControlPanel({
           )}
 
           <QAChecklist items={qaItems} />
-
-          <button
-            type="button"
-            className="w-full rounded-md bg-sky-600 py-2 text-sm font-semibold text-white transition hover:bg-sky-500 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
-            disabled={exportDisabled || exporting}
-            onClick={onExport}
-          >
-            {exporting ? "Exporting…" : "Generate Export"}
-          </button>
         </div>
       </section>
     </div>

@@ -1,29 +1,276 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ── Cinematic Dark Palette (UI/UX Pro Max: Modern Dark Cinema) ── */
+  --bg-deep: #020203;
+  --bg-base: #050506;
+  --bg-elevated: #0a0a0c;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --foreground: #EDEDEF;
+  --foreground-muted: #8A8F98;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --accent-glow: rgba(94, 106, 210, 0.25);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(94, 106, 210, 0.5);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --easing: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Glass variables ── */
+  --glass-blur: 15px;
+  --glass-opacity: 0.06;
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: var(--bg-deep);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Inter', var(--font-geist-sans), system-ui, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Base ── */
+body {
+  background: var(--bg-deep);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Cinematic gradient backdrop ── */
+.cinematic-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(94, 106, 210, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(94, 106, 210, 0.04) 0%, transparent 70%),
+    linear-gradient(180deg, #0a0a0f 0%, var(--bg-deep) 100%);
+}
+
+/* ── Glassmorphic panel ── */
+.glass-panel {
+  background: rgba(10, 10, 12, 0.75);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-right: var(--glass-border);
+}
+
+/* ── Glassmorphic card ── */
+.glass-card {
+  background: var(--surface);
+  border: var(--glass-border);
+  border-radius: var(--radius);
+}
+
+/* ── Ambient glow blobs ── */
+@keyframes blob-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -20px) scale(1.05); }
+  50% { transform: translate(-15px, 25px) scale(0.95); }
+  75% { transform: translate(20px, 10px) scale(1.02); }
+}
+
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.08;
+  pointer-events: none;
+  animation: blob-drift 20s ease-in-out infinite;
+}
+
+.ambient-blob-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--accent);
+  top: 15%;
+  right: 10%;
+  animation-delay: 0s;
+}
+
+.ambient-blob-2 {
+  width: 300px;
+  height: 300px;
+  background: #8B5CF6;
+  bottom: 20%;
+  left: 15%;
+  animation-delay: -7s;
+}
+
+/* ── Fade-in animation ── */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s var(--easing) forwards;
+}
+
+/* ── Pulse ring (premium loading indicator) ── */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(94, 106, 210, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(94, 106, 210, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(94, 106, 210, 0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.pulse-ring {
+  animation: pulse-ring 1.8s var(--easing) infinite;
 }
+
+/* ── Spin animation (retained for loading states) ── */
+@keyframes spin-smooth {
+  to { transform: rotate(360deg); }
+}
+
+.spin-smooth {
+  animation: spin-smooth 1.2s linear infinite;
+}
+
+/* ── Section header ── */
+.section-header {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+}
+
+/* ── Form controls (glassmorphic) ── */
+.glass-select,
+.glass-input {
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--foreground);
+  transition: all 0.25s var(--easing);
+  outline: none;
+}
+
+.glass-select:hover,
+.glass-input:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.glass-select:focus,
+.glass-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.glass-select:disabled,
+.glass-input:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.glass-select option {
+  background: var(--bg-elevated);
+  color: var(--foreground);
+}
+
+/* ── Checkbox (custom) ── */
+.glass-checkbox {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.2s var(--easing);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.glass-checkbox:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.glass-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.glass-checkbox:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.glass-checkbox:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ── Primary action button ── */
+.btn-primary {
+  width: 100%;
+  border-radius: var(--radius);
+  padding: 0.625rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s var(--easing);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 20px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-primary:disabled {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--foreground-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ── Label ── */
+.glass-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+}
+
+/* ── QA status pills ── */
+.qa-pass { color: #34D399; }
+.qa-warning { color: #FBBF24; }
+.qa-block { color: #F87171; }
 
 /*
  * Preview display contract (docs/PROJECTION_SCALEBAR_NOTES.md §14):
@@ -40,11 +287,29 @@ body {
 /* Checkerboard backdrop so design-asset transparency is visible. */
 .preview-checkerboard {
   background-image:
-    linear-gradient(45deg, #334155 25%, transparent 25%),
-    linear-gradient(-45deg, #334155 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #334155 75%),
-    linear-gradient(-45deg, transparent 75%, #334155 75%);
+    linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.03) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.03) 75%);
   background-size: 24px 24px;
   background-position: 0 0, 0 12px, 12px -12px, -12px 0;
-  background-color: #1e293b;
+  background-color: var(--bg-elevated);
+}
+
+/* ── Scrollbar styling ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.14);
 }

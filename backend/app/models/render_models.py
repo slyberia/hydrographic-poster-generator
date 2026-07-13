@@ -1,3 +1,4 @@
+from typing import Dict, Optional
 from pydantic import BaseModel, Field
 
 
@@ -12,3 +13,5 @@ class RenderRequest(BaseModel):
     design_asset_mode: bool = False
     show_legend: bool = True
     show_metadata: bool = True
+    custom_colors: Optional[Dict[str, str]] = None
+    element_transforms: Optional[Dict[str, Dict[str, float]]] = None
