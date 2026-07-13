@@ -77,7 +77,7 @@ steps:
           --concurrency=2 \
           --timeout=300 \
           --set-secrets=DATABASE_URL=${_DB_SECRET}:latest \
-          --set-env-vars="CORS_ORIGINS=$$CORS" \
+          --set-env-vars="^@@^CORS_ORIGINS=$$CORS" \
           --allow-unauthenticated
 
   # ---- 4. Discover Backend URL ----
@@ -138,7 +138,7 @@ steps:
         
         gcloud run services update ${_BACKEND_SERVICE} \
           --region=${_REGION} \
-          --update-env-vars="CORS_ORIGINS=$$CORS"
+          --update-env-vars="^@@^CORS_ORIGINS=$$CORS"
 
 images:
   - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_BACKEND_SERVICE}:$BUILD_ID
