@@ -13,6 +13,7 @@ const STEPS = [
     title: "Select Geography",
     description:
       "Choose a region and country from the CARICOM nations and surrounding areas. Optionally drill down to a state or province.",
+    colorClass: "text-dodger-blue border-dodger-blue/30 bg-dodger-blue/10",
   },
   {
     icon: (
@@ -29,6 +30,7 @@ const STEPS = [
     title: "Customize Style",
     description:
       "Pick a density preset, color palette, and typography style. These presets control how your river network is classified and rendered.",
+    colorClass: "text-safety-orange border-safety-orange/30 bg-safety-orange/10",
   },
   {
     icon: (
@@ -40,6 +42,7 @@ const STEPS = [
     title: "Add Text",
     description:
       'Enter a poster title and subtitle. These are rendered directly onto the map in the typography style you selected.',
+    colorClass: "text-neon border-neon/30 bg-neon/10",
   },
   {
     icon: (
@@ -52,17 +55,18 @@ const STEPS = [
     title: "Export",
     description:
       "Choose PNG, SVG, or PDF. Select a preset size or enter custom dimensions. Review the QA checklist, then generate your export.",
+    colorClass: "text-wild-melon border-wild-melon/30 bg-wild-melon/10",
   },
 ];
 
 export default function LandingPage() {
   return (
-    <main className="relative min-h-screen bg-[var(--background)] overflow-hidden flex flex-col items-center">
+    <main className="relative min-h-screen bg-slate-50 overflow-hidden flex flex-col items-center">
       {/* ── Header ── */}
       <header className="absolute top-0 left-0 w-full p-6 z-50 flex justify-between items-center max-w-6xl mx-auto">
         <div>
           <h1
-            className="text-xl font-semibold tracking-tight text-white"
+            className="text-xl font-semibold tracking-tight text-gray-900"
             style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
           >
             Hydro Poster
@@ -71,41 +75,41 @@ export default function LandingPage() {
         <nav className="flex gap-6">
           <Link
             href="/about"
-            className="text-[13px] text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors duration-200"
+            className="text-[13px] font-medium text-gray-600 hover:text-dodger-blue transition-colors duration-200"
           >
             About
           </Link>
           <Link
             href="/docs"
-            className="text-[13px] text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors duration-200"
+            className="text-[13px] font-medium text-gray-600 hover:text-dodger-blue transition-colors duration-200"
           >
             API Docs
           </Link>
         </nav>
       </header>
 
-      {/* ── Ambient glow blobs ── */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full opacity-30 mix-blend-screen filter blur-[100px] bg-[var(--accent)] pointer-events-none" aria-hidden="true" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full opacity-20 mix-blend-screen filter blur-[120px] bg-[var(--foreground-muted)] pointer-events-none" aria-hidden="true" />
+      {/* ── Ambient glow blobs (Multiply for light mode) ── */}
+      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full opacity-40 mix-blend-multiply filter blur-[100px] bg-turquoise pointer-events-none" aria-hidden="true" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full opacity-40 mix-blend-multiply filter blur-[120px] bg-amber pointer-events-none" aria-hidden="true" />
 
       {/* ── Hero Section ── */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pt-32 lg:pt-40 pb-16 flex flex-col items-center text-center mt-12">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)] mb-6">
+        <p className="text-[12px] font-bold uppercase tracking-[0.2em] text-wild-melon mb-6">
           Generative Cartography
         </p>
         <h1
-          className="text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-white mb-6"
+          className="text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-gray-900 mb-6"
           style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
         >
           Hydrographic <br className="hidden lg:block" /> Poster Generator
         </h1>
-        <p className="text-lg lg:text-xl text-[var(--foreground-muted)] max-w-2xl leading-relaxed mb-10">
+        <p className="text-lg lg:text-xl text-gray-600 max-w-2xl leading-relaxed mb-10">
           Create stunning, high-resolution river network poster maps from HydroRIVERS data. Select a geography, customize your style, and export print-ready posters or transparent design assets.
         </p>
         
         <Link 
           href="/studio"
-          className="btn-primary text-base px-8 py-4 shadow-[0_8px_30px_rgb(94,106,210,0.3)] hover:shadow-[0_8px_30px_rgb(94,106,210,0.5)] transition-all duration-300"
+          className="bg-dodger-blue text-white font-medium text-base px-8 py-4 rounded-xl shadow-[0_8px_30px_rgba(1,122,255,0.3)] hover:shadow-[0_8px_30px_rgba(1,122,255,0.5)] hover:scale-[1.02] transition-all duration-300"
         >
           Launch Generator
         </Link>
@@ -114,7 +118,7 @@ export default function LandingPage() {
       {/* ── How It Works ── */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 py-24">
         <h2
-          className="text-3xl font-semibold text-white mb-12 text-center"
+          className="text-3xl font-semibold text-gray-900 mb-12 text-center"
           style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
         >
           How It Works
@@ -124,20 +128,15 @@ export default function LandingPage() {
           {STEPS.map((step, i) => (
             <div key={i} className="flex gap-5 group">
               <div
-                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl transition-colors duration-200"
-                style={{
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid rgba(255, 255, 255, 0.08)",
-                  color: "var(--foreground)",
-                }}
+                className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border transition-colors duration-200 ${step.colorClass}`}
               >
                 {step.icon}
               </div>
               <div className="min-w-0">
-                <p className="text-lg font-semibold text-white leading-snug mb-2">
+                <p className="text-lg font-semibold text-gray-900 leading-snug mb-2">
                   {step.title}
                 </p>
-                <p className="text-sm leading-relaxed text-[var(--foreground-muted)]">
+                <p className="text-sm leading-relaxed text-gray-600">
                   {step.description}
                 </p>
               </div>
@@ -149,13 +148,9 @@ export default function LandingPage() {
       {/* ── Pro Tip ── */}
       <div className="relative z-10 w-full max-w-3xl mx-auto px-6 pb-32">
         <div
-          className="flex flex-col md:flex-row items-center md:items-start gap-4 rounded-2xl p-6 md:p-8 text-center md:text-left"
-          style={{
-            background: "rgba(94, 106, 210, 0.04)",
-            border: "1px solid rgba(94, 106, 210, 0.15)",
-          }}
+          className="flex flex-col md:flex-row items-center md:items-start gap-4 rounded-2xl p-6 md:p-8 text-center md:text-left bg-celery/10 border border-celery/30"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/10 text-[var(--accent)]">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-celery/20 text-celery">
             <svg
               width="24"
               height="24"
@@ -172,8 +167,8 @@ export default function LandingPage() {
             </svg>
           </div>
           <div>
-            <h3 className="text-base font-semibold text-white mb-2">Design Asset Mode</h3>
-            <p className="text-sm leading-relaxed text-[var(--foreground-muted)]">
+            <h3 className="text-base font-semibold text-gray-900 mb-2">Design Asset Mode</h3>
+            <p className="text-sm leading-relaxed text-gray-700">
               Toggle &ldquo;Design asset mode&rdquo; in the generator to export transparent river-network layers. This skips the poster background, text, and metadata — perfect for DTG printing, screenprinting, or layering in Adobe Illustrator.
             </p>
           </div>

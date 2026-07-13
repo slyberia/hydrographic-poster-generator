@@ -27,6 +27,15 @@
 @theme inline {
   --color-background: var(--bg-deep);
   --color-foreground: var(--foreground);
+  --color-dodger-blue: #017AFF;
+  --color-neon: #6C47FF;
+  --color-turquoise: #39C0C8;
+  --color-safety-orange: #F96300;
+  --color-wild-melon: #F34971;
+  --color-coral: #FF9382;
+  --color-amber: #F5C900;
+  --color-tan: #CDAD7A;
+  --color-celery: #AABB5D;
   --font-sans: 'Inter', var(--font-geist-sans), system-ui, sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
