@@ -48,6 +48,11 @@ class SVGRenderer:
         self.tokens.setdefault("scale_bar", self.tokens["text_secondary"])
         self.tokens.setdefault("metadata", self.tokens["text_secondary"])
 
+        if request.custom_colors:
+            for k, v in request.custom_colors.items():
+                if v:
+                    self.tokens[k] = v
+
         self.typography = rules_service.get_typography_preset(request.typography)
 
         if request.design_asset_mode:
@@ -88,6 +93,19 @@ class SVGRenderer:
         return "\n".join(p for p in parts if p)
 
     # ------------------------------------------------------------------ #
+
+    def _get_transform(self, element_id: str) -> str:
+        if not self.request.element_transforms:
+            return ""
+        t = self.request.element_transforms.get(element_id)
+        if not t:
+            return ""
+        x = t.get("x", 0)
+        y = t.get("y", 0)
+        s = t.get("scale", 1.0)
+        if x == 0 and y == 0 and s == 1.0:
+            return ""
+        return f' transform="translate({x:g},{y:g}) scale({s:g})"'
 
     def _svg_open(self) -> str:
         # Root element contract (§14): viewBox + explicit width/height,
@@ -162,7 +180,6 @@ class SVGRenderer:
             cls = feature.get("properties", {}).get("display_class", "minor")
             if cls not in DISPLAY_CLASSES:
                 cls = "minor"
-            
             props = feature.get("properties", {})
             hr_id = props.get("hydrorivers_id", "")
             s_order = props.get("stream_order", "")
@@ -177,7 +194,7 @@ class SVGRenderer:
                 f'data-display-class="{cls}" '
                 f'd="{" ".join(subpaths)}"/>'
             )
-        return f'<g id="rivers">{"".join(paths)}</g>'
+        return f'<g id="rivers"{self._get_transform("rivers")}>{"".join(paths)}</g>'
 
     def _render_title_block(self) -> str:
         x = rc.TITLE_BLOCK_X * self.s_style
@@ -185,10 +202,10 @@ class SVGRenderer:
         subtitle_y = title_y + rc.SUBTITLE_SIZE * 1.8 * self.s_style
         out = []
         if self.request.title:
-            out.append(f'<text class="title" x="{x:g}" y="{title_y:g}">'
+            out.append(f'<text class="title"{self._get_transform("title")} x="{x:g}" y="{title_y:g}">'
                        f'{escape(self.request.title)}</text>')
         if self.request.subtitle:
-            out.append(f'<text class="subtitle" x="{x:g}" y="{subtitle_y:g}">'
+            out.append(f'<text class="subtitle"{self._get_transform("subtitle")} x="{x:g}" y="{subtitle_y:g}">'
                        f'{escape(self.request.subtitle)}</text>')
         return "".join(out)
 
@@ -197,7 +214,7 @@ class SVGRenderer:
         cy = 350 * self.s_style
         s = 60 * self.s_style
         return (
-            f'<g id="north-arrow" fill="{self.tokens["text_secondary"]}">'
+            f'<g id="north-arrow"{self._get_transform("north-arrow")} fill="{self.tokens["text_secondary"]}">'
             f'<polygon points="{cx:g},{cy - s:g} {cx - s * 0.5:g},{cy + s * 0.6:g} '
             f'{cx:g},{cy + s * 0.2:g} {cx + s * 0.5:g},{cy + s * 0.6:g}"/>'
             f'<text class="label" x="{cx:g}" y="{cy + s * 1.6:g}" '
@@ -224,7 +241,8 @@ class SVGRenderer:
                 f'<text class="label" x="{x + 260 * self.s_style:g}" '
                 f'y="{y + 16 * self.s_style:g}">{cls.capitalize()}</text>'
             )
-        return f'<g id="legend">{"".join(rows)}</g>'
+        return f'<g id="legend"{self._get_transform("legend")}>{"".join(rows)}</g>'
+
 
     def _render_metadata_and_scale(self, projector: CoordinateProjector, clip_result: ClipResult) -> str:
         right = self.canvas_w - 300 * self.s_style
@@ -260,7 +278,7 @@ class SVGRenderer:
                          else f"{nice_m:g} m") + " (approx.)"
                 bar_y = y0 - 120 * self.s_style
                 scale_bar_svg = (
-                    f'<g id="scale-bar">'
+                    f'<g id="scale-bar"{self._get_transform("scale-bar")}>'
                     f'<line class="scalebar" x1="{right - bar_px:g}" y1="{bar_y:g}" '
                     f'x2="{right:g}" y2="{bar_y:g}"/>'
                     f'<line class="scalebar" x1="{right - bar_px:g}" '
@@ -279,4 +297,4 @@ class SVGRenderer:
             f'text-anchor="end">{escape(line)}</text>'
             for i, line in enumerate(lines)
         )
-        return f'{scale_bar_svg}<g id="metadata">{text_rows}</g>'
+        return f'{scale_bar_svg}<g id="metadata"{self._get_transform("metadata")}>{text_rows}</g>'

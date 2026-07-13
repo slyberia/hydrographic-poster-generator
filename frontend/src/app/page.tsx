@@ -8,6 +8,7 @@ import ControlPanel, {
   type PosterSettings,
 } from "@/components/ControlPanel";
 import PreviewPane from "@/components/PreviewPane";
+import WelcomeModal from "@/components/WelcomeModal";
 import {
   getGeographies,
   getPresets,
@@ -46,8 +47,8 @@ export default function Page() {
   const [bootError, setBootError] = useState<string | null>(null);
 
   const [settings, setSettings] = useState<PosterSettings>(DEFAULT_SETTINGS);
-  const [exportSettings, setExportSettings] =
-    useState<ExportSettings>(DEFAULT_EXPORT);
+  const [exportSettings, setExportSettings] = useState<ExportSettings>(DEFAULT_EXPORT);
+  const [transforms, setTransforms] = useState<Record<string, { x: number; y: number; scale: number }>>({});
 
   const [svg, setSvg] = useState<string | null>(null);
   const [riverCount, setRiverCount] = useState<number | null>(null);
@@ -86,9 +87,7 @@ export default function Page() {
     return () => controller.abort();
   }, []);
 
-  // Debounced preview refetch on any setting change. Clearing on
-  // deselection happens in handleSettingsChange (not here) so the effect
-  // never calls setState synchronously.
+  // Debounced preview refetch on any setting change.
   useEffect(() => {
     if (!settings.geography_id) return;
 
@@ -161,12 +160,15 @@ export default function Page() {
   );
 
   const handleExport = async () => {
+    if (hasBlockingIssue(qaItems)) return;
+    
     setExporting(true);
     setExportError(null);
     try {
       const { blob, filename } = await triggerExport({
         ...settings,
         ...exportSettings,
+        element_transforms: transforms,
       });
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
@@ -184,27 +186,46 @@ export default function Page() {
   };
 
   return (
-    <main className="flex h-screen bg-slate-950 text-slate-100">
-      <aside className="flex w-80 shrink-0 flex-col border-r border-slate-800 bg-slate-900/40 lg:w-96">
-        <header className="border-b border-slate-800 px-4 py-3 flex justify-between items-start">
+    <main className="relative flex h-screen overflow-hidden cinematic-bg">
+      {/* ── Welcome overlay (first visit) ── */}
+      <WelcomeModal />
+
+      {/* ── Ambient glow blobs ── */}
+      <div className="ambient-blob ambient-blob-1" aria-hidden="true" />
+      <div className="ambient-blob ambient-blob-2" aria-hidden="true" />
+
+      {/* ── Sidebar ── */}
+      <aside className="glass-panel relative z-10 flex w-80 shrink-0 flex-col lg:w-96">
+        <header className="border-b border-white/[0.06] px-5 py-4 flex justify-between items-center">
           <div>
-            <h1 className="text-base font-semibold">
-              Hydrographic Poster Generator
+            <h1
+              className="text-base font-semibold tracking-tight"
+              style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
+            >
+              Hydro Poster
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-[11px] text-[var(--foreground-muted)] mt-0.5">
               Preset-driven river network posters
             </p>
           </div>
-          <Link
-            href="/docs"
-            className="text-xs text-blue-400 hover:text-blue-300 underline underline-offset-2"
-          >
-            Docs
-          </Link>
+          <div className="flex gap-4">
+            <Link
+              href="/about"
+              className="text-[11px] text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors duration-200"
+            >
+              About
+            </Link>
+            <Link
+              href="/docs"
+              className="text-[11px] text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors duration-200"
+            >
+              Docs
+            </Link>
+          </div>
         </header>
 
         {bootError ? (
-          <div className="m-4 rounded-md border border-red-800 bg-red-950/50 p-3 text-sm text-red-300">
+          <div className="m-4 glass-card p-3 text-sm text-red-300 border-red-500/20">
             Failed to reach the API: {bootError}
           </div>
         ) : (
@@ -216,20 +237,18 @@ export default function Page() {
             exportSettings={exportSettings}
             onExportSettingsChange={handleExportSettingsChange}
             qaItems={qaItems}
-            onExport={handleExport}
-            exporting={exporting}
-            exportDisabled={hasBlockingIssue(qaItems)}
           />
         )}
 
         {exportError && (
-          <div className="mx-4 mb-4 rounded-md border border-red-800 bg-red-950/50 p-2 text-xs text-red-300">
+          <div className="mx-4 mb-4 glass-card p-2.5 text-xs text-red-300 border-red-500/20">
             Export failed: {exportError}
           </div>
         )}
       </aside>
 
-      <section className="min-w-0 flex-1 overflow-y-auto">
+      {/* ── Preview ── */}
+      <section className="relative z-10 min-w-0 flex-1 overflow-y-auto">
         <PreviewPane
           svg={svg}
           loading={previewLoading}
@@ -237,6 +256,12 @@ export default function Page() {
           designAssetMode={settings.design_asset_mode}
           riverCount={riverCount}
           geographyName={geographyName}
+          transforms={transforms}
+          onTransformsChange={setTransforms}
+          onResetTransforms={() => setTransforms({})}
+          onDownload={handleExport}
+          isDownloading={exporting}
+          exportDisabled={hasBlockingIssue(qaItems)}
         />
       </section>
     </main>

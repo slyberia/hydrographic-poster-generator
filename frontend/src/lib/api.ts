@@ -95,6 +95,8 @@ export interface RenderRequest {
   design_asset_mode: boolean;
   show_legend: boolean;
   show_metadata: boolean;
+  custom_colors?: Record<string, string>;
+  element_transforms?: Record<string, { x: number; y: number; scale: number }>;
 }
 
 export type ExportFormat = "svg" | "png" | "pdf";

@@ -11,6 +11,8 @@
  * identical space (no layout shift).
  */
 
+import InteractiveCanvas, { Transform } from "./InteractiveCanvas";
+
 interface PreviewPaneProps {
   svg: string | null;
   loading: boolean;
@@ -18,6 +20,12 @@ interface PreviewPaneProps {
   designAssetMode: boolean;
   riverCount: number | null;
   geographyName: string | null;
+  transforms: Record<string, Transform>;
+  onTransformsChange: (transforms: Record<string, Transform>) => void;
+  onResetTransforms: () => void;
+  onDownload: () => void;
+  isDownloading: boolean;
+  exportDisabled: boolean;
 }
 
 export default function PreviewPane({
@@ -27,22 +35,42 @@ export default function PreviewPane({
   designAssetMode,
   riverCount,
   geographyName,
+  transforms,
+  onTransformsChange,
+  onResetTransforms,
+  onDownload,
+  isDownloading,
+  exportDisabled,
 }: PreviewPaneProps) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 p-6">
+    <div className="flex h-full flex-col items-center justify-center gap-4 p-8">
+      {/* ── Preview card ── */}
       <div
-        className={`relative w-full max-w-xl overflow-hidden rounded-md shadow-2xl ring-1 ring-slate-700/60 ${
-          designAssetMode ? "preview-checkerboard" : "bg-slate-900"
+        className={`relative w-full max-w-xl overflow-hidden rounded-2xl transition-shadow duration-500 ${
+          designAssetMode
+            ? "preview-checkerboard"
+            : "bg-[var(--bg-elevated)]"
+        } ${
+          svg
+            ? "shadow-[0_8px_60px_-12px_rgba(94,106,210,0.15)]"
+            : "shadow-2xl shadow-black/40"
         }`}
-        style={{ aspectRatio: "2 / 3" }}
+        style={{
+          aspectRatio: "2 / 3",
+          border: "1px solid rgba(255, 255, 255, 0.06)",
+        }}
       >
         {svg ? (
-          <div
-            className="preview-svg"
-            dangerouslySetInnerHTML={{ __html: svg }}
-          />
+          <div className="preview-svg animate-fade-in h-full w-full">
+            <InteractiveCanvas
+              svg={svg}
+              transforms={transforms}
+              onTransformsChange={onTransformsChange}
+              onReset={onResetTransforms}
+            />
+          </div>
         ) : (
-          <div className="flex h-full items-center justify-center px-8 text-center text-sm text-slate-500">
+          <div className="flex h-full items-center justify-center px-8 text-center text-sm text-[var(--foreground-muted)]">
             {loading
               ? null
               : error
@@ -51,27 +79,48 @@ export default function PreviewPane({
           </div>
         )}
 
+        {/* ── Premium loading indicator ── */}
         {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-950/50">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-slate-500 border-t-slate-100" />
+          <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-deep)]/60 backdrop-blur-sm">
+            <div className="relative flex items-center justify-center">
+              <div className="absolute h-12 w-12 rounded-full pulse-ring bg-[var(--accent)]/20" />
+              <div className="h-10 w-10 spin-smooth rounded-full border-2 border-[var(--accent)]/20 border-t-[var(--accent)]" />
+            </div>
           </div>
         )}
       </div>
 
-      <div className="flex h-5 w-full max-w-xl items-center justify-between text-xs text-slate-400">
-        {error ? (
-          <span className="truncate text-red-400" title={error}>
-            {error}
-          </span>
-        ) : (
-          <>
-            <span>{geographyName ?? ""}</span>
-            <span>
-              {riverCount !== null
-                ? `${riverCount.toLocaleString()} river features`
-                : ""}
+      {/* ── Status & Actions ── */}
+      <div className="flex w-full max-w-xl items-center justify-between text-xs text-[var(--foreground-muted)]">
+        <div className="flex-1 truncate">
+          {error ? (
+            <span className="text-red-400" title={error}>
+              {error}
             </span>
-          </>
+          ) : (
+            <span>
+              {geographyName ?? ""}
+              {geographyName && riverCount !== null ? " • " : ""}
+              {riverCount !== null ? `${riverCount.toLocaleString()} features` : ""}
+            </span>
+          )}
+        </div>
+        
+        {svg && !error && (
+          <button
+            onClick={onDownload}
+            disabled={isDownloading || exportDisabled}
+            className="btn-primary py-2 px-6 ml-4"
+          >
+            {isDownloading ? (
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 spin-smooth rounded-full border-2 border-white/20 border-t-white" />
+                <span>Exporting...</span>
+              </div>
+            ) : (
+              "Download"
+            )}
+          </button>
         )}
       </div>
     </div>
