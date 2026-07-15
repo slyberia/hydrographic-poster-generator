@@ -393,10 +393,10 @@ export default function ControlPanel({
             let tokens: Record<string, string> = {};
             if (settings.style?.mode === "flag") {
                 const currentFlag = presets?.flags.find(p => p.id === settings.style?.preset_id);
-                tokens = currentFlag?.variants[settings.style?.variant || "light"];
+                tokens = (currentFlag?.variants[settings.style?.variant || "light"] as unknown as Record<string, string>) || {};
             } else {
                 const currentPalette = presets?.palette.find(p => p.id === settings.style?.preset_id);
-                tokens = currentPalette?.tokens;
+                tokens = (currentPalette?.tokens as unknown as Record<string, string>) || {};
             }
             
             const custom = settings.style?.overrides || {};

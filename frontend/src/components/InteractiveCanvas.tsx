@@ -1,16 +1,12 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 
-export interface Transform {
-  x: number;
-  y: number;
-  scale: number;
-}
+import { ElementOffset, LayoutOverrides } from "@/lib/types";
 
 export interface InteractiveCanvasProps {
   svg: string;
-  transforms: Record<string, Transform>;
-  onTransformsChange: (transforms: Record<string, Transform>) => void;
+  transforms: LayoutOverrides;
+  onTransformsChange: (transforms: LayoutOverrides) => void;
   onReset: () => void;
 }
 
@@ -62,7 +58,8 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
       
       if (dx !== 0 || dy !== 0) {
         e.preventDefault();
-        const currentT = transformsRef.current[target.id] || { x: 0, y: 0, scale: 1 };
+        const key = target.id as keyof LayoutOverrides;
+        const currentT = transformsRef.current[key] || { x: 0, y: 0 };
         let newX = currentT.x + dx;
         let newY = currentT.y + dy;
         newX = Math.max(-3600, Math.min(3600, newX));
@@ -118,7 +115,8 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
         dragStartEvent = e;
         isDragging = false;
         
-        const currentT = transformsRef.current[matchedId] || { x: 0, y: 0, scale: 1 };
+        const key = matchedId as keyof LayoutOverrides;
+        const currentT = transformsRef.current[key] || { x: 0, y: 0 };
         startTx = currentT.x;
         startTy = currentT.y;
         
@@ -191,7 +189,8 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
         newX = Math.max(-3600, Math.min(3600, newX));
         newY = Math.max(-5400, Math.min(5400, newY));
 
-        const currentT = transformsRef.current[draggingId] || { x: 0, y: 0, scale: 1 };
+        const key = draggingId as keyof LayoutOverrides;
+        const currentT = transformsRef.current[key] || { x: 0, y: 0 };
         
         onTransformsChangeRef.current({
           ...transformsRef.current,
