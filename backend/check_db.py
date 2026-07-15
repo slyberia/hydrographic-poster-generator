@@ -12,7 +12,7 @@ async def main():
 
     print("Connecting to Supabase...")
     try:
-        conn = await asyncpg.connect(db_url)
+        conn = await asyncpg.connect(db_url, statement_cache_size=0)
     except Exception as e:
         print(f"Failed to connect: {e}")
         return

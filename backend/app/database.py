@@ -33,6 +33,7 @@ class Database:
             min_size=2,
             max_size=10,
             timeout=10,
+            statement_cache_size=0,
         )
         logger.info("Database connected.")
 
