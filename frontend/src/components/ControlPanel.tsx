@@ -26,6 +26,10 @@ export interface PosterSettings {
   design_asset_mode: boolean;
   show_legend: boolean;
   show_metadata: boolean;
+  schema_version: 2;
+  metadata_options: import("@/lib/api").MetadataOptions;
+  typography_overrides: import("@/lib/api").TypographyOverrides;
+  layout_overrides: import("@/lib/api").LayoutOverrides;
 }
 
 export interface ExportSettings {

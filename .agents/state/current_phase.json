@@ -1,22 +1,35 @@
 {
   "schema_version": 1,
-  "phase_id": "phase-1-export-hotfix",
-  "phase_name": "Phase 1: Export Hotfix",
+  "phase_id": "phase-2a-contracts-state",
+  "phase_name": "Phase 2A: Contracts, Normalization & State Migration",
   "status": "approved",
   "approved_by_human": true,
   "approval_reference": "current_session",
-  "branch": "fix/export-manifest-v2",
-  "baseline_commit": "cee3054ed05c92522b9af4a79e074df17febad7b",
+  "branch": "feature/layout-metadata-typography-v2",
+  "baseline_commit": "5eae3caf5cfc323e37dbcc5187a37f538c9ce910",
   "allowed_paths": [
-    "backend/app/routers/export.py",
-    "backend/app/models/export_models.py",
-    "backend/tests/**",
+    "backend/app/models/render_models.py",
+    "backend/app/models/metadata_models.py",
+    "backend/app/models/typography_models.py",
+    "backend/app/models/layout_models.py",
+    "backend/app/services/rules_service.py",
+    "backend/app/services/svg_renderer.py",
+    "backend/app/services/metadata_resolver.py",
+    "backend/app/services/typography_resolver.py",
+    "backend/app/services/layout_resolver.py",
+    "frontend/src/lib/api.ts",
+    "frontend/src/lib/state_migration.ts",
+    "frontend/src/components/ControlPanel.tsx",
+    "frontend/src/app/studio/page.tsx",
+    "backend/tests/test_phase2a_baseline.py",
+    "backend/tests/test_render_models.py",
     "scratch/**"
   ],
   "excluded_paths": [],
   "scope_exempt_paths": [
     ".agents/state/**",
-    ".agents/config/**"
+    ".agents/config/**",
+    ".agents/scripts/**"
   ],
   "approved_operations": [
     "read",
@@ -30,13 +43,17 @@
     "merge",
     "force_push"
   ],
-  "verification_commands_file": ".agents/config/verification_commands.json",
-  "approved_baseline_file": ".agents/state/baselines/phase-1-export-hotfix/baseline_approved.json",
+  "verification_commands_file": ".agents/config/verification_commands_phase2a.json",
+  "approved_baseline_file": ".agents/state/baselines/phase-2a-contracts-state/baseline_approved.json",
   "protected_branches": [
     "main",
     "master"
   ],
   "known_preexisting_changes": [
-    ".agents/state/current_phase.json"
+    ".agents/state/current_phase.json",
+    ".agents/config/verification_commands_phase2a.json",
+    ".agents/state/baselines/**",
+    ".agents/state/verifications/**",
+    "backend/tests/test_phase2a_baseline.py"
   ]
 }

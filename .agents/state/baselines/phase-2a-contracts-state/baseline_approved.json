@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "phase-2a-contracts-state",
+  "branch": "feature/layout-metadata-typography-v2",
+  "commit": "5eae3caf5cfc323e37dbcc5187a37f538c9ce910",
+  "generated_at": "2026-07-15T19:08:44.724557+00:00",
+  "commands_file": ".agents\\config\\verification_commands_phase2a.json",
+  "commands": [
+    {
+      "name": "phase2a_contract_tests",
+      "cwd": ".",
+      "command": [
+        "python",
+        "backend/tests/test_phase2a_baseline.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.4,
+      "stdout_file": ".agents\\state\\baselines\\phase-2a-contracts-state\\phase2a_contract_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\phase-2a-contracts-state\\phase2a_contract_tests.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    }
+  ],
+  "test_cases": [],
+  "notes": "Auto-approved due to zero failures."
+}

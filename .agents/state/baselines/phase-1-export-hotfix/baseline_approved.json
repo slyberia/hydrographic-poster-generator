@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "phase-1-export-hotfix",
+  "branch": "fix/export-manifest-v2",
+  "commit": "cee3054ed05c92522b9af4a79e074df17febad7b",
+  "generated_at": "2026-07-15T18:16:39.880032+00:00",
+  "commands_file": ".agents/config/verification_commands.json",
+  "commands": [
+    {
+      "name": "isolated_export_test",
+      "cwd": ".",
+      "command": [
+        "python",
+        "scratch/test_phase0_baseline.py"
+      ],
+      "exit_code": 2,
+      "duration_seconds": 0.026,
+      "stdout_file": ".agents/state/baselines/phase-1-export-hotfix/isolated_export_test.stdout.txt",
+      "stderr_file": ".agents/state/baselines/phase-1-export-hotfix/isolated_export_test.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "known_preexisting"
+    }
+  ],
+  "test_cases": [],
+  "notes": "User reviewed and confirmed that this ValidationError is the intended defect to resolve."
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-15T18:25:57.537693+00:00",
+  "phase_id": "phase-1-export-hotfix",
+  "baseline_commit": "cee3054ed05c92522b9af4a79e074df17febad7b",
+  "approved_baseline_file": ".agents\\state\\baselines\\phase-1-export-hotfix\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands.json",
+    ".agents/state/baselines/phase-1-export-hotfix/baseline_approved.json",
+    ".agents/state/baselines/phase-1-export-hotfix/baseline_unapproved.json",
+    ".agents/state/baselines/phase-1-export-hotfix/baseline_unapproved.md",
+    ".agents/state/baselines/phase-1-export-hotfix/isolated_export_test.stderr.txt",
+    ".agents/state/baselines/phase-1-export-hotfix/isolated_export_test.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/phase-1-export-hotfix/isolated_export_test.stderr.txt",
+    ".agents/state/verifications/phase-1-export-hotfix/isolated_export_test.stdout.txt",
+    ".agents/state/verifications/phase-1-export-hotfix/post_edit_verification.json",
+    ".agents/state/verifications/phase-1-export-hotfix/post_edit_verification.md",
+    "backend/app/routers/export.py"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "isolated_export_test",
+      "command": [
+        "python",
+        "C:/Users/kyleg/.gemini/antigravity/brain/92ea24e5-873d-4cab-a65b-b43101e60182/scratch/test_phase0_baseline.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 0.177,
+      "stdout_file": ".agents\\state\\verifications\\phase-1-export-hotfix\\isolated_export_test.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\phase-1-export-hotfix\\isolated_export_test.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

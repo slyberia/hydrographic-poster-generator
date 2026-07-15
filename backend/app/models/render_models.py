@@ -2,6 +2,9 @@ from typing import Dict, Optional, Any
 from pydantic import BaseModel, Field, model_validator
 
 from app.models.style_models import StyleSelection
+from app.models.metadata_models import MetadataOptions
+from app.models.typography_models import TypographyOverrides
+from app.models.layout_models import LayoutOverrides
 
 class RenderRequest(BaseModel):
     geography_id: str
@@ -16,7 +19,10 @@ class RenderRequest(BaseModel):
     show_legend: bool = True
     show_metadata: bool = True
     custom_colors: Optional[Dict[str, str]] = None  # Deprecated legacy field
-    element_transforms: Optional[Dict[str, Dict[str, float]]] = None
+    element_transforms: Optional[Dict[str, Dict[str, float]]] = None  # Legacy layout field
+    metadata_options: Optional[MetadataOptions] = None
+    typography_overrides: Optional[TypographyOverrides] = None
+    layout_overrides: Optional[LayoutOverrides] = None
 
     @model_validator(mode="before")
     @classmethod

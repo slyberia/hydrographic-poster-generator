@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "phase2a_contract_tests",
+      "command": ["python", "backend/tests/test_phase2a_baseline.py"],
+      "enabled": true
+    }
+  ],
+  "note": "Phase 2A baseline tests for legacy contract compatibility."
+}

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-15T19:09:25.498980+00:00",
+  "phase_id": "phase-2a-contracts-state",
+  "baseline_commit": "5eae3caf5cfc323e37dbcc5187a37f538c9ce910",
+  "approved_baseline_file": ".agents\\state\\baselines\\phase-2a-contracts-state\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_phase2a.json",
+    ".agents/scripts/baseline_test.py",
+    ".agents/state/baselines/phase-1-export-hotfix/baseline_approved.json",
+    ".agents/state/baselines/phase-1-export-hotfix/baseline_unapproved.json",
+    ".agents/state/baselines/phase-1-export-hotfix/baseline_unapproved.md",
+    ".agents/state/baselines/phase-1-export-hotfix/isolated_export_test.stderr.txt",
+    ".agents/state/baselines/phase-1-export-hotfix/isolated_export_test.stdout.txt",
+    ".agents/state/baselines/phase-2a-contracts-state/baseline_approved.json",
+    ".agents/state/baselines/phase-2a-contracts-state/baseline_approved.md",
+    ".agents/state/baselines/phase-2a-contracts-state/baseline_unapproved.json",
+    ".agents/state/baselines/phase-2a-contracts-state/baseline_unapproved.md",
+    ".agents/state/baselines/phase-2a-contracts-state/phase2a_contract_tests.stderr.txt",
+    ".agents/state/baselines/phase-2a-contracts-state/phase2a_contract_tests.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/phase-1-export-hotfix/isolated_export_test.stderr.txt",
+    ".agents/state/verifications/phase-1-export-hotfix/isolated_export_test.stdout.txt",
+    ".agents/state/verifications/phase-1-export-hotfix/post_edit_verification.json",
+    ".agents/state/verifications/phase-1-export-hotfix/post_edit_verification.md",
+    ".agents/state/verifications/phase-2a-contracts-state/phase2a_contract_tests.stderr.txt",
+    ".agents/state/verifications/phase-2a-contracts-state/phase2a_contract_tests.stdout.txt",
+    ".agents/state/verifications/phase-2a-contracts-state/post_edit_verification.json",
+    ".agents/state/verifications/phase-2a-contracts-state/post_edit_verification.md",
+    "backend/app/models/layout_models.py",
+    "backend/app/models/metadata_models.py",
+    "backend/app/models/render_models.py",
+    "backend/app/models/typography_models.py",
+    "backend/app/services/layout_resolver.py",
+    "backend/app/services/metadata_resolver.py",
+    "backend/app/services/svg_renderer.py",
+    "backend/app/services/typography_resolver.py",
+    "backend/tests/test_phase2a_baseline.py",
+    "frontend/src/app/studio/page.tsx",
+    "frontend/src/components/ControlPanel.tsx",
+    "frontend/src/lib/api.ts",
+    "frontend/src/lib/state_migration.ts"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "phase2a_contract_tests",
+      "command": [
+        "python",
+        "backend/tests/test_phase2a_baseline.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 0.185,
+      "stdout_file": ".agents\\state\\verifications\\phase-2a-contracts-state\\phase2a_contract_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\phase-2a-contracts-state\\phase2a_contract_tests.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

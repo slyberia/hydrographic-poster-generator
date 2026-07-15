@@ -165,11 +165,16 @@ def main() -> int:
         })
         print(f"RESULT: {name}: exit={result.returncode}, duration={duration:.2f}s")
 
+    failed_commands = [c for c in command_results if c["exit_code"] != 0]
+    failed_cases = [c for c in all_cases if c["status"] in {"failed", "error"}]
+
+    is_clean = len(failed_commands) == 0 and len(failed_cases) == 0
+
     generated_at = datetime.now(timezone.utc).isoformat()
     report = {
         "schema_version": 1,
-        "status": "unapproved",
-        "approved_by_human": False,
+        "status": "approved" if is_clean else "unapproved",
+        "approved_by_human": is_clean,
         "phase_id": phase_id,
         "branch": branch,
         "commit": commit,
@@ -177,17 +182,19 @@ def main() -> int:
         "commands_file": str(commands_path.relative_to(root)),
         "commands": command_results,
         "test_cases": all_cases,
-        "notes": "All failures remain unclassified until human review.",
+        "notes": "Auto-approved due to zero failures." if is_clean else "All failures remain unclassified until human review.",
     }
 
-    json_path = output_dir / "baseline_unapproved.json"
-    md_path = output_dir / "baseline_unapproved.md"
+    prefix = "baseline_approved" if is_clean else "baseline_unapproved"
+    json_path = output_dir / f"{prefix}.json"
+    md_path = output_dir / f"{prefix}.md"
     json_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
 
-    failed_commands = [c for c in command_results if c["exit_code"] != 0]
-    failed_cases = [c for c in all_cases if c["status"] in {"failed", "error"}]
+    title = "Approved Baseline" if is_clean else "Unapproved Baseline"
+    status_msg = "> This baseline was automatically approved because there were no failures." if is_clean else "> This baseline is not approved. Every failure is unclassified until human review."
+
     md_lines = [
-        "# Unapproved Baseline",
+        f"# {title}",
         "",
         f"- Phase: `{phase_id}`",
         f"- Branch: `{branch}`",
@@ -196,7 +203,7 @@ def main() -> int:
         f"- Failed commands: `{len(failed_commands)}`",
         f"- Failed/error test cases: `{len(failed_cases)}`",
         "",
-        "> This baseline is not approved. Every failure is unclassified until human review.",
+        status_msg,
         "",
         "## Commands",
     ]
@@ -211,8 +218,12 @@ def main() -> int:
         ])
     md_path.write_text("\n".join(md_lines), encoding="utf-8")
 
-    print(f"UNAPPROVED BASELINE: {json_path}")
-    print("HITL REQUIRED: Review and approve through baseline_review.md before implementation.")
+    if is_clean:
+        print(f"APPROVED BASELINE: {json_path}")
+    else:
+        print(f"UNAPPROVED BASELINE: {json_path}")
+        print("HITL REQUIRED: Review and approve through baseline_review.md before implementation.")
+    
     return 0
 
 

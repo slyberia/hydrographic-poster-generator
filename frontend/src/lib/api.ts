@@ -99,6 +99,40 @@ export interface StyleSelection {
   overrides?: Record<string, string>;
 }
 
+// ------------------------------------------------------------ overrides
+
+export interface MetadataOptions {
+  show_title: boolean;
+  show_subtitle: boolean;
+  show_legend: boolean;
+  show_north_arrow: boolean;
+  show_scale_bar: boolean;
+  show_data_credits: boolean;
+}
+
+export interface TypographyOverrides {
+  title_font?: string;
+  title_weight?: string;
+  title_tracking?: string;
+  subtitle_font?: string;
+  subtitle_weight?: string;
+  subtitle_tracking?: string;
+}
+
+export interface ElementTransform {
+  x: number;
+  y: number;
+  scale: number;
+}
+
+export interface LayoutOverrides {
+  rivers?: ElementTransform;
+  title_block?: ElementTransform;
+  legend?: ElementTransform;
+  metadata?: ElementTransform;
+  north_arrow?: ElementTransform;
+}
+
 // ------------------------------------------------------------ render / export
 
 export interface RenderRequest {
@@ -114,7 +148,10 @@ export interface RenderRequest {
   show_legend: boolean;
   show_metadata: boolean;
   custom_colors?: Record<string, string>; // legacy
-  element_transforms?: Record<string, { x: number; y: number; scale: number }>;
+  element_transforms?: Record<string, { x: number; y: number; scale: number }>; // legacy
+  metadata_options?: MetadataOptions;
+  typography_overrides?: TypographyOverrides;
+  layout_overrides?: LayoutOverrides;
 }
 
 export type ExportFormat = "svg" | "png" | "pdf";

@@ -17,6 +17,7 @@ import {
   type PresetsResponse,
 } from "@/lib/api";
 import { evaluateQA, hasBlockingIssue } from "@/lib/qa";
+import { migratePosterSettings } from "@/lib/state_migration";
 
 const PREVIEW_DEBOUNCE_MS = 500;
 
@@ -35,6 +36,17 @@ const DEFAULT_SETTINGS: PosterSettings = {
   design_asset_mode: false,
   show_legend: true,
   show_metadata: true,
+  schema_version: 2,
+  metadata_options: {
+    show_title: true,
+    show_subtitle: true,
+    show_legend: true,
+    show_north_arrow: true,
+    show_scale_bar: true,
+    show_data_credits: true,
+  },
+  typography_overrides: {},
+  layout_overrides: {},
 };
 
 const DEFAULT_EXPORT: ExportSettings = {
@@ -49,7 +61,19 @@ export default function Page() {
   const [presets, setPresets] = useState<PresetsResponse | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
 
-  const [settings, setSettings] = useState<PosterSettings>(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState<PosterSettings>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("hydrorivers_settings");
+        if (saved) {
+          return migratePosterSettings(JSON.parse(saved)) as unknown as PosterSettings;
+        }
+      } catch (err) {
+        console.warn("Failed to load settings", err);
+      }
+    }
+    return DEFAULT_SETTINGS as unknown as PosterSettings;
+  });
   const [exportSettings, setExportSettings] = useState<ExportSettings>(DEFAULT_EXPORT);
   const [transforms, setTransforms] = useState<Record<string, { x: number; y: number; scale: number }>>({});
 
@@ -119,6 +143,13 @@ export default function Page() {
     }, PREVIEW_DEBOUNCE_MS);
 
     return () => clearTimeout(timer);
+  }, [settings]);
+
+  // Persist settings
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("hydrorivers_settings", JSON.stringify(settings));
+    }
   }, [settings]);
 
   const handleSettingsChange = (patch: Partial<PosterSettings>) => {

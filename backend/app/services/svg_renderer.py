@@ -16,6 +16,9 @@ from app.models.clip_models import ClipResult
 from app.models.render_models import RenderRequest
 from app.services.coordinate_projector import CoordinateProjector
 from app.services.rules_service import rules_service
+from app.services.typography_resolver import resolve_typography
+from app.services.metadata_resolver import resolve_metadata
+from app.services.layout_resolver import resolve_layout
 
 DISPLAY_CLASSES = ["major", "primary", "secondary", "minor", "headwater"]
 
@@ -49,7 +52,11 @@ class SVGRenderer:
         self.tokens.setdefault("scale_bar", self.tokens["text_secondary"])
         self.tokens.setdefault("metadata", self.tokens["text_secondary"])
 
-        self.typography = rules_service.get_typography_preset(request.typography)
+        preset_typography = rules_service.get_typography_preset(request.typography)
+        self.typography = resolve_typography(preset_typography, request.typography_overrides)
+        
+        self.metadata = resolve_metadata(request.show_metadata, request.show_legend, request.metadata_options)
+        self.layout = resolve_layout(request.element_transforms, request.layout_overrides)
 
         if request.design_asset_mode:
             m = rc.ASSET_MARGIN_F * min(self.canvas_w, self.canvas_h)
@@ -79,11 +86,13 @@ class SVGRenderer:
             )
         parts.append(self._render_rivers(clip_result, projector))
         if not self.request.design_asset_mode:
-            parts.append(self._render_title_block())
-            parts.append(self._render_north_arrow())
-            if self.request.show_legend:
+            if self.metadata.show_title or self.metadata.show_subtitle:
+                parts.append(self._render_title_block())
+            if self.metadata.show_north_arrow:
+                parts.append(self._render_north_arrow())
+            if self.metadata.show_legend:
                 parts.append(self._render_legend(clip_result))
-            if self.request.show_metadata:
+            if self.metadata.show_scale_bar or self.metadata.show_data_credits:
                 parts.append(self._render_metadata_and_scale(projector, clip_result))
         parts.append("</svg>")
         return "\n".join(p for p in parts if p)
@@ -91,17 +100,12 @@ class SVGRenderer:
     # ------------------------------------------------------------------ #
 
     def _get_transform(self, element_id: str) -> str:
-        if not self.request.element_transforms:
-            return ""
-        t = self.request.element_transforms.get(element_id)
+        t = getattr(self.layout, element_id, None)
         if not t:
             return ""
-        x = t.get("x", 0)
-        y = t.get("y", 0)
-        s = t.get("scale", 1.0)
-        if x == 0 and y == 0 and s == 1.0:
+        if t.x == 0.0 and t.y == 0.0 and t.scale == 1.0:
             return ""
-        return f' transform="translate({x:g},{y:g}) scale({s:g})"'
+        return f' transform="translate({t.x:g},{t.y:g}) scale({t.scale:g})"'
 
     def _svg_open(self) -> str:
         # Root element contract (§14): viewBox + explicit width/height,
@@ -196,13 +200,14 @@ class SVGRenderer:
         x = rc.TITLE_BLOCK_X * self.s_style
         title_y = (rc.TITLE_BLOCK_X + rc.TITLE_SIZE) * self.s_style
         subtitle_y = title_y + rc.SUBTITLE_SIZE * 1.8 * self.s_style
-        out = []
-        if self.request.title:
-            out.append(f'<text class="title"{self._get_transform("title")} x="{x:g}" y="{title_y:g}">'
+        out = [f'<g id="title_block"{self._get_transform("title_block")}>']
+        if self.metadata.show_title and self.request.title:
+            out.append(f'<text class="title" x="{x:g}" y="{title_y:g}">'
                        f'{escape(self.request.title)}</text>')
-        if self.request.subtitle:
-            out.append(f'<text class="subtitle"{self._get_transform("subtitle")} x="{x:g}" y="{subtitle_y:g}">'
+        if self.metadata.show_subtitle and self.request.subtitle:
+            out.append(f'<text class="subtitle" x="{x:g}" y="{subtitle_y:g}">'
                        f'{escape(self.request.subtitle)}</text>')
+        out.append('</g>')
         return "".join(out)
 
     def _render_north_arrow(self) -> str:
@@ -210,11 +215,14 @@ class SVGRenderer:
         cy = 350 * self.s_style
         s = 60 * self.s_style
         return (
-            f'<g id="north-arrow"{self._get_transform("north-arrow")} fill="{self.tokens["text_secondary"]}">'
-            f'<polygon points="{cx:g},{cy - s:g} {cx - s * 0.5:g},{cy + s * 0.6:g} '
-            f'{cx:g},{cy + s * 0.2:g} {cx + s * 0.5:g},{cy + s * 0.6:g}"/>'
-            f'<text class="label" x="{cx:g}" y="{cy + s * 1.6:g}" '
-            f'text-anchor="middle">N</text></g>'
+            f'<g id="north_arrow"{self._get_transform("north_arrow")}>'
+            f'<path d="M {cx:g} {cy - s * 2:g} L {cx - s * 0.8:g} {cy + s * 1.5:g} '
+            f'L {cx:g} {cy + s * 0.8:g} Z" fill="{self.tokens["text_secondary"]}"/>'
+            f'<path d="M {cx:g} {cy - s * 2:g} L {cx + s * 0.8:g} {cy + s * 1.5:g} '
+            f'L {cx:g} {cy + s * 0.8:g} Z" fill="{self.tokens["background"]}"/>'
+            f'<text x="{cx:g}" y="{cy - s * 2.5:g}" class="label" '
+            f'text-anchor="middle">N</text>'
+            f'</g>'
         )
 
     def _render_legend(self, clip_result: ClipResult) -> str:
@@ -245,25 +253,25 @@ class SVGRenderer:
         y0 = self.canvas_h - 700 * self.s_style
         step = 70 * self.s_style
 
-        lines: List[str] = [
-            f"Data source: {rc.DATA_SOURCE}",
-            f"Boundary source: {rc.BOUNDARY_SOURCE}",
-            f"Projection: {rc.PROJECTION_LABEL}",
-            f"Generated: {date.today().isoformat()}",
-        ]
-        
-        if clip_result.metadata.distortion_warning:
-            lines.append("Scale varies across map")
+        lines: List[str] = []
+        if self.metadata.show_data_credits:
+            lines.extend([
+                f"Data source: {rc.DATA_SOURCE}",
+                f"Boundary source: {rc.BOUNDARY_SOURCE}",
+                f"Projection: {rc.PROJECTION_LABEL}",
+                f"Generated: {date.today().isoformat()}",
+            ])
             
-        if clip_result.metadata.confidence_level == "low":
-            lines.append("Warning: High volume of repaired data")
+            if clip_result.metadata.distortion_warning:
+                lines.append("Scale varies across map")
+                
+            if clip_result.metadata.confidence_level == "low":
+                lines.append("Warning: High volume of repaired data")
 
         scale_bar_svg = ""
 
         # Scale bar honesty rule (§6.2): omit when distortion spread > 1.20.
-        if not clip_result.metadata.scale_bar_valid:
-            pass # Scale bar hidden, warning already added to metadata block
-        else:
+        if self.metadata.show_scale_bar and clip_result.metadata.scale_bar_valid:
             # ground_meters_per_px is already in actual-canvas px (§6.1);
             # only the target bar length scales with the canvas.
             m_per_px = projector.ground_meters_per_px()
@@ -274,7 +282,6 @@ class SVGRenderer:
                          else f"{nice_m:g} m") + " (approx.)"
                 bar_y = y0 - 120 * self.s_style
                 scale_bar_svg = (
-                    f'<g id="scale-bar"{self._get_transform("scale-bar")}>'
                     f'<line class="scalebar" x1="{right - bar_px:g}" y1="{bar_y:g}" '
                     f'x2="{right:g}" y2="{bar_y:g}"/>'
                     f'<line class="scalebar" x1="{right - bar_px:g}" '
@@ -285,7 +292,6 @@ class SVGRenderer:
                     f'y2="{bar_y + 15 * self.s_style:g}"/>'
                     f'<text class="label" x="{right:g}" '
                     f'y="{bar_y - 30 * self.s_style:g}" text-anchor="end">{label}</text>'
-                    f'</g>'
                 )
 
         text_rows = "".join(
@@ -293,4 +299,4 @@ class SVGRenderer:
             f'text-anchor="end">{escape(line)}</text>'
             for i, line in enumerate(lines)
         )
-        return f'{scale_bar_svg}<g id="metadata"{self._get_transform("metadata")}>{text_rows}</g>'
+        return f'<g id="metadata"{self._get_transform("metadata")}>{scale_bar_svg}{text_rows}</g>'
