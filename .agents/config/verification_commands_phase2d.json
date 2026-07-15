@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "phase2d_svg_renderer",
+      "command": ["python", "-m", "pytest", "backend/tests/test_svg_renderer.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "phase2d_layout_resolver",
+      "command": ["python", "-m", "pytest", "backend/tests/test_layout_resolver.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "phase2d_frontend_lint",
+      "command": ["npm.cmd", "run", "lint", "--", "-f", "junit", "-o", "lint-results.xml"],
+      "cwd": "frontend",
+      "enabled": true,
+      "junit_xml": "frontend/lint-results.xml"
+    }
+  ],
+  "note": "Phase 2D baseline tests for backend layout rendering and frontend UI."
+}

@@ -12,6 +12,8 @@ import {
   type StyleSelection,
 } from "@/lib/api";
 import type { QAItem } from "@/lib/qa";
+import { FEATURE_FLAGS } from "@/lib/features";
+import { Tooltip } from "@/components/Tooltip";
 import QAChecklist from "./QAChecklist";
 import ColorPickerPopover from "./ColorPickerPopover";
 
@@ -281,7 +283,7 @@ export default function ControlPanel({
                   });
                 } else {
                   // Standard mode
-                  const [mode, presetId] = val.split(":");
+                  const [, presetId] = val.split(":");
                   onSettingsChange({
                     style: {
                       schema_version: 2,
@@ -351,23 +353,25 @@ export default function ControlPanel({
               </select>
             </div>
           )}
-          <div>
-            <label htmlFor="typography" className="glass-label">
-              Typography
-            </label>
-            <select
-              id="typography"
-              className="glass-select"
-              value={settings.typography}
-              onChange={(e) => onSettingsChange({ typography: e.target.value })}
-            >
-              {(presets?.typography ?? []).map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {FEATURE_FLAGS.typography_customization && (
+            <div>
+              <label htmlFor="typography" className="glass-label">
+                Typography
+              </label>
+              <select
+                id="typography"
+                className="glass-select"
+                value={settings.typography}
+                onChange={(e) => onSettingsChange({ typography: e.target.value })}
+              >
+                {(presets?.typography ?? []).map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
       </section>
 
@@ -386,7 +390,7 @@ export default function ControlPanel({
         </div>
         <div className="space-y-0.5">
           {(() => {
-            let tokens: any = {};
+            let tokens: Record<string, string> = {};
             if (settings.style?.mode === "flag") {
                 const currentFlag = presets?.flags.find(p => p.id === settings.style?.preset_id);
                 tokens = currentFlag?.variants[settings.style?.variant || "light"];
@@ -503,47 +507,54 @@ export default function ControlPanel({
               Legend
             </span>
           </label>
-          <label className="flex items-center gap-2.5 cursor-pointer group">
-            <input
-              type="checkbox"
-              className="glass-checkbox"
-              checked={settings.show_metadata}
-              disabled={settings.design_asset_mode}
-              onChange={(e) =>
-                onSettingsChange({ show_metadata: e.target.checked })
-              }
-            />
-            <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
-              Metadata &amp; scale bar
-            </span>
-          </label>
-          <label className="flex items-center gap-2.5 cursor-pointer group">
-            <input
-              type="checkbox"
-              className="glass-checkbox"
-              checked={settings.design_asset_mode}
-              onChange={(e) =>
-                onSettingsChange({ design_asset_mode: e.target.checked })
-              }
-            />
-            <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
-              Design asset mode
-            </span>
-          </label>
+          {FEATURE_FLAGS.granular_metadata_controls && (
+            <label className="flex items-center gap-2.5 cursor-pointer group">
+              <input
+                type="checkbox"
+                className="glass-checkbox"
+                checked={settings.show_metadata}
+                disabled={settings.design_asset_mode}
+                onChange={(e) =>
+                  onSettingsChange({ show_metadata: e.target.checked })
+                }
+              />
+              <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
+                Metadata &amp; scale bar
+              </span>
+            </label>
+          )}
+          <Tooltip content="Disables titles and text for use as a base map">
+            <label className="flex items-center gap-2.5 cursor-pointer group">
+              <input
+                type="checkbox"
+                className="glass-checkbox"
+                checked={settings.design_asset_mode}
+                onChange={(e) =>
+                  onSettingsChange({ design_asset_mode: e.target.checked })
+                }
+              />
+              <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
+                Design asset mode
+              </span>
+            </label>
+          </Tooltip>
         </div>
       </section>
 
       {/* ── Layout ── */}
+      {FEATURE_FLAGS.manual_layout_editing && (
       <section className="animate-fade-in" style={{ animationDelay: "0.22s" }}>
         <div className="flex items-center justify-between mb-2.5">
           <h2 className="section-header !mb-0">Layout</h2>
           {Object.keys(settings.layout_overrides || {}).length > 0 && (
-            <button
-              onClick={() => onSettingsChange({ layout_overrides: {} })}
-              className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-[var(--foreground)] transition-colors"
-            >
-              Reset All
-            </button>
+            <Tooltip content="Reset all manual position overrides">
+              <button
+                onClick={() => onSettingsChange({ layout_overrides: {} })}
+                className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-[var(--foreground)] transition-colors"
+              >
+                Reset All
+              </button>
+            </Tooltip>
           )}
         </div>
         <div className="grid grid-cols-2 gap-2">
@@ -612,6 +623,7 @@ export default function ControlPanel({
           })}
         </div>
       </section>
+      )}
 
       {/* ── Export ── */}
       <section

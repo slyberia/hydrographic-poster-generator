@@ -1,27 +1,43 @@
 {
-  "phase_id": "phase_2c_layout_interaction",
-  "name": "Phase 2C: Layout & Interaction",
+  "schema_version": 1,
+  "phase_id": "phase-2d-ui-integration",
+  "phase_name": "Phase 2D: UI Rollout, Accessibility & Full Integration",
   "status": "approved",
   "approved_by_human": true,
-  "branch": "feature/phase-2c-layout-interaction",
-  "baseline_commit": "3c24840159c53fcaf548358f345a27e16943e204",
+  "baseline_commit": "8d79e7658c4022ed834e7acd898701e1251fbde3",
+  "branch": "feature/phase-2d-ui-integration",
   "allowed_paths": [
-    "backend/app/services/layout_resolver.py",
-    "backend/app/services/svg_renderer.py",
-    "backend/tests/test_layout_resolver.py",
-    "backend/tests/test_svg_renderer.py",
-    "frontend/src/components/InteractiveCanvas.tsx",
+    "frontend/src/app/studio/page.tsx",
+    "frontend/src/app/page.tsx",
+    "frontend/src/app/globals.css",
     "frontend/src/components/ControlPanel.tsx",
-    "frontend/src/lib/api.ts",
-    "frontend/src/app/studio/page.tsx"
+    "frontend/src/components/InteractiveCanvas.tsx",
+    "frontend/src/components/Tooltip.tsx",
+    "frontend/src/lib/features.ts",
+    "frontend/src/lib/state_migration.ts",
+    "frontend/package.json",
+    "frontend/package-lock.json"
+  ],
+  "excluded_paths": [],
+  "approved_operations": [
+    "frontend_ui_modification",
+    "accessibility_improvements",
+    "feature_flag_integration",
+    "state_migration_hardening"
   ],
   "prohibited_operations": [
     "cloud_run_deploy",
-    "database_migration"
+    "database_migration",
+    "backend_contract_redesign"
+  ],
+  "known_preexisting_changes": [
+    ".agents/state/current_phase.json",
+    ".agents/config/verification_commands_phase2d.json"
   ],
   "scope_exempt_paths": [
-    ".agents/*"
+    ".agents/*",
+    "frontend/lint-results.xml"
   ],
-  "verification_commands_file": ".agents/config/verification_commands_phase2c.json",
-  "approved_baseline_file": ".agents/state/baselines/phase_2c_layout_interaction/baseline_approved.json"
+  "verification_commands_file": ".agents/config/verification_commands_phase2d.json",
+  "approved_baseline_file": ".agents/state/baselines/phase-2d-ui-integration/baseline_approved.json"
 }

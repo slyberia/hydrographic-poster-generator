@@ -1,4 +1,4 @@
-import { PosterSettings } from "@/components/ControlPanel";
+
 import { MetadataOptions, TypographyOverrides, LayoutOverrides } from "./api";
 
 // The shape of settings inside ControlPanel before Phase 2A
@@ -6,7 +6,7 @@ export interface LegacyPosterSettings {
   geography_id: string;
   density_preset: string;
   classification_preset: string;
-  style?: any;
+  style?: Record<string, unknown>;
   palette?: string;
   typography: string;
   title: string;
@@ -24,22 +24,23 @@ export interface PosterSettingsV2 extends LegacyPosterSettings {
   layout_overrides: LayoutOverrides;
 }
 
-export function migratePosterSettings(saved: any): PosterSettingsV2 {
-  if (saved && saved.schema_version === 2) {
+export function migratePosterSettings(saved: unknown): PosterSettingsV2 {
+  if (saved && typeof saved === "object" && "schema_version" in saved && saved.schema_version === 2) {
     return saved as PosterSettingsV2;
   }
 
   // Construct default V2 shape from the legacy one
+  const legacy = (saved && typeof saved === "object") ? (saved as Record<string, unknown>) : {};
   return {
-    ...saved,
+    ...(legacy as unknown as LegacyPosterSettings),
     schema_version: 2,
     metadata_options: {
-      show_title: saved?.show_metadata ?? true,
-      show_subtitle: saved?.show_metadata ?? true,
-      show_legend: saved?.show_legend ?? true,
-      show_north_arrow: saved?.show_metadata ?? true,
-      show_scale_bar: saved?.show_metadata ?? true,
-      show_data_credits: saved?.show_metadata ?? true,
+      show_title: (legacy.show_metadata as boolean | undefined) ?? true,
+      show_subtitle: (legacy.show_metadata as boolean | undefined) ?? true,
+      show_legend: (legacy.show_legend as boolean | undefined) ?? true,
+      show_north_arrow: (legacy.show_metadata as boolean | undefined) ?? true,
+      show_scale_bar: (legacy.show_metadata as boolean | undefined) ?? true,
+      show_data_credits: (legacy.show_metadata as boolean | undefined) ?? true,
     },
     typography_overrides: {},
     layout_overrides: {},

@@ -44,12 +44,47 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
     const svgEl = container.querySelector("svg");
     if (!svgEl) return;
 
+    const KEY_INCREMENT = 10;
+    const KEY_INCREMENT_SHIFT = 50;
+
+    const handleElementKeyDown = (e: KeyboardEvent) => {
+      const target = e.currentTarget as Element;
+      if (!target.id || !DRAGGABLE_GROUPS.includes(target.id)) return;
+      
+      let dx = 0;
+      let dy = 0;
+      const step = e.shiftKey ? KEY_INCREMENT_SHIFT : KEY_INCREMENT;
+
+      if (e.key === "ArrowLeft") dx = -step;
+      else if (e.key === "ArrowRight") dx = step;
+      else if (e.key === "ArrowUp") dy = -step;
+      else if (e.key === "ArrowDown") dy = step;
+      
+      if (dx !== 0 || dy !== 0) {
+        e.preventDefault();
+        const currentT = transformsRef.current[target.id] || { x: 0, y: 0, scale: 1 };
+        let newX = currentT.x + dx;
+        let newY = currentT.y + dy;
+        newX = Math.max(-3600, Math.min(3600, newX));
+        newY = Math.max(-5400, Math.min(5400, newY));
+
+        onTransformsChangeRef.current({
+          ...transformsRef.current,
+          [target.id]: { ...currentT, x: newX, y: newY }
+        });
+      }
+    };
+
     // Apply cursor styles and touch-action to draggable groups
     DRAGGABLE_GROUPS.forEach(id => {
       const el = svgEl.querySelector(`#${id}`);
       if (el instanceof SVGElement) {
         el.style.cursor = "grab";
         el.style.touchAction = "none";
+        el.setAttribute("tabindex", "0");
+        el.setAttribute("role", "button");
+        el.setAttribute("aria-label", `Move ${id.replace("_", " ")}`);
+        el.addEventListener("keydown", handleElementKeyDown as EventListener);
       }
     });
 
@@ -223,6 +258,12 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
       svgEl.removeEventListener("pointerup", handlePointerUp as EventListener);
       svgEl.removeEventListener("pointercancel", handlePointerCancel as EventListener);
       window.removeEventListener("keydown", handleKeyDown);
+      DRAGGABLE_GROUPS.forEach(id => {
+        const el = svgEl.querySelector(`#${id}`);
+        if (el instanceof SVGElement) {
+          el.removeEventListener("keydown", handleElementKeyDown as EventListener);
+        }
+      });
     };
   }, [svg]);
 
