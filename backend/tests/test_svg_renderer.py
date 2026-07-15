@@ -62,7 +62,7 @@ def test_one_path_per_feature_with_classes():
 def test_poster_chrome_present():
     svg = render()
     for marker in ("Test Title", "Sub", 'id="legend"', 'id="metadata"',
-                   'id="north-arrow"', "Data source:", "Boundary source:",
+                   'id="north_arrow"', "Data source:", "Boundary source:",
                    "Projection:", "Generated:", "<rect"):
         assert marker in svg, f"missing {marker}"
 
@@ -78,7 +78,7 @@ def test_design_asset_mode_strips_chrome():
 def test_scale_bar_values_match_contract():
     svg = render()
     assert "200 km (approx.)" in svg  # contract §7 verified value
-    x1 = float(re.search(r'<g id="scale-bar"><line class="scalebar" x1="([\d.]+)"', svg).group(1))
+    x1 = float(re.search(r'<line class="scalebar" x1="([\d.]+)"', svg).group(1))
     x2 = 3300.0  # right anchor
     assert x2 - x1 == pytest.approx(354.3, abs=1.0)
 

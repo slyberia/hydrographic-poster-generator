@@ -533,6 +533,86 @@ export default function ControlPanel({
         </div>
       </section>
 
+      {/* ── Layout ── */}
+      <section className="animate-fade-in" style={{ animationDelay: "0.22s" }}>
+        <div className="flex items-center justify-between mb-2.5">
+          <h2 className="section-header !mb-0">Layout</h2>
+          {Object.keys(settings.layout_overrides || {}).length > 0 && (
+            <button
+              onClick={() => onSettingsChange({ layout_overrides: {} })}
+              className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-[var(--foreground)] transition-colors"
+            >
+              Reset All
+            </button>
+          )}
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {["title_block", "metadata", "legend", "north_arrow"].map((id) => {
+            const transform = settings.layout_overrides?.[id] || { x: 0, y: 0, scale: 1 };
+            const isActive = !!settings.layout_overrides?.[id];
+            
+            return (
+              <div key={id} className={`space-y-1.5 p-2 rounded-lg border transition-colors ${isActive ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/5 hover:border-white/10'}`}>
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] text-[var(--foreground)] capitalize font-medium">
+                    {id.replace("_", " ")}
+                  </label>
+                  {isActive && (
+                    <button
+                      onClick={() => {
+                        const newOverrides = { ...settings.layout_overrides };
+                        delete newOverrides[id];
+                        onSettingsChange({ layout_overrides: newOverrides });
+                      }}
+                      className="text-[9px] text-white/50 hover:text-white"
+                      title="Reset"
+                    >
+                      ↺
+                    </button>
+                  )}
+                </div>
+                <div className="flex gap-1.5">
+                  <div className="flex-1">
+                    <label className="text-[8px] text-white/40 uppercase block mb-0.5">X</label>
+                    <input 
+                      type="number" 
+                      className="glass-input !py-0.5 !px-1.5 !text-[10px]" 
+                      value={Math.round(transform.x)}
+                      min={-3600} max={3600}
+                      onChange={(e) => {
+                        onSettingsChange({
+                          layout_overrides: {
+                            ...settings.layout_overrides,
+                            [id]: { ...transform, x: Number(e.target.value) }
+                          }
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-[8px] text-white/40 uppercase block mb-0.5">Y</label>
+                    <input 
+                      type="number" 
+                      className="glass-input !py-0.5 !px-1.5 !text-[10px]" 
+                      value={Math.round(transform.y)}
+                      min={-5400} max={5400}
+                      onChange={(e) => {
+                        onSettingsChange({
+                          layout_overrides: {
+                            ...settings.layout_overrides,
+                            [id]: { ...transform, y: Number(e.target.value) }
+                          }
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
       {/* ── Export ── */}
       <section
         className="mt-auto border-t border-white/[0.06] pt-4 animate-fade-in"

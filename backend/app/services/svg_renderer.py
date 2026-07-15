@@ -99,13 +99,13 @@ class SVGRenderer:
 
     # ------------------------------------------------------------------ #
 
-    def _get_transform(self, element_id: str) -> str:
+    def _get_transform(self, element_id: str, cx: float, cy: float) -> str:
         t = getattr(self.layout, element_id, None)
         if not t:
             return ""
         if t.x == 0.0 and t.y == 0.0 and t.scale == 1.0:
             return ""
-        return f' transform="translate({t.x:g},{t.y:g}) scale({t.scale:g})"'
+        return f' transform="translate({cx:g}, {cy:g}) translate({t.x:g}, {t.y:g}) scale({t.scale:g}) translate({-cx:g}, {-cy:g})"'
 
     def _svg_open(self) -> str:
         # Root element contract (§14): viewBox + explicit width/height,
@@ -194,13 +194,17 @@ class SVGRenderer:
                 f'data-display-class="{cls}" '
                 f'd="{" ".join(subpaths)}"/>'
             )
-        return f'<g id="rivers"{self._get_transform("rivers")}>{"".join(paths)}</g>'
+        cx = self.canvas_w / 2.0
+        cy = self.canvas_h / 2.0
+        return f'<g id="rivers"{self._get_transform("rivers", cx, cy)}>{"".join(paths)}</g>'
 
     def _render_title_block(self) -> str:
         x = rc.TITLE_BLOCK_X * self.s_style
         title_y = (rc.TITLE_BLOCK_X + rc.TITLE_SIZE) * self.s_style
         subtitle_y = title_y + rc.SUBTITLE_SIZE * 1.8 * self.s_style
-        out = [f'<g id="title_block"{self._get_transform("title_block")}>']
+        cx = x + 300 * self.s_style
+        cy = title_y + (subtitle_y - title_y) / 2
+        out = [f'<g id="title_block"{self._get_transform("title_block", cx, cy)}>']
         if self.metadata.show_title and self.request.title:
             out.append(f'<text class="title" x="{x:g}" y="{title_y:g}">'
                        f'{escape(self.request.title)}</text>')
@@ -215,7 +219,7 @@ class SVGRenderer:
         cy = 350 * self.s_style
         s = 60 * self.s_style
         return (
-            f'<g id="north_arrow"{self._get_transform("north_arrow")}>'
+            f'<g id="north_arrow"{self._get_transform("north_arrow", cx, cy)}>'
             f'<path d="M {cx:g} {cy - s * 2:g} L {cx - s * 0.8:g} {cy + s * 1.5:g} '
             f'L {cx:g} {cy + s * 0.8:g} Z" fill="{self.tokens["text_secondary"]}"/>'
             f'<path d="M {cx:g} {cy - s * 2:g} L {cx + s * 0.8:g} {cy + s * 1.5:g} '
@@ -245,7 +249,9 @@ class SVGRenderer:
                 f'<text class="label" x="{x + 260 * self.s_style:g}" '
                 f'y="{y + 16 * self.s_style:g}">{cls.capitalize()}</text>'
             )
-        return f'<g id="legend"{self._get_transform("legend")}>{"".join(rows)}</g>'
+        cx = x + 150 * self.s_style
+        cy = y0 + (len(classes) * step) / 2
+        return f'<g id="legend"{self._get_transform("legend", cx, cy)}>{"".join(rows)}</g>'
 
 
     def _render_metadata_and_scale(self, projector: CoordinateProjector, clip_result: ClipResult) -> str:
@@ -299,4 +305,6 @@ class SVGRenderer:
             f'text-anchor="end">{escape(line)}</text>'
             for i, line in enumerate(lines)
         )
-        return f'<g id="metadata"{self._get_transform("metadata")}>{scale_bar_svg}{text_rows}</g>'
+        cx = right - 150 * self.s_style
+        cy = y0 + (len(lines) * step) / 2
+        return f'<g id="metadata"{self._get_transform("metadata", cx, cy)}>{scale_bar_svg}{text_rows}</g>'

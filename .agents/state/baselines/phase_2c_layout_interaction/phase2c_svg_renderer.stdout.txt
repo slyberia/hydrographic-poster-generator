@@ -1,0 +1,46 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\MORE AI STUFF\HydroRIVERS Image Generator
+plugins: anyio-4.12.1
+collecting ... collected 11 items
+
+backend/tests/test_svg_renderer.py::test_root_element_contract PASSED    [  9%]
+backend/tests/test_svg_renderer.py::test_one_path_per_feature_with_classes PASSED [ 18%]
+backend/tests/test_svg_renderer.py::test_poster_chrome_present FAILED    [ 27%]
+backend/tests/test_svg_renderer.py::test_design_asset_mode_strips_chrome PASSED [ 36%]
+backend/tests/test_svg_renderer.py::test_scale_bar_values_match_contract FAILED [ 45%]
+backend/tests/test_svg_renderer.py::test_scale_bar_omitted_for_tall_maps PASSED [ 54%]
+backend/tests/test_svg_renderer.py::test_empty_rivers_still_renders_frame PASSED [ 63%]
+backend/tests/test_svg_renderer.py::test_user_text_is_escaped PASSED     [ 72%]
+backend/tests/test_svg_renderer.py::test_missing_bbox_rejected PASSED    [ 81%]
+backend/tests/test_svg_renderer.py::test_svg_is_well_formed_xml PASSED   [ 90%]
+backend/tests/test_svg_renderer.py::test_unknown_presets_rejected PASSED [100%]
+
+================================== FAILURES ===================================
+_________________________ test_poster_chrome_present __________________________
+
+    def test_poster_chrome_present():
+        svg = render()
+        for marker in ("Test Title", "Sub", 'id="legend"', 'id="metadata"',
+                       'id="north-arrow"', "Data source:", "Boundary source:",
+                       "Projection:", "Generated:", "<rect"):
+>           assert marker in svg, f"missing {marker}"
+E           AssertionError: missing id="north-arrow"
+E           assert 'id="north-arrow"' in '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3600 5400" width="3600" height="5400">\n<style>@import url(\'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap\');path.river{fill:none;stroke-linecap:round;stroke-linejoin:round;}.major{stroke:#38BDF8;stroke-width:6;}.primary{stroke:#0EA5E9;stroke-width:4;}.secondary{stroke:#0284C7;stroke-width:2.5;}.minor{stroke:#0369A1;stroke-width:1.5;}.headwater{stroke:#075985;stroke-width:0.8;}.title{font-family:\'Inter\',sans-serif;font-weight:700;letter-spacing:0.05em;font-size:200px;fill:#F8FAFC;}.subtitle{font-family:\'Inter\',sans-serif;font-weight:400;letter-spacing:0.02em;font-size:90px;fill:#94A3B8;}.label{font-family:\'Inter\',sans-serif;font-size:48px;fill:#94A3B8;}.scalebar{stroke:#94A3B8;stroke-width:4;}</style>\n<rect width="3600" height="5400" fill="#0F172A"/>\n<g id="rivers"><path class="river major" data-river-id="" data-stream-order="" data-upstream-area="" data-length-km="" data-display-class="major" d="M1125,4450 L2000,2700 L2873.2,951.8"/><path class="river headwater" data-river-id="" data-stream-order="" data-upstream-area="" data-length-km="" data-display-class="headwater" d="M1...0 L 3252 440 L 3300 398 Z" fill="#94A3B8"/><path d="M 3300 230 L 3348 440 L 3300 398 Z" fill="#0F172A"/><text x="3300" y="200" class="label" text-anchor="middle">N</text></g>\n<g id="legend"><line x1="300" y1="4700" x2="500" y2="4700" stroke="#38BDF8" stroke-width="6" stroke-linecap="round"/><text class="label" x="560" y="4716">Major</text><line x1="300" y1="4790" x2="500" y2="4790" stroke="#075985" stroke-width="2" stroke-linecap="round"/><text class="label" x="560" y="4806">Headwater</text></g>\n<g id="metadata"><line class="scalebar" x1="2945.69" y1="4580" x2="3300" y2="4580"/><line class="scalebar" x1="2945.69" y1="4565" x2="2945.69" y2="4595"/><line class="scalebar" x1="3300" y1="4565" x2="3300" y2="4595"/><text class="label" x="3300" y="4550" text-anchor="end">200 km (approx.)</text><text class="label" x="3300" y="4700" text-anchor="end">Data source: HydroRIVERS v1.0 (WWF)</text><text class="label" x="3300" y="4770" text-anchor="end">Boundary source: geoBoundaries (CC BY 4.0)</text><text class="label" x="3300" y="4840" text-anchor="end">Projection: Web Mercator (EPSG:3857)</text><text class="label" x="3300" y="4910" text-anchor="end">Generated: 2026-07-15</text></g>\n</svg>'
+
+backend\tests\test_svg_renderer.py:67: AssertionError
+____________________ test_scale_bar_values_match_contract _____________________
+
+    def test_scale_bar_values_match_contract():
+        svg = render()
+        assert "200 km (approx.)" in svg  # contract §7 verified value
+>       x1 = float(re.search(r'<g id="scale-bar"><line class="scalebar" x1="([\d.]+)"', svg).group(1))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'group'
+
+backend\tests\test_svg_renderer.py:81: AttributeError
+=========================== short test summary info ===========================
+FAILED backend/tests/test_svg_renderer.py::test_poster_chrome_present - Asser...
+FAILED backend/tests/test_svg_renderer.py::test_scale_bar_values_match_contract
+========================= 2 failed, 9 passed in 0.53s =========================

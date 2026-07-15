@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "status": "unapproved",
+  "approved_by_human": false,
+  "phase_id": "phase_2c_layout_interaction",
+  "branch": "feature/phase-2c-layout-interaction",
+  "commit": "3c24840159c53fcaf548358f345a27e16943e204",
+  "generated_at": "2026-07-15T19:36:37.942422+00:00",
+  "commands_file": ".agents\\config\\verification_commands_phase2c.json",
+  "commands": [
+    {
+      "name": "phase2c_svg_renderer",
+      "cwd": ".",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_svg_renderer.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "duration_seconds": 2.303,
+      "stdout_file": ".agents\\state\\baselines\\phase_2c_layout_interaction\\phase2c_svg_renderer.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\phase_2c_layout_interaction\\phase2c_svg_renderer.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "unclassified"
+    }
+  ],
+  "test_cases": [],
+  "notes": "All failures remain unclassified until human review."
+}

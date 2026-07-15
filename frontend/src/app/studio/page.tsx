@@ -75,7 +75,6 @@ export default function Page() {
     return DEFAULT_SETTINGS as unknown as PosterSettings;
   });
   const [exportSettings, setExportSettings] = useState<ExportSettings>(DEFAULT_EXPORT);
-  const [transforms, setTransforms] = useState<Record<string, { x: number; y: number; scale: number }>>({});
 
   const [svg, setSvg] = useState<string | null>(null);
   const [riverCount, setRiverCount] = useState<number | null>(null);
@@ -205,7 +204,6 @@ export default function Page() {
       const { blob, filename } = await triggerExport({
         ...settings,
         ...exportSettings,
-        element_transforms: transforms,
       });
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
@@ -296,9 +294,9 @@ export default function Page() {
           designAssetMode={settings.design_asset_mode}
           riverCount={riverCount}
           geographyName={geographyName}
-          transforms={transforms}
-          onTransformsChange={setTransforms}
-          onResetTransforms={() => setTransforms({})}
+          transforms={settings.layout_overrides}
+          onTransformsChange={(layout_overrides) => handleSettingsChange({ layout_overrides })}
+          onResetTransforms={() => handleSettingsChange({ layout_overrides: {} })}
           onDownload={handleExport}
           isDownloading={exporting}
           exportDisabled={hasBlockingIssue(qaItems)}

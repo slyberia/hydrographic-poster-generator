@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-15T19:45:37.935289+00:00",
+  "phase_id": "phase_2c_layout_interaction",
+  "baseline_commit": "3c24840159c53fcaf548358f345a27e16943e204",
+  "approved_baseline_file": ".agents\\state\\baselines\\phase_2c_layout_interaction\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_phase2c.json",
+    ".agents/state/baselines/phase_2c_layout_interaction/baseline_approved.json",
+    ".agents/state/baselines/phase_2c_layout_interaction/baseline_unapproved.json",
+    ".agents/state/baselines/phase_2c_layout_interaction/baseline_unapproved.md",
+    ".agents/state/baselines/phase_2c_layout_interaction/phase2c_svg_renderer.stderr.txt",
+    ".agents/state/baselines/phase_2c_layout_interaction/phase2c_svg_renderer.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/phase2_plan_extracted.md",
+    ".agents/state/verifications/phase_2c_layout_interaction/phase2c_svg_renderer.stderr.txt",
+    ".agents/state/verifications/phase_2c_layout_interaction/phase2c_svg_renderer.stdout.txt",
+    ".agents/state/verifications/phase_2c_layout_interaction/post_edit_verification.json",
+    ".agents/state/verifications/phase_2c_layout_interaction/post_edit_verification.md",
+    "backend/app/services/layout_resolver.py",
+    "backend/app/services/svg_renderer.py",
+    "backend/tests/test_layout_resolver.py",
+    "backend/tests/test_svg_renderer.py",
+    "frontend/src/app/studio/page.tsx",
+    "frontend/src/components/ControlPanel.tsx",
+    "frontend/src/components/InteractiveCanvas.tsx"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "phase2c_svg_renderer",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_svg_renderer.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 1.111,
+      "stdout_file": ".agents\\state\\verifications\\phase_2c_layout_interaction\\phase2c_svg_renderer.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\phase_2c_layout_interaction\\phase2c_svg_renderer.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}
