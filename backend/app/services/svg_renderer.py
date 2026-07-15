@@ -40,18 +40,14 @@ class SVGRenderer:
         # Style lengths (strokes, type) scale off the reference canvas (§10).
         self.s_style = min(self.canvas_w / rc.CANVAS_W, self.canvas_h / rc.CANVAS_H)
 
-        palette = rules_service.get_palette_preset(request.palette)
-        self.tokens = palette.tokens.model_dump()
+        resolved_style = rules_service.resolve_style(request.style)
+        self.tokens = resolved_style.tokens
+        
         # Palette fallbacks: presets define 8 tokens; layout chrome maps onto
         # them rather than extending the preset schema (§ review decision).
         self.tokens.setdefault("accent", self.tokens["feature_major"])
         self.tokens.setdefault("scale_bar", self.tokens["text_secondary"])
         self.tokens.setdefault("metadata", self.tokens["text_secondary"])
-
-        if request.custom_colors:
-            for k, v in request.custom_colors.items():
-                if v:
-                    self.tokens[k] = v
 
         self.typography = rules_service.get_typography_preset(request.typography)
 

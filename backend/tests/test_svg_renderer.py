@@ -55,7 +55,7 @@ def test_one_path_per_feature_with_classes():
     paths = re.findall(r'<path class="river (\w+)"', svg)
     assert paths == ["major", "headwater"]
     # MultiLineString: one element, two subpaths (two M commands)
-    d = re.search(r'<path class="river headwater" d="([^"]+)"', svg).group(1)
+    d = re.search(r'<path class="river headwater".*? d="([^"]+)"', svg).group(1)
     assert d.count("M") == 2
 
 
@@ -87,7 +87,10 @@ def test_scale_bar_omitted_for_tall_maps():
     # Chile-like latitude span: spread > 1.20 -> no bar, honesty note instead.
     tall_bbox = [0, -8_000_000, 1_000_000, -2_000_000]
     req = RenderRequest(geography_id="g")
-    svg = SVGRenderer(req).generate_svg(make_clip(bbox=tall_bbox))
+    clip = make_clip(bbox=tall_bbox)
+    clip.metadata.scale_bar_valid = False
+    clip.metadata.distortion_warning = True
+    svg = SVGRenderer(req).generate_svg(clip)
     assert 'id="scale-bar"' not in svg
     assert "Scale varies across map" in svg
     assert "(approx.)" not in svg

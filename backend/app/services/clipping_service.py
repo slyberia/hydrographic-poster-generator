@@ -1,16 +1,16 @@
-import asyncpg
 import json
+import math
 from app.models.clip_models import ClipResult, ClipMetadata
 from app.services.rules_service import rules_service
-from app.models.clip_models import ClipRequest, ClipResult, ClipMetadata
+from app.repository.river_repository import RiverRepository
 
 class ClippingService:
     @staticmethod
     async def clip_rivers(
-        pool: asyncpg.Pool,
+        repo: RiverRepository,
         geography_id: str,
         density_preset_id: str,
-        classification_preset_id: str # We may use this later, currently density controls it per the spec
+        classification_preset_id: str
     ) -> ClipResult:
 
         # 1. Resolve presets
@@ -18,84 +18,41 @@ class ClippingService:
         min_order = density.min_stream_order
         class_map = density.classification_map
 
-        # 2. Boundary lookup + frame extent. The bbox comes from the boundary
-        # polygon (not the rivers) so the map frame is stable across density
-        # presets. Scalar accessors avoid BOX2D parsing since this is one row.
-        # (docs/PROJECTION_SCALEBAR_NOTES.md §3.1)
-        boundary_query = """
-            SELECT name, region_code,
-                   ST_XMin(ST_Transform(geom, 3857)) AS bbox_min_x,
-                   ST_YMin(ST_Transform(geom, 3857)) AS bbox_min_y,
-                   ST_XMax(ST_Transform(geom, 3857)) AS bbox_max_x,
-                   ST_YMax(ST_Transform(geom, 3857)) AS bbox_max_y,
-                   ST_XMin(geom) AS bbox4326_min_x,
-                   ST_YMin(geom) AS bbox4326_min_y,
-                   ST_XMax(geom) AS bbox4326_max_x,
-                   ST_YMax(geom) AS bbox4326_max_y
-            FROM admin_boundaries
-            WHERE id = $1;
-        """
+        # 2. Fetch boundary extent
+        boundary = await repo.get_geography_boundary(geography_id)
+        if not boundary:
+            raise ValueError(f"Geography '{geography_id}' not found")
 
-        # 3. Rivers clipped to the boundary, projected to Web Mercator so the
-        # renderer works in flat Cartesian meters (contract §1).
-        rivers_query = """
-            SELECT 
-                hr.hydrorivers_id,
-                hr.stream_order,
-                hr.upstream_area,
-                hr.length_km,
-                hr.display_class,
-                hr.geom_repaired,
-                ST_AsGeoJSON(ST_Transform(ST_MakeValid(ST_Intersection(ST_MakeValid(hr.geom), geo.geom)), 3857)) as geojson
-            FROM hydro_rivers hr
-            JOIN (SELECT geom FROM admin_boundaries WHERE id = $1) geo
-            ON ST_Intersects(hr.geom, geo.geom)
-            WHERE hr.stream_order >= $2
-            ORDER BY hr.stream_order DESC;
-        """
+        # 3. Clip rivers
+        rows = await repo.clip_rivers_to_geojson(geography_id, min_order)
 
         features = []
         repaired_count = 0
 
-        async with pool.acquire() as conn:
-            boundary = await conn.fetchrow(boundary_query, geography_id)
-            if boundary is None:
-                raise ValueError(f"Geography '{geography_id}' not found")
+        for row in rows:
+            geojson_str = row['geojson']
+            if not geojson_str:
+                continue
 
-            rows = await conn.fetch(rivers_query, geography_id, min_order)
+            geometry = json.loads(geojson_str)
+            if 'LineString' not in geometry['type']:
+                continue
 
-            for row in rows:
-                geojson_str = row['geojson']
-                if not geojson_str:
-                    continue
+            stream_order = row['stream_order']
+            display_class = class_map.get(stream_order, "minor")
 
-                if row.get('geom_repaired'):
-                    repaired_count += 1
-
-                # PostgreSQL ST_AsGeoJSON returns a string of the geometry object
-                geometry = json.loads(geojson_str)
-
-                # If intersection resulted in something other than LineString/MultiLineString, we can handle or skip
-                # (e.g. ST_Intersection can sometimes return Points if boundaries just touch)
-                if 'LineString' not in geometry['type']:
-                    continue
-
-                stream_order = row['stream_order']
-                display_class = class_map.get(stream_order, "minor")
-
-                feature = {
-                    "type": "Feature",
-                    "geometry": geometry,
-                    "properties": {
-                        "hydrorivers_id": row['hydrorivers_id'],
-                        "stream_order": stream_order,
-                        "upstream_area": float(row['upstream_area']) if row['upstream_area'] else None,
-                        "length_km": float(row['length_km']) if row['length_km'] else None,
-                        "display_class": display_class,
-                        "geom_repaired": bool(row.get('geom_repaired'))
-                    }
+            feature = {
+                "type": "Feature",
+                "geometry": geometry,
+                "properties": {
+                    "hydrorivers_id": row['hydrorivers_id'],
+                    "stream_order": stream_order,
+                    "upstream_area": float(row['upstream_area']) if row['upstream_area'] else None,
+                    "length_km": float(row['length_km']) if row['length_km'] else None,
+                    "display_class": display_class
                 }
-                features.append(feature)
+            }
+            features.append(feature)
 
         total_features = len(features)
         confidence_level = "standard"
@@ -106,12 +63,10 @@ class ClippingService:
                 confidence_level = "low"
                 warnings.append(f"High number of repaired geometries ({repaired_ratio:.1%} > 5%)")
 
-        # Calculate distortion based on latitude spread (Mercator distortion = 1 / cos(lat))
-        import math
+        # 4. Mercator Distortion Check
         min_lat = boundary['bbox4326_min_y']
         max_lat = boundary['bbox4326_max_y']
         
-        # Avoid math domain errors at poles
         min_lat_rad = math.radians(max(-89.9, min(89.9, min_lat)))
         max_lat_rad = math.radians(max(-89.9, min(89.9, max_lat)))
         

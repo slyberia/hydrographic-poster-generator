@@ -11,7 +11,9 @@ import asyncpg
 from app.config.density_presets import DENSITY_PRESETS
 from app.config.palette_presets import PALETTE_PRESETS
 from app.config.typography_presets import TYPOGRAPHY_PRESETS
-from app.models.preset_models import DensityPreset, PalettePreset, TypographyPreset
+from app.config.flag_presets import FLAG_PRESETS
+from app.models.preset_models import DensityPreset, PalettePreset, TypographyPreset, FlagPreset
+from app.models.style_models import StyleSelection, ResolvedStyle
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +22,7 @@ class RulesService:
         self._density: Dict[str, DensityPreset] = {}
         self._palette: Dict[str, PalettePreset] = {}
         self._typography: Dict[str, TypographyPreset] = {}
+        self._flags: Dict[str, FlagPreset] = {}
         self._source: str = "none"  # "database" or "hardcoded"
         self._rule_versions: Dict[str, int] = {}  # rule_id -> version
 
@@ -54,11 +57,14 @@ class RulesService:
                 self._palette[payload["id"]] = PalettePreset(**payload)
             elif rule_type == "typography":
                 self._typography[payload["id"]] = TypographyPreset(**payload)
+            elif rule_type == "flag":
+                self._flags[payload["id"]] = FlagPreset(**payload)
 
     def _load_from_hardcoded(self):
         self._density = {k: DensityPreset(**v) for k, v in DENSITY_PRESETS.items()}
         self._palette = {k: PalettePreset(**v) for k, v in PALETTE_PRESETS.items()}
         self._typography = {k: TypographyPreset(**v) for k, v in TYPOGRAPHY_PRESETS.items()}
+        self._flags = {k: FlagPreset(**v) for k, v in FLAG_PRESETS.items()}
 
     async def reload(self, pool: asyncpg.Pool):
         """Hot-reload rules from DB without restart."""
@@ -83,6 +89,28 @@ class RulesService:
         if not preset:
             raise ValueError(f"Typography preset '{preset_id}' not found (source: {self._source})")
         return preset
+
+    def resolve_style(self, style: StyleSelection) -> ResolvedStyle:
+        if style.mode == "standard":
+            preset = self.get_palette_preset(style.preset_id)
+            tokens = preset.tokens.model_dump()
+        elif style.mode == "flag":
+            flag = self._flags.get(style.preset_id)
+            if not flag:
+                raise ValueError(f"Flag preset '{style.preset_id}' not found (source: {self._source})")
+            variant = style.variant or "light"
+            if variant not in flag.variants:
+                raise ValueError(f"Variant '{variant}' not found in flag '{style.preset_id}'")
+            tokens = flag.variants[variant].model_dump()
+        else:
+            raise ValueError(f"Unknown style mode: {style.mode}")
+            
+        if style.overrides:
+            for k, v in style.overrides.items():
+                if v:
+                    tokens[k] = v
+                    
+        return ResolvedStyle(source=style, tokens=tokens)
 
     @property
     def source(self) -> str:

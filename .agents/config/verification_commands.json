@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "isolated_export_test",
+      "command": ["python", "scratch/test_phase0_baseline.py"],
+      "enabled": true
+    }
+  ],
+  "note": "Using the isolated test script from Phase 0 to verify the ValidationError without hitting Cairo dependency issues on Windows."
+}

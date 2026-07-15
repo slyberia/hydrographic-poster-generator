@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "approved_by": "HUMAN_NAME",
+  "approved_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "phase_id": "phase-1-example",
+  "branch": "fix/example",
+  "commit": "FULL_COMMIT_HASH",
+  "source_unapproved_file": ".agents/state/baselines/phase-1-example/baseline_unapproved.json",
+  "commands": [],
+  "test_cases": [
+    {
+      "id": "tests/test_example.py::test_case",
+      "status": "failed",
+      "classification": "known_pre_existing",
+      "notes": "Confirmed before implementation."
+    }
+  ]
+}

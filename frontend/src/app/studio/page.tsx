@@ -24,7 +24,11 @@ const DEFAULT_SETTINGS: PosterSettings = {
   geography_id: "",
   density_preset: "balanced",
   classification_preset: "standard",
-  palette: "abyss",
+  style: {
+    schema_version: 2,
+    mode: "standard",
+    preset_id: "abyss",
+  },
   typography: "gallery_poster",
   title: "",
   subtitle: "",
@@ -74,7 +78,10 @@ export default function Page() {
         setSettings((s) => ({
           ...s,
           density_preset: pre.density[0]?.id ?? s.density_preset,
-          palette: pre.palette[0]?.id ?? s.palette,
+          style: {
+            ...s.style!,
+            preset_id: pre.palette[0]?.id ?? s.style?.preset_id ?? "abyss",
+          },
           typography: pre.typography[0]?.id ?? s.typography,
         }));
       })

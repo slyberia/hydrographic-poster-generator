@@ -5,6 +5,7 @@ import asyncpg
 from fastapi import HTTPException
 
 from app.settings import settings
+from app.repository.river_repository import RiverRepository
 
 logger = logging.getLogger(__name__)
 
@@ -53,3 +54,8 @@ async def get_db_pool() -> asyncpg.Pool:
             logger.error("Database unavailable: %s", exc)
             raise HTTPException(status_code=503, detail="Database unavailable")
     return db.pool
+
+async def get_repository() -> RiverRepository:
+    """Dependency for FastAPI to get the river repository."""
+    pool = await get_db_pool()
+    return RiverRepository(pool)

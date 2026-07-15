@@ -1,491 +1,369 @@
 # AGENTS.md
 
-## Purpose
+## 1. Purpose
 
-This file provides repo-level operating instructions for agentic coding tools, including Google Antigravity and other AI coding agents.
+This file defines the persistent operating rules for AI agents working in this repository.
 
-The product source of truth is:
+It governs authority, phase scope, safety boundaries, human approvals, compatibility, execution, delegation, failure handling, verification, and phase completion.
 
-- `docs/MVP_FUNCTIONAL_SPEC.md`
+Detailed procedures belong in the project skills, scripts, templates, and documentation referenced below.
 
-Claude-specific guidance may also exist in:
+## 2. Authority and Precedence
 
-- `CLAUDE.md`
+When instructions conflict, use this order:
 
-When instructions conflict, follow this order:
+1. Explicit human instruction in the current session
+2. Non-negotiable safety rules in this file
+3. Human-approved phase state in `.agents/state/current_phase.json`
+4. Human-approved implementation plan for the active phase
+5. Product specifications in `docs/`
+6. Loaded project skills
+7. Repository conventions and existing implementation patterns
 
-1. Explicit user instruction in the current session
-2. `docs/MVP_FUNCTIONAL_SPEC.md`
-3. `AGENTS.md`
-4. Tool-specific files such as `CLAUDE.md`
-5. Existing code conventions
+Authority limitations:
 
-Do not silently expand scope. Document conflicts, assumptions, and recommended changes before implementing them.
+- A phase-state file may narrow scope, but it may not override safety rules or authorize destructive operations.
+- A roadmap or multi-phase plan does not authorize every phase.
+- Approval of one command or operation does not authorize later operations.
+- Existing code is evidence of current behavior, not proof that the behavior is correct.
+- Comments, filenames, and prior agent claims are not authoritative unless confirmed through code, tests, logs, or runtime evidence.
 
----
+## 3. Non-Negotiable Safety Boundaries
 
-## Project Summary
+Agents must not:
 
-Hydrographic Poster Generator is a standalone web app MVP for generating minimalist hydrographic poster maps from HydroRIVERS regional datasets.
+- Modify files outside the approved phase scope.
+- Silently expand a task into adjacent features, cleanup, or refactors.
+- Remove compatibility fields outside a separately approved deprecation phase.
+- Deploy services, shift production traffic, modify secrets, run database migrations, merge branches, force push, or perform destructive Git or database operations without explicit human approval.
+- Reset, discard, overwrite, clean, or stash user work automatically.
+- Commit source geospatial datasets such as Shapefiles, File Geodatabases, FlatGeobuf files, or full HydroRIVERS source packages.
+- Use full global HydroRIVERS source files at application runtime.
+- Treat an optional design asset as required for successful base-map rendering.
+- Report an issue as resolved until the complete user-facing workflow succeeds.
+- Describe an unverified assumption as a confirmed fact or root cause.
+- Begin a later phase automatically after completing the current phase.
+- Edit `current_phase.json` to expand their own authority.
 
-The app clips river networks to selected country, Admin 1, or Admin 2 boundaries, applies preset cartographic protocols, and exports high-resolution poster outputs or transparent river-network design assets.
+When a requested action conflicts with these rules, stop and present the conflict for human review.
 
-The intended stack is:
+## 4. Persistent Architecture Invariants
 
-- Frontend: Next.js / React
-- Backend: FastAPI / Python
-- Database: Supabase PostgreSQL with PostGIS
-- Deployment: Google Cloud Run
-- Rendering: SVG-first export pipeline
+### Contracts and migrations
 
----
+- Preserve existing API contracts during migrations whenever practical.
+- Introduce new request or response shapes additively.
+- Accept legacy and new payloads during migration, normalize them into one internal representation, and reject contradictory combinations explicitly.
+- Inspect persisted frontend state before changing its schema.
+- Do not remove compatibility logic until callers, saved state, fixtures, scripts, and mixed-version deployments have been evaluated.
 
-## Core MVP Scope
+### Business logic
 
-Build toward the MVP described in `docs/MVP_FUNCTIONAL_SPEC.md`.
+- Use canonical resolvers for styling, typography, metadata, layout, and other shared domains.
+- Do not duplicate interpretation logic across routers, components, preview paths, export paths, or debug endpoints.
+- Resolve request-level configuration before passing data to low-level renderers.
+- Renderers consume validated domain objects rather than raw API fields.
 
-The MVP includes:
+### Rendering
 
-- HydroRIVERS regional datasets for:
-  - South America
-  - North and Central America
-- Country, Admin 1, and Admin 2 geography selection
-- Supabase PostgreSQL/PostGIS spatial backend
-- Dynamic clipping of river features to selected boundaries
-- Preset-driven density/classification behavior
-- Curated palette selection, including dark and light variants
-- Three typography presets
-- Fixed portrait-oriented poster layout based on the Veins of Edo reference
-- Basic QA checks before export
-- PNG, SVG, and PDF poster export
-- Transparent river-network design asset export for design/DTG/screenprinting use
+- Maintain logical parity between preview and export.
+- Preview, export, and sensitivity modes use one orchestration pipeline with explicit render profiles.
+- Optional assets degrade gracefully and do not block base rendering.
+- User-controlled text is escaped before SVG output.
+- Layout, typography, metadata, and styling settings that affect output are included in cache keys and export manifests.
 
----
+### Database and spatial processing
 
-## Explicit Non-Goals for MVP
+- Spatial clipping is PostGIS-backed.
+- Raw SQL and direct pool access remain behind the repository boundary.
+- Routers do not contain raw SQL.
+- Schema incompatibility fails readiness before production traffic.
+- Invalid SQL, missing columns, schema drift, and malformed geometry are not disguised as transient failures.
+- Full global HydroRIVERS files are not loaded at runtime.
 
-Do not add these unless the user explicitly asks:
+For detailed architecture guidance, load:
 
-- User-uploaded spatial datasets
-- Manual color picker
-- Custom classification thresholds
-- Drag-and-drop layout editing
-- Multi-label map annotation
-- Full GIS viewer parity
-- Account system or authentication
-- Paid/export gating
-- Public gallery
-- Multi-design-system marketplace
-- Runtime use of full global HydroRIVERS files
+`.agents/skills/architecture/SKILL.md`
 
-The MVP is a protocol-driven poster generator, not an open-ended cartographic design suite. Humans will survive without sixteen sliders for line opacity.
+## 5. Current Phase and Scope Controls
 
----
+Implementation requires a human-approved phase-state file:
 
-## Expected Repository Structure
+`.agents/state/current_phase.json`
 
-Target structure:
+It must define at minimum:
 
-```text
-/
-├── frontend/
-├── backend/
-├── docs/
-│   └── MVP_FUNCTIONAL_SPEC.md
-├── db/
-│   └── migrations/
-├── scripts/
-├── data/
-├── README.md
-├── CLAUDE.md
-├── AGENTS.md
-├── .env.example
-└── .gitignore
-```
+- Phase ID and name
+- Explicit approved status
+- Human approval marker
+- Expected branch
+- Baseline commit
+- Allowed and excluded paths
+- Approved and prohibited operations
+- Verification command file
+- Approved baseline artifact
 
-Large source datasets must not be committed to Git.
+Before editing:
 
----
+- Confirm the phase file exists.
+- Confirm its status is `approved`.
+- Confirm `approved_by_human` is true.
+- Confirm the current branch matches.
+- Confirm the baseline commit exists.
+- Confirm the task matches the named phase.
+- Confirm intended files fall within `allowed_paths`.
+- Confirm the requested operation is not prohibited.
 
-## Data Rules
+If phase state is missing, stale, contradictory, or incomplete, stop for human review.
 
-Source geospatial data should remain outside the repo.
+## 6. Required Execution Lifecycle
 
-Do not commit:
+All changes follow this sequence:
 
-- HydroRIVERS shapefiles
-- HydroRIVERS file geodatabases
-- GeoPackages
-- large GeoJSON files
-- FlatGeobuf files
-- generated exports
-- zipped raw spatial datasets
+Inspect
+→ collect reference inventory
+→ classify dependencies
+→ run baseline tests
+→ obtain human baseline approval
+→ implement within phase scope
+→ verify against the approved baseline
+→ review changed-file scope
+→ produce a phase walkthrough
 
-The repo may contain:
+Load `.agents/skills/execution_core/SKILL.md` for detailed procedures.
 
-- import scripts
-- schema definitions
-- migration files
-- small synthetic fixtures
-- documentation
-- example configuration
-- tiny test geometries where needed
+### Inspect before editing
 
-Initial import support should cover both:
+Before modifying files:
 
-- shapefile
-- file geodatabase, where feasible
+- Open the actual implementation.
+- Inspect models, signatures, return types, tests, state, and call sites.
+- Search every symbol, route, field, storage key, and contract being changed.
+- Separate findings into confirmed facts, assumptions requiring verification, and risks.
+- Identify expected files and missing characterization tests.
 
-If file geodatabase support creates GDAL/runtime dependency issues, document the issue and recommend a fallback instead of silently dropping support.
+### Reference inventory
 
----
+Run:
 
-## Database Rules
+`python .agents/scripts/dependency_search.py <symbols>`
 
-Primary database target:
+The script produces a reference inventory, not a completed dependency map. Classify the results into producers, consumers, persisted copies, cached copies, API callers, tests, internal routes, documentation, deployment dependencies, or unrelated references.
 
-- Supabase PostgreSQL with PostGIS enabled
+### Git preflight
 
-The app should connect through environment variables, especially:
+Run:
 
-```env
-DATABASE_URL=
-SUPABASE_URL=
-SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-```
+`python .agents/scripts/git_preflight.py`
 
-Avoid hardcoding Supabase-only assumptions in the database access layer when ordinary PostgreSQL/PostGIS patterns are sufficient. Future migration to Cloud SQL PostgreSQL/PostGIS should remain possible.
+It must succeed before edits. It never modifies the worktree.
 
-Expected core tables:
+### Baseline execution and HITL approval
 
-- `hydro_rivers`
-- `admin_boundaries`
+Run:
 
-Recommended `hydro_rivers` fields:
+`python .agents/scripts/baseline_test.py`
 
-```text
-id
-region_code
-source_dataset
-source_version
-hydrorivers_id
-stream_order
-upstream_area
-length_km
-display_class
-geom
-```
+The script records evidence and marks failures `unclassified`.
 
-Recommended `admin_boundaries` fields:
+Implementation begins only after a human confirms test scope, classifies failures, and approves the baseline for the named phase and commit.
 
-```text
-id
-name
-country
-country_code
-admin_level
-parent_id
-region_code
-source
-source_version
-geom
-```
+The implementing agent must not independently approve its own baseline.
 
-Use spatial indexes for `geom` columns.
+## 7. Implementation Rules
 
-Migration tooling is not finalized. Recommend a migration approach during development before implementing schema work.
+During implementation:
 
----
+- Work only within the approved phase and allowed paths.
+- Make the smallest coherent change.
+- Avoid speculative cleanup.
+- Preserve external behavior unless the approved plan explicitly changes it.
+- Add characterization tests before altering untested behavior.
+- Prefer upstream boundaries over repeated downstream patches.
+- Keep unrelated migrations in separate phases.
+- Do not modify deployment configuration, schemas, secrets, or production services unless specifically approved.
+- Do not remove compatibility fields merely because new internal models exist.
+- Do not treat a passing unit test as proof of end-to-end success.
 
-## Spatial Processing Rules
+If the approved scope is insufficient, stop and request a human-approved phase update.
 
-Spatial clipping should be PostGIS-backed.
+## 8. Compatibility and Migration Policy
 
-Expected clipping contract:
+Compatibility is the default.
 
-```text
-clipRivers(geographyId, densityPreset, classificationPreset)
-```
+When introducing a new contract:
 
-Expected output shape:
+1. Keep the legacy field or shape.
+2. Add the new field or shape.
+3. Normalize both into one internal model.
+4. Define behavior when both are supplied.
+5. Reject conflicts explicitly.
+6. Test old-client/new-backend combinations.
+7. Add persisted-state migration where applicable.
+8. Consider cached browser sessions and mixed deployment versions.
+9. Log legacy usage where useful.
+10. Remove legacy support only in a separately approved deprecation phase.
 
-```json
-{
-  "type": "FeatureCollection",
-  "features": [],
-  "metadata": {
-    "geography": "",
-    "region_code": "",
-    "river_count": 0,
-    "classification_status": ""
-  }
-}
-```
+Explicit human approval is required before removing or incompatibly changing request fields, response fields, error shapes, persisted-state migration, legacy deserialization, saved payload support, or deployment compatibility.
 
-The backend should:
+## 9. Human Approval Gates
 
-1. Fetch the selected boundary geometry.
-2. Select river features intersecting the boundary.
-3. Clip river geometries to the boundary.
-4. Apply or validate classification.
-5. Return clipped GeoJSON or pass the result to the renderer.
+Explicit human approval is required before:
 
-Classification should use runtime logic with `display_class` as a fallback/validation field.
+- Database migrations or destructive database commands
+- Cloud Run deployments or production traffic shifts
+- Secret, environment-variable, or production configuration changes
+- Branch merges, force pushes, or destructive Git operations
+- Write-enabled sub-agent delegation
+- Out-of-scope file changes
+- Compatibility-field or migration-code removal
+- API-breaking changes
+- Changes to `AGENTS.md`
+- Expansion of the approved phase
+- Patching an unexpected failure outside the current phase
 
----
+Use:
 
-## Projection and Scale Bar Handling
+`.agents/skills/execution_core/templates/destructive_operation_request.md`
 
-Projection and scale bar behavior requires investigation.
+Each approval request states the exact operation, command, tool, target, effect, risks, reversibility, rollback, and whether approval covers one command or a bounded sequence.
 
-Agents must examine and recommend the safest MVP approach for:
+Approval is never inferred from silence.
 
-- accurate scale bar generation
-- area-specific projection choice
-- cross-region consistency
-- SVG coordinate conversion
-- metadata reporting
+## 10. Sub-Agent Delegation
 
-If accurate scale cannot be guaranteed, the app should hide the scale bar or label it as approximate instead of rendering a misleading scale bar. A wrong scale bar is a tiny liar with typography.
+Sub-agents are read-only by default.
 
----
+For read-only investigation, use `enable_write_tools=false`.
 
-## Rendering and Export Rules
+Write-enabled delegation requires explicit human approval and non-overlapping file scope.
 
-Rendering should be SVG-first unless investigation reveals a better implementation path.
+Every delegated task defines:
 
-Poster export mode should include:
+- Role
+- Read-only or write-enabled status
+- Permitted and prohibited files
+- Question or task
+- Evidence required
+- Completion criteria
 
-- background
-- river network
-- title
-- subtitle
-- optional capital label/marker
-- legend
-- scale bar or approved scale alternative
-- north arrow
-- metadata
+Parallel write access is prohibited for overlapping shared contracts, including request models, export manifests, renderers, orchestration services, shared resolvers, frontend API types, persisted settings, shared fixtures, and database migrations.
 
-Design asset export mode should include:
+One primary agent reviews and integrates delegated work. Sub-agents do not deploy, merge, modify secrets, shift traffic, or expand scope.
 
-- river network only by default
-- transparent background
-- no title
-- no subtitle
-- no legend
-- no scale bar
-- no north arrow
-- no metadata
-- optional capital marker only if explicitly supported
+## 11. Unexpected-Failure Protocol
 
-Supported export formats for MVP:
+When an unexpected error, test failure, runtime exception, or regression appears:
 
-- SVG
-- PNG
-- PDF
+1. Stop implementation.
+2. Capture the exact error, stack trace, command, request, and relevant logs.
+3. Determine when it appeared.
+4. Classify it as:
+   - Direct consequence
+   - Interface drift
+   - Hidden pre-existing failure
+   - Environmental failure
+   - Unrelated defect
+   - Unclassified
+5. Search related call sites and contracts.
+6. Update the dependency inventory.
+7. Identify the regression test required.
+8. Determine whether it belongs inside the approved phase.
+9. Present findings for human review when scope or classification is uncertain.
 
-Transparent design asset export should support:
+Use:
 
-- SVG
-- PNG
+`.agents/skills/execution_core/templates/unexpected_failure_report.md`
 
----
+Do not immediately patch the newest failing line.
 
-## UI Rules
+## 12. Verification
 
-The frontend should expose simple, preset-driven controls:
+After implementation, run:
 
-- geography selector
-- density preset
-- classification preset
-- palette selector
-- typography preset
-- title input
-- subtitle input
-- capital label toggle
-- legend toggle if supported
-- metadata toggle if supported by spec
-- export mode
-- export size
-- export format
-- QA checklist
-- generate/export action
+`python .agents/scripts/post_edit_verification.py`
 
-Avoid adding advanced customization controls during MVP.
+Verification includes, where applicable:
 
----
+- Targeted and full relevant tests
+- Type checking and linting
+- Contract and frontend tests
+- Visual or browser verification
+- Preview/export parity
+- Persisted-state migration
+- Cache-key differentiation
+- Search for stale references
+- Git diff review
+- Allowed-file-scope comparison
 
-## QA Rules
+Verification requires an approved baseline and distinguishes unchanged, new, resolved, changed, and ambiguous failures.
 
-The app should surface a simple QA checklist before export.
+It fails on out-of-scope tracked or untracked files. It never reverts files automatically.
 
-Minimum QA categories:
+Do not claim all tests passed unless command output proves it.
 
-- data loaded
-- boundary found
-- river features found
-- required fields available
-- clipping completed
-- classification validated or fallback used
-- text fits within layout zones
-- metadata present for poster export
-- export settings valid
-- projection/scale bar status reported
+## 13. Browser and UI Verification
 
-Severity levels:
+For UI, rendering, or end-to-end changes, verify:
 
-- Pass
-- Warning
-- Block
+- Before and after screenshots
+- Browser console
+- Network request and response status
+- Payload or content type where relevant
+- Loading and recoverable-error behavior
+- Last-successful-preview retention
+- Responsive layout
+- Feature-disabled behavior
+- Export behavior where relevant
+- Keyboard and pointer interaction
 
-Warnings may allow export. Blocks should prevent export until resolved.
+Use:
 
----
+`.agents/skills/execution_core/templates/browser_verification.md`
 
-## Development Behavior for Agents
+Browser checks supplement automated tests. They do not replace them.
 
-When implementing:
+## 14. Feature Flags
 
-1. Read `docs/MVP_FUNCTIONAL_SPEC.md` first.
-2. Inspect existing repo structure before making changes.
-3. Keep changes modular and easy to review.
-4. Prefer small, focused commits or change sets.
-5. Do not silently expand scope.
-6. Document assumptions in the response.
-7. Identify conflicts between the spec and implementation reality.
-8. Recommend revisions before making major architectural changes.
-9. Keep generated code readable and conventional.
-10. Avoid over-engineering before the MVP path is proven.
+New user-facing behavior should use independently controllable feature flags where practical.
 
-If an implementation detail is uncertain, mark it as:
+Applicable areas include manual layout editing, metadata controls, typography customization, flag palettes, color-picker redesign, tooltips, and Design Asset Mode changes.
 
-```text
-Requires Investigation
-```
+Disabling a flag restores previous stable behavior without rolling back unrelated work.
 
-Then recommend options with tradeoffs.
+## 15. Documentation
 
----
+Update documentation when a phase changes public contracts, persisted state, database expectations, render profiles, cache inputs, font catalogs, asset manifests, deployment, rollback, feature flags, or compatibility.
 
-## Local Development Expectations
+Detailed technical information belongs in `docs/`, not this file.
 
-The final repo should support Docker-based local development.
+Do not create duplicate or conflicting sources of truth.
 
-Expected direction:
+## 16. Model and Task Guidance
 
-- frontend service
-- backend service
-- optional local Postgres/PostGIS or local Supabase workflow
-- `.env.example` for configuration
+Use high-depth architectural review for shared models, API migrations, database boundaries, rendering pipelines, cross-layer changes, state migrations, deployment sequencing, compatibility removal, and multi-system failures.
 
-Supabase-first development is the priority, but the exact hosted-vs-local CLI workflow may be finalized during setup.
+Lower-complexity execution may be appropriate for isolated tests, text changes, small component polish, and documentation corrections.
 
----
+Notify the human when the active model or mode is insufficient for the risk or complexity.
 
-## Deployment Expectations
+## 17. Error-Claim Discipline
 
-Target deployment:
+Use these terms precisely:
 
-- Google Cloud Run for the app
-- Supabase hosted PostgreSQL/PostGIS as the primary database target
+- Confirmed defect: reproduced and directly traced.
+- Probable cause: strongly supported but not fully verified.
+- Next confirmed failure: the current verified error in a layered sequence.
+- Root cause: evidence explains the failure class, not merely the latest exception.
+- Resolved: the complete user-facing flow succeeds and regression tests pass.
+- Verified in production: confirmed against the deployed revision.
 
-The app should be containerized and read runtime config from environment variables.
+## 18. Completion and Phase Closeout
 
-Do not require raw geospatial source files inside the Cloud Run container.
+Every phase produces:
 
----
+`.agents/skills/execution_core/templates/phase_walkthrough.md`
 
-## Documentation Expectations
+A phase is complete only after scope compliance, approved baseline comparison, required tests, changed-file review, documentation updates, rollback instructions, human review of unresolved risks, and explicit pass/fail against exit criteria.
 
-Keep documentation current when decisions change.
-
-Update the relevant docs when implementing or revising:
-
-- product behavior
-- data ingestion
-- database schema
-- environment variables
-- deployment setup
-- export behavior
-- QA checks
-- known limitations
-
-Recommended docs:
-
-```text
-docs/MVP_FUNCTIONAL_SPEC.md
-docs/DATA_INGESTION.md
-docs/DATABASE_SCHEMA.md
-docs/EXPORT_PIPELINE.md
-docs/DEPLOYMENT.md
-```
-
-Only create additional docs when they serve an actual implementation need. Documentation sprawl is just clutter wearing a blazer.
-
----
-
-## Model Selection Guidance
-
-Agents should assess the complexity of the current task against their active model tier. If a mismatch is detected, note the recommendation to the user before proceeding. Do not halt work already in progress unless the mismatch is severe (e.g., a fast model attempting to design the clipping service from scratch).
-
-### Task Complexity Tiers for This Project
-
-#### Tier 1: High Complexity (use reasoning/high-effort models)
-
-- Initial architecture and scaffolding decisions
-- Designing the PostGIS clipping and classification pipeline
-- Implementing the SVG rendering and export service
-- Projection and scale bar investigation
-- Writing or reviewing the spatial processing contract
-- Debugging cross-service data flow issues
-- Translating `MVP_FUNCTIONAL_SPEC.md` sections into new features
-- Any task marked `Requires Investigation` in `CLAUDE.md`
-
-Recommended models: Gemini Pro (High), Claude Opus/Sonnet, GPT-4o/o1
-
-#### Tier 2: Moderate Complexity (use standard models)
-
-- Implementing well-defined API endpoints from existing patterns
-- Building frontend components from an established design system
-- Writing integration tests for existing services
-- Adding new presets to palette/typography/density configs
-- Database migration files for defined schemas
-- Reviewing and updating documentation
-
-Recommended models: Gemini Pro (Medium), Claude Sonnet, GPT-4o
-
-#### Tier 3: Low Complexity (use fast/efficient models)
-
-- Fixing lint, type, or formatting errors
-- Updating README content or inline comments
-- Adding entries to `.gitignore` or `.env.example`
-- Simple CSS/layout adjustments
-- Renaming variables or files
-- Running and reporting test results
-
-Recommended models: Gemini Flash, Gemini Pro (Low), Claude Haiku, GPT-4o-mini
-
-### Agent Behavior
-
-- If running a Tier 1 task on a fast/low model: note the mismatch and recommend the user switch before beginning complex implementation. Continue with research and planning if possible.
-- If running a Tier 3 task on a high/reasoning model: note that a lighter model would be more efficient, but proceed. Do not block trivial work.
-- When uncertain about tier, default to the current model and note the ambiguity.
-
----
-
-## Final Instruction
-
-Build the MVP in accordance with the product spec, but treat unresolved technical items as investigation checkpoints rather than opportunities to improvise wildly.
-
-When in doubt, preserve the MVP scope, explain the tradeoff, and recommend the next safest step.
-
----
-
-## Test Failure Workflow (Diagnostic Coach Protocol)
-
-If `npm run validate` or any automated testing script returns an exit code of 1:
-1. Catch the error and capture the stderr output.
-2. Automatically generate a prompt that includes the error log and the last modified file.
-3. Treat this prompt as a directive to yourself: act as the "Diagnostic Coach". Analyze the error log and provide a strict sequence of commands to fix the bug in the chat. Do not write the code directly; output a plan.
-4. Pause for Human-in-the-loop approval before executing the fix.
+Do not proceed to the next phase automatically.

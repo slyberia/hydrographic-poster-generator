@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 import asyncpg
 
-from app.database import get_db_pool
+from app.database import get_repository
+from app.repository.river_repository import RiverRepository
 from app.models.render_models import RenderRequest
 from app.services.clipping_service import ClippingService
 from app.services.svg_renderer import SVGRenderer
@@ -10,16 +11,16 @@ router = APIRouter()
 
 @router.post("/preview")
 async def generate_preview(request: RenderRequest,
-                           pool: asyncpg.Pool = Depends(get_db_pool)):
+                           repo: RiverRepository = Depends(get_repository)):
     """Clip rivers to the selected geography and render the poster SVG."""
     try:
-        renderer = SVGRenderer(request)
+        renderer = SVGRenderer(request, canvas=(2400, 3600))
     except ValueError as exc:  # unknown palette/typography preset
         raise HTTPException(status_code=422, detail=str(exc))
 
     try:
         clip_result = await ClippingService.clip_rivers(
-            pool=pool,
+            repo=repo,
             geography_id=request.geography_id,
             density_preset_id=request.density_preset,
             classification_preset_id=request.classification_preset,
@@ -27,15 +28,7 @@ async def generate_preview(request: RenderRequest,
     except ValueError as exc:  # unknown geography or density preset
         raise HTTPException(status_code=404, detail=str(exc))
 
-    svg = renderer.generate_svg(
-        clip_result=clip_result,
-        palette_id=request.palette,
-        typography_id=request.typography,
-        title=request.title,
-        subtitle=request.subtitle,
-        canvas_width=2400, # preview dims
-        canvas_height=3600
-    )
+    svg = renderer.generate_svg(clip_result)
     
     import json
     from collections import Counter

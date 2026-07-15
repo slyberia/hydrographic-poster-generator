@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "backend-pytest",
+      "enabled": true,
+      "cwd": ".",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "--junitxml",
+        ".agents/state/results/backend-pytest.xml"
+      ],
+      "junit_xml": ".agents/state/results/backend-pytest.xml"
+    },
+    {
+      "name": "frontend-tests",
+      "enabled": false,
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--runInBand"
+      ]
+    }
+  ]
+}

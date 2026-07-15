@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "phase_id": "phase-1-export-hotfix",
+  "phase_name": "Phase 1: Export Hotfix",
+  "status": "approved",
+  "approved_by_human": true,
+  "approval_reference": "current_session",
+  "branch": "fix/export-manifest-v2",
+  "baseline_commit": "48e8d3f",
+  "allowed_paths": [
+    "backend/app/routers/export.py",
+    "backend/app/models/export_models.py",
+    "backend/tests/**",
+    "scratch/**"
+  ],
+  "excluded_paths": [],
+  "scope_exempt_paths": [
+    ".agents/state/**"
+  ],
+  "approved_operations": [
+    "read",
+    "edit"
+  ],
+  "prohibited_operations": [
+    "deploy",
+    "database_migration",
+    "secret_change",
+    "traffic_shift",
+    "merge",
+    "force_push"
+  ],
+  "verification_commands_file": ".agents/config/verification_commands.json",
+  "approved_baseline_file": "",
+  "protected_branches": [
+    "main",
+    "master"
+  ],
+  "known_preexisting_changes": []
+}

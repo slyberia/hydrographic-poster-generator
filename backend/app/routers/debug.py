@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 import asyncpg
 from typing import Dict, Any
 
-from app.database import get_db_pool
+from app.database import get_repository
+from app.repository.river_repository import RiverRepository
 from app.models.render_models import RenderRequest
-from app.models.clip_models import ClipRequest
 from app.services.clipping_service import ClippingService
 from app.services.svg_renderer import SVGRenderer
 from app.services.rules_service import rules_service
@@ -14,7 +14,7 @@ router = APIRouter()
 @router.post("/sensitivity")
 async def debug_sensitivity(
     request: RenderRequest,
-    pool: asyncpg.Pool = Depends(get_db_pool)
+    repo: RiverRepository = Depends(get_repository)
 ) -> Dict[str, Any]:
     """
     Sensitivity sweep endpoint: renders the requested geography with three different
@@ -53,20 +53,16 @@ async def debug_sensitivity(
         
         rules_service._density[temp_id] = temp_density
         
-        clip_req = ClipRequest(geography_id=geography_id, density_preset=temp_id)
-        clip_result = await ClippingService.clip_rivers(pool, clip_req)
+        clip_result = await ClippingService.clip_rivers(
+            repo=repo,
+            geography_id=geography_id,
+            density_preset_id=temp_id,
+            classification_preset_id=request.classification_preset
+        )
         
         # Render SVG
-        renderer = SVGRenderer(request)
-        svg_content = renderer.generate_svg(
-            clip_result=clip_result,
-            palette_id=request.palette,
-            typography_id=request.typography,
-            title=request.title,
-            subtitle=request.subtitle,
-            canvas_width=1000,
-            canvas_height=1000
-        )
+        renderer = SVGRenderer(request, canvas=(1000, 1000))
+        svg_content = renderer.generate_svg(clip_result)
         
         results[variant] = svg_content
         results["metadata"][f"{variant}_river_count"] = clip_result.metadata.river_count

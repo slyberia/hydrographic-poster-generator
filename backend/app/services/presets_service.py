@@ -5,7 +5,8 @@ def get_all_presets() -> PresetsResponse:
     return PresetsResponse(
         density=list(rules_service._density.values()),
         palette=list(rules_service._palette.values()),
-        typography=list(rules_service._typography.values())
+        typography=list(rules_service._typography.values()),
+        flags=list(rules_service._flags.values())
     )
 
 def get_density_preset(preset_id: str):

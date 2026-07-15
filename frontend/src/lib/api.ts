@@ -65,6 +65,12 @@ export interface PalettePreset {
   tokens: PaletteTokens;
 }
 
+export interface FlagPreset {
+  id: string;
+  name: string;
+  variants: Record<string, PaletteTokens>;
+}
+
 export interface TypographyPreset {
   id: string;
   name: string;
@@ -80,6 +86,17 @@ export interface PresetsResponse {
   density: DensityPreset[];
   palette: PalettePreset[];
   typography: TypographyPreset[];
+  flags: FlagPreset[];
+}
+
+// ---------------------------------------------------------------- style model
+
+export interface StyleSelection {
+  schema_version: number;
+  mode: "standard" | "flag";
+  preset_id: string;
+  variant?: "light" | "dark";
+  overrides?: Record<string, string>;
 }
 
 // ------------------------------------------------------------ render / export
@@ -88,14 +105,15 @@ export interface RenderRequest {
   geography_id: string;
   density_preset: string;
   classification_preset: string;
-  palette: string;
+  style?: StyleSelection;
+  palette?: string; // legacy
   typography: string;
   title: string;
   subtitle: string;
   design_asset_mode: boolean;
   show_legend: boolean;
   show_metadata: boolean;
-  custom_colors?: Record<string, string>;
+  custom_colors?: Record<string, string>; // legacy
   element_transforms?: Record<string, { x: number; y: number; scale: number }>;
 }
 
@@ -172,23 +190,40 @@ export function getPresets(signal?: AbortSignal): Promise<PresetsResponse> {
   return getJson<PresetsResponse>("/presets", signal);
 }
 
+// Global active preview controller to ensure only the latest request finishes
+let activePreviewController: AbortController | null = null;
+
 export async function getPreview(
   request: RenderRequest,
   signal?: AbortSignal,
 ): Promise<PreviewResult> {
-  const res = await fetch(`${API_BASE}/preview`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request),
-    signal,
-  });
-  if (!res.ok) await raiseForStatus(res);
-  const riverCount = res.headers.get("X-River-Count");
-  return {
-    svg: await res.text(),
-    riverCount: riverCount !== null ? Number(riverCount) : null,
-    geographyName: res.headers.get("X-Geography-Name"),
-  };
+  if (activePreviewController) {
+    activePreviewController.abort("Stale request replaced by a newer one");
+  }
+  activePreviewController = new AbortController();
+  const linkedSignal = signal
+    ? AbortSignal.any([signal, activePreviewController.signal])
+    : activePreviewController.signal;
+
+  try {
+    const res = await fetch(`${API_BASE}/preview`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+      signal: linkedSignal,
+    });
+    if (!res.ok) await raiseForStatus(res);
+    const riverCount = res.headers.get("X-River-Count");
+    return {
+      svg: await res.text(),
+      riverCount: riverCount !== null ? Number(riverCount) : null,
+      geographyName: res.headers.get("X-Geography-Name"),
+    };
+  } finally {
+    if (activePreviewController?.signal === linkedSignal) {
+      activePreviewController = null;
+    }
+  }
 }
 
 export async function triggerExport(

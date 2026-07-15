@@ -34,7 +34,13 @@ class TypographyPreset(BaseModel):
     subtitle_weight: str
     subtitle_tracking: str
 
+class FlagPreset(BaseModel):
+    id: str
+    name: str
+    variants: Dict[str, PaletteTokens]
+
 class PresetsResponse(BaseModel):
     density: List[DensityPreset]
     palette: List[PalettePreset]
     typography: List[TypographyPreset]
+    flags: List[FlagPreset]

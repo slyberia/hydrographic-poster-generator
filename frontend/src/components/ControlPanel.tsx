@@ -9,23 +9,23 @@ import {
   type GeographyDetail,
   type GeographyRegion,
   type PresetsResponse,
+  type StyleSelection,
 } from "@/lib/api";
 import type { QAItem } from "@/lib/qa";
 import QAChecklist from "./QAChecklist";
-import ColorPicker from "./ColorPicker";
+import ColorPickerPopover from "./ColorPickerPopover";
 
 export interface PosterSettings {
   geography_id: string;
   density_preset: string;
   classification_preset: string;
-  palette: string;
+  style?: StyleSelection;
   typography: string;
   title: string;
   subtitle: string;
   design_asset_mode: boolean;
   show_legend: boolean;
   show_metadata: boolean;
-  custom_colors?: Record<string, string>;
 }
 
 export interface ExportSettings {
@@ -58,6 +58,11 @@ interface ControlPanelProps {
   qaItems: QAItem[];
 }
 
+interface ActiveColorPickerState {
+  key: string;
+  rect: DOMRect;
+}
+
 export default function ControlPanel({
   regions,
   presets,
@@ -67,6 +72,8 @@ export default function ControlPanel({
   onExportSettingsChange,
   qaItems,
 }: ControlPanelProps) {
+  const [activeColorPicker, setActiveColorPicker] = useState<ActiveColorPickerState | null>(null);
+
   // Cascading geography picker state.
   const [regionCode, setRegionCode] = useState("");
   const [countryId, setCountryId] = useState("");
@@ -248,21 +255,98 @@ export default function ControlPanel({
           </div>
           <div>
             <label htmlFor="palette" className="glass-label">
-              Palette
+              Theme / Palette
             </label>
             <select
               id="palette"
               className="glass-select"
-              value={settings.palette}
-              onChange={(e) => onSettingsChange({ palette: e.target.value })}
+              value={settings.style?.mode === "flag" ? "mode_flag" : `standard:${settings.style?.preset_id}`}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val === "mode_flag") {
+                  // Switch to flag mode, select first available flag
+                  const firstFlag = presets?.flags?.[0]?.id || "";
+                  onSettingsChange({
+                    style: {
+                      schema_version: 2,
+                      mode: "flag",
+                      preset_id: firstFlag,
+                      variant: settings.style?.variant || "light",
+                      overrides: {},
+                    },
+                  });
+                } else {
+                  // Standard mode
+                  const [mode, presetId] = val.split(":");
+                  onSettingsChange({
+                    style: {
+                      schema_version: 2,
+                      mode: "standard",
+                      preset_id: presetId,
+                      variant: settings.style?.variant,
+                      overrides: {},
+                    },
+                  });
+                }
+              }}
             >
               {(presets?.palette ?? []).map((p) => (
-                <option key={p.id} value={p.id}>
+                <option key={`standard:${p.id}`} value={`standard:${p.id}`}>
                   {p.name} ({p.type})
                 </option>
               ))}
+              <option value="mode_flag">Country Flags…</option>
             </select>
           </div>
+
+          {settings.style?.mode === "flag" && (
+            <div>
+              <label htmlFor="country_flag" className="glass-label">
+                Country
+              </label>
+              <select
+                id="country_flag"
+                className="glass-select"
+                value={settings.style.preset_id}
+                onChange={(e) => {
+                  onSettingsChange({
+                    style: {
+                      ...settings.style!,
+                      preset_id: e.target.value,
+                      overrides: {}, // Clear custom colors when switching flags
+                    },
+                  });
+                }}
+              >
+                {(presets?.flags ?? []).map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          {settings.style?.mode === "flag" && (
+            <div>
+              <label htmlFor="variant" className="glass-label">
+                Variant
+              </label>
+              <select
+                id="variant"
+                className="glass-select"
+                value={settings.style?.variant || "light"}
+                onChange={(e) => onSettingsChange({
+                  style: {
+                    ...settings.style!,
+                    variant: e.target.value as "light" | "dark",
+                  }
+                })}
+              >
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+          )}
           <div>
             <label htmlFor="typography" className="glass-label">
               Typography
@@ -287,9 +371,9 @@ export default function ControlPanel({
       <section className="animate-fade-in" style={{ animationDelay: "0.12s" }}>
         <div className="flex items-center justify-between mb-2.5">
           <h2 className="section-header !mb-0">Colors</h2>
-          {settings.custom_colors && Object.keys(settings.custom_colors).length > 0 && (
+          {settings.style?.overrides && Object.keys(settings.style.overrides).length > 0 && (
             <button
-              onClick={() => onSettingsChange({ custom_colors: {} })}
+              onClick={() => onSettingsChange({ style: { ...settings.style!, overrides: {} } })}
               className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-[var(--foreground)] transition-colors"
             >
               Reset to Preset
@@ -298,35 +382,64 @@ export default function ControlPanel({
         </div>
         <div className="space-y-0.5">
           {(() => {
-            const currentPalette = presets?.palette.find(p => p.id === settings.palette);
-            const tokens = currentPalette?.tokens;
-            const custom = settings.custom_colors || {};
+            let tokens: any = {};
+            if (settings.style?.mode === "flag") {
+                const currentFlag = presets?.flags.find(p => p.id === settings.style?.preset_id);
+                tokens = currentFlag?.variants[settings.style?.variant || "light"];
+            } else {
+                const currentPalette = presets?.palette.find(p => p.id === settings.style?.preset_id);
+                tokens = currentPalette?.tokens;
+            }
+            
+            const custom = settings.style?.overrides || {};
             
             const handleColorChange = (key: string, value: string) => {
-              onSettingsChange({ custom_colors: { ...custom, [key]: value } });
+              onSettingsChange({ style: { ...settings.style!, overrides: { ...custom, [key]: value } } });
             };
 
-            const getColor = (key: keyof NonNullable<typeof tokens>) => custom[key] ?? tokens?.[key] ?? "#000000";
+            const handleColorCommit = (key: string, value: string) => {
+              onSettingsChange({ style: { ...settings.style!, overrides: { ...custom, [key]: value } } });
+            };
+
+            const getColor = (key: string) => custom[key] ?? tokens?.[key] ?? "#000000";
+            
+            const activeColors = Array.from(new Set(Object.values(tokens || {}).map(c => String(c)))).filter(Boolean);
 
             return (
               <>
-                <div className="mb-2">
-                  <p className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/40 mb-1">Canvas</p>
-                  <ColorPicker label="Background" value={getColor("background")} onChange={(v) => handleColorChange("background", v)} />
-                </div>
-                <div className="mb-2">
-                  <p className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/40 mb-1">Rivers</p>
-                  <ColorPicker label="Major" value={getColor("feature_major")} onChange={(v) => handleColorChange("feature_major", v)} />
-                  <ColorPicker label="Primary" value={getColor("feature_primary")} onChange={(v) => handleColorChange("feature_primary", v)} />
-                  <ColorPicker label="Secondary" value={getColor("feature_secondary")} onChange={(v) => handleColorChange("feature_secondary", v)} />
-                  <ColorPicker label="Minor" value={getColor("feature_minor")} onChange={(v) => handleColorChange("feature_minor", v)} />
-                  <ColorPicker label="Headwater" value={getColor("feature_headwater")} onChange={(v) => handleColorChange("feature_headwater", v)} />
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/40 mb-1">Text</p>
-                  <ColorPicker label="Primary Text" value={getColor("text_primary")} onChange={(v) => handleColorChange("text_primary", v)} />
-                  <ColorPicker label="Secondary Text" value={getColor("text_secondary")} onChange={(v) => handleColorChange("text_secondary", v)} />
-                </div>
+                {Object.keys(tokens || {}).map((key) => (
+                  <div key={key} className="flex items-center justify-between group">
+                    <label className="text-[11px] text-[var(--foreground-muted)] capitalize w-24">
+                      {key.replace(/_/g, " ")}
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono text-[var(--foreground-muted)] w-16 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {getColor(key)}
+                      </span>
+                      <button
+                        className="w-5 h-5 rounded-full border border-white/20 shadow-sm cursor-pointer"
+                        style={{ backgroundColor: getColor(key) }}
+                        title={`Customize ${key}`}
+                        onClick={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          setActiveColorPicker({ key, rect });
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+                
+                {activeColorPicker && (
+                  <ColorPickerPopover
+                    label={activeColorPicker.key}
+                    initialColor={getColor(activeColorPicker.key)}
+                    activeColors={activeColors}
+                    onChange={(color) => handleColorChange(activeColorPicker.key, color)}
+                    onCommit={(color) => handleColorCommit(activeColorPicker.key, color)}
+                    onClose={() => setActiveColorPicker(null)}
+                    triggerRect={activeColorPicker.rect}
+                  />
+                )}
               </>
             );
           })()}

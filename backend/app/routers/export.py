@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, BackgroundTasks
 import asyncpg
 
-from app.database import get_db_pool
+from app.database import get_repository
+from app.repository.river_repository import RiverRepository
 from app.models.export_models import ExportRequest
 from app.services.clipping_service import ClippingService
 from app.services.export_service import ExportService
@@ -12,10 +13,10 @@ router = APIRouter()
 @router.post("/export")
 async def generate_export(request: ExportRequest,
                           background_tasks: BackgroundTasks,
-                          pool: asyncpg.Pool = Depends(get_db_pool)):
+                          repo: RiverRepository = Depends(get_repository)):
     """Clip, render, and convert the poster to the requested format/size."""
     try:
-        clip_result = await ClippingService.clip_rivers(pool, request)
+        clip_result = await ClippingService.clip_rivers(repo, request.geography_id, request.density_preset, request.classification_preset)
     except ValueError as exc:  # unknown geography or density preset
         raise HTTPException(status_code=404, detail=str(exc))
 
@@ -38,16 +39,9 @@ async def generate_export(request: ExportRequest,
         for f in clip_result.features
     )
     
-    # We resolve size via ExportService.resolve_size, wait export_service doesn't expose it directly.
-    # Let's extract canvas_width and canvas_height from the actual dimensions
-    # Instead of pulling size out of ExportService here, we'll just use a placeholder or read the request.export_size.
-    # To keep it simple, we'll parse the request size or use defaults.
-    # ExportService uses predefined dimensions based on export_size. Let's assume standard poster is 7200x10800 for 24x36.
-    # But wait, we can just grab size from the request.
-    from app.config.render_constants import EXPORT_SIZES
-    size = EXPORT_SIZES.get(request.export_size, EXPORT_SIZES["24x36"])
-    canvas_w = request.custom_width or size.width
-    canvas_h = request.custom_height or size.height
+    size = ExportService.resolve_size(request)
+    canvas_w = size.width
+    canvas_h = size.height
 
     manifest = ExportManifest(
         generated_at=datetime.now(timezone.utc),
@@ -78,7 +72,7 @@ async def generate_export(request: ExportRequest,
         confidence_warnings=clip_result.metadata.confidence_warnings
     )
 
-    AuditService.queue_audit_log(background_tasks, pool, manifest)
+    AuditService.queue_audit_log(background_tasks, repo.pool, manifest)
 
     return Response(
         content=payload,

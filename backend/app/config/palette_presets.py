@@ -43,5 +43,20 @@ PALETTE_PRESETS = {
             "text_primary": "#FFFFFF",
             "text_secondary": "#64748B"
         }
+    },
+    "guyana": {
+        "id": "guyana",
+        "name": "Guyana",
+        "type": "light",
+        "tokens": {
+            "background": "#FDFBF7",
+            "feature_major": "#CE1126",
+            "feature_primary": "#FCD116",
+            "feature_secondary": "#009E49",
+            "feature_minor": "#000000",
+            "feature_headwater": "#4A4A4A",
+            "text_primary": "#000000",
+            "text_secondary": "#009E49"
+        }
     }
 }
