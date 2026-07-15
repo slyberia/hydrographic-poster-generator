@@ -3,7 +3,7 @@
   "commands": [
     {
       "name": "isolated_export_test",
-      "command": ["python", "scratch/test_phase0_baseline.py"],
+      "command": ["python", "C:/Users/kyleg/.gemini/antigravity/brain/92ea24e5-873d-4cab-a65b-b43101e60182/scratch/test_phase0_baseline.py"],
       "enabled": true
     }
   ],
