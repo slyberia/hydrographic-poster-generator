@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 
-import { ElementOffset, LayoutOverrides } from "@/lib/types";
+import { ElementTransform, LayoutOverrides } from "@/lib/api";
 
 export interface InteractiveCanvasProps {
   svg: string;
@@ -59,7 +59,7 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
       if (dx !== 0 || dy !== 0) {
         e.preventDefault();
         const key = target.id as keyof LayoutOverrides;
-        const currentT = transformsRef.current[key] || { x: 0, y: 0 };
+        const currentT = transformsRef.current[key] || { x: 0, y: 0, scale: 1 };
         let newX = currentT.x + dx;
         let newY = currentT.y + dy;
         newX = Math.max(-3600, Math.min(3600, newX));
@@ -116,7 +116,7 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
         isDragging = false;
         
         const key = matchedId as keyof LayoutOverrides;
-        const currentT = transformsRef.current[key] || { x: 0, y: 0 };
+        const currentT = transformsRef.current[key] || { x: 0, y: 0, scale: 1 };
         startTx = currentT.x;
         startTy = currentT.y;
         
@@ -190,7 +190,7 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
         newY = Math.max(-5400, Math.min(5400, newY));
 
         const key = draggingId as keyof LayoutOverrides;
-        const currentT = transformsRef.current[key] || { x: 0, y: 0 };
+        const currentT = transformsRef.current[key] || { x: 0, y: 0, scale: 1 };
         
         onTransformsChangeRef.current({
           ...transformsRef.current,

@@ -11,7 +11,8 @@
  * identical space (no layout shift).
  */
 
-import InteractiveCanvas, { Transform } from "./InteractiveCanvas";
+import InteractiveCanvas from "./InteractiveCanvas";
+import { LayoutOverrides } from "@/lib/api";
 
 interface PreviewPaneProps {
   svg: string | null;
@@ -20,8 +21,8 @@ interface PreviewPaneProps {
   designAssetMode: boolean;
   riverCount: number | null;
   geographyName: string | null;
-  transforms: Record<string, Transform>;
-  onTransformsChange: (transforms: Record<string, Transform>) => void;
+  transforms: LayoutOverrides;
+  onTransformsChange: (transforms: LayoutOverrides) => void;
   onResetTransforms: () => void;
   onDownload: () => void;
   isDownloading: boolean;

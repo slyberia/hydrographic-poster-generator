@@ -29,28 +29,28 @@ export function Tooltip({ children, content, id }: TooltipProps) {
 
   if (!FEATURE_FLAGS.new_tooltip_system) {
     // If feature flag is off, just render the child natively (could use native title as fallback)
-    return React.cloneElement(children, {
+    return React.cloneElement(children as React.ReactElement<any>, {
       title: typeof content === "string" ? content : undefined,
     });
   }
 
   // Intercept focus and blur for keyboard accessibility on the trigger element
-  const childWithEvents = React.cloneElement(children, {
+  const childWithEvents = React.cloneElement(children as React.ReactElement<any>, {
     onFocus: (e: React.FocusEvent) => {
       show();
-      children.props.onFocus?.(e);
+      (children.props as any).onFocus?.(e);
     },
     onBlur: (e: React.FocusEvent) => {
       hide();
-      children.props.onBlur?.(e);
+      (children.props as any).onBlur?.(e);
     },
     onMouseEnter: (e: React.MouseEvent) => {
       show();
-      children.props.onMouseEnter?.(e);
+      (children.props as any).onMouseEnter?.(e);
     },
     onMouseLeave: (e: React.MouseEvent) => {
       hide();
-      children.props.onMouseLeave?.(e);
+      (children.props as any).onMouseLeave?.(e);
     },
     "aria-describedby": isVisible ? tooltipId : undefined,
   });

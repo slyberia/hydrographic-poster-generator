@@ -559,8 +559,9 @@ export default function ControlPanel({
         </div>
         <div className="grid grid-cols-2 gap-2">
           {["title_block", "metadata", "legend", "north_arrow"].map((id) => {
-            const transform = settings.layout_overrides?.[id] || { x: 0, y: 0, scale: 1 };
-            const isActive = !!settings.layout_overrides?.[id];
+            const key = id as keyof typeof settings.layout_overrides;
+            const transform = settings.layout_overrides?.[key] || { x: 0, y: 0, scale: 1 };
+            const isActive = !!settings.layout_overrides?.[key];
             
             return (
               <div key={id} className={`space-y-1.5 p-2 rounded-lg border transition-colors ${isActive ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/5 hover:border-white/10'}`}>
@@ -572,7 +573,7 @@ export default function ControlPanel({
                     <button
                       onClick={() => {
                         const newOverrides = { ...settings.layout_overrides };
-                        delete newOverrides[id];
+                        delete newOverrides[key];
                         onSettingsChange({ layout_overrides: newOverrides });
                       }}
                       className="text-[9px] text-white/50 hover:text-white"

@@ -132,8 +132,17 @@ steps:
     args:
       - '-c'
       - |
-        FRONTEND_URL=$$(gcloud run services describe ${_FRONTEND_SERVICE} --region=${_REGION} --format="value(status.url)")
-        CORS="$$FRONTEND_URL,http://localhost:3000"
+        URLS_JSON=$$(gcloud run services describe ${_FRONTEND_SERVICE} --region=${_REGION} --format="value(metadata.annotations['run.googleapis.com/urls'])")
+        # Extract URLs, remove brackets and quotes, replace spaces with commas if any
+        URLS=$$(echo $$URLS_JSON | sed 's/[][]//g' | sed 's/"//g' | tr -s ' ' ',')
+        
+        if [ -n "$$URLS" ]; then
+          CORS="$$URLS,http://localhost:3000"
+        else
+          FRONTEND_URL=$$(gcloud run services describe ${_FRONTEND_SERVICE} --region=${_REGION} --format="value(status.url)")
+          CORS="$$FRONTEND_URL,http://localhost:3000"
+        fi
+        
         echo "Patching backend CORS with: $$CORS"
         
         gcloud run services update ${_BACKEND_SERVICE} \
