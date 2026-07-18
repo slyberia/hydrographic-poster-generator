@@ -1,0 +1,18 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- C:\MORE AI STUFF\HydroRIVERS Image Generator\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\MORE AI STUFF\HydroRIVERS Image Generator
+plugins: anyio-4.14.1
+collecting ... collected 9 items
+
+backend/tests/test_feature_ingestion.py::test_match_osm_element_school PASSED [ 11%]
+backend/tests/test_feature_ingestion.py::test_match_osm_element_no_match PASSED [ 22%]
+backend/tests/test_feature_ingestion.py::test_normalize_tags PASSED      [ 33%]
+backend/tests/test_feature_ingestion.py::test_match_osm_element_disjunctive PASSED [ 44%]
+backend/tests/test_feature_ingestion.py::test_osm_element_to_geojson_point PASSED [ 55%]
+backend/tests/test_feature_ingestion.py::test_osm_element_to_geojson_polygon PASSED [ 66%]
+backend/tests/test_feature_ingestion.py::test_build_overpass_query PASSED [ 77%]
+backend/tests/test_feature_ingestion.py::test_manual_features_structure PASSED [ 88%]
+backend/tests/test_feature_ingestion.py::test_parse_osm_pbf_file PASSED  [100%]
+
+============================== 9 passed in 0.31s ==============================

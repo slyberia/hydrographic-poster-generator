@@ -7,7 +7,7 @@
  * belongs server-side with real font metrics.
  */
 
-import type { ExportFormat, ExportSize, TypographyPreset } from "./api";
+import type { ExportFormat, ExportSize, TypographyPreset, MetadataOptions } from "./api";
 
 export type QASeverity = "pass" | "warning" | "block";
 
@@ -79,6 +79,7 @@ export interface QAInput {
   /** X-River-Count from the last successful preview; null before first load */
   riverCount: number | null;
   previewError: string | null;
+  metadataOptions?: MetadataOptions | null;
 }
 
 export function evaluateQA(input: QAInput): QAItem[] {
@@ -120,30 +121,42 @@ export function evaluateQA(input: QAInput): QAItem[] {
 
   // Visual/layout QA: text fit heuristic (§15) — warning, never block.
   if (input.typography && !input.designAssetMode) {
-    const titleLimit = maxTitleChars(input.typography);
-    const subtitleLimit = maxSubtitleChars(input.typography);
-    const titleOver = input.title.length > titleLimit;
-    const subtitleOver = input.subtitle.length > subtitleLimit;
-    if (titleOver || subtitleOver) {
-      const parts = [];
-      if (titleOver) {
-        parts.push(`title ${input.title.length}/${titleLimit}`);
+    const showTitle = input.metadataOptions?.show_title ?? true;
+    const showSubtitle = input.metadataOptions?.show_subtitle ?? true;
+
+    if (showTitle || showSubtitle) {
+      const titleLimit = maxTitleChars(input.typography);
+      const subtitleLimit = maxSubtitleChars(input.typography);
+      const titleOver = showTitle && input.title.length > titleLimit;
+      const subtitleOver = showSubtitle && input.subtitle.length > subtitleLimit;
+      if (titleOver || subtitleOver) {
+        const parts = [];
+        if (titleOver) {
+          parts.push(`title ${input.title.length}/${titleLimit}`);
+        }
+        if (subtitleOver) {
+          parts.push(`subtitle ${input.subtitle.length}/${subtitleLimit}`);
+        }
+        items.push({
+          id: "text_fit",
+          label: "Text Fit",
+          severity: "warning",
+          message: `Text may exceed its block (${parts.join(", ")} chars).`,
+        });
+      } else {
+        items.push({
+          id: "text_fit",
+          label: "Text Fit",
+          severity: "pass",
+          message: "Title and subtitle fit their blocks.",
+        });
       }
-      if (subtitleOver) {
-        parts.push(`subtitle ${input.subtitle.length}/${subtitleLimit}`);
-      }
-      items.push({
-        id: "text_fit",
-        label: "Text Fit",
-        severity: "warning",
-        message: `Text may exceed its block (${parts.join(", ")} chars).`,
-      });
     } else {
       items.push({
         id: "text_fit",
         label: "Text Fit",
         severity: "pass",
-        message: "Title and subtitle fit their blocks.",
+        message: "Title and subtitle are hidden.",
       });
     }
   }

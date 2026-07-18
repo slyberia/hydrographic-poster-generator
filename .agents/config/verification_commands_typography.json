@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "contract_tests",
+      "command": ["python", "backend/tests/test_phase2a_baseline.py"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "svg_renderer_tests",
+      "command": ["python", "-m", "pytest", "backend/tests/test_svg_renderer.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "frontend_lint",
+      "command": ["npm.cmd", "run", "lint", "--", "-f", "junit", "-o", "lint-results.xml"],
+      "cwd": "frontend",
+      "enabled": true,
+      "junit_xml": "frontend/lint-results.xml"
+    }
+  ],
+  "note": "Phase 4 typography override verification."
+}

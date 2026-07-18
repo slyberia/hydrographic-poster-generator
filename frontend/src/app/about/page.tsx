@@ -7,6 +7,7 @@ export default function AboutPage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -57,7 +58,7 @@ export default function AboutPage() {
               className="text-[var(--foreground-muted)] font-light leading-relaxed max-w-[65ch]"
               style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)" }}
             >
-              This isn't just a design tool. It's a lens into the unique intersection of rigorous geographic information systems (GIS) and minimalist cartographic art.
+              This isn&apos;t just a design tool. It&apos;s a lens into the unique intersection of rigorous geographic information systems (GIS) and minimalist cartographic art.
             </p>
           </div>
           <div className="lg:col-span-5 relative">
@@ -91,7 +92,7 @@ export default function AboutPage() {
               Behind the glassmorphic controls lies a heavy-duty spatial engine. We use PostgreSQL and PostGIS to query and dynamically clip the massive <span className="text-[var(--foreground)] font-medium">HydroRIVERS dataset</span> — mapping over 32 million kilometers of global river networks.
             </p>
             <p className="text-[var(--foreground-muted)] leading-relaxed">
-              When you select a geography, the engine isn't just loading a static image. It is executing complex spatial intersections in real-time, calculating upstream areas, and assigning cartographic display classes to raw geometric data before translating it into vector art.
+              When you select a geography, the engine isn&apos;t just loading a static image. It is executing complex spatial intersections in real-time, calculating upstream areas, and assigning cartographic display classes to raw geometric data before translating it into vector art.
             </p>
           </div>
         </section>
@@ -120,7 +121,7 @@ export default function AboutPage() {
             <div className="flex flex-col gap-3">
               <h3 className="text-xl text-[var(--foreground)] font-medium">Design Assets</h3>
               <p className="text-[var(--foreground-muted)] leading-relaxed">
-                Switch to "Design Asset Mode" to strip away the background, text, and metadata. Export the raw, transparent SVG river network to incorporate real spatial data into your own Adobe Illustrator or Figma workflows.
+                Switch to &quot;Design Asset Mode&quot; to strip away the background, text, and metadata. Export the raw, transparent SVG river network to incorporate real spatial data into your own Adobe Illustrator or Figma workflows.
               </p>
             </div>
 

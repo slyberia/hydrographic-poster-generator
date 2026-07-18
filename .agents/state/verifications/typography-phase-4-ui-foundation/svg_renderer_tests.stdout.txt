@@ -1,0 +1,20 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\MORE AI STUFF\HydroRIVERS Image Generator
+plugins: anyio-4.12.1
+collecting ... collected 11 items
+
+backend/tests/test_svg_renderer.py::test_root_element_contract PASSED    [  9%]
+backend/tests/test_svg_renderer.py::test_one_path_per_feature_with_classes PASSED [ 18%]
+backend/tests/test_svg_renderer.py::test_poster_chrome_present PASSED    [ 27%]
+backend/tests/test_svg_renderer.py::test_design_asset_mode_strips_chrome PASSED [ 36%]
+backend/tests/test_svg_renderer.py::test_scale_bar_values_match_contract PASSED [ 45%]
+backend/tests/test_svg_renderer.py::test_scale_bar_omitted_for_tall_maps PASSED [ 54%]
+backend/tests/test_svg_renderer.py::test_empty_rivers_still_renders_frame PASSED [ 63%]
+backend/tests/test_svg_renderer.py::test_user_text_is_escaped PASSED     [ 72%]
+backend/tests/test_svg_renderer.py::test_missing_bbox_rejected PASSED    [ 81%]
+backend/tests/test_svg_renderer.py::test_svg_is_well_formed_xml PASSED   [ 90%]
+backend/tests/test_svg_renderer.py::test_unknown_presets_rejected PASSED [100%]
+
+============================= 11 passed in 0.42s ==============================

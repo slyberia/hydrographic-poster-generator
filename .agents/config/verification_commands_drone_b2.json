@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "contract_tests",
+      "command": [".venv\\Scripts\\python", "backend/tests/test_phase2a_baseline.py"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "grid_generation_test",
+      "command": [".venv\\Scripts\\python", "-m", "pytest", "backend/tests/test_grid_generation.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Phase B2: Region boundary normalization and H3 grid generation checks."
+}

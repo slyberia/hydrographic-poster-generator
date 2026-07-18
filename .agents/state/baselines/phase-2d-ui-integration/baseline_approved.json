@@ -3,9 +3,9 @@
   "status": "approved",
   "approved_by_human": true,
   "phase_id": "phase-2d-ui-integration",
-  "branch": "feature/phase-2d-ui-integration",
-  "commit": "8d79e7658c4022ed834e7acd898701e1251fbde3",
-  "generated_at": "2026-07-15T20:53:46.265634+00:00",
+  "branch": "main",
+  "commit": "92861daf8c2a00cf6db5ffa2ccb881a705027bd5",
+  "generated_at": "2026-07-16T22:39:41.740025+00:00",
   "commands_file": ".agents\\config\\verification_commands_phase2d.json",
   "commands": [
     {
@@ -19,7 +19,7 @@
         "-v"
       ],
       "exit_code": 0,
-      "duration_seconds": 1.725,
+      "duration_seconds": 0.806,
       "stdout_file": ".agents\\state\\baselines\\phase-2d-ui-integration\\phase2d_svg_renderer.stdout.txt",
       "stderr_file": ".agents\\state\\baselines\\phase-2d-ui-integration\\phase2d_svg_renderer.stderr.txt",
       "junit_xml": null,
@@ -37,7 +37,7 @@
         "-v"
       ],
       "exit_code": 0,
-      "duration_seconds": 1.591,
+      "duration_seconds": 0.833,
       "stdout_file": ".agents\\state\\baselines\\phase-2d-ui-integration\\phase2d_layout_resolver.stdout.txt",
       "stderr_file": ".agents\\state\\baselines\\phase-2d-ui-integration\\phase2d_layout_resolver.stderr.txt",
       "junit_xml": null,
@@ -57,13 +57,13 @@
         "-o",
         "lint-results.xml"
       ],
-      "exit_code": 1,
-      "duration_seconds": 10.038,
+      "exit_code": 0,
+      "duration_seconds": 4.853,
       "stdout_file": ".agents\\state\\baselines\\phase-2d-ui-integration\\phase2d_frontend_lint.stdout.txt",
       "stderr_file": ".agents\\state\\baselines\\phase-2d-ui-integration\\phase2d_frontend_lint.stderr.txt",
       "junit_xml": "frontend/lint-results.xml",
-      "test_case_count": 28,
-      "classification": "pre_existing"
+      "test_case_count": 22,
+      "classification": "not_applicable"
     }
   ],
   "test_cases": [
@@ -86,46 +86,16 @@
       "classification": "not_applicable"
     },
     {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::org.eslint.react-hooks/set-state-in-effect",
-      "status": "failed",
-      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders\n\nEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:\n* Update external systems with the latest state from React.\n* Subscribe for updates from some external system, calling setState in a callback function when external state changes.\n\nCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).\n\nC:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page.tsx:10:5\n   8 |\n   9 |   useEffect(() => {\n> 10 |     setMounted(true);\n     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect\n  11 |   }, []);\n  12 |\n  13 |   if (!mounted) return null;\nline 10, col 5, Error - Error: Calling setState synchronously within an effect can trigger cascading renders&#10;&#10;Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:&#10;* Update external systems with the latest state from React.&#10;* Subscribe for updates from some external system, calling setState in a callback function when external state changes.&#10;&#10;Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).&#10;&#10;C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page.tsx:10:5&#10;   8 |&#10;   9 |   useEffect(() =&gt; {&#10;&gt; 10 |     setMounted(true);&#10;     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect&#10;  11 |   }, []);&#10;  12 |&#10;  13 |   if (!mounted) return null; (react-hooks/set-state-in-effect)",
-      "classification": "pre_existing"
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
     },
     {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::org.eslint.react/no-unescaped-entities",
-      "status": "failed",
-      "message": "`'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.\nline 60, col 23, Error - `&apos;` can be escaped with `&amp;apos;`, `&amp;lsquo;`, `&amp;#39;`, `&amp;rsquo;`. (react/no-unescaped-entities)",
-      "classification": "pre_existing"
-    },
-    {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::org.eslint.react/no-unescaped-entities",
-      "status": "failed",
-      "message": "`'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.\nline 60, col 48, Error - `&apos;` can be escaped with `&amp;apos;`, `&amp;lsquo;`, `&amp;#39;`, `&amp;rsquo;`. (react/no-unescaped-entities)",
-      "classification": "pre_existing"
-    },
-    {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::org.eslint.react/no-unescaped-entities",
-      "status": "failed",
-      "message": "`'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.\nline 94, col 58, Error - `&apos;` can be escaped with `&amp;apos;`, `&amp;lsquo;`, `&amp;#39;`, `&amp;rsquo;`. (react/no-unescaped-entities)",
-      "classification": "pre_existing"
-    },
-    {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::org.eslint.react/no-unescaped-entities",
-      "status": "failed",
-      "message": "`\"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.\nline 123, col 27, Error - `&quot;` can be escaped with `&amp;quot;`, `&amp;ldquo;`, `&amp;#34;`, `&amp;rdquo;`. (react/no-unescaped-entities)",
-      "classification": "pre_existing"
-    },
-    {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::org.eslint.react/no-unescaped-entities",
-      "status": "failed",
-      "message": "`\"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.\nline 123, col 45, Error - `&quot;` can be escaped with `&amp;quot;`, `&amp;ldquo;`, `&amp;#34;`, `&amp;rdquo;`. (react/no-unescaped-entities)",
-      "classification": "pre_existing"
-    },
-    {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\docs\\page::org.eslint.react/no-unescaped-entities",
-      "status": "failed",
-      "message": "`'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.\nline 68, col 163, Error - `&apos;` can be escaped with `&amp;apos;`, `&amp;lsquo;`, `&amp;#39;`, `&amp;rsquo;`. (react/no-unescaped-entities)",
-      "classification": "pre_existing"
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\docs\\page::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\docs\\page.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
     },
     {
       "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\layout::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\layout.tsx",
@@ -134,10 +104,10 @@
       "classification": "not_applicable"
     },
     {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\page::org.eslint.@typescript-eslint/no-unused-vars",
-      "status": "failed",
-      "message": "'Image' is defined but never used.\nline 2, col 8, Warning - &apos;Image&apos; is defined but never used. (@typescript-eslint/no-unused-vars)",
-      "classification": "pre_existing"
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\page::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\page.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
     },
     {
       "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\studio\\page::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\studio\\page.tsx",
@@ -152,22 +122,16 @@
       "classification": "not_applicable"
     },
     {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover::org.eslint.react-hooks/set-state-in-effect",
-      "status": "failed",
-      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders\n\nEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:\n* Update external systems with the latest state from React.\n* Subscribe for updates from some external system, calling setState in a callback function when external state changes.\n\nCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).\n\nC:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover.tsx:32:5\n  30 |   // Sync internal state when initialColor changes externally\n  31 |   useEffect(() => {\n> 32 |     setColor(initialColor);\n     |     ^^^^^^^^ Avoid calling setState() directly within an effect\n  33 |   }, [initialColor]);\n  34 |\n  35 |   // Handle positioning\nline 32, col 5, Error - Error: Calling setState synchronously within an effect can trigger cascading renders&#10;&#10;Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:&#10;* Update external systems with the latest state from React.&#10;* Subscribe for updates from some external system, calling setState in a callback function when external state changes.&#10;&#10;Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).&#10;&#10;C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover.tsx:32:5&#10;  30 |   // Sync internal state when initialColor changes externally&#10;  31 |   useEffect(() =&gt; {&#10;&gt; 32 |     setColor(initialColor);&#10;     |     ^^^^^^^^ Avoid calling setState() directly within an effect&#10;  33 |   }, [initialColor]);&#10;  34 |&#10;  35 |   // Handle positioning (react-hooks/set-state-in-effect)",
-      "classification": "pre_existing"
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
     },
     {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ControlPanel::org.eslint.@typescript-eslint/no-unused-vars",
-      "status": "failed",
-      "message": "'mode' is assigned a value but never used.\nline 284, col 26, Warning - &apos;mode&apos; is assigned a value but never used. (@typescript-eslint/no-unused-vars)",
-      "classification": "pre_existing"
-    },
-    {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ControlPanel::org.eslint.@typescript-eslint/no-explicit-any",
-      "status": "failed",
-      "message": "Unexpected any. Specify a different type.\nline 389, col 25, Error - Unexpected any. Specify a different type. (@typescript-eslint/no-explicit-any)",
-      "classification": "pre_existing"
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ControlPanel::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ControlPanel.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
     },
     {
       "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\InteractiveCanvas::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\InteractiveCanvas.tsx",
@@ -188,7 +152,19 @@
       "classification": "not_applicable"
     },
     {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\Tooltip::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\Tooltip.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
       "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\api::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\api.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\features::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\features.ts",
       "status": "passed",
       "message": "",
       "classification": "not_applicable"
@@ -200,22 +176,10 @@
       "classification": "not_applicable"
     },
     {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\state_migration::org.eslint.@typescript-eslint/no-unused-vars",
-      "status": "failed",
-      "message": "'PosterSettings' is defined but never used.\nline 1, col 10, Warning - &apos;PosterSettings&apos; is defined but never used. (@typescript-eslint/no-unused-vars)",
-      "classification": "pre_existing"
-    },
-    {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\state_migration::org.eslint.@typescript-eslint/no-explicit-any",
-      "status": "failed",
-      "message": "Unexpected any. Specify a different type.\nline 9, col 11, Error - Unexpected any. Specify a different type. (@typescript-eslint/no-explicit-any)",
-      "classification": "pre_existing"
-    },
-    {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\state_migration::org.eslint.@typescript-eslint/no-explicit-any",
-      "status": "failed",
-      "message": "Unexpected any. Specify a different type.\nline 27, col 46, Error - Unexpected any. Specify a different type. (@typescript-eslint/no-explicit-any)",
-      "classification": "pre_existing"
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\state_migration::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\state_migration.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
     },
     {
       "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\client::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\client.ts",
@@ -224,10 +188,10 @@
       "classification": "not_applicable"
     },
     {
-      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\middleware::org.eslint.@typescript-eslint/no-unused-vars",
-      "status": "failed",
-      "message": "'options' is defined but never used.\nline 24, col 48, Warning - &apos;options&apos; is defined but never used. (@typescript-eslint/no-unused-vars)",
-      "classification": "pre_existing"
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\middleware::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\middleware.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
     },
     {
       "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\server::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\server.ts",
@@ -236,5 +200,5 @@
       "classification": "not_applicable"
     }
   ],
-  "notes": "All failures remain unclassified until human review."
+  "notes": "Auto-approved due to zero failures."
 }

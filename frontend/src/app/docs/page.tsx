@@ -65,7 +65,7 @@ export default function DocsPage() {
             <div className="bg-neutral-800 rounded-lg p-6">
               <h3 className="text-lg font-medium text-[var(--foreground)] mb-2">How are geometries repaired?</h3>
               <p className="text-neutral-400">
-                During the clipping process, PostGIS runs <code>ST_MakeValid</code> to fix self-intersecting or malformed river polygons. If more than 5% of a map's features required active repair, a confidence warning is automatically attached to the export metadata.
+                During the clipping process, PostGIS runs <code>ST_MakeValid</code> to fix self-intersecting or malformed river polygons. If more than 5% of a map&apos;s features required active repair, a confidence warning is automatically attached to the export metadata.
               </p>
             </div>
             <div className="bg-neutral-800 rounded-lg p-6">

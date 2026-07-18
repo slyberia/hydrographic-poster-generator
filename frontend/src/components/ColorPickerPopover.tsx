@@ -29,6 +29,7 @@ export default function ColorPickerPopover({
 
   // Sync internal state when initialColor changes externally
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setColor(initialColor);
   }, [initialColor]);
 

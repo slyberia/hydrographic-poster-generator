@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "repository_root": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator",
+  "symbols": [
+    "typography_overrides",
+    "TypographyOverrides"
+  ],
+  "match_count": 26,
+  "matches": [
+    {
+      "symbol": "TypographyOverrides",
+      "file": "docs\\ROADMAP.md",
+      "line": 39,
+      "context": "37: ### \ud83d\udd35 Phase 4: Typography Foundation (Pending)\n38: - **Advanced UI Selectors**: Implement font family pickers, weight selectors, and letter-spacing tracking sliders on the frontend.\n39: - **Overrides**: Wire the controls to construct and send the `TypographyOverrides` object to the backend.\n40: - **Customization Limits**: Validate that typography adjustments respect bounds defined in the backend's `TypographyOverrides` models.\n41: ",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "docs\\ROADMAP.md",
+      "line": 40,
+      "context": "38: - **Advanced UI Selectors**: Implement font family pickers, weight selectors, and letter-spacing tracking sliders on the frontend.\n39: - **Overrides**: Wire the controls to construct and send the `TypographyOverrides` object to the backend.\n40: - **Customization Limits**: Validate that typography adjustments respect bounds defined in the backend's `TypographyOverrides` models.\n41: \n42: ### \ud83d\udd35 Phase 5: Composition Hardening (Pending)",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "typography_overrides",
+      "file": "frontend\\src\\components\\ControlPanel.tsx",
+      "line": 33,
+      "context": "31:   schema_version: 2;\n32:   metadata_options: import(\"@/lib/api\").MetadataOptions;\n33:   typography_overrides: import(\"@/lib/api\").TypographyOverrides;\n34:   layout_overrides: import(\"@/lib/api\").LayoutOverrides;\n35: }",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "frontend\\src\\components\\ControlPanel.tsx",
+      "line": 33,
+      "context": "31:   schema_version: 2;\n32:   metadata_options: import(\"@/lib/api\").MetadataOptions;\n33:   typography_overrides: import(\"@/lib/api\").TypographyOverrides;\n34:   layout_overrides: import(\"@/lib/api\").LayoutOverrides;\n35: }",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "frontend\\src\\lib\\api.ts",
+      "line": 113,
+      "context": "111: }\n112: \n113: export interface TypographyOverrides {\n114:   title_font?: string;\n115:   title_weight?: string;",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "typography_overrides",
+      "file": "frontend\\src\\lib\\api.ts",
+      "line": 153,
+      "context": "151:   element_transforms?: Record<string, { x: number; y: number; scale: number }>; // legacy\n152:   metadata_options?: MetadataOptions;\n153:   typography_overrides?: TypographyOverrides;\n154:   layout_overrides?: LayoutOverrides;\n155: }",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "frontend\\src\\lib\\api.ts",
+      "line": 153,
+      "context": "151:   element_transforms?: Record<string, { x: number; y: number; scale: number }>; // legacy\n152:   metadata_options?: MetadataOptions;\n153:   typography_overrides?: TypographyOverrides;\n154:   layout_overrides?: LayoutOverrides;\n155: }",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "frontend\\src\\lib\\state_migration.ts",
+      "line": 2,
+      "context": "1: \n2: import { MetadataOptions, TypographyOverrides, LayoutOverrides } from \"./api\";\n3: \n4: // The shape of settings inside ControlPanel before Phase 2A",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "typography_overrides",
+      "file": "frontend\\src\\lib\\state_migration.ts",
+      "line": 23,
+      "context": "21:   schema_version: 2;\n22:   metadata_options: MetadataOptions;\n23:   typography_overrides: TypographyOverrides;\n24:   layout_overrides: LayoutOverrides;\n25: }",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "frontend\\src\\lib\\state_migration.ts",
+      "line": 23,
+      "context": "21:   schema_version: 2;\n22:   metadata_options: MetadataOptions;\n23:   typography_overrides: TypographyOverrides;\n24:   layout_overrides: LayoutOverrides;\n25: }",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "typography_overrides",
+      "file": "frontend\\src\\lib\\state_migration.ts",
+      "line": 45,
+      "context": "43:       show_data_credits: (legacy.show_metadata as boolean | undefined) ?? true,\n44:     },\n45:     typography_overrides: {},\n46:     layout_overrides: {},\n47:   };",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "typography_overrides",
+      "file": "frontend\\src\\app\\studio\\page.tsx",
+      "line": 48,
+      "context": "46:     show_data_credits: true,\n47:   },\n48:   typography_overrides: {},\n49:   layout_overrides: {},\n50: };",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "typography_overrides",
+      "file": "backend\\tests\\test_phase2a_baseline.py",
+      "line": 10,
+      "context": "8: def test_legacy_render_request_valid():\n9:     \"\"\"Verify that existing requests without new fields continue rendering identically.\"\"\"\n10:     # A legacy request without metadata_options or typography_overrides\n11:     req = RenderRequest(\n12:         geography_id=\"test_geo\",",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "backend\\app\\models\\render_models.py",
+      "line": 6,
+      "context": "4: from app.models.style_models import StyleSelection\n5: from app.models.metadata_models import MetadataOptions\n6: from app.models.typography_models import TypographyOverrides\n7: from app.models.layout_models import LayoutOverrides\n8: ",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "typography_overrides",
+      "file": "backend\\app\\models\\render_models.py",
+      "line": 24,
+      "context": "22:     element_transforms: Optional[Dict[str, Dict[str, float]]] = None  # Legacy layout field\n23:     metadata_options: Optional[MetadataOptions] = None\n24:     typography_overrides: Optional[TypographyOverrides] = None\n25:     layout_overrides: Optional[LayoutOverrides] = None\n26: ",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "backend\\app\\models\\render_models.py",
+      "line": 24,
+      "context": "22:     element_transforms: Optional[Dict[str, Dict[str, float]]] = None  # Legacy layout field\n23:     metadata_options: Optional[MetadataOptions] = None\n24:     typography_overrides: Optional[TypographyOverrides] = None\n25:     layout_overrides: Optional[LayoutOverrides] = None\n26: ",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "backend\\app\\models\\typography_models.py",
+      "line": 4,
+      "context": "2: from pydantic import BaseModel, ConfigDict\n3: \n4: class TypographyOverrides(BaseModel):\n5:     model_config = ConfigDict(extra=\"forbid\")\n6: ",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "typography_overrides",
+      "file": "backend\\app\\services\\svg_renderer.py",
+      "line": 56,
+      "context": "54: \n55:         preset_typography = rules_service.get_typography_preset(request.typography)\n56:         self.typography = resolve_typography(preset_typography, request.typography_overrides)\n57:         \n58:         self.metadata = resolve_metadata(request.show_metadata, request.show_legend, request.metadata_options)",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "backend\\app\\services\\typography_resolver.py",
+      "line": 3,
+      "context": "1: from typing import Optional\n2: from app.models.preset_models import TypographyPreset\n3: from app.models.typography_models import TypographyOverrides, ResolvedTypography\n4: \n5: def resolve_typography(preset: TypographyPreset, overrides: Optional[TypographyOverrides]) -> ResolvedTypography:",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": "backend\\app\\services\\typography_resolver.py",
+      "line": 5,
+      "context": "3: from app.models.typography_models import TypographyOverrides, ResolvedTypography\n4: \n5: def resolve_typography(preset: TypographyPreset, overrides: Optional[TypographyOverrides]) -> ResolvedTypography:\n6:     \"\"\"\n7:     Merges a typography preset with runtime overrides to produce a finalized typography configuration.",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": ".agents\\state\\phase2_plan_extracted.md",
+      "line": 217,
+      "context": "215: ## Backend Models\n216: \n217: ### `TypographyOverrides`\n218: \n219: Create a strict model using the actual existing typography token names:",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": ".agents\\state\\phase2_plan_extracted.md",
+      "line": 222,
+      "context": "220: \n221: ```python\n222: class TypographyOverrides(BaseModel):\n223:     model_config = ConfigDict(extra=\"forbid\")\n224: ",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "typography_overrides",
+      "file": ".agents\\state\\phase2_plan_extracted.md",
+      "line": 328,
+      "context": "326: \n327: typography: str = \"gallery_poster\"\n328: typography_overrides: TypographyOverrides | None = None\n329: \n330: layout_overrides: LayoutOverrides | None = None",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": ".agents\\state\\phase2_plan_extracted.md",
+      "line": 328,
+      "context": "326: \n327: typography: str = \"gallery_poster\"\n328: typography_overrides: TypographyOverrides | None = None\n329: \n330: layout_overrides: LayoutOverrides | None = None",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": ".agents\\state\\phase2_plan_extracted.md",
+      "line": 440,
+      "context": "438: \n439: ```ts\n440: type TypographyOverrides = {\n441:   titleFontId?: string;\n442:   titleSize?: number;",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "TypographyOverrides",
+      "file": ".agents\\state\\phase2_plan_extracted.md",
+      "line": 1257,
+      "context": "1255: \n1256:   // New additive settings\n1257:   typographyOverrides?: TypographyOverrides;\n1258:   metadataOptions?: MetadataOptions;\n1259:   layoutOverrides?: LayoutOverrides;",
+      "classification": "unclassified",
+      "review_required": true
+    }
+  ],
+  "warning": "This is a reference inventory, not a completed dependency map."
+}

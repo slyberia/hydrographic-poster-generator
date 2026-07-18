@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "typography-phase-4-ui-foundation",
+  "branch": "typography-phase-4-ui-foundation",
+  "commit": "92861daf8c2a00cf6db5ffa2ccb881a705027bd5",
+  "generated_at": "2026-07-17T04:42:28.148279+00:00",
+  "commands_file": ".agents\\config\\verification_commands_typography.json",
+  "commands": [
+    {
+      "name": "contract_tests",
+      "cwd": ".",
+      "command": [
+        "python",
+        "backend/tests/test_phase2a_baseline.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.413,
+      "stdout_file": ".agents\\state\\baselines\\typography-phase-4-ui-foundation\\contract_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\typography-phase-4-ui-foundation\\contract_tests.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "svg_renderer_tests",
+      "cwd": ".",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_svg_renderer.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 1.665,
+      "stdout_file": ".agents\\state\\baselines\\typography-phase-4-ui-foundation\\svg_renderer_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\typography-phase-4-ui-foundation\\svg_renderer_tests.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "frontend_lint",
+      "cwd": "frontend",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "-f",
+        "junit",
+        "-o",
+        "lint-results.xml"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 9.883,
+      "stdout_file": ".agents\\state\\baselines\\typography-phase-4-ui-foundation\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\typography-phase-4-ui-foundation\\frontend_lint.stderr.txt",
+      "junit_xml": "frontend/lint-results.xml",
+      "test_case_count": 27,
+      "classification": "not_applicable"
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\eslint.config::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\eslint.config.mjs",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\next.config::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\next.config.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\postcss.config::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\postcss.config.mjs",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\docs\\page::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\docs\\page.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\drone\\page::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\drone\\page.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\layout::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\layout.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\page::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\page.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\studio\\page::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\studio\\page.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPicker::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPicker.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ControlPanel::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ControlPanel.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\InteractiveCanvas::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\InteractiveCanvas.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\PreviewPane::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\PreviewPane.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\QAChecklist::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\QAChecklist.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\Tooltip::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\Tooltip.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\drone\\ControlRail::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\drone\\ControlRail.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\drone\\MapView::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\drone\\MapView.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\drone\\ReportDrawer::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\drone\\ReportDrawer.tsx",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\api::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\api.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\droneApi::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\droneApi.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\features::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\features.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\qa::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\qa.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\state_migration::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\state_migration.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\client::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\client.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\middleware::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\middleware.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\server::C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\server.ts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    }
+  ],
+  "notes": "Auto-approved due to zero failures."
+}

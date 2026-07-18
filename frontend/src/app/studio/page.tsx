@@ -191,6 +191,7 @@ export default function Page() {
         customHeight: exportSettings.custom_height,
         riverCount,
         previewError,
+        metadataOptions: settings.metadata_options,
       }),
     [settings, exportSettings, typographyPreset, riverCount, previewError],
   );

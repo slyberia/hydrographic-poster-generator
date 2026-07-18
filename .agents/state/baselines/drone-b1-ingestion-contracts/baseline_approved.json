@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "drone-b1-ingestion-contracts",
+  "branch": "drone-b1-ingestion-contracts",
+  "commit": "92861daf8c2a00cf6db5ffa2ccb881a705027bd5",
+  "generated_at": "2026-07-17T13:25:07.951325+00:00",
+  "commands_file": ".agents\\config\\verification_commands_drone_b1.json",
+  "commands": [
+    {
+      "name": "contract_tests",
+      "cwd": ".",
+      "command": [
+        ".venv\\Scripts\\python",
+        "backend/tests/test_phase2a_baseline.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.383,
+      "stdout_file": ".agents\\state\\baselines\\drone-b1-ingestion-contracts\\contract_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\drone-b1-ingestion-contracts\\contract_tests.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "ingestion_dry_run_test",
+      "cwd": ".",
+      "command": [
+        ".venv\\Scripts\\python",
+        "-m",
+        "pytest",
+        "backend/tests/test_ingestion_dry_run.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 1.805,
+      "stdout_file": ".agents\\state\\baselines\\drone-b1-ingestion-contracts\\ingestion_dry_run_test.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\drone-b1-ingestion-contracts\\ingestion_dry_run_test.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    }
+  ],
+  "test_cases": [],
+  "notes": "Auto-approved due to zero failures."
+}

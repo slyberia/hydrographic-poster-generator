@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 
-import { ElementTransform, LayoutOverrides } from "@/lib/api";
+import { LayoutOverrides } from "@/lib/api";
 
 export interface InteractiveCanvasProps {
   svg: string;

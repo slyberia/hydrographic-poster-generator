@@ -1,38 +1,37 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-15T21:11:12.706840+00:00",
+  "generated_at": "2026-07-16T22:49:04.696831+00:00",
   "phase_id": "phase-2d-ui-integration",
-  "baseline_commit": "8d79e7658c4022ed834e7acd898701e1251fbde3",
+  "baseline_commit": "92861daf8c2a00cf6db5ffa2ccb881a705027bd5",
   "approved_baseline_file": ".agents\\state\\baselines\\phase-2d-ui-integration\\baseline_approved.json",
   "changed_paths": [
-    ".agents/config/verification_commands_phase2d.json",
     ".agents/state/baselines/phase-2d-ui-integration/baseline_approved.json",
+    ".agents/state/baselines/phase-2d-ui-integration/baseline_approved.md",
+    ".agents/state/baselines/phase-2d-ui-integration/baseline_unapproved.json",
     ".agents/state/baselines/phase-2d-ui-integration/baseline_unapproved.md",
-    ".agents/state/baselines/phase-2d-ui-integration/phase2d_frontend_lint.stderr.txt",
-    ".agents/state/baselines/phase-2d-ui-integration/phase2d_frontend_lint.stdout.txt",
-    ".agents/state/baselines/phase-2d-ui-integration/phase2d_layout_resolver.stderr.txt",
     ".agents/state/baselines/phase-2d-ui-integration/phase2d_layout_resolver.stdout.txt",
-    ".agents/state/baselines/phase-2d-ui-integration/phase2d_svg_renderer.stderr.txt",
     ".agents/state/baselines/phase-2d-ui-integration/phase2d_svg_renderer.stdout.txt",
     ".agents/state/current_phase.json",
-    ".agents/state/verifications/phase-2d-ui-integration/phase2d_frontend_lint.stderr.txt",
-    ".agents/state/verifications/phase-2d-ui-integration/phase2d_frontend_lint.stdout.txt",
-    ".agents/state/verifications/phase-2d-ui-integration/phase2d_layout_resolver.stderr.txt",
-    ".agents/state/verifications/phase-2d-ui-integration/phase2d_layout_resolver.stdout.txt",
-    ".agents/state/verifications/phase-2d-ui-integration/phase2d_svg_renderer.stderr.txt",
-    ".agents/state/verifications/phase-2d-ui-integration/phase2d_svg_renderer.stdout.txt",
-    ".agents/state/verifications/phase-2d-ui-integration/post_edit_verification.json",
-    ".agents/state/verifications/phase-2d-ui-integration/post_edit_verification.md",
+    "backend/app/main.py",
+    "backend/app/routers/drone.py",
+    "backend/app/services/drone_service.py",
+    "db/migrations/005_drone_mcda_schema.sql",
     "frontend/lint-results.xml",
     "frontend/package-lock.json",
     "frontend/package.json",
+    "frontend/src/app/about/page.tsx",
+    "frontend/src/app/docs/page.tsx",
+    "frontend/src/app/drone/page.tsx",
     "frontend/src/app/globals.css",
-    "frontend/src/app/page.tsx",
+    "frontend/src/components/ColorPickerPopover.tsx",
     "frontend/src/components/ControlPanel.tsx",
     "frontend/src/components/InteractiveCanvas.tsx",
     "frontend/src/components/Tooltip.tsx",
-    "frontend/src/lib/features.ts",
-    "frontend/src/lib/state_migration.ts"
+    "frontend/src/components/drone/ControlRail.tsx",
+    "frontend/src/components/drone/MapView.tsx",
+    "frontend/src/components/drone/ReportDrawer.tsx",
+    "frontend/src/lib/droneApi.ts",
+    "frontend/src/utils/supabase/middleware.ts"
   ],
   "out_of_scope_paths": [],
   "commands": [
@@ -47,7 +46,7 @@
       ],
       "cwd": ".",
       "exit_code": 0,
-      "duration_seconds": 2.0,
+      "duration_seconds": 1.003,
       "stdout_file": ".agents\\state\\verifications\\phase-2d-ui-integration\\phase2d_svg_renderer.stdout.txt",
       "stderr_file": ".agents\\state\\verifications\\phase-2d-ui-integration\\phase2d_svg_renderer.stderr.txt",
       "test_case_count": 0
@@ -63,7 +62,7 @@
       ],
       "cwd": ".",
       "exit_code": 0,
-      "duration_seconds": 1.979,
+      "duration_seconds": 1.197,
       "stdout_file": ".agents\\state\\verifications\\phase-2d-ui-integration\\phase2d_layout_resolver.stdout.txt",
       "stderr_file": ".agents\\state\\verifications\\phase-2d-ui-integration\\phase2d_layout_resolver.stderr.txt",
       "test_case_count": 0
@@ -81,76 +80,19 @@
         "lint-results.xml"
       ],
       "cwd": "frontend",
-      "exit_code": 1,
-      "duration_seconds": 13.943,
+      "exit_code": 0,
+      "duration_seconds": 6.075,
       "stdout_file": ".agents\\state\\verifications\\phase-2d-ui-integration\\phase2d_frontend_lint.stdout.txt",
       "stderr_file": ".agents\\state\\verifications\\phase-2d-ui-integration\\phase2d_frontend_lint.stderr.txt",
       "test_case_count": 27
     }
   ],
   "comparison": {
-    "unchanged_failures": [
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::org.eslint.react-hooks/set-state-in-effect",
-        "status": "failed",
-        "message": "Error: Calling setState synchronously within an effect can trigger cascading renders\n\nEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:\n* Update external systems with the latest state from React.\n* Subscribe for updates from some external system, calling setState in a callback function when external state changes.\n\nCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).\n\nC:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page.tsx:10:5\n   8 |\n   9 |   useEffect(() => {\n> 10 |     setMounted(true);\n     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect\n  11 |   }, []);\n  12 |\n  13 |   if (!mounted) return null;\nline 10, col 5, Error - Error: Calling setState synchronously within an effect can trigger cascading renders&#10;&#10;Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:&#10;* Update external systems with the latest state from React.&#10;* Subscribe for updates from some external system, calling setState in a callback function when external state changes.&#10;&#10;Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).&#10;&#10;C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page.tsx:10:5&#10;   8 |&#10;   9 |   useEffect(() =&gt; {&#10;&gt; 10 |     setMounted(true);&#10;     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect&#10;  11 |   }, []);&#10;  12 |&#10;  13 |   if (!mounted) return null; (react-hooks/set-state-in-effect)",
-        "baseline_classification": "pre_existing"
-      },
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\about\\page::org.eslint.react/no-unescaped-entities",
-        "status": "failed",
-        "message": "`\"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.\nline 123, col 45, Error - `&quot;` can be escaped with `&amp;quot;`, `&amp;ldquo;`, `&amp;#34;`, `&amp;rdquo;`. (react/no-unescaped-entities)",
-        "baseline_classification": "pre_existing"
-      },
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\docs\\page::org.eslint.react/no-unescaped-entities",
-        "status": "failed",
-        "message": "`'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.\nline 68, col 163, Error - `&apos;` can be escaped with `&amp;apos;`, `&amp;lsquo;`, `&amp;#39;`, `&amp;rsquo;`. (react/no-unescaped-entities)",
-        "baseline_classification": "pre_existing"
-      },
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover::org.eslint.react-hooks/set-state-in-effect",
-        "status": "failed",
-        "message": "Error: Calling setState synchronously within an effect can trigger cascading renders\n\nEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:\n* Update external systems with the latest state from React.\n* Subscribe for updates from some external system, calling setState in a callback function when external state changes.\n\nCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).\n\nC:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover.tsx:32:5\n  30 |   // Sync internal state when initialColor changes externally\n  31 |   useEffect(() => {\n> 32 |     setColor(initialColor);\n     |     ^^^^^^^^ Avoid calling setState() directly within an effect\n  33 |   }, [initialColor]);\n  34 |\n  35 |   // Handle positioning\nline 32, col 5, Error - Error: Calling setState synchronously within an effect can trigger cascading renders&#10;&#10;Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:&#10;* Update external systems with the latest state from React.&#10;* Subscribe for updates from some external system, calling setState in a callback function when external state changes.&#10;&#10;Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).&#10;&#10;C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ColorPickerPopover.tsx:32:5&#10;  30 |   // Sync internal state when initialColor changes externally&#10;  31 |   useEffect(() =&gt; {&#10;&gt; 32 |     setColor(initialColor);&#10;     |     ^^^^^^^^ Avoid calling setState() directly within an effect&#10;  33 |   }, [initialColor]);&#10;  34 |&#10;  35 |   // Handle positioning (react-hooks/set-state-in-effect)",
-        "baseline_classification": "pre_existing"
-      },
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\utils\\supabase\\middleware::org.eslint.@typescript-eslint/no-unused-vars",
-        "status": "failed",
-        "message": "'options' is defined but never used.\nline 24, col 48, Warning - &apos;options&apos; is defined but never used. (@typescript-eslint/no-unused-vars)",
-        "baseline_classification": "pre_existing"
-      }
-    ],
+    "unchanged_failures": [],
     "new_failures": [],
     "resolved_failures": [],
     "changed_results": [],
-    "ambiguous_results": [
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\app\\page::org.eslint.@typescript-eslint/no-unused-vars",
-        "reason": "Test existed in approved baseline but was not present in current parsed results.",
-        "baseline_status": "failed"
-      },
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ControlPanel::org.eslint.@typescript-eslint/no-unused-vars",
-        "reason": "Test existed in approved baseline but was not present in current parsed results.",
-        "baseline_status": "failed"
-      },
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\components\\ControlPanel::org.eslint.@typescript-eslint/no-explicit-any",
-        "reason": "Test existed in approved baseline but was not present in current parsed results.",
-        "baseline_status": "failed"
-      },
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\state_migration::org.eslint.@typescript-eslint/no-unused-vars",
-        "reason": "Test existed in approved baseline but was not present in current parsed results.",
-        "baseline_status": "failed"
-      },
-      {
-        "id": "C:\\MORE AI STUFF\\HydroRIVERS Image Generator\\frontend\\src\\lib\\state_migration::org.eslint.@typescript-eslint/no-explicit-any",
-        "reason": "Test existed in approved baseline but was not present in current parsed results.",
-        "baseline_status": "failed"
-      }
-    ]
+    "ambiguous_results": []
   },
-  "blocking_review_required": true
+  "blocking_review_required": false
 }
