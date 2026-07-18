@@ -1,25 +1,20 @@
 "use client";
 
-/** components/ControlRail.tsx — left rail: identity, zone strip, weights, runs. */
+/** components/ControlRail.tsx — left rail: identity, zone strip, weights, runs,
+ * sensitivity. */
 
 import { useState } from "react";
-import { FactorWeight, RunStats, RunSummary, Zone } from "@/lib/droneApi";
+import { FactorWeight, RunStats, RunSummary, SensitivityStatus, Zone } from "@/lib/droneApi";
+import { ZONE_CSS, ZONE_LABELS } from "@/lib/zoneTheme";
+import SensitivityPanel, { MapDisplayMode } from "@/components/drone/SensitivityPanel";
+import { SweepPhase } from "@/lib/useSensitivity";
 
-const ZONE_COLORS: Record<Zone, string> = {
-  PROHIBITED: "var(--z-prohibited)",
-  RESTRICTED: "var(--z-restricted)",
-  CONDITIONAL: "var(--z-conditional)",
-  SUITABLE: "var(--z-suitable)",
-};
-
-const ZONE_LABELS: Record<Zone, string> = {
-  PROHIBITED: "Prohibited · no-fly",
-  RESTRICTED: "Restricted · authorization",
-  CONDITIONAL: "Conditional · caution",
-  SUITABLE: "Suitable · lower risk",
-};
-
-function ZoneStrip({ stats }: { stats: RunStats | null }) {
+function ZoneStrip(props: {
+  stats: RunStats | null;
+  hiddenZones: Set<Zone>;
+  onToggleZone: (zone: Zone) => void;
+}) {
+  const { stats, hiddenZones } = props;
   if (!stats) return null;
   return (
     <section className="zonestrip" aria-label="Zone distribution">
@@ -30,15 +25,29 @@ function ZoneStrip({ stats }: { stats: RunStats | null }) {
           <div
             key={z.zone}
             className="zonestrip-seg"
-            style={{ flex: `${z.pct} 0 0`, background: ZONE_COLORS[z.zone] }}
+            style={{
+              flex: `${z.pct} 0 0`,
+              background: ZONE_CSS[z.zone],
+              opacity: hiddenZones.has(z.zone) ? 0.25 : 1,
+            }}
           />
         ))}
       </div>
       <div className="zonestrip-rows">
         {stats.zones.map((z) => (
           <div className="zonestrip-row" key={z.zone}>
-            <span className="swatch" style={{ background: ZONE_COLORS[z.zone] }} />
-            <span className="zname">{ZONE_LABELS[z.zone]}</span>
+            <input
+              type="checkbox"
+              id={`zv-${z.zone}`}
+              className="zonevis"
+              checked={!hiddenZones.has(z.zone)}
+              onChange={() => props.onToggleZone(z.zone)}
+              aria-label={`Show ${z.zone} cells on map`}
+            />
+            <label htmlFor={`zv-${z.zone}`} className="zonevis-label">
+              <span className="swatch" style={{ background: ZONE_CSS[z.zone] }} />
+              <span className="zname">{ZONE_LABELS[z.zone]}</span>
+            </label>
             <span className="zpct">{z.pct}%</span>
             <span className="zarea">{z.area_km2.toLocaleString()} km²</span>
           </div>
@@ -55,9 +64,17 @@ export default function ControlRail(props: {
   stats: RunStats | null;
   busy: boolean;
   status: { text: string; error?: boolean };
+  hiddenZones: Set<Zone>;
+  sensitivityPhase: SweepPhase;
+  sensitivityStatus: SensitivityStatus | null;
+  sensitivityError: string | null;
+  displayMode: MapDisplayMode;
   onRunModel: (label: string, overrides?: Record<string, number>) => void;
   onSaveWeight: (key: string, weight: number) => void;
   onSelectRun: (runId: string) => void;
+  onToggleZone: (zone: Zone) => void;
+  onTriggerSensitivity: (delta: number) => void;
+  onDisplayMode: (mode: MapDisplayMode) => void;
 }) {
   const { factors, runs, activeRun, stats, busy, status } = props;
   const [label, setLabel] = useState("");
@@ -73,6 +90,14 @@ export default function ControlRail(props: {
     }
   };
 
+  const activeRunComplete =
+    activeRun !== null &&
+    runs.some((r) => r.run_id === activeRun && r.status === "complete");
+
+  const factorNames = Object.fromEntries(
+    factors.map((f) => [f.factor_key, f.factor_name])
+  );
+
   return (
     <aside className="rail">
       <header>
@@ -82,7 +107,11 @@ export default function ControlRail(props: {
         </h1>
       </header>
 
-      <ZoneStrip stats={stats} />
+      <ZoneStrip
+        stats={stats}
+        hiddenZones={props.hiddenZones}
+        onToggleZone={props.onToggleZone}
+      />
 
       <section aria-label="Run model">
         <p className="sectionlabel">Run model</p>
@@ -153,6 +182,17 @@ export default function ControlRail(props: {
           </button>
         ))}
       </section>
+
+      <SensitivityPanel
+        phase={props.sensitivityPhase}
+        status={props.sensitivityStatus}
+        error={props.sensitivityError}
+        canTrigger={activeRunComplete && !busy}
+        displayMode={props.displayMode}
+        factorNames={factorNames}
+        onTrigger={props.onTriggerSensitivity}
+        onDisplayMode={props.onDisplayMode}
+      />
     </aside>
   );
 }

@@ -2,14 +2,8 @@
 
 /** components/ReportDrawer.tsx — the methodology's location report, rendered. */
 
-import { LocationReport, Zone } from "@/lib/droneApi";
-
-const ZONE_COLORS: Record<Zone, string> = {
-  PROHIBITED: "var(--z-prohibited)",
-  RESTRICTED: "var(--z-restricted)",
-  CONDITIONAL: "var(--z-conditional)",
-  SUITABLE: "var(--z-suitable)",
-};
+import { LocationReport, VolatilityRecord } from "@/lib/droneApi";
+import { VOLATILITY_FILL, ZONE_CSS } from "@/lib/zoneTheme";
 
 const FACTOR_NAMES: Record<string, string> = {
   population: "Population density",
@@ -23,9 +17,14 @@ const FACTOR_NAMES: Record<string, string> = {
 export default function ReportDrawer(props: {
   report: LocationReport;
   onClose: () => void;
+  /** Volatility for this cell, when a completed sweep exists for the active run.
+   * null = sweep exists but cell is constraint-locked; undefined = no sweep. */
+  volatility?: VolatilityRecord | null;
+  totalPerturbations?: number;
 }) {
   const r = props.report;
   const factors = Object.entries(r.factor_breakdown ?? {});
+  const hasSweep = props.volatility !== undefined;
 
   return (
     <div className="drawer" role="dialog" aria-label="Location report">
@@ -33,7 +32,7 @@ export default function ReportDrawer(props: {
         ✕
       </button>
       <h2>Location report</h2>
-      <span className="zone-chip" style={{ background: ZONE_COLORS[r.zone] }}>
+      <span className="zone-chip" style={{ background: ZONE_CSS[r.zone] }}>
         {r.zone}
       </span>
 
@@ -74,6 +73,34 @@ export default function ReportDrawer(props: {
                   </span>
                 </div>
               ))}
+            </dd>
+          </>
+        )}
+
+        {hasSweep && (
+          <>
+            <dt>Stability</dt>
+            <dd>
+              {props.volatility ? (
+                <>
+                  <span
+                    className="zone-chip"
+                    style={{
+                      background: VOLATILITY_FILL[props.volatility.volatility_category],
+                    }}
+                  >
+                    {props.volatility.volatility_category}
+                  </span>{" "}
+                  σ {props.volatility.stddev.toFixed(3)} ·{" "}
+                  {props.volatility.zone_flips}
+                  {props.totalPerturbations
+                    ? ` / ${props.totalPerturbations}`
+                    : ""}{" "}
+                  zone flips under ±weight perturbation
+                </>
+              ) : (
+                "Constraint-locked — not affected by weight changes."
+              )}
             </dd>
           </>
         )}
