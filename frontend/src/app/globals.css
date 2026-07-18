@@ -583,3 +583,70 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .drone-console .zonestrip-seg { transition: none; }
 }
+
+/* ---------- sensitivity panel (Phase D) ---------- */
+.drone-console .deltarow,
+.drone-console .modetoggle {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.drone-console .modetoggle { margin-top: 10px; }
+.drone-console .deltabtn {
+  flex: 1;
+  font: inherit;
+  font-size: 0.78rem;
+  padding: 6px 8px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.drone-console .deltabtn:hover { background: var(--paper); }
+.drone-console .deltabtn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.drone-console .deltabtn[aria-checked="true"] {
+  border-color: var(--action);
+  background: oklch(0.95 0.02 155);
+  font-weight: 700;
+}
+
+.drone-console .ranktable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  margin-top: 8px;
+}
+.drone-console .ranktable th {
+  text-align: left;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--hairline);
+}
+.drone-console .ranktable td {
+  padding: 3px 4px;
+  border-bottom: 1px dashed var(--hairline);
+  font-variant-numeric: tabular-nums;
+}
+
+.drone-console .vol-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 8px;
+}
+
+/* zone visibility toggles in the strip */
+.drone-console .zonevis { accent-color: var(--action); }
+.drone-console .zonevis-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  cursor: pointer;
+}
+.drone-console .zonevis-label .zname { flex: 1; }

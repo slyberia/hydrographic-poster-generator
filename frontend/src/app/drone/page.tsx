@@ -4,9 +4,11 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
-import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport } from "@/lib/droneApi";
+import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone } from "@/lib/droneApi";
 import ControlRail from "@/components/drone/ControlRail";
 import ReportDrawer from "@/components/drone/ReportDrawer";
+import { MapDisplayMode } from "@/components/drone/SensitivityPanel";
+import { useSensitivity } from "@/lib/useSensitivity";
 
 // Leaflet touches `window`; render map client-side only.
 const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
@@ -20,6 +22,10 @@ export default function Page() {
   const [report, setReport] = useState<LocationReport | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<{ text: string; error?: boolean }>({ text: "" });
+  const [hiddenZones, setHiddenZones] = useState<Set<Zone>>(new Set());
+  const [displayMode, setDisplayMode] = useState<MapDisplayMode>("zones");
+
+  const sensitivity = useSensitivity(activeRun);
 
   const refreshConfig = useCallback(async () => {
     try {
@@ -36,6 +42,8 @@ export default function Page() {
   const selectRun = useCallback(async (runId: string) => {
     setBusy(true);
     setReport(null);
+    setDisplayMode("zones");
+    setHiddenZones(new Set());
     setStatus({ text: "Loading results…" });
     try {
       const [fc, detail] = await Promise.all([
@@ -104,6 +112,22 @@ export default function Page() {
     [activeRun]
   );
 
+  const toggleZone = useCallback((zone: Zone) => {
+    setHiddenZones((prev) => {
+      const next = new Set(prev);
+      if (next.has(zone)) next.delete(zone);
+      else next.add(zone);
+      return next;
+    });
+  }, []);
+
+  // Volatility lookup for the drawer: undefined = no completed sweep,
+  // null = sweep exists but this cell is constraint-locked.
+  const reportVolatility =
+    report && sensitivity.phase === "complete" && sensitivity.volatilityByH3
+      ? sensitivity.volatilityByH3.get(report.h3_index) ?? null
+      : undefined;
+
   return (
     <div className="drone-console h-full w-full">
       <div className="shell">
@@ -114,13 +138,34 @@ export default function Page() {
           stats={stats}
           busy={busy}
           status={status}
+          hiddenZones={hiddenZones}
+          sensitivityPhase={sensitivity.phase}
+          sensitivityStatus={sensitivity.status}
+          sensitivityError={sensitivity.error}
+          displayMode={displayMode}
           onRunModel={runModel}
           onSaveWeight={saveWeight}
           onSelectRun={selectRun}
+          onToggleZone={toggleZone}
+          onTriggerSensitivity={sensitivity.trigger}
+          onDisplayMode={setDisplayMode}
         />
         <div className="mapwrap">
-          <MapView geojson={geojson} onCellClick={onCellClick} />
-          {report && <ReportDrawer report={report} onClose={() => setReport(null)} />}
+          <MapView
+            geojson={geojson}
+            onCellClick={onCellClick}
+            displayMode={displayMode}
+            volatilityByH3={sensitivity.volatilityByH3}
+            hiddenZones={hiddenZones}
+          />
+          {report && (
+            <ReportDrawer
+              report={report}
+              onClose={() => setReport(null)}
+              volatility={reportVolatility}
+              totalPerturbations={sensitivity.status?.total_runs}
+            />
+          )}
         </div>
       </div>
     </div>

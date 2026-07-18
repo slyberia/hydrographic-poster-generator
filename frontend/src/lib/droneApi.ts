@@ -49,6 +49,43 @@ export interface LocationReport {
   disclaimer: string;
 }
 
+// ---- Sensitivity (Phase C backend contract — mirror of drone.py Pydantic models) ----
+
+export interface SensitivityFactorRank {
+  factor_key: string;
+  direction: "up" | "down";
+  mean_absolute_deviation: number;
+  zone_flips: number;
+}
+
+export interface SensitivitySummary {
+  avg_stddev: number;
+  max_stddev: number;
+  total_zone_flips: number;
+  pct_cells_flipped: number;
+  factor_rankings: SensitivityFactorRank[];
+}
+
+export interface SensitivityStatus {
+  sweep_id: string;
+  status: "running" | "complete" | "failed";
+  total_runs: number;
+  completed_runs: number;
+  failed_runs: number;
+  partial_results: boolean;
+  summary: SensitivitySummary | null;
+}
+
+export interface VolatilityRecord {
+  h3_index: string;
+  stddev: number;
+  variance: number;
+  zone_flips: number;
+  volatility_category: "LOW" | "MEDIUM" | "HIGH";
+  baseline_zone: string;
+  baseline_score: number | null;
+}
+
 async function http<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
     ...init,
@@ -89,4 +126,16 @@ export const droneApi = {
 
   getLocationReport: (runId: string, h3: string) =>
     http<LocationReport>(`/runs/${runId}/report/${h3}`),
+
+  triggerSensitivity: (runId: string, delta = 0.1, label?: string) =>
+    http<SensitivityStatus>(`/runs/${runId}/sensitivity`, {
+      method: "POST",
+      body: JSON.stringify({ delta, label: label ?? null }),
+    }),
+
+  getSensitivityStatus: (runId: string, sweepId: string) =>
+    http<SensitivityStatus>(`/runs/${runId}/sensitivity/${sweepId}`),
+
+  getVolatility: (runId: string, sweepId: string) =>
+    http<VolatilityRecord[]>(`/runs/${runId}/sensitivity/${sweepId}/volatility`),
 };

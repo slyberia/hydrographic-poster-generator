@@ -1,3 +1,4 @@
+import asyncio
 import json
 import uuid
 import logging
@@ -61,12 +62,17 @@ async def patch_factor(pool: asyncpg.Pool, key: str, weight: float) -> List[Dict
 
 
 async def list_runs(pool: asyncpg.Pool) -> List[Dict[str, Any]]:
-    """List all recorded model runs sorted by creation time."""
+    """List all recorded model runs sorted by creation time.
+
+    Sensitivity sweep children (runs carrying params.parent_run_id) are excluded —
+    they are internal perturbation runs, not user-facing scenarios.
+    """
     async with pool.acquire() as conn:
         rows = await conn.fetch("""
             SELECT run_id::text, label, status, weights_snapshot,
                    created_at::text, completed_at::text
             FROM mcda_model_runs
+            WHERE (params->>'parent_run_id') IS NULL
             ORDER BY created_at DESC
         """)
         return [dict(r) for r in rows]
@@ -372,3 +378,287 @@ async def results_geojson(pool: asyncpg.Pool, run_id: str, zone: Optional[str] =
             },
         } for r in rows],
     }
+
+
+# =============================================================================
+# Phase C: Sensitivity Analysis (OAT weight perturbation sweeps)
+# =============================================================================
+
+SWEEP_STALE_MINUTES = 15
+
+# Population statistics (STDDEV_POP / VAR_POP) are used throughout: an OAT sweep is
+# the entire population of perturbations, not a sample drawn from one, and the
+# volatility category thresholds below are calibrated against population stddev.
+# Constraint-locked cells carry NULL total_score in the baseline and every child
+# (constraints ignore weights), so both aggregation queries exclude NULL scores —
+# those cells cannot flip zone by definition and must not be categorized.
+
+_FACTOR_RANKING_SQL = """
+    SELECT
+        m.params ->> 'sensitivity_factor'    AS factor_key,
+        m.params ->> 'sensitivity_direction' AS direction,
+        AVG(ABS(c.total_score - base.total_score))                        AS mean_absolute_deviation,
+        SUM(CASE WHEN c.final_zone != base.final_zone THEN 1 ELSE 0 END)  AS zone_flips
+    FROM mcda_cell_results c
+    JOIN mcda_cell_results base
+        ON base.h3_index = c.h3_index AND base.run_id = $1::uuid
+    JOIN mcda_model_runs m ON m.run_id = c.run_id
+    WHERE m.params ->> 'sweep_id' = $2
+      AND m.status = 'complete'
+      AND c.total_score IS NOT NULL
+      AND base.total_score IS NOT NULL
+    GROUP BY factor_key, direction
+    ORDER BY zone_flips DESC, mean_absolute_deviation DESC
+"""
+
+_SWEEP_SUMMARY_SQL = """
+    WITH per_cell AS (
+        SELECT c.h3_index,
+               STDDEV_POP(c.total_score) AS sd,
+               SUM(CASE WHEN c.final_zone != base.final_zone THEN 1 ELSE 0 END) AS flips
+        FROM mcda_cell_results c
+        JOIN mcda_cell_results base
+            ON base.h3_index = c.h3_index AND base.run_id = $1::uuid
+        JOIN mcda_model_runs m ON m.run_id = c.run_id
+        WHERE m.params ->> 'sweep_id' = $2
+          AND m.status = 'complete'
+          AND c.total_score IS NOT NULL
+          AND base.total_score IS NOT NULL
+        GROUP BY c.h3_index
+    )
+    SELECT COALESCE(ROUND(AVG(sd)::numeric, 4), 0)                    AS avg_stddev,
+           COALESCE(ROUND(MAX(sd)::numeric, 4), 0)                    AS max_stddev,
+           COALESCE(SUM(flips), 0)::int                               AS total_zone_flips,
+           COALESCE(ROUND((100.0 * COUNT(*) FILTER (WHERE flips > 0)
+                           / NULLIF(COUNT(*), 0))::numeric, 2), 0)    AS pct_cells_flipped
+    FROM per_cell
+"""
+
+_VOLATILITY_SQL = """
+    SELECT
+        c.h3_index,
+        ROUND(STDDEV_POP(c.total_score)::numeric, 4)  AS stddev,
+        ROUND(VAR_POP(c.total_score)::numeric, 4)     AS variance,
+        SUM(CASE WHEN c.final_zone != base.final_zone THEN 1 ELSE 0 END) AS zone_flips,
+        base.final_zone::text  AS baseline_zone,
+        base.total_score       AS baseline_score,
+        CASE
+            WHEN STDDEV_POP(c.total_score) < 0.15 THEN 'LOW'
+            WHEN STDDEV_POP(c.total_score) < 0.40 THEN 'MEDIUM'
+            ELSE 'HIGH'
+        END AS volatility_category
+    FROM mcda_cell_results c
+    JOIN mcda_cell_results base
+        ON base.h3_index = c.h3_index AND base.run_id = $1::uuid
+    JOIN mcda_model_runs m ON m.run_id = c.run_id
+    WHERE m.params ->> 'sweep_id' = $2
+      AND m.status = 'complete'
+      AND c.total_score IS NOT NULL
+      AND base.total_score IS NOT NULL
+    GROUP BY c.h3_index, base.final_zone, base.total_score
+"""
+
+
+async def trigger_sensitivity_analysis(pool: asyncpg.Pool, base_run_id: str,
+                                       delta: float = 0.10,
+                                       label: Optional[str] = None) -> Dict[str, Any]:
+    """Trigger a one-at-a-time (OAT) weight perturbation sweep.
+
+    Perturbation convention:
+      - Each active factor's raw weight is perturbed by ±delta one at a time.
+      - The engine renormalizes weights PER CELL over the factors present in that
+        cell (tmp_cell_wsum in execute_run). Cells without coverage of the perturbed
+        factor are unaffected; within covered cells, the perturbation shifts every
+        present factor's normalized share.
+      - Score scale (1-5) and zone thresholds are unchanged.
+      - Attribution (MAD, zone flips) therefore reflects the combined
+        normalized-share effect within the perturbed factor's spatial footprint —
+        not a global ceteris-paribus effect. This is the intended OAT semantics
+        for this engine.
+
+    Idempotent: if the base run already has children in pending/running state, the
+    existing sweep's status is returned and no new runs are created. (Known
+    limitation: the guard is check-then-act without a lock; acceptable for a
+    single-analyst tool.)
+    """
+    async with pool.acquire() as conn:
+        base = await conn.fetchrow(
+            "SELECT status, region_id FROM mcda_model_runs WHERE run_id = $1::uuid",
+            base_run_id,
+        )
+        if base is None:
+            raise ValueError(f"Base run {base_run_id} not found")
+        if base["status"] != "complete":
+            raise ValueError(f"Base run {base_run_id} is '{base['status']}', not 'complete'")
+
+        existing_sweep_id = await conn.fetchval("""
+            SELECT params->>'sweep_id'
+            FROM mcda_model_runs
+            WHERE params->>'parent_run_id' = $1
+              AND status IN ('pending', 'running')
+            LIMIT 1
+        """, base_run_id)
+        if existing_sweep_id:
+            return await get_sensitivity_status(pool, base_run_id, existing_sweep_id)
+
+        factors = await conn.fetch(
+            "SELECT factor_key, weight FROM mcda_factors WHERE is_active ORDER BY factor_key"
+        )
+        if not factors:
+            raise ValueError("No active factors — cannot run sensitivity analysis")
+        region_key = await conn.fetchval(
+            "SELECT region_key FROM mcda_region_boundary WHERE region_id = $1",
+            base["region_id"],
+        )
+
+    sweep_id = str(uuid.uuid4())
+    total_expected = 2 * len(factors)
+    child_run_ids: List[str] = []
+
+    for f in factors:
+        base_weight = float(f["weight"])
+        for direction, mult in (("up", 1.0 + delta), ("down", 1.0 - delta)):
+            sign = "+" if direction == "up" else "-"
+            child_label = (f"{label or 'sensitivity'}: "
+                           f"{f['factor_key']} {sign}{round(delta * 100):g}%")
+            child_id = await create_run(
+                pool, region_key, child_label,
+                {f["factor_key"]: base_weight * mult},
+            )
+            # Merge — never replace — so create_run's thresholds snapshot survives.
+            meta = {
+                "parent_run_id": base_run_id,
+                "sweep_id": sweep_id,
+                "sensitivity_factor": f["factor_key"],
+                "sensitivity_delta": delta,
+                "sensitivity_direction": direction,
+                "total_expected": total_expected,
+            }
+            async with pool.acquire() as conn:
+                await conn.execute("""
+                    UPDATE mcda_model_runs
+                    SET params = COALESCE(params, '{}'::jsonb) || $2::jsonb
+                    WHERE run_id = $1::uuid
+                """, child_id, json.dumps(meta))
+            child_run_ids.append(child_id)
+
+    # NOTE: on Cloud Run with request-based CPU allocation this background task can
+    # be throttled after the response returns; see PHASE_C_SENSITIVITY_PLAN.md §3j.
+    asyncio.create_task(_execute_sweep(pool, child_run_ids))
+
+    return {
+        "sweep_id": sweep_id,
+        "status": "running",
+        "total_runs": total_expected,
+        "completed_runs": 0,
+        "failed_runs": 0,
+        "partial_results": False,
+        "summary": None,
+    }
+
+
+async def _execute_sweep(pool: asyncpg.Pool, run_ids: List[str]) -> None:
+    """Execute sweep children sequentially with per-child error isolation."""
+    for run_id in run_ids:
+        try:
+            await execute_run(pool, run_id)
+        except Exception as exc:
+            logger.error("Sensitivity child %s failed: %s", run_id, exc)
+            async with pool.acquire() as conn:
+                await conn.execute(
+                    "UPDATE mcda_model_runs SET status='failed' WHERE run_id=$1::uuid",
+                    run_id,
+                )
+
+
+async def get_sensitivity_status(pool: asyncpg.Pool, base_run_id: str,
+                                 sweep_id: str) -> Dict[str, Any]:
+    """Poll sweep progress; includes factor rankings over completed children.
+
+    Deliberately writes on read: children stuck in pending/running beyond
+    SWEEP_STALE_MINUTES are marked failed here, so a crashed sweep cannot block
+    the trigger's idempotency guard forever.
+    """
+    async with pool.acquire() as conn:
+        await conn.execute(f"""
+            UPDATE mcda_model_runs SET status='failed'
+            WHERE params->>'sweep_id' = $1
+              AND status IN ('pending', 'running')
+              AND created_at < now() - interval '{SWEEP_STALE_MINUTES} minutes'
+        """, sweep_id)
+
+        children = await conn.fetch("""
+            SELECT run_id::text, status
+            FROM mcda_model_runs
+            WHERE params->>'sweep_id' = $1
+        """, sweep_id)
+        if not children:
+            raise ValueError(f"Sweep {sweep_id} not found")
+
+        total = len(children)
+        completed = sum(1 for c in children if c["status"] == "complete")
+        failed = sum(1 for c in children if c["status"] == "failed")
+        active = total - completed - failed
+
+        if completed == total:
+            status = "complete"
+        elif active > 0:
+            status = "running"
+        else:
+            status = "failed"
+
+        summary = None
+        if completed > 0:
+            ranking_rows = await conn.fetch(_FACTOR_RANKING_SQL, base_run_id, sweep_id)
+            summary_row = await conn.fetchrow(_SWEEP_SUMMARY_SQL, base_run_id, sweep_id)
+            summary = {
+                "avg_stddev": float(summary_row["avg_stddev"]),
+                "max_stddev": float(summary_row["max_stddev"]),
+                "total_zone_flips": int(summary_row["total_zone_flips"]),
+                "pct_cells_flipped": float(summary_row["pct_cells_flipped"]),
+                "factor_rankings": [{
+                    "factor_key": r["factor_key"],
+                    "direction": r["direction"],
+                    "mean_absolute_deviation": float(r["mean_absolute_deviation"]),
+                    "zone_flips": int(r["zone_flips"]),
+                } for r in ranking_rows],
+            }
+
+    return {
+        "sweep_id": sweep_id,
+        "status": status,
+        "total_runs": total,
+        "completed_runs": completed,
+        "failed_runs": failed,
+        "partial_results": completed < total,
+        "summary": summary,
+    }
+
+
+async def get_volatility_data(pool: asyncpg.Pool, base_run_id: str,
+                              sweep_id: str) -> List[Dict[str, Any]]:
+    """Per-cell volatility across a sweep (thin payload, no geometry).
+
+    Partial sweeps return partial (but internally consistent) data over the
+    completed children; the status endpoint's partial_results flag tells the
+    client. Constraint-locked cells (NULL total_score) are excluded — their zone
+    is weight-independent and cannot flip.
+    """
+    async with pool.acquire() as conn:
+        exists = await conn.fetchval(
+            "SELECT 1 FROM mcda_model_runs WHERE params->>'sweep_id' = $1 LIMIT 1",
+            sweep_id,
+        )
+        if not exists:
+            raise ValueError(f"Sweep {sweep_id} not found")
+        rows = await conn.fetch(_VOLATILITY_SQL, base_run_id, sweep_id)
+
+    return [{
+        "h3_index": r["h3_index"],
+        "stddev": float(r["stddev"]),
+        "variance": float(r["variance"]),
+        "zone_flips": int(r["zone_flips"]),
+        "volatility_category": r["volatility_category"],
+        "baseline_zone": r["baseline_zone"],
+        "baseline_score": float(r["baseline_score"]) if r["baseline_score"] is not None else None,
+    } for r in rows]

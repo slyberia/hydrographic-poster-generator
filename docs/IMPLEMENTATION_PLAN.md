@@ -1,5 +1,10 @@
 # Master Implementation Plan: Phases 4 through 7
 
+> [!WARNING]
+> **Historical document.** All phases described below (4–7) are complete — see the
+> Historical Roadmap section of `docs/ROADMAP.md`. This file is preserved for context
+> only and does not describe pending work. Do not implement from it.
+
 This document outlines the architecture, decisions, and exact file changes required to complete the remainder of the MVP, spanning the SVG rendering engine, the export pipeline, the frontend control panel, and final deployment.
 
 ---

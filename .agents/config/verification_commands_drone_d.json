@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "frontend_lint",
+      "command": ["npm", "run", "lint"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "frontend_build",
+      "command": ["npm", "run", "build"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "frontend_e2e_qa",
+      "command": ["npm", "run", "test:e2e"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "backend_regression",
+      "command": ["python", "-m", "pytest", "backend/tests/test_drone_sensitivity.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Phase D: verification is lint + production build + the automated Playwright QA suite (frontend/e2e, owner-approved 2026-07-18, automates manual QA steps 1-9 against a network-mocked backend; step 10 remains the build command). The backend suite runs as a no-regression tripwire — this phase must not touch backend files. Manual QA against a live stack remains recommended before production deploys."
+}

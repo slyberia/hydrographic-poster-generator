@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Literal
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 import asyncpg
 
@@ -14,6 +14,45 @@ class RunCreateRequest(BaseModel):
 
 class WeightUpdateRequest(BaseModel):
     weight: float
+
+
+# ---- Sensitivity models ----
+
+class SensitivityTriggerRequest(BaseModel):
+    delta: float = Field(0.10, ge=0.01, le=0.50,
+        description="Fractional perturbation (e.g. 0.10 = ±10%)")
+    label: Optional[str] = None
+
+class SensitivityFactorRank(BaseModel):
+    factor_key: str
+    direction: Literal["up", "down"]
+    mean_absolute_deviation: float
+    zone_flips: int
+
+class SensitivitySummary(BaseModel):
+    avg_stddev: float
+    max_stddev: float
+    total_zone_flips: int
+    pct_cells_flipped: float
+    factor_rankings: List[SensitivityFactorRank]
+
+class SensitivityStatus(BaseModel):
+    sweep_id: str
+    status: Literal["running", "complete", "failed"]
+    total_runs: int
+    completed_runs: int
+    failed_runs: int
+    partial_results: bool
+    summary: Optional[SensitivitySummary] = None
+
+class VolatilityRecord(BaseModel):
+    h3_index: str
+    stddev: float
+    variance: float
+    zone_flips: int
+    volatility_category: Literal["LOW", "MEDIUM", "HIGH"]
+    baseline_zone: str
+    baseline_score: Optional[float]
 
 
 # ---- Config / Factors ----
@@ -88,6 +127,53 @@ async def get_run_geojson(
         return await drone_service.results_geojson(pool, run_id, zone)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
+
+
+# ---- Sensitivity ----
+
+@router.post("/runs/{run_id}/sensitivity", tags=["Drone Sensitivity"],
+             status_code=202, response_model=SensitivityStatus)
+async def trigger_sensitivity(
+    run_id: str,
+    body: SensitivityTriggerRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool),
+):
+    """Trigger OAT weight perturbation sweep. Idempotent: returns existing active sweep."""
+    try:
+        return await drone_service.trigger_sensitivity_analysis(
+            pool, run_id, delta=body.delta, label=body.label,
+        )
+    except ValueError as exc:
+        code = 404 if "not found" in str(exc) else 400
+        raise HTTPException(status_code=code, detail=str(exc))
+
+
+@router.get("/runs/{run_id}/sensitivity/{sweep_id}", tags=["Drone Sensitivity"],
+            response_model=SensitivityStatus)
+async def get_sensitivity_status(
+    run_id: str,
+    sweep_id: str,
+    pool: asyncpg.Pool = Depends(get_db_pool),
+):
+    """Poll sweep progress and factor rankings (partial results OK)."""
+    try:
+        return await drone_service.get_sensitivity_status(pool, run_id, sweep_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@router.get("/runs/{run_id}/sensitivity/{sweep_id}/volatility", tags=["Drone Sensitivity"],
+            response_model=List[VolatilityRecord])
+async def get_volatility(
+    run_id: str,
+    sweep_id: str,
+    pool: asyncpg.Pool = Depends(get_db_pool),
+):
+    """Per-cell volatility (thin payload, no geometry). Partial sweeps return partial data."""
+    try:
+        return await drone_service.get_volatility_data(pool, run_id, sweep_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
 
 
 @router.get("/runs/{run_id}/report/{h3_index}", tags=["Drone Runs"])
