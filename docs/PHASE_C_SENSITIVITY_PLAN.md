@@ -4,7 +4,10 @@
 >
 > **Scope**: Backend only — service functions, router endpoints, unit tests. **No frontend changes.**
 >
-> **Branch**: Create `drone-phase-c-sensitivity` from `drone-b3-osm-features` (tip: `cd72727`).
+> **Branch**: `claude/implementation-plan-review-9ibbph` (session-bound; supersedes
+> Revision 1's `drone-phase-c-sensitivity`). The branch is based on `main`, whose tip
+> already contains the `drone-b3-osm-features` history (merge of `cd72727` via PR #12),
+> so the code baseline is identical.
 >
 > **Revision 2 (2026-07-18)**: Incorporates the plan-review findings. Changes from
 > Revision 1 are listed in §10 and are integrated into the body below. Revision 1's
@@ -485,7 +488,7 @@ Phase C (backend): <concise description>
 - <bullet summary of changes>
 ```
 
-Push to `drone-phase-c-sensitivity`. Do not merge into `main` or `drone-b3-osm-features`.
+Push to `claude/implementation-plan-review-9ibbph`. Do not merge into `main` or `drone-b3-osm-features`.
 
 ---
 

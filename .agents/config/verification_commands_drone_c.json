@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "sensitivity_unit_tests",
+      "command": ["python", "-m", "pytest", "backend/tests/test_drone_sensitivity.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "existing_drone_tests",
+      "command": ["python", "-m", "pytest", "backend/tests/test_feature_ingestion.py", "backend/tests/test_grid_generation.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Phase C: Sensitivity sweep triggering, volatility statistics, idempotency, and failure handling."
+}
