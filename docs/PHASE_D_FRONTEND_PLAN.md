@@ -8,7 +8,13 @@
 > **Branch**: `claude/implementation-plan-review-9ibbph` (session-bound), continuing
 > the Phase C work on the same PR.
 >
-> **Status**: DRAFT — awaiting owner approval before implementation.
+> **Status**: APPROVED (2026-07-18) — owner accepted all defaults. §9 resolutions:
+> delta presets ±5/10/20% with ±10% default; "Constraint-locked (stable by
+> definition)" legend copy stands; SensitivityPanel mounts below "Runs".
+> Owner also asked about a dashboard for editing these values — resolved: factor
+> weights are already editable in the rail, delta is a preset selector, and the
+> volatility thresholds stay backend-owned by design (a config-table + admin
+> endpoint is the future shape if tuning is ever needed; recorded in §8).
 
 ---
 
@@ -378,6 +384,9 @@ completion report):
   a rider on this phase.
 - Sweep cancellation endpoint + button.
 - Volatility overlay opacity slider.
+- Volatility-threshold tuning via backend config table + admin endpoint, if the
+  0.15/0.40 calibration ever needs adjustment. Explicitly NOT a frontend-editable
+  value — thresholds stay single-sourced in backend SQL (Phase C §3f).
 
 ---
 

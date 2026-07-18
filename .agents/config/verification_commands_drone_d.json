@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "frontend_lint",
+      "command": ["npm", "run", "lint"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "frontend_build",
+      "command": ["npm", "run", "build"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "backend_regression",
+      "command": ["python", "-m", "pytest", "backend/tests/test_drone_sensitivity.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Phase D: no frontend test framework exists in this repo (scripts are dev/build/start/lint only); verification is lint + production build + the manual QA script in plan section 7. The backend suite runs as a no-regression tripwire — this phase must not touch backend files."
+}

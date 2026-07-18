@@ -1,34 +1,43 @@
 {
   "schema_version": 1,
-  "phase_id": "drone-phase-c-sensitivity",
-  "phase_name": "Drone Phase C: Validation & Sensitivity Analysis (Backend)",
+  "phase_id": "drone-phase-d-frontend",
+  "phase_name": "Drone Phase D: Zoning Framework & Frontend Map Integration (Remaining)",
   "status": "approved",
   "approved_by_human": true,
-  "baseline_commit": "c87ae09",
+  "baseline_commit": "dba841a",
   "branch": "claude/implementation-plan-review-9ibbph",
   "protected_branches": [],
   "allowed_paths": [
-    "backend/app/services/drone_service.py",
-    "backend/app/routers/drone.py",
-    "backend/tests/test_drone_sensitivity.py",
+    "frontend/src/lib/droneApi.ts",
+    "frontend/src/lib/zoneTheme.ts",
+    "frontend/src/lib/useSensitivity.ts",
+    "frontend/src/app/drone/page.tsx",
+    "frontend/src/components/drone/ControlRail.tsx",
+    "frontend/src/components/drone/SensitivityPanel.tsx",
+    "frontend/src/components/drone/MapView.tsx",
+    "frontend/src/components/drone/ReportDrawer.tsx",
+    "frontend/src/app/globals.css",
     ".agents/state/current_phase.json",
-    ".agents/config/verification_commands_drone_c.json"
+    ".agents/config/verification_commands_drone_d.json"
   ],
   "excluded_paths": [
-    "frontend/**",
-    "scripts/ingest_drone_data.py",
-    "db/migrations/**"
+    "backend/**",
+    "db/**",
+    "scripts/**"
   ],
   "approved_operations": [
-    "sensitivity_service_functions",
-    "router_endpoint_additions",
-    "unit_test_creation"
+    "sensitivity_ui_integration",
+    "map_overlay_additions",
+    "zone_toggle_controls",
+    "report_drawer_extension",
+    "color_theme_consolidation"
   ],
   "prohibited_operations": [
+    "backend_modifications",
     "database_schema_changes",
-    "frontend_modifications",
+    "dependency_additions",
     "deployment_changes"
   ],
-  "verification_commands_file": ".agents/config/verification_commands_drone_c.json",
-  "approved_baseline_file": ".agents/state/baselines/drone-phase-c-sensitivity/baseline_approved.json"
+  "verification_commands_file": ".agents/config/verification_commands_drone_d.json",
+  "approved_baseline_file": ".agents/state/baselines/drone-phase-d-frontend/baseline_approved.json"
 }
