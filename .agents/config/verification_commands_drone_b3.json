@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "contract_tests",
+      "command": [".venv\\Scripts\\python", "backend/tests/test_phase2a_baseline.py"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "grid_generation_test",
+      "command": [".venv\\Scripts\\python", "-m", "pytest", "backend/tests/test_grid_generation.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "feature_ingestion_test",
+      "command": [".venv\\Scripts\\python", "-m", "pytest", "backend/tests/test_feature_ingestion.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Phase B3: Overpass OSM spatial querying, geometry filtering, and manual aerodrome seeding checks."
+}

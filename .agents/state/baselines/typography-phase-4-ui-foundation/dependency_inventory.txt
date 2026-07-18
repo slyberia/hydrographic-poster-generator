@@ -1,0 +1,264 @@
+Repository: C:\MORE AI STUFF\HydroRIVERS Image Generator
+Symbols: typography_overrides, TypographyOverrides
+Matches: 26
+WARNING: Results are unclassified and require review.
+
+Symbol: TypographyOverrides
+File: docs\ROADMAP.md
+Line: 39
+Classification: unclassified
+37: ### 🔵 Phase 4: Typography Foundation (Pending)
+38: - **Advanced UI Selectors**: Implement font family pickers, weight selectors, and letter-spacing tracking sliders on the frontend.
+39: - **Overrides**: Wire the controls to construct and send the `TypographyOverrides` object to the backend.
+40: - **Customization Limits**: Validate that typography adjustments respect bounds defined in the backend's `TypographyOverrides` models.
+41: 
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: docs\ROADMAP.md
+Line: 40
+Classification: unclassified
+38: - **Advanced UI Selectors**: Implement font family pickers, weight selectors, and letter-spacing tracking sliders on the frontend.
+39: - **Overrides**: Wire the controls to construct and send the `TypographyOverrides` object to the backend.
+40: - **Customization Limits**: Validate that typography adjustments respect bounds defined in the backend's `TypographyOverrides` models.
+41: 
+42: ### 🔵 Phase 5: Composition Hardening (Pending)
+------------------------------------------------------------------------
+Symbol: typography_overrides
+File: frontend\src\components\ControlPanel.tsx
+Line: 33
+Classification: unclassified
+31:   schema_version: 2;
+32:   metadata_options: import("@/lib/api").MetadataOptions;
+33:   typography_overrides: import("@/lib/api").TypographyOverrides;
+34:   layout_overrides: import("@/lib/api").LayoutOverrides;
+35: }
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: frontend\src\components\ControlPanel.tsx
+Line: 33
+Classification: unclassified
+31:   schema_version: 2;
+32:   metadata_options: import("@/lib/api").MetadataOptions;
+33:   typography_overrides: import("@/lib/api").TypographyOverrides;
+34:   layout_overrides: import("@/lib/api").LayoutOverrides;
+35: }
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: frontend\src\lib\api.ts
+Line: 113
+Classification: unclassified
+111: }
+112: 
+113: export interface TypographyOverrides {
+114:   title_font?: string;
+115:   title_weight?: string;
+------------------------------------------------------------------------
+Symbol: typography_overrides
+File: frontend\src\lib\api.ts
+Line: 153
+Classification: unclassified
+151:   element_transforms?: Record<string, { x: number; y: number; scale: number }>; // legacy
+152:   metadata_options?: MetadataOptions;
+153:   typography_overrides?: TypographyOverrides;
+154:   layout_overrides?: LayoutOverrides;
+155: }
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: frontend\src\lib\api.ts
+Line: 153
+Classification: unclassified
+151:   element_transforms?: Record<string, { x: number; y: number; scale: number }>; // legacy
+152:   metadata_options?: MetadataOptions;
+153:   typography_overrides?: TypographyOverrides;
+154:   layout_overrides?: LayoutOverrides;
+155: }
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: frontend\src\lib\state_migration.ts
+Line: 2
+Classification: unclassified
+1: 
+2: import { MetadataOptions, TypographyOverrides, LayoutOverrides } from "./api";
+3: 
+4: // The shape of settings inside ControlPanel before Phase 2A
+------------------------------------------------------------------------
+Symbol: typography_overrides
+File: frontend\src\lib\state_migration.ts
+Line: 23
+Classification: unclassified
+21:   schema_version: 2;
+22:   metadata_options: MetadataOptions;
+23:   typography_overrides: TypographyOverrides;
+24:   layout_overrides: LayoutOverrides;
+25: }
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: frontend\src\lib\state_migration.ts
+Line: 23
+Classification: unclassified
+21:   schema_version: 2;
+22:   metadata_options: MetadataOptions;
+23:   typography_overrides: TypographyOverrides;
+24:   layout_overrides: LayoutOverrides;
+25: }
+------------------------------------------------------------------------
+Symbol: typography_overrides
+File: frontend\src\lib\state_migration.ts
+Line: 45
+Classification: unclassified
+43:       show_data_credits: (legacy.show_metadata as boolean | undefined) ?? true,
+44:     },
+45:     typography_overrides: {},
+46:     layout_overrides: {},
+47:   };
+------------------------------------------------------------------------
+Symbol: typography_overrides
+File: frontend\src\app\studio\page.tsx
+Line: 48
+Classification: unclassified
+46:     show_data_credits: true,
+47:   },
+48:   typography_overrides: {},
+49:   layout_overrides: {},
+50: };
+------------------------------------------------------------------------
+Symbol: typography_overrides
+File: backend\tests\test_phase2a_baseline.py
+Line: 10
+Classification: unclassified
+8: def test_legacy_render_request_valid():
+9:     """Verify that existing requests without new fields continue rendering identically."""
+10:     # A legacy request without metadata_options or typography_overrides
+11:     req = RenderRequest(
+12:         geography_id="test_geo",
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: backend\app\models\render_models.py
+Line: 6
+Classification: unclassified
+4: from app.models.style_models import StyleSelection
+5: from app.models.metadata_models import MetadataOptions
+6: from app.models.typography_models import TypographyOverrides
+7: from app.models.layout_models import LayoutOverrides
+8: 
+------------------------------------------------------------------------
+Symbol: typography_overrides
+File: backend\app\models\render_models.py
+Line: 24
+Classification: unclassified
+22:     element_transforms: Optional[Dict[str, Dict[str, float]]] = None  # Legacy layout field
+23:     metadata_options: Optional[MetadataOptions] = None
+24:     typography_overrides: Optional[TypographyOverrides] = None
+25:     layout_overrides: Optional[LayoutOverrides] = None
+26: 
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: backend\app\models\render_models.py
+Line: 24
+Classification: unclassified
+22:     element_transforms: Optional[Dict[str, Dict[str, float]]] = None  # Legacy layout field
+23:     metadata_options: Optional[MetadataOptions] = None
+24:     typography_overrides: Optional[TypographyOverrides] = None
+25:     layout_overrides: Optional[LayoutOverrides] = None
+26: 
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: backend\app\models\typography_models.py
+Line: 4
+Classification: unclassified
+2: from pydantic import BaseModel, ConfigDict
+3: 
+4: class TypographyOverrides(BaseModel):
+5:     model_config = ConfigDict(extra="forbid")
+6: 
+------------------------------------------------------------------------
+Symbol: typography_overrides
+File: backend\app\services\svg_renderer.py
+Line: 56
+Classification: unclassified
+54: 
+55:         preset_typography = rules_service.get_typography_preset(request.typography)
+56:         self.typography = resolve_typography(preset_typography, request.typography_overrides)
+57:         
+58:         self.metadata = resolve_metadata(request.show_metadata, request.show_legend, request.metadata_options)
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: backend\app\services\typography_resolver.py
+Line: 3
+Classification: unclassified
+1: from typing import Optional
+2: from app.models.preset_models import TypographyPreset
+3: from app.models.typography_models import TypographyOverrides, ResolvedTypography
+4: 
+5: def resolve_typography(preset: TypographyPreset, overrides: Optional[TypographyOverrides]) -> ResolvedTypography:
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: backend\app\services\typography_resolver.py
+Line: 5
+Classification: unclassified
+3: from app.models.typography_models import TypographyOverrides, ResolvedTypography
+4: 
+5: def resolve_typography(preset: TypographyPreset, overrides: Optional[TypographyOverrides]) -> ResolvedTypography:
+6:     """
+7:     Merges a typography preset with runtime overrides to produce a finalized typography configuration.
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: .agents\state\phase2_plan_extracted.md
+Line: 217
+Classification: unclassified
+215: ## Backend Models
+216: 
+217: ### `TypographyOverrides`
+218: 
+219: Create a strict model using the actual existing typography token names:
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: .agents\state\phase2_plan_extracted.md
+Line: 222
+Classification: unclassified
+220: 
+221: ```python
+222: class TypographyOverrides(BaseModel):
+223:     model_config = ConfigDict(extra="forbid")
+224: 
+------------------------------------------------------------------------
+Symbol: typography_overrides
+File: .agents\state\phase2_plan_extracted.md
+Line: 328
+Classification: unclassified
+326: 
+327: typography: str = "gallery_poster"
+328: typography_overrides: TypographyOverrides | None = None
+329: 
+330: layout_overrides: LayoutOverrides | None = None
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: .agents\state\phase2_plan_extracted.md
+Line: 328
+Classification: unclassified
+326: 
+327: typography: str = "gallery_poster"
+328: typography_overrides: TypographyOverrides | None = None
+329: 
+330: layout_overrides: LayoutOverrides | None = None
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: .agents\state\phase2_plan_extracted.md
+Line: 440
+Classification: unclassified
+438: 
+439: ```ts
+440: type TypographyOverrides = {
+441:   titleFontId?: string;
+442:   titleSize?: number;
+------------------------------------------------------------------------
+Symbol: TypographyOverrides
+File: .agents\state\phase2_plan_extracted.md
+Line: 1257
+Classification: unclassified
+1255: 
+1256:   // New additive settings
+1257:   typographyOverrides?: TypographyOverrides;
+1258:   metadataOptions?: MetadataOptions;
+1259:   layoutOverrides?: LayoutOverrides;
+------------------------------------------------------------------------

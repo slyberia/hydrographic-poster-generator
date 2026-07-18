@@ -16,6 +16,7 @@ import { FEATURE_FLAGS } from "@/lib/features";
 import { Tooltip } from "@/components/Tooltip";
 import QAChecklist from "./QAChecklist";
 import ColorPickerPopover from "./ColorPickerPopover";
+import { setTypographyOverride } from "@/lib/settings";
 
 export interface PosterSettings {
   geography_id: string;
@@ -79,6 +80,7 @@ export default function ControlPanel({
   qaItems,
 }: ControlPanelProps) {
   const [activeColorPicker, setActiveColorPicker] = useState<ActiveColorPickerState | null>(null);
+  const [showTypographyOverrides, setShowTypographyOverrides] = useState(false);
 
   // Cascading geography picker state.
   const [regionCode, setRegionCode] = useState("");
@@ -354,22 +356,214 @@ export default function ControlPanel({
             </div>
           )}
           {FEATURE_FLAGS.typography_customization && (
-            <div>
-              <label htmlFor="typography" className="glass-label">
-                Typography
-              </label>
-              <select
-                id="typography"
-                className="glass-select"
-                value={settings.typography}
-                onChange={(e) => onSettingsChange({ typography: e.target.value })}
-              >
-                {(presets?.typography ?? []).map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
+            <div className="space-y-3">
+              <div>
+                <label htmlFor="typography" className="glass-label">
+                  Typography Preset
+                </label>
+                <select
+                  id="typography"
+                  className="glass-select"
+                  value={settings.typography}
+                  onChange={(e) => {
+                    // Changing base preset resets overrides per A5
+                    onSettingsChange({
+                      typography: e.target.value,
+                      typography_overrides: {},
+                    });
+                  }}
+                >
+                  {(presets?.typography ?? []).map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Advanced Overrides Toggle */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowTypographyOverrides(!showTypographyOverrides)}
+                  className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors focus-visible:outline-none"
+                >
+                  <span
+                    className="text-[10px] transform transition-transform duration-200"
+                    style={{
+                      display: "inline-block",
+                      transform: showTypographyOverrides ? "rotate(90deg)" : "rotate(0deg)",
+                    }}
+                  >
+                    ▶
+                  </span>
+                  <span>Advanced Customization</span>
+                  {Object.keys(settings.typography_overrides || {}).length > 0 && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" title="Overrides active" />
+                  )}
+                </button>
+              </div>
+
+              {showTypographyOverrides && (
+                <div className="pl-3 border-l border-white/10 space-y-4 pt-1 pb-1">
+                  {/* Reset All button */}
+                  {Object.keys(settings.typography_overrides || {}).length > 0 && (
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => onSettingsChange({ typography_overrides: {} })}
+                        className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
+                      >
+                        Reset Overrides
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Title Settings Group */}
+                  <div className="space-y-2.5">
+                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Title Text</h4>
+                    
+                    {/* Title Font */}
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-[var(--text-secondary)]">Font Family</label>
+                      <select
+                        className="glass-select !py-1 text-xs"
+                        value={settings.typography_overrides?.title_font || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          onSettingsChange({
+                            typography_overrides: setTypographyOverride(settings, "title_font", val || undefined).typography_overrides
+                          });
+                        }}
+                      >
+                        <option value="">Default (Preset)</option>
+                        <option value="Inter">Inter</option>
+                        <option value="Roboto Mono">Roboto Mono</option>
+                        <option value="Outfit">Outfit</option>
+                      </select>
+                    </div>
+
+                    {/* Title Weight */}
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-[var(--text-secondary)]">Font Weight</label>
+                      <select
+                        className="glass-select !py-1 text-xs"
+                        value={settings.typography_overrides?.title_weight || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          onSettingsChange({
+                            typography_overrides: setTypographyOverride(settings, "title_weight", val || undefined).typography_overrides
+                          });
+                        }}
+                      >
+                        <option value="">Default (Preset)</option>
+                        <option value="300">300 (Light)</option>
+                        <option value="400">400 (Regular)</option>
+                        <option value="500">500 (Medium)</option>
+                        <option value="600">600 (Semi-Bold)</option>
+                        <option value="700">700 (Bold)</option>
+                      </select>
+                    </div>
+
+                    {/* Title Tracking */}
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-[var(--text-secondary)]">Letter Spacing (Tracking)</label>
+                      <select
+                        className="glass-select !py-1 text-xs"
+                        value={settings.typography_overrides?.title_tracking || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          onSettingsChange({
+                            typography_overrides: setTypographyOverride(settings, "title_tracking", val || undefined).typography_overrides
+                          });
+                        }}
+                      >
+                        <option value="">Default (Preset)</option>
+                        <option value="-0.02em">Tight (-0.02em)</option>
+                        <option value="0em">Normal (0em)</option>
+                        <option value="0.02em">Relaxed (0.02em)</option>
+                        <option value="0.05em">Wide (0.05em)</option>
+                        <option value="0.1em">Extra Wide (0.1em)</option>
+                        <option value="0.15em">Expansive (0.15em)</option>
+                        <option value="0.2em">Highly Expansive (0.2em)</option>
+                        <option value="0.25em">Maximum (0.25em)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Subtitle Settings Group */}
+                  <div className="space-y-2.5 pt-2 border-t border-white/5">
+                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Subtitle Text</h4>
+                    
+                    {/* Subtitle Font */}
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-[var(--text-secondary)]">Font Family</label>
+                      <select
+                        className="glass-select !py-1 text-xs"
+                        value={settings.typography_overrides?.subtitle_font || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          onSettingsChange({
+                            typography_overrides: setTypographyOverride(settings, "subtitle_font", val || undefined).typography_overrides
+                          });
+                        }}
+                      >
+                        <option value="">Default (Preset)</option>
+                        <option value="Inter">Inter</option>
+                        <option value="Roboto Mono">Roboto Mono</option>
+                        <option value="Outfit">Outfit</option>
+                      </select>
+                    </div>
+
+                    {/* Subtitle Weight */}
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-[var(--text-secondary)]">Font Weight</label>
+                      <select
+                        className="glass-select !py-1 text-xs"
+                        value={settings.typography_overrides?.subtitle_weight || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          onSettingsChange({
+                            typography_overrides: setTypographyOverride(settings, "subtitle_weight", val || undefined).typography_overrides
+                          });
+                        }}
+                      >
+                        <option value="">Default (Preset)</option>
+                        <option value="300">300 (Light)</option>
+                        <option value="400">400 (Regular)</option>
+                        <option value="500">500 (Medium)</option>
+                        <option value="600">600 (Semi-Bold)</option>
+                        <option value="700">700 (Bold)</option>
+                      </select>
+                    </div>
+
+                    {/* Subtitle Tracking */}
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-[var(--text-secondary)]">Letter Spacing (Tracking)</label>
+                      <select
+                        className="glass-select !py-1 text-xs"
+                        value={settings.typography_overrides?.subtitle_tracking || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          onSettingsChange({
+                            typography_overrides: setTypographyOverride(settings, "subtitle_tracking", val || undefined).typography_overrides
+                          });
+                        }}
+                      >
+                        <option value="">Default (Preset)</option>
+                        <option value="-0.02em">Tight (-0.02em)</option>
+                        <option value="0em">Normal (0em)</option>
+                        <option value="0.02em">Relaxed (0.02em)</option>
+                        <option value="0.05em">Wide (0.05em)</option>
+                        <option value="0.1em">Extra Wide (0.1em)</option>
+                        <option value="0.15em">Expansive (0.15em)</option>
+                        <option value="0.2em">Highly Expansive (0.2em)</option>
+                        <option value="0.25em">Maximum (0.25em)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -500,14 +694,55 @@ export default function ControlPanel({
               checked={settings.show_legend}
               disabled={settings.design_asset_mode}
               onChange={(e) =>
-                onSettingsChange({ show_legend: e.target.checked })
+                onSettingsChange({
+                  show_legend: e.target.checked,
+                  metadata_options: {
+                    ...settings.metadata_options,
+                    show_legend: e.target.checked,
+                  },
+                })
               }
             />
             <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
               Legend
             </span>
           </label>
-          {FEATURE_FLAGS.granular_metadata_controls && (
+          {FEATURE_FLAGS.granular_metadata_controls ? (
+            <div className="space-y-2 border-l border-white/10 pl-3 ml-2">
+              {[
+                { key: "show_title", label: "Title" },
+                { key: "show_subtitle", label: "Subtitle" },
+                { key: "show_legend", label: "Legend" },
+                { key: "show_north_arrow", label: "North Arrow" },
+                { key: "show_scale_bar", label: "Scale Bar" },
+                { key: "show_data_credits", label: "Data Credits" },
+              ].map(({ key, label }) => {
+                const optKey = key as keyof typeof settings.metadata_options;
+                return (
+                  <label key={key} className="flex items-center gap-2.5 cursor-pointer group text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground)]">
+                    <input
+                      type="checkbox"
+                      className="glass-checkbox scale-90"
+                      checked={settings.metadata_options?.[optKey] ?? true}
+                      disabled={settings.design_asset_mode}
+                      onChange={(e) =>
+                        onSettingsChange({
+                          metadata_options: {
+                            ...settings.metadata_options,
+                            [optKey]: e.target.checked,
+                          },
+                          ...(optKey === "show_legend" ? { show_legend: e.target.checked } : {}),
+                        })
+                      }
+                    />
+                    <span className="transition-colors duration-200">
+                      {label}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          ) : (
             <label className="flex items-center gap-2.5 cursor-pointer group">
               <input
                 type="checkbox"

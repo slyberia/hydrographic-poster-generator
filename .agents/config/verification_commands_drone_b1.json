@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "contract_tests",
+      "command": [".venv\\Scripts\\python", "backend/tests/test_phase2a_baseline.py"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "ingestion_dry_run_test",
+      "command": [".venv\\Scripts\\python", "-m", "pytest", "backend/tests/test_ingestion_dry_run.py", "-v"],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Phase B1: Ingestion Contracts and dry-run preflight checks."
+}

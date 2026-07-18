@@ -10,7 +10,6 @@ that letterboxes with transparent bars (verified failure mode).
 from dataclasses import dataclass
 from typing import Optional, Tuple
 
-import cairosvg
 
 from app.config import render_constants as rc
 from app.models.clip_models import ClipResult
@@ -76,6 +75,7 @@ class ExportService:
             return svg.encode("utf-8"), MEDIA_TYPES["svg"], filename
 
         if fmt == "png":
+            import cairosvg
             payload = cairosvg.svg2png(bytestring=svg.encode("utf-8"),
                                        output_width=size.width)
             return payload, MEDIA_TYPES["png"], filename
@@ -88,6 +88,7 @@ class ExportService:
             out_h = int(round(size.physical_in[1] * 96))
         else:
             out_w, out_h = size.width, size.height
+        import cairosvg
         payload = cairosvg.svg2pdf(bytestring=svg.encode("utf-8"),
                                    output_width=out_w, output_height=out_h)
         return payload, MEDIA_TYPES["pdf"], filename

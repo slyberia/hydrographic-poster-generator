@@ -29,28 +29,38 @@ export function Tooltip({ children, content, id }: TooltipProps) {
 
   if (!FEATURE_FLAGS.new_tooltip_system) {
     // If feature flag is off, just render the child natively (could use native title as fallback)
-    return React.cloneElement(children as React.ReactElement<any>, {
+    return React.cloneElement(children as React.ReactElement<{ title?: string }>, {
       title: typeof content === "string" ? content : undefined,
     });
   }
 
+  interface TooltipTargetProps {
+    onFocus?: React.FocusEventHandler<HTMLElement>;
+    onBlur?: React.FocusEventHandler<HTMLElement>;
+    onMouseEnter?: React.MouseEventHandler<HTMLElement>;
+    onMouseLeave?: React.MouseEventHandler<HTMLElement>;
+    "aria-describedby"?: string;
+  }
+
+  const childProps = children.props as TooltipTargetProps;
+
   // Intercept focus and blur for keyboard accessibility on the trigger element
-  const childWithEvents = React.cloneElement(children as React.ReactElement<any>, {
-    onFocus: (e: React.FocusEvent) => {
+  const childWithEvents = React.cloneElement(children as React.ReactElement<TooltipTargetProps>, {
+    onFocus: (e: React.FocusEvent<HTMLElement>) => {
       show();
-      (children.props as any).onFocus?.(e);
+      childProps.onFocus?.(e);
     },
-    onBlur: (e: React.FocusEvent) => {
+    onBlur: (e: React.FocusEvent<HTMLElement>) => {
       hide();
-      (children.props as any).onBlur?.(e);
+      childProps.onBlur?.(e);
     },
-    onMouseEnter: (e: React.MouseEvent) => {
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
       show();
-      (children.props as any).onMouseEnter?.(e);
+      childProps.onMouseEnter?.(e);
     },
-    onMouseLeave: (e: React.MouseEvent) => {
+    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
       hide();
-      (children.props as any).onMouseLeave?.(e);
+      childProps.onMouseLeave?.(e);
     },
     "aria-describedby": isVisible ? tooltipId : undefined,
   });

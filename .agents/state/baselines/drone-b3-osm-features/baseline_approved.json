@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "drone-b3-osm-features",
+  "branch": "drone-b3-osm-features",
+  "commit": "92861daf8c2a00cf6db5ffa2ccb881a705027bd5",
+  "generated_at": "2026-07-17T21:23:56.249454+00:00",
+  "commands_file": ".agents\\config\\verification_commands_drone_b3.json",
+  "commands": [
+    {
+      "name": "contract_tests",
+      "cwd": ".",
+      "command": [
+        ".venv\\Scripts\\python",
+        "backend/tests/test_phase2a_baseline.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.506,
+      "stdout_file": ".agents\\state\\baselines\\drone-b3-osm-features\\contract_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\drone-b3-osm-features\\contract_tests.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "grid_generation_test",
+      "cwd": ".",
+      "command": [
+        ".venv\\Scripts\\python",
+        "-m",
+        "pytest",
+        "backend/tests/test_grid_generation.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 2.022,
+      "stdout_file": ".agents\\state\\baselines\\drone-b3-osm-features\\grid_generation_test.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\drone-b3-osm-features\\grid_generation_test.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "feature_ingestion_test",
+      "cwd": ".",
+      "command": [
+        ".venv\\Scripts\\python",
+        "-m",
+        "pytest",
+        "backend/tests/test_feature_ingestion.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 1.986,
+      "stdout_file": ".agents\\state\\baselines\\drone-b3-osm-features\\feature_ingestion_test.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\drone-b3-osm-features\\feature_ingestion_test.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    }
+  ],
+  "test_cases": [],
+  "notes": "Auto-approved due to zero failures."
+}

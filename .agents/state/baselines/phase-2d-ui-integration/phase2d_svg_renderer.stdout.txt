@@ -17,4 +17,4 @@ backend/tests/test_svg_renderer.py::test_missing_bbox_rejected PASSED    [ 81%]
 backend/tests/test_svg_renderer.py::test_svg_is_well_formed_xml PASSED   [ 90%]
 backend/tests/test_svg_renderer.py::test_unknown_presets_rejected PASSED [100%]
 
-============================= 11 passed in 0.48s ==============================
+============================= 11 passed in 0.23s ==============================
