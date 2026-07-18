@@ -17,6 +17,12 @@
     "frontend/src/components/drone/MapView.tsx",
     "frontend/src/components/drone/ReportDrawer.tsx",
     "frontend/src/app/globals.css",
+    "frontend/e2e/mockBackend.ts",
+    "frontend/e2e/drone-console.spec.ts",
+    "frontend/playwright.config.ts",
+    "frontend/package.json",
+    "frontend/package-lock.json",
+    "frontend/.gitignore",
     ".agents/state/current_phase.json",
     ".agents/config/verification_commands_drone_d.json"
   ],
@@ -30,12 +36,13 @@
     "map_overlay_additions",
     "zone_toggle_controls",
     "report_drawer_extension",
-    "color_theme_consolidation"
+    "color_theme_consolidation",
+    "e2e_qa_automation"
   ],
   "prohibited_operations": [
     "backend_modifications",
     "database_schema_changes",
-    "dependency_additions",
+    "dependency_additions_except_owner_approved_playwright_devdep",
     "deployment_changes"
   ],
   "verification_commands_file": ".agents/config/verification_commands_drone_d.json",

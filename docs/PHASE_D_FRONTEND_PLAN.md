@@ -353,6 +353,16 @@ cd frontend && npm run lint && npm run build
 python -m pytest backend/tests/test_drone_sensitivity.py -v   # no-regression tripwire
 ```
 
+> **Update (2026-07-18, owner-approved):** steps 1–9 below are now automated as
+> a Playwright E2E suite (`frontend/e2e/drone-console.spec.ts`, run via
+> `npm run test:e2e`) against a network-mocked backend
+> (`frontend/e2e/mockBackend.ts`). `@playwright/test` was added as a
+> dev-dependency by explicit owner decision, superseding this phase's original
+> no-new-dependencies rule for that one package. The mocks encode the backend
+> contract as verified by `backend/tests/test_drone_sensitivity.py`; step 10
+> remains covered by the build command. Running this script manually against a
+> live backend + DB is still recommended once before production deploys.
+
 Manual QA script (run against local backend + DB, record results in the phase
 completion report):
 
@@ -379,9 +389,12 @@ completion report):
 
 - `GET /runs/{run_id}/sensitivity` latest-sweep discovery endpoint (backend),
   enabling sweep rehydration after reload (§3g).
-- Frontend unit-test framework (vitest) — worth adopting once client logic
+- ~~Frontend unit-test framework (vitest) — worth adopting once client logic
   grows beyond `useSensitivity`; introducing it deserves its own decision, not
-  a rider on this phase.
+  a rider on this phase.~~ **Resolved 2026-07-18:** owner approved test
+  automation; Playwright E2E (with network-mocked backend) was chosen over
+  vitest because the QA script's behaviors are browser-level (canvas
+  hit-testing, polling, Leaflet restyles). See §7 update.
 - Sweep cancellation endpoint + button.
 - Volatility overlay opacity slider.
 - Volatility-threshold tuning via backend config table + admin endpoint, if the
