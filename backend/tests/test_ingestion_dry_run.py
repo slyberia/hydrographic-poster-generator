@@ -32,6 +32,7 @@ async def test_validate_taxonomy_registry_success():
         {"subtype_id": 15, "subtype_key": "aerodrome_proximity"},
         {"subtype_id": 16, "subtype_key": "heliport_proximity"},
         {"subtype_id": 17, "subtype_key": "protected_area"},
+        {"subtype_id": 19, "subtype_key": "pier"},
     ]
 
     mock_conn.fetch.side_effect = lambda sql, *args: (
@@ -41,7 +42,7 @@ async def test_validate_taxonomy_registry_success():
     layer_id_map, subtype_id_map = await validate_taxonomy_registry(mock_conn)
 
     assert len(layer_id_map) == 5
-    assert len(subtype_id_map) == 8
+    assert len(subtype_id_map) == 9
     assert layer_id_map["guynode_schools_r4"] == 1
     assert subtype_id_map["school"] == 10
 
@@ -69,6 +70,7 @@ async def test_validate_taxonomy_registry_inactive_layer_fails():
         {"subtype_id": 15, "subtype_key": "aerodrome_proximity"},
         {"subtype_id": 16, "subtype_key": "heliport_proximity"},
         {"subtype_id": 17, "subtype_key": "protected_area"},
+        {"subtype_id": 19, "subtype_key": "pier"},
     ]
 
     mock_conn.fetch.side_effect = lambda sql, *args: (
@@ -101,6 +103,7 @@ async def test_validate_taxonomy_registry_missing_subtype_fails():
         {"subtype_id": 15, "subtype_key": "aerodrome_proximity"},
         {"subtype_id": 16, "subtype_key": "heliport_proximity"},
         {"subtype_id": 17, "subtype_key": "protected_area"},
+        {"subtype_id": 19, "subtype_key": "pier"},
     ]
 
     mock_conn.fetch.side_effect = lambda sql, *args: (

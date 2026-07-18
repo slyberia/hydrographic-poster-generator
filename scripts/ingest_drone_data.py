@@ -68,11 +68,20 @@ FEATURE_MAPPINGS = {
     "port": {
         "layer_key": "guynode_infrastructure",
         "subtype_key": "port",
-        "osm_match": {
-            "harbour": {"yes"},
-            "industrial": {"port"}
-        },
+        "match_any": [
+            {"harbour": {"yes"}},
+            {"industrial": {"port"}, "landuse": {"industrial"}}
+        ],
         "allowed_geometry_types": {"Point", "Polygon", "MultiPolygon"},
+        "default_confidence": "proxy_osm",
+    },
+    "pier": {
+        "layer_key": "guynode_infrastructure",
+        "subtype_key": "pier",
+        "osm_match": {
+            "man_made": {"pier"}
+        },
+        "allowed_geometry_types": {"LineString", "MultiLineString", "Polygon", "MultiPolygon"},
         "default_confidence": "proxy_osm",
     },
     "airport": {
@@ -330,23 +339,47 @@ async def fetch_overpass_features(query: str, cache_path: Path) -> List[Dict[str
         raise RuntimeError("Failed to fetch features from Overpass API after maximum retries.")
 
 
+def normalize_tags(item: Dict[str, Any]) -> Dict[str, str]:
+    """Helper to resolve tag vs tags formatting inconsistencies in OSM datasets."""
+    raw = item.get("tags") or item.get("tag") or {}
+    return {str(k): str(v) for k, v in raw.items()} if isinstance(raw, dict) else {}
+
+
 def match_osm_element(elem: Dict[str, Any]) -> List[Tuple[str, Dict[str, Any]]]:
     """Check if OSM element tags match active registry taxonomies."""
-    tags = elem.get("tags") or elem.get("tag") or {}
+    tags = normalize_tags(elem)
     if not tags:
         return []
     
     matches = []
     for mapping_key, config in FEATURE_MAPPINGS.items():
-        osm_match = config["osm_match"]
-        is_match = True
-        for key, possible_values in osm_match.items():
-            val = tags.get(key)
-            if not val or val not in possible_values:
-                is_match = False
-                break
-        if is_match:
-            matches.append((mapping_key, config))
+        # Check disjunctive match_any rules
+        if "match_any" in config:
+            is_match = False
+            for group in config["match_any"]:
+                group_match = True
+                for key, possible_values in group.items():
+                    val = tags.get(key)
+                    if not val or val not in possible_values:
+                        group_match = False
+                        break
+                if group_match:
+                    is_match = True
+                    break
+            if is_match:
+                matches.append((mapping_key, config))
+        
+        # Fallback to standard flat osm_match
+        elif "osm_match" in config:
+            osm_match = config["osm_match"]
+            is_match = True
+            for key, possible_values in osm_match.items():
+                val = tags.get(key)
+                if not val or val not in possible_values:
+                    is_match = False
+                    break
+            if is_match:
+                matches.append((mapping_key, config))
             
     return matches
 
@@ -385,13 +418,22 @@ def osm_element_to_geojson(elem: Dict[str, Any], config: Dict[str, Any]) -> Opti
     return None
 
 
-def parse_osm_pbf_file(pbf_path: Path, bbox: Tuple[float, float, float, float]) -> List[Dict[str, Any]]:
+def parse_osm_pbf_file(pbf_path: Path, bbox: Tuple[float, float, float, float]) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
     """Extract features matching registry taxonomies from local PBF file inside bbox."""
     logger.info(f"Locally parsing OSM PBF file: {pbf_path}...")
     ymin, xmin, ymax, xmax = bbox
     
     node_coords = {}
     matched_features = []
+    
+    diag = {
+        "candidate_nodes_matched": 0,
+        "candidate_ways_matched": 0,
+        "ways_resolved": 0,
+        "ways_dropped_unresolved_nodes": 0,
+        "ways_dropped_invalid_geometry": 0,
+        "node_refs_missing_at_way_time": 0
+    }
     
     # Sequential scan through OSM binary protocol format
     for item in osmiter.iter_from_osm(pbf_path):
@@ -406,11 +448,12 @@ def parse_osm_pbf_file(pbf_path: Path, bbox: Tuple[float, float, float, float]) 
             if matches:
                 # Bbox spatial pre-filtering
                 if ymin <= lat <= ymax and xmin <= lon <= xmax:
+                    diag["candidate_nodes_matched"] += 1
                     for mapping_key, config in matches:
                         matched_features.append({
                             "type": "node",
                             "id": node_id,
-                            "tag": item.get("tag") or item.get("tag", {}),
+                            "tag": normalize_tags(item),
                             "geometry": {"type": "Point", "coordinates": [lon, lat]},
                             "config": config
                         })
@@ -419,17 +462,26 @@ def parse_osm_pbf_file(pbf_path: Path, bbox: Tuple[float, float, float, float]) 
             way_id = item["id"]
             matches = match_osm_element(item)
             if matches:
+                diag["candidate_ways_matched"] += 1
+                
                 # Resolve way nodes coordinates
                 coords = []
                 valid = True
+                missing_nodes_count = 0
                 for nd_id in item.get("nd", []):
                     if nd_id in node_coords:
                         coords.append(node_coords[nd_id])
                     else:
                         valid = False
-                        break
+                        missing_nodes_count += 1
                 
-                if valid and coords:
+                if not valid:
+                    diag["ways_dropped_unresolved_nodes"] += 1
+                    diag["node_refs_missing_at_way_time"] += missing_nodes_count
+                    continue
+                
+                if coords:
+                    diag["ways_resolved"] += 1
                     lats = [c[0] for c in coords]
                     lons = [c[1] for c in coords]
                     way_ymin, way_xmin, way_ymax, way_xmax = min(lats), min(lons), max(lats), max(lons)
@@ -453,13 +505,13 @@ def parse_osm_pbf_file(pbf_path: Path, bbox: Tuple[float, float, float, float]) 
                             matched_features.append({
                                 "type": "way",
                                 "id": way_id,
-                                "tag": item.get("tag") or item.get("tag", {}),
+                                "tag": normalize_tags(item),
                                 "geometry": {"type": geom_type, "coordinates": geom_val},
                                 "config": config
                             })
                             
-    logger.info(f"PBF parser matched {len(matched_features)} features.")
-    return matched_features
+    logger.info(f"PBF parser completed. Matched {len(matched_features)} features.")
+    return matched_features, diag
 
 
 async def execute_dry_run(args: argparse.Namespace) -> int:
@@ -519,8 +571,12 @@ async def execute_dry_run(args: argparse.Namespace) -> int:
             if not pbf_path.exists():
                 logger.error(f"OSM PBF file not found: {pbf_path}")
                 return 1
-            features = parse_osm_pbf_file(pbf_path, bbox)
+            if not pbf_path.is_file():
+                logger.error(f"Expected a PBF file, found non-file path: {pbf_path}")
+                return 1
+            features, pbf_diag = parse_osm_pbf_file(pbf_path, bbox)
             logger.info(f"Dry-run PBF scan matched {len(features)} elements.")
+            logger.info(f"Parser Accounting Diagnostics: {json.dumps(pbf_diag, indent=2)}")
         else:
             query = build_overpass_query(bbox)
             cache_path = Path(__file__).resolve().parent / "overpass_cache.json"
@@ -605,12 +661,16 @@ async def execute_stage(args: argparse.Namespace) -> int:
 
         # 4. Source OSM features
         features_data = []
+        pbf_diag = None
         if args.osm_pbf:
             pbf_path = Path(args.osm_pbf)
             if not pbf_path.exists():
                 logger.error(f"OSM PBF file not found: {pbf_path}")
                 return 1
-            matched_pbf_elements = parse_osm_pbf_file(pbf_path, bbox)
+            if not pbf_path.is_file():
+                logger.error(f"Expected a PBF file, found non-file path: {pbf_path}")
+                return 1
+            matched_pbf_elements, pbf_diag = parse_osm_pbf_file(pbf_path, bbox)
             
             for item in matched_pbf_elements:
                 source_key = f"osm:{item['type']}:{item['id']}"
@@ -765,6 +825,14 @@ async def execute_stage(args: argparse.Namespace) -> int:
             )
             logger.info(f"Spatial filtering removed features outside boundary: {deleted_count_res}")
 
+            # Parse deleted features count
+            deleted_count = 0
+            if deleted_count_res.startswith("DELETE "):
+                try:
+                    deleted_count = int(deleted_count_res.split()[1])
+                except Exception:
+                    pass
+
             # Get final staged counts
             final_features_count = await conn.fetchval(
                 "SELECT COUNT(*) FROM staging_features WHERE run_id = $1", run_id
@@ -786,6 +854,36 @@ async def execute_stage(args: argparse.Namespace) -> int:
             )
             
             logger.info(f"Ingestion run ID {run_id} staged successfully: 1 boundary, {len(cells)} cells, {final_features_count} spatial features.")
+
+            # Print diagnostics accounting report
+            if pbf_diag:
+                # Review warning threshold check (1% way drop)
+                candidate_ways = pbf_diag["candidate_ways_matched"]
+                dropped_ways = pbf_diag["ways_dropped_unresolved_nodes"] + pbf_diag["ways_dropped_invalid_geometry"]
+                
+                unresolved_ratio = 0.0
+                if candidate_ways > 0:
+                    unresolved_ratio = dropped_ways / candidate_ways
+
+                accounting_report = {
+                    "run_type": "verification",
+                    "candidate_nodes_matched": pbf_diag["candidate_nodes_matched"],
+                    "candidate_ways_matched": pbf_diag["candidate_ways_matched"],
+                    "ways_resolved": pbf_diag["ways_resolved"],
+                    "ways_dropped_unresolved_nodes": pbf_diag["ways_dropped_unresolved_nodes"],
+                    "ways_dropped_invalid_geometry": pbf_diag["ways_dropped_invalid_geometry"],
+                    "node_refs_missing_at_way_time": pbf_diag["node_refs_missing_at_way_time"],
+                    "features_removed_outside_region": deleted_count,
+                    "features_staged": final_features_count
+                }
+                
+                logger.info(f"Parser Accounting Diagnostics Report:\n{json.dumps(accounting_report, indent=2)}")
+                
+                if unresolved_ratio > 0.01:
+                    logger.warning(
+                        f"WARNING: Unresolved/invalid ways ratio ({unresolved_ratio:.2%}) exceeds 1% threshold! "
+                        "Sign-off in verification log required."
+                    )
             
     except Exception as exc:
         logger.error(f"Failed to stage ingestion run: {exc}")
@@ -796,13 +894,194 @@ async def execute_stage(args: argparse.Namespace) -> int:
     return 0
 
 
+async def execute_promote(args: argparse.Namespace) -> int:
+    run_id = args.run_id
+    region_key = args.region_key
+    
+    logger.info(f"=== STARTING PROMOTION FOR RUN ID {run_id} ===")
+    
+    try:
+        conn = await get_db_connection()
+    except Exception as exc:
+        logger.error(f"Failed to connect to database: {exc}")
+        return 1
+        
+    try:
+        async with conn.transaction():
+            # 1. Assert the run exists in staging, status is verified/staged, and not already promoted
+            run = await conn.fetchrow(
+                "SELECT run_id, status FROM mcda_ingestion_runs WHERE run_id = $1::uuid", run_id
+            )
+            if not run:
+                logger.error(f"Ingestion run {run_id} not found in mcda_ingestion_runs.")
+                return 2
+                
+            if run["status"] == "promoted":
+                logger.error(f"Run {run_id} is already promoted.")
+                return 3
+                
+            if run["status"] != "staged":
+                logger.error(f"Run {run_id} is in status '{run['status']}', expected 'staged' for promotion.")
+                return 4
+                
+            # 2. Upsert region boundary
+            logger.info("Upserting region boundary...")
+            region_id = await conn.fetchval(
+                """
+                INSERT INTO mcda_region_boundary (region_key, region_name, geom)
+                SELECT region_key, region_name, geom
+                FROM staging_region_boundary WHERE run_id = $1::uuid
+                ON CONFLICT (region_key) DO UPDATE
+                  SET geom = EXCLUDED.geom, region_name = EXCLUDED.region_name
+                RETURNING region_id;
+                """,
+                run_id
+            )
+            logger.info(f"Resolved region_id = {region_id}")
+            
+            # 3. Clear canonical features/grid cells for this region (Option A: scoped delete)
+            logger.info(f"Clearing canonical features and grid cells for region_id {region_id}...")
+            # Delete dependent cell results first to avoid FK constraint violations
+            deleted_results_res = await conn.execute(
+                """
+                DELETE FROM mcda_cell_results cr
+                USING mcda_grid g
+                WHERE cr.h3_index = g.h3_index AND g.region_id = $1
+                """,
+                region_id
+            )
+            logger.info(f"Deleted old cell results: {deleted_results_res}")
+
+            # Delete features intersecting target region boundary
+            deleted_features_res = await conn.execute(
+                """
+                DELETE FROM mcda_features f
+                USING mcda_region_boundary r
+                WHERE r.region_id = $1 AND ST_Intersects(f.geom, r.geom)
+                """,
+                region_id
+            )
+            logger.info(f"Deleted old features intersecting region boundary: {deleted_features_res}")
+            
+            # Delete old grid cells for this region
+            deleted_grid_res = await conn.execute(
+                "DELETE FROM mcda_grid WHERE region_id = $1",
+                region_id
+            )
+            logger.info(f"Deleted old grid cells: {deleted_grid_res}")
+            
+            # 4. Promote H3 grid cells
+            logger.info("Promoting grid cells...")
+            promoted_grid_res = await conn.execute(
+                """
+                INSERT INTO mcda_grid (h3_index, resolution, region_id, geom, centroid)
+                SELECT sg.h3_index, sg.resolution, $2, sg.geom, sg.centroid
+                FROM staging_grid sg WHERE sg.run_id = $1::uuid
+                ON CONFLICT (h3_index) DO UPDATE
+                  SET region_id = EXCLUDED.region_id;
+                """,
+                run_id, region_id
+            )
+            grid_promoted = 0
+            if promoted_grid_res.startswith("INSERT "):
+                grid_promoted = int(promoted_grid_res.split()[2])
+            
+            # 5. Promote features
+            logger.info("Promoting spatial features...")
+            promoted_features_res = await conn.execute(
+                """
+                INSERT INTO mcda_features (layer_id, subtype_key, name, attrs, geom)
+                SELECT l.layer_id, sf.subtype_key, sf.name, sf.attrs, sf.geom
+                FROM staging_features sf
+                JOIN mcda_layers l ON l.layer_key = sf.layer_key
+                WHERE sf.run_id = $1::uuid;
+                """,
+                run_id
+            )
+            features_promoted = 0
+            if promoted_features_res.startswith("INSERT "):
+                features_promoted = int(promoted_features_res.split()[2])
+                
+            # 6. Perform Attrition Checks
+            # Fetch staging counts
+            staged_features = await conn.fetchval(
+                "SELECT COUNT(*) FROM staging_features WHERE run_id = $1::uuid", run_id
+            )
+            staged_grid = await conn.fetchval(
+                "SELECT COUNT(*) FROM staging_grid WHERE run_id = $1::uuid", run_id
+            )
+            
+            logger.info(f"Staged features count: {staged_features}, Promoted: {features_promoted}")
+            logger.info(f"Staged grid cell count: {staged_grid}, Promoted: {grid_promoted}")
+            
+            # Attrition mismatch check for features
+            orphan_layer_keys = []
+            if staged_features != features_promoted:
+                # Find orphan layer keys
+                orphans = await conn.fetch(
+                    """
+                    SELECT DISTINCT sf.layer_key
+                    FROM staging_features sf
+                    LEFT JOIN mcda_layers l ON l.layer_key = sf.layer_key
+                    WHERE sf.run_id = $1::uuid AND l.layer_id IS NULL
+                    """,
+                    run_id
+                )
+                orphan_layer_keys = [r["layer_key"] for r in orphans]
+                
+                logger.error(
+                    f"ERROR: Silent feature attrition detected! Staged: {staged_features}, Promoted: {features_promoted}. "
+                    f"Orphan layer_keys: {orphan_layer_keys}"
+                )
+                raise ValueError("Silent feature attrition detected on promotion")
+                
+            # Attrition mismatch check for grid
+            if staged_grid != grid_promoted:
+                logger.error(
+                    f"ERROR: Silent grid attrition detected! Staged: {staged_grid}, Promoted: {grid_promoted}."
+                )
+                raise ValueError("Silent grid attrition detected on promotion")
+                
+            # 7. Mark run as promoted in metadata
+            await conn.execute(
+                """
+                UPDATE mcda_ingestion_runs
+                SET status = 'promoted'
+                WHERE run_id = $1::uuid
+                """,
+                run_id
+            )
+            
+            # Print promotion report
+            report = {
+                "run_id": str(run_id),
+                "boundary_upserted": True,
+                "grid_staged": staged_grid,
+                "grid_promoted": grid_promoted,
+                "features_staged": staged_features,
+                "features_promoted": features_promoted,
+                "orphan_layer_keys": orphan_layer_keys
+            }
+            logger.info(f"Promotion Report:\n{json.dumps(report, indent=2)}")
+            
+    except Exception as exc:
+        logger.error(f"Promotion failed and was rolled back: {exc}")
+        return 5
+    finally:
+        await conn.close()
+        
+    logger.info("=== PROMOTION COMPLETED SUCCESSFULLY ===")
+    return 0
+
+
 async def main() -> int:
     parser = argparse.ArgumentParser(description="Drone Spatial Data Ingestion Script.")
-    parser.add_argument("--region-geojson", required=True, help="Path to administrative region GeoJSON file.")
+    parser.add_argument("--region-geojson", help="Path to administrative region GeoJSON file.")
     parser.add_argument("--region-key", required=True, help="Region key id (e.g. guyana_region_4).")
-    parser.add_argument("--region-name", required=True, help="Region name (e.g. Demerara-Mahaica).")
+    parser.add_argument("--region-name", help="Region name (e.g. Demerara-Mahaica).")
     parser.add_argument("--h3-resolution", type=int, default=9, help="H3 grid resolution.")
     parser.add_argument("--osm-pbf", help="Path to local OpenStreetMap PBF file.")
+    parser.add_argument("--run-id", help="UUID of staged run to promote.")
     
     # CLI modes
     parser.add_argument("--dry-run", action="store_true", help="Perform preflight checks without writes.")
@@ -816,6 +1095,14 @@ async def main() -> int:
     if args.rollback_run:
         return await rollback_run(args.rollback_run)
 
+    if args.dry_run or args.stage:
+        if not args.region_geojson:
+            logger.error("Error: --region-geojson is required for staging/dry-run.")
+            return 1
+        if not args.region_name:
+            logger.error("Error: --region-name is required for staging/dry-run.")
+            return 1
+
     if args.dry_run:
         return await execute_dry_run(args)
     
@@ -823,8 +1110,13 @@ async def main() -> int:
         return await execute_stage(args)
 
     if args.promote:
-        logger.error("Promote operation requires separate human approval and is not allowed in B3.")
-        return 1
+        if not args.run_id:
+            logger.error("Error: --run-id <UUID> is required for promotion.")
+            return 1
+        if args.stage:
+            logger.error("Error: Cannot combine --stage and --promote in a single run. Target a previously verified run id.")
+            return 1
+        return await execute_promote(args)
 
     logger.warning("No action specified. Run with --dry-run or --stage.")
     return 0

@@ -4,10 +4,10 @@
 
 - Phase: `drone-b3-osm-features`
 - Branch: `drone-b3-osm-features`
-- Commit: `92861daf8c2a00cf6db5ffa2ccb881a705027bd5`
-- Unapproved baseline JSON: `.agents/state/baselines/drone-b3-osm-features/baseline_approved.json`
+- Commit: `119c2d6e9a793266ff64c8a889a1143018cbc147`
+- Unapproved baseline JSON: `.agents/state/baselines/drone-b3-osm-features/baseline_unapproved.json`
 - Verification command file: `.agents/config/verification_commands_drone_b3.json`
-- Generated at: `2026-07-17T18:37:11.000000+00:00`
+- Generated at: `2026-07-18T05:19:15Z`
 
 ## Test Scope Review
 
@@ -36,6 +36,7 @@ N/A
 ## Human Approval Record
 
 - Approved by: User
-- Approved at: 2026-07-17T16:06:08-04:00
+- Approved at: 2026-07-18T01:19:25-04:00
 - Approved phase: drone-b3-osm-features
-- Approved commit: 92861daf8c2a00cf6db5ffa2ccb881a705027bd5
+- Approved commit: 119c2d6e9a793266ff64c8a889a1143018cbc147
+- Reference state: Clean git status confirmed prior to correction work.

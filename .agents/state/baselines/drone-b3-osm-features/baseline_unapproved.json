@@ -4,8 +4,8 @@
   "approved_by_human": false,
   "phase_id": "drone-b3-osm-features",
   "branch": "drone-b3-osm-features",
-  "commit": "92861daf8c2a00cf6db5ffa2ccb881a705027bd5",
-  "generated_at": "2026-07-17T21:21:20.832816+00:00",
+  "commit": "119c2d6e9a793266ff64c8a889a1143018cbc147",
+  "generated_at": "2026-07-18T06:24:49.919608+00:00",
   "commands_file": ".agents\\config\\verification_commands_drone_b3.json",
   "commands": [
     {
@@ -16,7 +16,7 @@
         "backend/tests/test_phase2a_baseline.py"
       ],
       "exit_code": 0,
-      "duration_seconds": 0.436,
+      "duration_seconds": 0.185,
       "stdout_file": ".agents\\state\\baselines\\drone-b3-osm-features\\contract_tests.stdout.txt",
       "stderr_file": ".agents\\state\\baselines\\drone-b3-osm-features\\contract_tests.stderr.txt",
       "junit_xml": null,
@@ -34,7 +34,7 @@
         "-v"
       ],
       "exit_code": 0,
-      "duration_seconds": 1.969,
+      "duration_seconds": 0.943,
       "stdout_file": ".agents\\state\\baselines\\drone-b3-osm-features\\grid_generation_test.stdout.txt",
       "stderr_file": ".agents\\state\\baselines\\drone-b3-osm-features\\grid_generation_test.stderr.txt",
       "junit_xml": null,
@@ -51,15 +51,15 @@
         "backend/tests/test_feature_ingestion.py",
         "-v"
       ],
-      "exit_code": 1,
-      "duration_seconds": 2.25,
+      "exit_code": 0,
+      "duration_seconds": 0.957,
       "stdout_file": ".agents\\state\\baselines\\drone-b3-osm-features\\feature_ingestion_test.stdout.txt",
       "stderr_file": ".agents\\state\\baselines\\drone-b3-osm-features\\feature_ingestion_test.stderr.txt",
       "junit_xml": null,
       "test_case_count": 0,
-      "classification": "unclassified"
+      "classification": "not_applicable"
     }
   ],
   "test_cases": [],
-  "notes": "All failures remain unclassified until human review."
+  "notes": "All baselines require manual human review and approval in baseline_review.md before starting implementation."
 }

@@ -4,7 +4,7 @@
   "phase_name": "Drone Phase B3: OSM and Manually Seeded Features",
   "status": "approved",
   "approved_by_human": true,
-  "baseline_commit": "92861daf8c2a00cf6db5ffa2ccb881a705027bd5",
+  "baseline_commit": "119c2d6e9a793266ff64c8a889a1143018cbc147",
   "branch": "drone-b3-osm-features",
   "protected_branches": [],
   "allowed_paths": [

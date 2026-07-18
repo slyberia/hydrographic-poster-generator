@@ -6,6 +6,7 @@ from scripts.ingest_drone_data import (
     build_overpass_query,
     MANUAL_FEATURES,
     parse_osm_pbf_file,
+    normalize_tags,
 )
 
 
@@ -37,6 +38,41 @@ def test_match_osm_element_no_match():
     }
     matches = match_osm_element(elem)
     assert len(matches) == 0
+
+
+def test_normalize_tags():
+    """Verify normalize_tags handles tags/tag keys and non-dict inputs correctly."""
+    assert normalize_tags({"tags": {"amenity": "school"}}) == {"amenity": "school"}
+    assert normalize_tags({"tag": {"power": "line"}}) == {"power": "line"}
+    assert normalize_tags({"tags": None}) == {}
+    assert normalize_tags({"type": "node"}) == {}
+
+
+def test_match_osm_element_disjunctive():
+    """Verify disjunctive rule engine matches ports and pier correctly."""
+    # Test harbour=yes matches port
+    elem1 = {"type": "node", "id": 1, "tags": {"harbour": "yes"}}
+    matches1 = match_osm_element(elem1)
+    assert len(matches1) == 1
+    assert matches1[0][0] == "port"
+    
+    # Test landuse=industrial AND industrial=port matches port
+    elem2 = {"type": "node", "id": 2, "tags": {"landuse": "industrial", "industrial": "port"}}
+    matches2 = match_osm_element(elem2)
+    assert len(matches2) == 1
+    assert matches2[0][0] == "port"
+
+    # Test landuse=industrial alone does NOT match port
+    elem3 = {"type": "node", "id": 3, "tags": {"landuse": "industrial"}}
+    matches3 = match_osm_element(elem3)
+    assert len(matches3) == 0
+
+    # Test man_made=pier matches pier
+    elem4 = {"type": "way", "id": 4, "tags": {"man_made": "pier"}}
+    matches4 = match_osm_element(elem4)
+    assert len(matches4) == 1
+    assert matches4[0][0] == "pier"
+
 
 
 def test_osm_element_to_geojson_point():
@@ -126,9 +162,13 @@ def test_parse_osm_pbf_file(monkeypatch):
     monkeypatch.setattr("osmiter.iter_from_osm", lambda path: iter(mock_data))
     
     bbox = (6.0, -59.0, 7.0, -57.0)
-    features = parse_osm_pbf_file(Path("dummy.pbf"), bbox)
+    features, pbf_diag = parse_osm_pbf_file(Path("dummy.pbf"), bbox)
     
     assert len(features) == 2
+    assert pbf_diag["candidate_nodes_matched"] == 1
+    assert pbf_diag["candidate_ways_matched"] == 1
+    assert pbf_diag["ways_resolved"] == 1
+    assert pbf_diag["ways_dropped_unresolved_nodes"] == 0
     
     # Check first matched feature (school node)
     f0 = features[0]
