@@ -3,18 +3,25 @@ import asyncpg
 
 from app.database import get_db_pool
 from app.services.rules_service import rules_service
+from app.services.spatial_cache import clip_cache, boundary_cache
 
 router = APIRouter()
 
 @router.post("/reload-rules")
 async def reload_rules(pool: asyncpg.Pool = Depends(get_db_pool)):
-    """Hot-reload platform rules from the database without redeployment."""
+    """Hot-reload platform rules from the database without redeployment.
+
+    Also flushes the in-process spatial caches, so this doubles as the manual
+    cache-invalidation hook after a data re-import.
+    """
     await rules_service.reload(pool)
+    cleared = clip_cache.clear() + boundary_cache.clear()
     return {
         "status": "reloaded",
         "source": rules_service.source,
         "rule_count": len(rules_service.rule_versions),
         "versions": rules_service.rule_versions,
+        "spatial_cache_entries_cleared": cleared,
     }
 
 @router.get("/export-history")

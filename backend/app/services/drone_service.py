@@ -574,11 +574,16 @@ async def _execute_sweep(pool: asyncpg.Pool, run_ids: List[str]) -> None:
 
 async def get_sensitivity_status(pool: asyncpg.Pool, base_run_id: str,
                                  sweep_id: str) -> Dict[str, Any]:
-    """Poll sweep progress; includes factor rankings over completed children.
+    """Poll sweep progress; includes factor rankings once the sweep is terminal.
 
     Deliberately writes on read: children stuck in pending/running beyond
     SWEEP_STALE_MINUTES are marked failed here, so a crashed sweep cannot block
     the trigger's idempotency guard forever.
+
+    The ranking/summary aggregations self-join mcda_cell_results across every
+    child run, so they are computed only when no children remain active —
+    in-flight polls stay cheap status counts instead of re-running the
+    heaviest read queries every few seconds.
     """
     async with pool.acquire() as conn:
         await conn.execute(f"""
@@ -609,7 +614,7 @@ async def get_sensitivity_status(pool: asyncpg.Pool, base_run_id: str,
             status = "failed"
 
         summary = None
-        if completed > 0:
+        if completed > 0 and active == 0:
             ranking_rows = await conn.fetch(_FACTOR_RANKING_SQL, base_run_id, sweep_id)
             summary_row = await conn.fetchrow(_SWEEP_SUMMARY_SQL, base_run_id, sweep_id)
             summary = {
