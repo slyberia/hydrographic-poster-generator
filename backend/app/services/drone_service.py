@@ -542,8 +542,9 @@ async def trigger_sensitivity_analysis(pool: asyncpg.Pool, base_run_id: str,
                 """, child_id, json.dumps(meta))
             child_run_ids.append(child_id)
 
-    # NOTE: on Cloud Run with request-based CPU allocation this background task can
-    # be throttled after the response returns; see PHASE_C_SENSITIVITY_PLAN.md §3j.
+    # NOTE: this background task outlives the request; it requires CPU
+    # always-allocated on Cloud Run (--no-cpu-throttling, set in cloudbuild.yaml)
+    # or it stalls after the 202 returns; see PHASE_C_SENSITIVITY_PLAN.md §3j.
     asyncio.create_task(_execute_sweep(pool, child_run_ids))
 
     return {
