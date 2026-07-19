@@ -12,7 +12,6 @@ import {
   type StyleSelection,
 } from "@/lib/api";
 import type { QAItem } from "@/lib/qa";
-import { FEATURE_FLAGS } from "@/lib/features";
 import { Tooltip } from "@/components/Tooltip";
 import QAChecklist from "./QAChecklist";
 import ColorPickerPopover from "./ColorPickerPopover";
@@ -355,8 +354,7 @@ export default function ControlPanel({
               </select>
             </div>
           )}
-          {FEATURE_FLAGS.typography_customization && (
-            <div className="space-y-3">
+          <div className="space-y-3">
               <div>
                 <label htmlFor="typography" className="glass-label">
                   Typography Preset
@@ -425,8 +423,9 @@ export default function ControlPanel({
                     
                     {/* Title Font */}
                     <div className="space-y-1">
-                      <label className="text-[11px] text-[var(--text-secondary)]">Font Family</label>
+                      <label htmlFor="title-font" className="text-[11px] text-[var(--text-secondary)]">Font Family</label>
                       <select
+                        id="title-font"
                         className="glass-select !py-1 text-xs"
                         value={settings.typography_overrides?.title_font || ""}
                         onChange={(e) => {
@@ -445,8 +444,9 @@ export default function ControlPanel({
 
                     {/* Title Weight */}
                     <div className="space-y-1">
-                      <label className="text-[11px] text-[var(--text-secondary)]">Font Weight</label>
+                      <label htmlFor="title-weight" className="text-[11px] text-[var(--text-secondary)]">Font Weight</label>
                       <select
+                        id="title-weight"
                         className="glass-select !py-1 text-xs"
                         value={settings.typography_overrides?.title_weight || ""}
                         onChange={(e) => {
@@ -467,8 +467,9 @@ export default function ControlPanel({
 
                     {/* Title Tracking */}
                     <div className="space-y-1">
-                      <label className="text-[11px] text-[var(--text-secondary)]">Letter Spacing (Tracking)</label>
+                      <label htmlFor="title-tracking" className="text-[11px] text-[var(--text-secondary)]">Letter Spacing (Tracking)</label>
                       <select
+                        id="title-tracking"
                         className="glass-select !py-1 text-xs"
                         value={settings.typography_overrides?.title_tracking || ""}
                         onChange={(e) => {
@@ -497,8 +498,9 @@ export default function ControlPanel({
                     
                     {/* Subtitle Font */}
                     <div className="space-y-1">
-                      <label className="text-[11px] text-[var(--text-secondary)]">Font Family</label>
+                      <label htmlFor="subtitle-font" className="text-[11px] text-[var(--text-secondary)]">Font Family</label>
                       <select
+                        id="subtitle-font"
                         className="glass-select !py-1 text-xs"
                         value={settings.typography_overrides?.subtitle_font || ""}
                         onChange={(e) => {
@@ -517,8 +519,9 @@ export default function ControlPanel({
 
                     {/* Subtitle Weight */}
                     <div className="space-y-1">
-                      <label className="text-[11px] text-[var(--text-secondary)]">Font Weight</label>
+                      <label htmlFor="subtitle-weight" className="text-[11px] text-[var(--text-secondary)]">Font Weight</label>
                       <select
+                        id="subtitle-weight"
                         className="glass-select !py-1 text-xs"
                         value={settings.typography_overrides?.subtitle_weight || ""}
                         onChange={(e) => {
@@ -539,8 +542,9 @@ export default function ControlPanel({
 
                     {/* Subtitle Tracking */}
                     <div className="space-y-1">
-                      <label className="text-[11px] text-[var(--text-secondary)]">Letter Spacing (Tracking)</label>
+                      <label htmlFor="subtitle-tracking" className="text-[11px] text-[var(--text-secondary)]">Letter Spacing (Tracking)</label>
                       <select
+                        id="subtitle-tracking"
                         className="glass-select !py-1 text-xs"
                         value={settings.typography_overrides?.subtitle_tracking || ""}
                         onChange={(e) => {
@@ -565,7 +569,6 @@ export default function ControlPanel({
                 </div>
               )}
             </div>
-          )}
         </div>
       </section>
 
@@ -707,8 +710,7 @@ export default function ControlPanel({
               Legend
             </span>
           </label>
-          {FEATURE_FLAGS.granular_metadata_controls ? (
-            <div className="space-y-2 border-l border-white/10 pl-3 ml-2">
+          <div className="space-y-2 border-l border-white/10 pl-3 ml-2">
               {[
                 { key: "show_title", label: "Title" },
                 { key: "show_subtitle", label: "Subtitle" },
@@ -742,22 +744,6 @@ export default function ControlPanel({
                 );
               })}
             </div>
-          ) : (
-            <label className="flex items-center gap-2.5 cursor-pointer group">
-              <input
-                type="checkbox"
-                className="glass-checkbox"
-                checked={settings.show_metadata}
-                disabled={settings.design_asset_mode}
-                onChange={(e) =>
-                  onSettingsChange({ show_metadata: e.target.checked })
-                }
-              />
-              <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
-                Metadata &amp; scale bar
-              </span>
-            </label>
-          )}
           <Tooltip content="Disables titles and text for use as a base map">
             <label className="flex items-center gap-2.5 cursor-pointer group">
               <input
@@ -777,7 +763,6 @@ export default function ControlPanel({
       </section>
 
       {/* ── Layout ── */}
-      {FEATURE_FLAGS.manual_layout_editing && (
       <section className="animate-fade-in" style={{ animationDelay: "0.22s" }}>
         <div className="flex items-center justify-between mb-2.5">
           <h2 className="section-header !mb-0">Layout</h2>
@@ -820,9 +805,11 @@ export default function ControlPanel({
                 </div>
                 <div className="flex gap-1.5">
                   <div className="flex-1">
-                    <label className="text-[8px] text-white/40 uppercase block mb-0.5">X</label>
+                    <label htmlFor={`layout-${id}-x`} className="text-[8px] text-white/40 uppercase block mb-0.5">X</label>
                     <input 
+                      id={`layout-${id}-x`}
                       type="number" 
+                      aria-label={`${id.replace("_", " ")} X offset`}
                       className="glass-input !py-0.5 !px-1.5 !text-[10px]" 
                       value={Math.round(transform.x)}
                       min={-3600} max={3600}
@@ -837,9 +824,11 @@ export default function ControlPanel({
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="text-[8px] text-white/40 uppercase block mb-0.5">Y</label>
+                    <label htmlFor={`layout-${id}-y`} className="text-[8px] text-white/40 uppercase block mb-0.5">Y</label>
                     <input 
+                      id={`layout-${id}-y`}
                       type="number" 
+                      aria-label={`${id.replace("_", " ")} Y offset`}
                       className="glass-input !py-0.5 !px-1.5 !text-[10px]" 
                       value={Math.round(transform.y)}
                       min={-5400} max={5400}
@@ -859,7 +848,6 @@ export default function ControlPanel({
           })}
         </div>
       </section>
-      )}
 
       {/* ── Export ── */}
       <section

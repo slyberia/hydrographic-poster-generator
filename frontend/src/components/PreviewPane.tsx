@@ -60,6 +60,7 @@ export default function PreviewPane({
           aspectRatio: "2 / 3",
           border: "1px solid rgba(255, 255, 255, 0.06)",
         }}
+        aria-busy={loading}
       >
         {svg ? (
           <div className="preview-svg animate-fade-in h-full w-full">
@@ -82,11 +83,15 @@ export default function PreviewPane({
 
         {/* ── Premium loading indicator ── */}
         {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-deep)]/60 backdrop-blur-sm">
+          <div
+            role="status"
+            className="absolute inset-0 flex items-center justify-center bg-[var(--bg-deep)]/60 backdrop-blur-sm"
+          >
             <div className="relative flex items-center justify-center">
               <div className="absolute h-12 w-12 rounded-full pulse-ring bg-[var(--accent)]/20" />
               <div className="h-10 w-10 spin-smooth rounded-full border-2 border-[var(--accent)]/20 border-t-[var(--accent)]" />
             </div>
+            <span className="sr-only">Rendering preview…</span>
           </div>
         )}
       </div>

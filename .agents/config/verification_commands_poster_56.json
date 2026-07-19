@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "commands": [
+    { "name": "frontend_lint",  "command": ["npm", "run", "lint"],  "cwd": "frontend", "enabled": true },
+    { "name": "frontend_build", "command": ["npm", "run", "build"], "cwd": "frontend", "enabled": true },
+    { "name": "frontend_e2e",   "command": ["npm", "run", "test:e2e"], "cwd": "frontend", "enabled": true },
+    { "name": "backend_tests",  "command": ["python", "-m", "pytest", "backend/tests", "-v"], "cwd": ".", "enabled": true }
+  ],
+  "note": "Poster 5+6: parity, resilience, flag cleanup, accessibility. Backend suite must stay green — no backend runtime edits are in scope (parity tests are additive)."
+}

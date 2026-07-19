@@ -243,16 +243,32 @@ export async function getPreview(
     : activePreviewController.signal;
 
   try {
-    const res = await fetch(`${API_BASE}/preview`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-      signal: linkedSignal,
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${API_BASE}/preview`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request),
+        signal: linkedSignal,
+      });
+    } catch (err) {
+      // Deliberate aborts (stale request replaced, unmount) must keep their
+      // abort identity so callers can ignore them; only network-level
+      // failures get the friendly message.
+      if (linkedSignal.aborted) throw err;
+      throw new Error(
+        "Could not reach the render service — check your connection and try again.",
+      );
+    }
     if (!res.ok) await raiseForStatus(res);
+    const svg = await res.text();
+    // A truncated/garbled body must never be injected into the canvas.
+    if (!/^\s*<svg[\s>]/.test(svg) || !svg.trimEnd().endsWith("</svg>")) {
+      throw new Error("The server returned an invalid preview. Please try again.");
+    }
     const riverCount = res.headers.get("X-River-Count");
     return {
-      svg: await res.text(),
+      svg,
       riverCount: riverCount !== null ? Number(riverCount) : null,
       geographyName: res.headers.get("X-Geography-Name"),
     };
@@ -267,12 +283,20 @@ export async function triggerExport(
   request: ExportRequest,
   signal?: AbortSignal,
 ): Promise<ExportResult> {
-  const res = await fetch(`${API_BASE}/export`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request),
-    signal,
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/export`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+      signal,
+    });
+  } catch (err) {
+    if (signal?.aborted) throw err;
+    throw new Error(
+      "Could not reach the export service — check your connection and try again.",
+    );
+  }
   if (!res.ok) await raiseForStatus(res);
 
   const disposition = res.headers.get("Content-Disposition") ?? "";
