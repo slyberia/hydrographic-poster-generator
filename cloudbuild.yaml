@@ -15,6 +15,11 @@
 # and export is CPU-bound single-request work — hence 2 GiB memory and
 # concurrency 2. Do not raise concurrency without raising memory.
 #
+# CPU is always-allocated (--no-cpu-throttling): the drone sensitivity sweep
+# runs ~85 s of work in an asyncio background task after its 202 response
+# returns (PHASE_C_SENSITIVITY_PLAN.md §3j); request-based CPU allocation
+# would throttle that task to near zero and stall or kill sweeps.
+#
 # Image tag uses $BUILD_ID (always populated) rather than $COMMIT_SHA, so a
 # manual `gcloud builds submit --config cloudbuild.yaml` works without a
 # connected repo trigger — $COMMIT_SHA is empty on manual submits and would
@@ -76,6 +81,7 @@ steps:
           --cpu=2 \
           --concurrency=2 \
           --timeout=300 \
+          --no-cpu-throttling \
           --set-secrets=DATABASE_URL=${_DB_SECRET}:latest \
           --set-env-vars="^@@^CORS_ORIGINS=$$CORS" \
           --allow-unauthenticated

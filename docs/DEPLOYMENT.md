@@ -129,6 +129,18 @@ therefore deploys the backend with **2 GiB memory, 2 vCPU,
 concurrency 2**. Keep memory ≥ 1 GiB in all cases, and do not raise
 concurrency without raising memory proportionally.
 
+The backend must also run with **CPU always allocated**
+(`--no-cpu-throttling`). The drone sensitivity sweep executes
+~85 seconds of work in an asyncio background task *after* its
+`202 Accepted` response returns
+(`docs/PHASE_C_SENSITIVITY_PLAN.md` §3j). Under the default
+request-based CPU allocation, Cloud Run throttles CPU to near zero once
+the response is sent, so sweeps stall or die in production while working
+fine locally. `cloudbuild.yaml` sets this flag; keep it on any manual
+deploy. Note that always-allocated CPU changes billing from per-request
+to per-instance-lifetime, so pair it with scale-to-zero (the default
+`min-instances=0`) unless you need warm starts.
+
 The frontend serves a static-ish UI and runs fine at 512 MiB with default
 concurrency.
 
@@ -146,7 +158,7 @@ Dockerfile for you, no local Docker needed):
 # Backend
 gcloud run deploy hydro-backend --source backend \
   --region us-central1 --port 8080 \
-  --memory 2Gi --cpu 2 --concurrency 2 --timeout 300 \
+  --memory 2Gi --cpu 2 --concurrency 2 --timeout 300 --no-cpu-throttling \
   --set-secrets DATABASE_URL=hydro-database-url:latest \
   --set-env-vars CORS_ORIGINS=https://YOUR-FRONTEND.run.app \
   --allow-unauthenticated
@@ -166,6 +178,7 @@ docker build -t $REPO/hydro-backend:latest backend
 docker push  $REPO/hydro-backend:latest
 gcloud run deploy hydro-backend --image $REPO/hydro-backend:latest \
   --region us-central1 --port 8080 --memory 2Gi --cpu 2 --concurrency 2 \
+  --no-cpu-throttling \
   --set-secrets DATABASE_URL=hydro-database-url:latest --allow-unauthenticated
 
 docker build --build-arg NEXT_PUBLIC_API_URL=https://YOUR-BACKEND.run.app \
