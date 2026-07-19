@@ -56,6 +56,10 @@ class FakeDB:
                       "land_use", "population", "regulatory"]
         ]
         self.region_key = "guyana_region_4"
+        # Persisted aggregates (migration 008). Empty by default so existing
+        # tests exercise the legacy child-results fallback path.
+        self.sweep_summary = {}     # sweep_id -> summary row dict
+        self.sweep_volatility = {}  # sweep_id -> [volatility row dicts]
 
     def add_run(self, run_id=None, status="complete", params=None,
                 created_at=None, label="run", region_id=2):
@@ -153,6 +157,8 @@ class FakeConn:
             run = self.db.runs.get(args[0])
             return None if run is None else {"status": run["status"],
                                              "region_id": run["region_id"]}
+        if "FROM mcda_sweep_summary" in q:
+            return self.db.sweep_summary.get(args[0])
         if "WITH per_cell" in q:
             return self.db.summary_row(args[0], args[1])
         raise AssertionError(f"Unexpected fetchrow: {q[:80]}")
@@ -174,6 +180,8 @@ class FakeConn:
     async def fetch(self, q, *args):
         if "FROM mcda_factors WHERE is_active" in q:
             return sorted(self.db.factors, key=lambda f: f["factor_key"])
+        if "FROM mcda_sweep_volatility" in q:
+            return self.db.sweep_volatility.get(args[0], [])
         if "mean_absolute_deviation" in q:
             return self.db.ranking_rows(args[0], args[1])
         if "volatility_category" in q:
@@ -433,6 +441,44 @@ def test_params_merge_preserves_thresholds(pool, db, fake_create_run, no_sweep_e
         assert run["params"]["parent_run_id"] == base
         assert run["params"]["sensitivity_factor"]
         assert run["params"]["sensitivity_direction"] in ("up", "down")
+
+
+def test_persisted_summary_preferred(pool, db):
+    """A sweep with persisted aggregates (post-008 engine) must serve them and
+    never consult the legacy child-results queries."""
+    base, sweep = make_sweep(db, n_children=2)
+    db.sweep_summary[sweep] = {
+        "avg_stddev": 0.1234, "max_stddev": 0.5, "total_zone_flips": 7,
+        "pct_cells_flipped": 12.5,
+        "factor_rankings": json.dumps([{"factor_key": "population", "direction": "up",
+                                        "mean_absolute_deviation": 0.2, "zone_flips": 7}]),
+    }
+    # No db.cells registered: the legacy reference implementations would return
+    # empty aggregates, so any non-empty summary proves the persisted path won.
+
+    status = asyncio.run(get_sensitivity_status(pool, base, sweep))
+
+    assert status["summary"]["total_zone_flips"] == 7
+    assert status["summary"]["avg_stddev"] == pytest.approx(0.1234)
+    assert status["summary"]["factor_rankings"][0]["factor_key"] == "population"
+
+
+def test_persisted_volatility_preferred(pool, db):
+    base, sweep = make_sweep(db, n_children=2)
+    db.sweep_volatility[sweep] = [{
+        "h3_index": "cell_persisted", "stddev": 0.42, "variance": 0.1764,
+        "zone_flips": 3, "baseline_zone": "SUITABLE", "baseline_score": 2.1,
+        "volatility_category": "HIGH",
+    }]
+    kids = child_ids(db, sweep)
+    db.cells[base] = {"cell_legacy": (2.0, "SUITABLE")}
+    for kid in kids:
+        db.cells[kid] = {"cell_legacy": (2.2, "SUITABLE")}
+
+    volatility = asyncio.run(get_volatility_data(pool, base, sweep))
+
+    assert [r["h3_index"] for r in volatility] == ["cell_persisted"]
+    assert volatility[0]["volatility_category"] == "HIGH"
 
 
 def test_null_scores_excluded(pool, db):

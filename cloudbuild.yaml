@@ -36,6 +36,10 @@ substitutions:
   _BACKEND_SERVICE: hydro-backend
   _FRONTEND_SERVICE: hydro-frontend
   _DB_SECRET: hydro-database-url
+  # Secret Manager secret holding the shared key for /admin/* endpoints
+  # (deny-all when the env var is absent). Create it before deploying:
+  #   printf 'your-key' | gcloud secrets create hydro-admin-api-key --data-file=-
+  _ADMIN_KEY_SECRET: hydro-admin-api-key
 
 steps:
   # ---- 1. Build Backend ----
@@ -83,6 +87,7 @@ steps:
           --timeout=300 \
           --no-cpu-throttling \
           --set-secrets=DATABASE_URL=${_DB_SECRET}:latest \
+          --set-secrets=ADMIN_API_KEY=${_ADMIN_KEY_SECRET}:latest \
           --set-env-vars="^@@^CORS_ORIGINS=$$CORS" \
           --allow-unauthenticated
 

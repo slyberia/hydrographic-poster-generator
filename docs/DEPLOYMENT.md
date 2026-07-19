@@ -144,6 +144,20 @@ to per-instance-lifetime, so pair it with scale-to-zero (the default
 The frontend serves a static-ish UI and runs fine at 512 MiB with default
 concurrency.
 
+### Backend security environment
+
+- **`ADMIN_API_KEY`** — shared key required (as the `X-Admin-Key` header)
+  by all `/admin/*` endpoints. `cloudbuild.yaml` wires it from the
+  Secret Manager secret named by `_ADMIN_KEY_SECRET`
+  (default `hydro-admin-api-key`); create the secret before deploying:
+  `printf 'your-key' | gcloud secrets create hydro-admin-api-key --data-file=-`.
+  If the variable is absent the admin surface is disabled entirely
+  (deny-all), never open.
+- **`ENABLE_DEBUG_ENDPOINTS`** — mounts `/debug/*` when truthy. Never set
+  this on Cloud Run: the debug endpoints run unauthenticated synchronous
+  CPU-bound render work, a direct cost lever on an always-allocated
+  service. `docker-compose.yml` enables it for local development only.
+
 ---
 
 ## 4b. Alternative: deploy the Dockerfiles directly (no cloudbuild.yaml)

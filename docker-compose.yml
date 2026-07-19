@@ -13,6 +13,9 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL to your PostGIS connection string}
       CORS_ORIGINS: http://localhost:3000
+      # Local-dev conveniences; both default OFF in production deploys.
+      ENABLE_DEBUG_ENDPOINTS: "true"
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-local-dev-admin-key}
 
   frontend:
     build:
