@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { FEATURE_FLAGS } from "@/lib/features";
 
 interface TooltipProps {
   children: React.ReactElement;
@@ -26,13 +25,6 @@ export function Tooltip({ children, content, id }: TooltipProps) {
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isVisible, hide]);
-
-  if (!FEATURE_FLAGS.new_tooltip_system) {
-    // If feature flag is off, just render the child natively (could use native title as fallback)
-    return React.cloneElement(children as React.ReactElement<{ title?: string }>, {
-      title: typeof content === "string" ? content : undefined,
-    });
-  }
 
   interface TooltipTargetProps {
     onFocus?: React.FocusEventHandler<HTMLElement>;

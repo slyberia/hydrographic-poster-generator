@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { LayoutOverrides } from "@/lib/api";
 
@@ -32,6 +32,16 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
   useEffect(() => {
     onTransformsChangeRef.current = onTransformsChange;
   }, [onTransformsChange]);
+
+  // Inject the SVG imperatively, only when the markup actually changes.
+  // dangerouslySetInnerHTML gets re-applied on unrelated re-renders, which
+  // replaces the SVG subtree and silently drops the pointer/keyboard wiring,
+  // tabindex, and any active focus (studio-parity e2e pins this).
+  useLayoutEffect(() => {
+    if (containerRef.current && containerRef.current.innerHTML !== svg) {
+      containerRef.current.innerHTML = svg;
+    }
+  }, [svg]);
 
   useEffect(() => {
     if (!containerRef.current || !svg) return;
@@ -287,10 +297,9 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
         )}
       </div>
 
-      <div 
+      <div
         ref={containerRef}
         className="w-full h-full flex items-center justify-center interactive-svg-container"
-        dangerouslySetInnerHTML={{ __html: svg }} 
       />
     </div>
   );

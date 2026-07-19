@@ -29,25 +29,26 @@ This active sequence ensures backend contract safety, backward compatibility for
 - **Integration**: Wired resolvers into the `/preview` and `/export` SVG rendering pipelines.
 - **Local Verification**: Cleaned TypeScript compilation errors in frontend builds and updated dynamic CORS origin mapping.
 
-### 🟡 Phase 3: Metadata Migration (Next Step)
-- **Granular UI Controls**: Build frontend UI checkboxes to replace the single master `show_metadata` toggle.
-- **Wiring**: Map these toggles directly to the backend's new `MetadataOptions` Pydantic model (`show_title`, `show_subtitle`, `show_north_arrow`, `show_scale_bar`, `show_data_credits`).
-- **QA Integration**: Update the pre-flight QA checklist to evaluate and reflect metadata visibility states.
+### 🟢 Phase 3: Metadata Migration (Completed)
+- **Granular UI Controls**: Six `show_*` checkboxes replace the single master `show_metadata` toggle (`frontend/src/components/ControlPanel.tsx`, Layers section).
+- **Wiring**: Toggles map to the backend `MetadataOptions` model via `metadata_options` in the render payload (`frontend/src/lib/api.ts`); payload fidelity is pinned by `frontend/e2e/studio-parity.spec.ts`.
+- **QA Integration**: The pre-flight QA checklist reads metadata visibility states (`frontend/src/lib/qa.ts` text-fit check honors `show_title`/`show_subtitle`).
 
-### 🔵 Phase 4: Typography Foundation (Pending)
-- **Advanced UI Selectors**: Implement font family pickers, weight selectors, and letter-spacing tracking sliders on the frontend.
-- **Overrides**: Wire the controls to construct and send the `TypographyOverrides` object to the backend.
-- **Customization Limits**: Validate that typography adjustments respect bounds defined in the backend's `TypographyOverrides` models.
+### 🟢 Phase 4: Typography Foundation (Completed)
+- **Advanced UI Selectors**: Font family, weight, and tracking selectors live under "Advanced Customization" (`ControlPanel.tsx`).
+- **Overrides**: Controls build the `typography_overrides` object (`frontend/src/lib/settings.ts`); changing the base preset resets overrides. E2E-pinned in `studio-parity.spec.ts`.
+- **Customization Limits**: Values come from fixed option lists mirroring the backend `TypographyOverrides` model.
 
-### 🔵 Phase 5: Composition Hardening (Pending)
-- **Parity Verification**: Systematically audit the interactive canvas preview against PDF, PNG, and SVG exports to ensure exact layout, scaling, and scaling-factor parity.
-- **Client Resilience**: Ensure the application recovers gracefully from malformed geometry, database connection dropouts, or network timeouts.
-- **State Migration Verification**: Validate client local storage migrations on page load (V1 settings to V2).
+### 🟢 Phase 5: Composition Hardening (Completed)
+- **Parity Verification**: `backend/tests/test_render_parity.py` asserts preview-path and export-path SVG are byte-identical through the shared `SVGRenderer` across a settings matrix (metadata toggles, typography overrides, layout overrides, design-asset mode), plus PNG dimension and PDF page-box structural checks. Client-side, `frontend/e2e/studio-parity.spec.ts` asserts the canvas transform math and control state reach the payload exactly.
+  - *Method limit*: parity is renderer-level plus payload fidelity — rasters are not pixel-diffed. One manual visual pass on a live stack is the final gate (see `docs/DEPLOYMENT.md` §5 rollout checklist).
+- **Client Resilience**: `frontend/e2e/studio-resilience.spec.ts` injects backend 500s, network failures, malformed SVG, and export failures; the client surfaces friendly errors and recovers (fixes in `frontend/src/lib/api.ts` and `InteractiveCanvas.tsx`).
+- **State Migration Verification**: V1→V2 localStorage migration and garbage-state fallback are e2e-verified end to end.
 
-### 🔵 Phase 6: UI Rollout (Pending)
-- **Feature Flags**: Clean up and align the frontend feature flags (`typography_customization`, `granular_metadata_controls`, `manual_layout_editing`) to map strictly to production-ready UI toggles.
-- **Polish & Accessibility**: Conduct complete keyboard/pointer interaction audits, screen reader checks (ARIA attributes), and responsive layout testing across device break-points.
-- **Production Deploy**: Roll out the final version to Cloud Run and mark the integration complete.
+### 🟡 Phase 6: UI Rollout (Code complete — deploy pending owner checklist)
+- **Feature Flags**: All flags removed (`frontend/src/lib/features.ts` deleted); the granular metadata, typography customization, and manual layout UIs are unconditional. Legacy payload fields (`show_metadata`, `palette`, `element_transforms`) and the V1→V2 migration are retained for back-compat.
+- **Polish & Accessibility**: Keyboard/ARIA audit automated in `frontend/e2e/studio-a11y.spec.ts` (tab order, accessible names, keyboard operability, status/live regions); label associations and live-region roles added. Judgment-call items (contrast, screen-reader nuance) are listed in the phase completion report.
+- **Production Deploy**: Owner-executed via the "Final rollout checklist" in `docs/DEPLOYMENT.md` §5 — not run from the sandbox.
 
 ---
 

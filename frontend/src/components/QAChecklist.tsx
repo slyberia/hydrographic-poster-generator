@@ -16,7 +16,9 @@ const SEVERITY_LABELS: Record<QASeverity, string> = {
 
 export default function QAChecklist({ items }: { items: QAItem[] }) {
   return (
-    <ul className="space-y-1.5">
+    // role="status": QA severity changes are announced to screen readers
+    // without stealing focus (polite live region).
+    <ul className="space-y-1.5" role="status">
       {items.map((item) => (
         <li key={item.id} className="flex items-start gap-2 text-xs">
           <span

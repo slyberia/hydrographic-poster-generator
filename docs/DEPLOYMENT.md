@@ -181,7 +181,78 @@ Whichever path you use, the frontend's backend URL is a **build-time** arg
 
 ---
 
-## 5. Production Checklist
+## 5. Final rollout checklist (Poster Phases 5+6)
+
+Owner-executed — the development sandbox has no GCP credentials, so this
+phase ships the checklist, not the deployment. Every command below is
+verified against `cloudbuild.yaml` as it exists in this repo.
+
+> Note: `cloudbuild.yaml` defines only these substitutions: `_REGION`,
+> `_AR_REPO`, `_BACKEND_SERVICE`, `_FRONTEND_SERVICE`, `_DB_SECRET`. The
+> pipeline discovers the backend/frontend URLs dynamically (steps
+> `discover-backend-url` and `patch-backend-cors`), so no URL substitutions
+> are needed — the two-pass flow in §4 above predates that discovery logic;
+> a single `gcloud builds submit` per deploy is sufficient once both
+> services exist.
+
+### Pre-deploy (run locally, all must pass)
+
+- [ ] `python -m pytest backend/tests -v` — full backend suite green
+      (2 known async-skip failures in `test_golden.py` / `test_scenarios.py`
+      only if `pytest-asyncio` is absent; documented, unrelated).
+- [ ] `cd frontend && npm run lint && npm run build` — clean.
+- [ ] `cd frontend && npm run test:e2e` — drone + studio suites green
+      (parity, resilience, accessibility).
+- [ ] One manual visual parity pass on a live stack: generate a preview,
+      export the same settings as SVG, PNG, and PDF, and compare against the
+      on-screen canvas (layout, colors, typography, moved elements). The
+      automated parity contract is renderer-level
+      (`backend/tests/test_render_parity.py`) plus client payload fidelity
+      (`frontend/e2e/studio-parity.spec.ts`); it does not pixel-diff rasters,
+      so this one human pass is the final gate.
+
+### Deploy
+
+```bash
+gcloud builds submit --config cloudbuild.yaml
+```
+
+(Defaults deploy to `us-central1` as `hydro-backend` / `hydro-frontend`
+from the `hydro` Artifact Registry repo, with `DATABASE_URL` from the
+`hydro-database-url` secret. Override via
+`--substitutions=_REGION=...,_AR_REPO=...,_BACKEND_SERVICE=...,_FRONTEND_SERVICE=...,_DB_SECRET=...`
+only if your environment differs.)
+
+### Post-deploy smoke
+
+- [ ] `curl https://BACKEND_URL/health` returns 200.
+- [ ] Open the frontend, select a geography, and confirm one preview
+      renders with QA statuses visible in the sidebar.
+- [ ] Export once per format — PNG, SVG, PDF — and open each file.
+- [ ] Export one transparent design asset (design asset mode, PNG).
+- [ ] `fc-list | grep -iE 'inter|roboto mono|outfit'` inside the backend
+      image shows all three families (font fallback check, §3).
+
+### Rollback
+
+```bash
+# List revisions, then shift traffic back to the previous one.
+gcloud run revisions list --service hydro-backend --region us-central1
+gcloud run services update-traffic hydro-backend \
+  --region us-central1 --to-revisions PREVIOUS_REVISION=100
+
+gcloud run revisions list --service hydro-frontend --region us-central1
+gcloud run services update-traffic hydro-frontend \
+  --region us-central1 --to-revisions PREVIOUS_REVISION=100
+```
+
+Roll both services together if the API contract changed; the frontend's
+backend URL is baked at build time, so a frontend rollback keeps pointing
+at whichever backend URL it was built against.
+
+---
+
+## 6. Production Checklist
 
 - [ ] `DATABASE_URL` comes from Secret Manager, not env-var plaintext
 - [ ] `CORS_ORIGINS` restricted to the deployed frontend origin
