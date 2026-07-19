@@ -46,7 +46,10 @@ class RulesService:
             )
         for row in rows:
             rule_type = row["rule_type"]
-            payload = row["payload"]  # already a dict from JSONB
+            payload = row["payload"]
+            if isinstance(payload, str):
+                import json
+                payload = json.loads(payload)
             self._rule_versions[row["id"]] = row["version"]
             if rule_type == "density":
                 # Convert classification_map keys from string to int
