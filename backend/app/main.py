@@ -70,8 +70,13 @@ app.include_router(drone.router, tags=["Drone Zoning"])
 from app.routers import admin
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
 
-from app.routers import debug
-app.include_router(debug.router, prefix="/debug", tags=["Debug"])
+# Debug endpoints run unauthenticated, synchronous, CPU-bound work (three
+# clip+render passes per call), so they are opt-in and must stay off in
+# production (audit finding D2).
+import os
+if os.getenv("ENABLE_DEBUG_ENDPOINTS", "").lower() in ("1", "true", "yes"):
+    from app.routers import debug
+    app.include_router(debug.router, prefix="/debug", tags=["Debug"])
 
 @app.get("/health", tags=["Health"])
 async def health_check():
