@@ -4,6 +4,8 @@
 
 import { LocationReport, VolatilityRecord } from "@/lib/droneApi";
 import { VOLATILITY_FILL, ZONE_CSS } from "@/lib/zoneTheme";
+import InfoTip from "@/components/drone/InfoTip";
+import { CONFIDENCE_INFO } from "@/lib/droneInfo";
 
 const FACTOR_NAMES: Record<string, string> = {
   population: "Population density",
@@ -105,7 +107,15 @@ export default function ReportDrawer(props: {
           </>
         )}
 
-        <dt>Data confidence</dt>
+        <dt>
+          Data confidence
+          {CONFIDENCE_INFO[r.data_confidence.toLowerCase()] && (
+            <InfoTip
+              text={CONFIDENCE_INFO[r.data_confidence.toLowerCase()]}
+              label="What data confidence means"
+            />
+          )}
+        </dt>
         <dd>{r.data_confidence.replace("_", " ")}</dd>
 
         <dt>Cell</dt>

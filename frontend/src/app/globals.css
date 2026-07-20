@@ -650,3 +650,156 @@ body {
   cursor: pointer;
 }
 .drone-console .zonevis-label .zname { flex: 1; }
+
+/* ---------- drone console UX additions (progress, help, geosearch, delete) ---------- */
+
+/* ETA trickle bar — top of the map area */
+.drone-console .loadingbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 1200;
+  background: transparent;
+  overflow: hidden;
+}
+.drone-console .loadingbar-fill {
+  height: 100%;
+  background: var(--action);
+  transition: width 120ms linear;
+  box-shadow: 0 0 8px var(--action);
+}
+
+/* map overlays (loading spinner + empty state) */
+.drone-console .map-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  pointer-events: none;
+}
+.drone-console .map-overlay-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  max-width: 280px;
+  padding: 18px 22px;
+  border-radius: var(--radius-lg, 16px);
+  background: color-mix(in oklch, var(--paper-raised) 82%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 6px 24px oklch(0.3 0.02 160 / 0.18);
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+.drone-console .map-overlay-card strong { font-size: 0.95rem; }
+.drone-console .map-overlay-card span { color: var(--ink-soft); }
+.drone-console .map-spinner {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 3px solid var(--hairline);
+  border-top-color: var(--action);
+  animation: drone-spin 0.8s linear infinite;
+}
+@keyframes drone-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .drone-console .map-spinner { animation: none; }
+  .drone-console .loadingbar-fill { transition: none; }
+}
+
+/* help disclosure */
+.drone-console .helppanel {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--paper);
+  padding: 4px 12px;
+}
+.drone-console .helppanel summary {
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 0;
+  color: var(--ink);
+}
+.drone-console .helppanel-body { font-size: 0.8rem; color: var(--ink-soft); padding-bottom: 8px; }
+.drone-console .helppanel-body p { margin: 6px 0; line-height: 1.45; }
+.drone-console .helppanel-body strong { color: var(--ink); }
+
+/* inline info tooltip */
+.drone-console .infotip { position: relative; display: inline-flex; margin-left: 5px; }
+.drone-console .infotip-btn {
+  font: inherit;
+  font-size: 0.72rem;
+  line-height: 1;
+  width: 16px; height: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; border-radius: 50%;
+  background: var(--surface, rgba(0,0,0,0.06));
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.drone-console .infotip-btn:hover { color: var(--ink); }
+.drone-console .infotip-pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 240px;
+  z-index: 1300;
+  padding: 8px 10px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 24px oklch(0.3 0.02 160 / 0.2);
+}
+
+/* geosearch */
+.drone-console .geosearch-box { position: relative; }
+.drone-console .geosearch-box input {
+  width: 100%; font: inherit; padding: 8px 10px;
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  background: var(--paper); color: var(--ink);
+}
+.drone-console .geosearch-list {
+  list-style: none; margin: 4px 0 0; padding: 4px;
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 1300;
+  background: var(--paper-raised);
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  box-shadow: 0 6px 24px oklch(0.3 0.02 160 / 0.2);
+  max-height: 240px; overflow-y: auto;
+}
+.drone-console .geosearch-opt {
+  width: 100%; text-align: left; font: inherit; font-size: 0.82rem;
+  padding: 7px 9px; border: none; border-radius: 8px;
+  background: transparent; color: var(--ink); cursor: pointer;
+}
+.drone-console .geosearch-opt:hover { background: var(--paper); }
+
+/* runs list: row wrapper + delete + empty badge */
+.drone-console .runrow { display: flex; align-items: stretch; gap: 6px; margin-bottom: 6px; }
+.drone-console .runrow .runitem { flex: 1; margin-bottom: 0; }
+.drone-console .runitem-del {
+  flex: none; width: 34px;
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  background: transparent; cursor: pointer; color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+.drone-console .runitem-del:hover { background: var(--paper); color: var(--z-prohibited); border-color: var(--z-prohibited); }
+.drone-console .rbadge {
+  margin-left: 6px; font-size: 0.64rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 1px 5px; border-radius: 6px;
+  background: var(--surface, rgba(0,0,0,0.06)); color: var(--ink-soft);
+  vertical-align: middle;
+}

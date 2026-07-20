@@ -7,6 +7,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { VolatilityRecord, Zone } from "@/lib/droneApi";
 import { CONSTRAINT_LOCKED_FILL, VOLATILITY_FILL, ZONE_FILL } from "@/lib/zoneTheme";
+import LoadingBar from "@/components/drone/LoadingBar";
 
 export type MapDisplayMode = "zones" | "volatility";
 
@@ -16,11 +17,17 @@ export default function MapView(props: {
   displayMode?: MapDisplayMode;
   volatilityByH3?: Map<string, VolatilityRecord> | null;
   hiddenZones?: Set<Zone>;
+  loading?: boolean;
+  /** When set, fly the map to this point and drop a marker (georeference search). */
+  focusPoint?: { lat: number; lon: number } | null;
 }) {
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.GeoJSON | null>(null);
+  const markerRef = useRef<L.CircleMarker | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const clickRef = useRef(props.onCellClick);
+
+  const isEmpty = props.geojson !== null && (props.geojson.features?.length ?? 0) === 0;
 
   // Style inputs live in refs so restyles never force a layer rebuild.
   const styleInputsRef = useRef({
@@ -111,5 +118,46 @@ export default function MapView(props: {
     layerRef.current?.setStyle(styleFor);
   }, [props.displayMode, props.volatilityByH3, props.hiddenZones]);
 
-  return <div ref={containerRef} style={{ height: "100%", width: "100%" }} />;
+  // Georeference search: fly to the picked point and mark it.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const p = props.focusPoint;
+    if (!p) {
+      markerRef.current?.remove();
+      markerRef.current = null;
+      return;
+    }
+    map.flyTo([p.lat, p.lon], 13, { duration: 0.75 });
+    if (markerRef.current) {
+      markerRef.current.setLatLng([p.lat, p.lon]);
+    } else {
+      markerRef.current = L.circleMarker([p.lat, p.lon], {
+        radius: 7, color: "#111", weight: 2, fillColor: "#fff", fillOpacity: 1,
+      }).addTo(map);
+    }
+  }, [props.focusPoint]);
+
+  return (
+    <div className="mapview-root" style={{ position: "relative", height: "100%", width: "100%" }}>
+      <LoadingBar active={!!props.loading} label="Loading map" />
+      <div ref={containerRef} style={{ height: "100%", width: "100%" }} />
+      {isEmpty && !props.loading && (
+        <div className="map-overlay map-overlay--empty" role="status">
+          <div className="map-overlay-card">
+            <strong>No scored cells for this run</strong>
+            <span>This run completed without results — re-run the zoning model to generate a map.</span>
+          </div>
+        </div>
+      )}
+      {props.loading && (
+        <div className="map-overlay map-overlay--loading" role="status" aria-live="polite">
+          <div className="map-overlay-card">
+            <span className="map-spinner" aria-hidden="true" />
+            <span>Loading map…</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

@@ -3,7 +3,7 @@
 /** app/drone/page.tsx — Zoning console. Rail (controls) + map + report drawer. */
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone } from "@/lib/droneApi";
 import ControlRail from "@/components/drone/ControlRail";
 import ReportDrawer from "@/components/drone/ReportDrawer";
@@ -24,6 +24,11 @@ export default function Page() {
   const [status, setStatus] = useState<{ text: string; error?: boolean }>({ text: "" });
   const [hiddenZones, setHiddenZones] = useState<Set<Zone>>(new Set());
   const [displayMode, setDisplayMode] = useState<MapDisplayMode>("zones");
+  const [focusPoint, setFocusPoint] = useState<{ lat: number; lon: number } | null>(null);
+
+  // Monotonic guard: only the most recent selectRun may write results, so
+  // fast run switches can't render an earlier response over a later one.
+  const loadSeq = useRef(0);
 
   const sensitivity = useSensitivity(activeRun);
 
@@ -40,8 +45,10 @@ export default function Page() {
   }, []);
 
   const selectRun = useCallback(async (runId: string) => {
+    const seq = ++loadSeq.current;
     setBusy(true);
     setReport(null);
+    setFocusPoint(null);
     setDisplayMode("zones");
     setHiddenZones(new Set());
     setStatus({ text: "Loading results…" });
@@ -50,14 +57,16 @@ export default function Page() {
         api.getRunGeoJSON(runId),
         api.getRunStats(runId),
       ]);
+      if (seq !== loadSeq.current) return; // superseded by a newer selection
       setGeojson(fc);
       setStats(detail.stats ?? null);
       setActiveRun(runId);
       setStatus({ text: "" });
     } catch (e) {
+      if (seq !== loadSeq.current) return;
       setStatus({ text: String(e), error: true });
     } finally {
-      setBusy(false);
+      if (seq === loadSeq.current) setBusy(false);
     }
   }, []);
 
@@ -112,6 +121,49 @@ export default function Page() {
     [activeRun]
   );
 
+  const deleteRun = useCallback(
+    async (runId: string) => {
+      try {
+        await api.deleteRun(runId);
+        if (runId === activeRun) {
+          // Resetting activeRun also tears down the sensitivity poll (the hook
+          // keys on it) and clears the drawer — the domino guard for deletion.
+          setActiveRun(null);
+          setGeojson(null);
+          setStats(null);
+          setReport(null);
+        }
+        await refreshConfig();
+        setStatus({ text: "Run deleted." });
+      } catch (e) {
+        setStatus({ text: String(e), error: true });
+      }
+    },
+    [activeRun, refreshConfig]
+  );
+
+  const onGeoPick = useCallback(
+    async (pick: { lat: number; lon: number; h3: string; label: string }) => {
+      setFocusPoint({ lat: pick.lat, lon: pick.lon });
+      if (!activeRun) {
+        setStatus({ text: "Select a run first to see its zoning at that location.", error: true });
+        return;
+      }
+      try {
+        setReport(await api.getLocationReport(activeRun, pick.h3));
+        setStatus({ text: `Showing zoning at ${pick.label}.` });
+      } catch {
+        // report endpoint 404s for cells outside the grid.
+        setReport(null);
+        setStatus({
+          text: `"${pick.label}" is outside the covered zoning area (Region 4).`,
+          error: true,
+        });
+      }
+    },
+    [activeRun]
+  );
+
   const toggleZone = useCallback((zone: Zone) => {
     setHiddenZones((prev) => {
       const next = new Set(prev);
@@ -146,9 +198,11 @@ export default function Page() {
           onRunModel={runModel}
           onSaveWeight={saveWeight}
           onSelectRun={selectRun}
+          onDeleteRun={deleteRun}
           onToggleZone={toggleZone}
           onTriggerSensitivity={sensitivity.trigger}
           onDisplayMode={setDisplayMode}
+          onGeoPick={onGeoPick}
         />
         <div className="mapwrap">
           <MapView
@@ -157,6 +211,8 @@ export default function Page() {
             displayMode={displayMode}
             volatilityByH3={sensitivity.volatilityByH3}
             hiddenZones={hiddenZones}
+            loading={busy}
+            focusPoint={focusPoint}
           />
           {report && (
             <ReportDrawer

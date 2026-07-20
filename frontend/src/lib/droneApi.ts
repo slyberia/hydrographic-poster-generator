@@ -24,6 +24,9 @@ export interface RunSummary {
   weights_snapshot: Record<string, number>;
   created_at: string;
   completed_at: string | null;
+  /** Scored cells persisted for this run. 0 = complete but empty (nothing to
+   * draw on the map) — the UI shows an explicit empty state for these. */
+  cell_count: number;
 }
 
 export interface FactorWeight {
@@ -95,6 +98,7 @@ async function http<T>(path: string, init?: RequestInit): Promise<T> {
     const body = await res.text().catch(() => "");
     throw new Error(`${res.status} ${res.statusText} — ${body.slice(0, 300)}`);
   }
+  if (res.status === 204) return undefined as T; // e.g. DELETE
   return res.json() as Promise<T>;
 }
 
@@ -123,6 +127,9 @@ export const droneApi = {
 
   getRunStats: (runId: string) =>
     http<{ stats?: RunStats } & RunSummary>(`/runs/${runId}`),
+
+  deleteRun: (runId: string) =>
+    http<void>(`/runs/${runId}`, { method: "DELETE" }),
 
   getLocationReport: (runId: string, h3: string) =>
     http<LocationReport>(`/runs/${runId}/report/${h3}`),
