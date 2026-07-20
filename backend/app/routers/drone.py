@@ -1,5 +1,5 @@
 from typing import Optional, Dict, Any, List, Literal
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
 import asyncpg
 
 from app.database import get_db_pool
@@ -114,6 +114,16 @@ async def get_run_details(run_id: str, pool: asyncpg.Pool = Depends(get_db_pool)
     if not details:
         raise HTTPException(status_code=404, detail=f"Run {run_id} not found")
     return details
+
+
+@router.delete("/runs/{run_id}", status_code=204, tags=["Drone Runs"])
+async def delete_run(run_id: str, pool: asyncpg.Pool = Depends(get_db_pool)):
+    """Delete a run and everything derived from it (sweep children, volatility,
+    summary, cell results). Returns 204 on success, 404 if the run is unknown."""
+    deleted = await drone_service.delete_run(pool, run_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail=f"Run {run_id} not found")
+    return Response(status_code=204)
 
 
 @router.get("/runs/{run_id}/geojson", tags=["Drone Runs"])

@@ -69,13 +69,57 @@ async def list_runs(pool: asyncpg.Pool) -> List[Dict[str, Any]]:
     """
     async with pool.acquire() as conn:
         rows = await conn.fetch("""
-            SELECT run_id::text, label, status, weights_snapshot,
-                   created_at::text, completed_at::text
-            FROM mcda_model_runs
-            WHERE (params->>'parent_run_id') IS NULL
-            ORDER BY created_at DESC
+            SELECT m.run_id::text, m.label, m.status, m.weights_snapshot,
+                   m.created_at::text, m.completed_at::text,
+                   (SELECT count(*) FROM mcda_cell_results r
+                    WHERE r.run_id = m.run_id) AS cell_count
+            FROM mcda_model_runs m
+            WHERE (m.params->>'parent_run_id') IS NULL
+            ORDER BY m.created_at DESC
         """)
         return [dict(r) for r in rows]
+
+
+async def delete_run(pool: asyncpg.Pool, run_id: str) -> bool:
+    """Atomically delete a run and everything derived from it.
+
+    Returns False if the run does not exist. Cleanup covers, in one transaction:
+      - mcda_sweep_volatility rows for every sweep this run parents (NO FK, so
+        they will not cascade and must be removed explicitly);
+      - the run's sweep children (separate mcda_model_runs rows referencing this
+        run via params.parent_run_id);
+      - the run itself.
+    mcda_cell_results (FK ON DELETE CASCADE) and mcda_sweep_summary
+    (base_run_id FK ON DELETE CASCADE) are removed automatically by the row
+    deletes above.
+    """
+    async with pool.acquire() as conn:
+        async with conn.transaction():
+            exists = await conn.fetchval(
+                "SELECT 1 FROM mcda_model_runs WHERE run_id = $1::uuid", run_id
+            )
+            if not exists:
+                return False
+            # Volatility has no cascade path — clear it for sweeps this run parents.
+            await conn.execute("""
+                DELETE FROM mcda_sweep_volatility
+                WHERE sweep_id IN (
+                    SELECT DISTINCT (params->>'sweep_id')::uuid
+                    FROM mcda_model_runs
+                    WHERE params->>'parent_run_id' = $1
+                      AND params ? 'sweep_id'
+                )
+            """, run_id)
+            # Sweep children (their cell_results cascade with them).
+            await conn.execute(
+                "DELETE FROM mcda_model_runs WHERE params->>'parent_run_id' = $1",
+                run_id,
+            )
+            # The run itself: cascades its cell_results and its sweep_summary rows.
+            await conn.execute(
+                "DELETE FROM mcda_model_runs WHERE run_id = $1::uuid", run_id
+            )
+            return True
 
 
 async def get_run_details(pool: asyncpg.Pool, run_id: str) -> Optional[Dict[str, Any]]:
