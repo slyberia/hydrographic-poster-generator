@@ -89,6 +89,34 @@ export interface VolatilityRecord {
   baseline_score: number | null;
 }
 
+// ---- Export (Option B: server-side static-map composite of the viewport) ----
+
+export interface ExportBBox {
+  west: number;
+  south: number;
+  east: number;
+  north: number;
+}
+
+export interface ExportViewParams {
+  bbox: ExportBBox;
+  zoom: number;
+  format: "png" | "svg" | "pdf";
+  scale?: number;
+  display_mode?: "zones" | "volatility";
+  sweep_id?: string | null;
+  hidden_zones?: string[] | null;
+}
+
+/** A read of the live map's current extent — the whole export contract. */
+export type ViewportSnapshot = { bbox: ExportBBox; zoom: number };
+
+function filenameFromDisposition(header: string | null, fallback: string): string {
+  if (!header) return fallback;
+  const m = /filename="?([^"]+)"?/.exec(header);
+  return m?.[1] ?? fallback;
+}
+
 async function http<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
     ...init,
@@ -145,4 +173,25 @@ export const droneApi = {
 
   getVolatility: (runId: string, sweepId: string) =>
     http<VolatilityRecord[]>(`/runs/${runId}/sensitivity/${sweepId}/volatility`),
+
+  exportView: async (
+    runId: string,
+    params: ExportViewParams
+  ): Promise<{ blob: Blob; filename: string }> => {
+    const res = await fetch(`${BASE}/runs/${runId}/export`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`${res.status} ${res.statusText} — ${body.slice(0, 300)}`);
+    }
+    const blob = await res.blob();
+    const filename = filenameFromDisposition(
+      res.headers.get("Content-Disposition"),
+      `drone_zoning.${params.format}`
+    );
+    return { blob, filename };
+  },
 };

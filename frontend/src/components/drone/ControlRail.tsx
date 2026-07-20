@@ -81,10 +81,14 @@ export default function ControlRail(props: {
   onTriggerSensitivity: (delta: number) => void;
   onDisplayMode: (mode: MapDisplayMode) => void;
   onGeoPick: (pick: { lat: number; lon: number; h3: string; label: string }) => void;
+  onExport: (format: "png" | "svg" | "pdf", scale: number) => void;
+  exporting: boolean;
 }) {
   const { factors, runs, activeRun, stats, busy, status } = props;
   const [label, setLabel] = useState("");
   const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [exportFormat, setExportFormat] = useState<"png" | "svg" | "pdf">("png");
+  const [exportScale, setExportScale] = useState(2);
 
   const WEIGHT_MAX = 10;
 
@@ -251,6 +255,51 @@ export default function ControlRail(props: {
         onTrigger={props.onTriggerSensitivity}
         onDisplayMode={props.onDisplayMode}
       />
+
+      <section aria-label="Export">
+        <p className="sectionlabel">
+          Export current view
+          <InfoTip text={OPERATION_INFO.export.body} label="What Export does" />
+        </p>
+        <div className="exportrow">
+          <label htmlFor="export-format" className="exportlabel">Format</label>
+          <select
+            id="export-format"
+            value={exportFormat}
+            onChange={(e) => setExportFormat(e.target.value as "png" | "svg" | "pdf")}
+          >
+            <option value="png">PNG (raster)</option>
+            <option value="svg">SVG (vector)</option>
+            <option value="pdf">PDF (print)</option>
+          </select>
+        </div>
+        <div className="exportrow">
+          <label htmlFor="export-scale" className="exportlabel">Resolution</label>
+          <select
+            id="export-scale"
+            value={exportScale}
+            onChange={(e) => setExportScale(Number(e.target.value))}
+            disabled={exportFormat === "svg"}
+            title={exportFormat === "svg" ? "SVG is resolution-independent" : undefined}
+          >
+            <option value={1}>1× (screen)</option>
+            <option value={2}>2× (sharp)</option>
+            <option value={4}>4× (poster)</option>
+          </select>
+        </div>
+        <button
+          className="btn"
+          disabled={!activeRunComplete || busy || props.exporting}
+          onClick={() => props.onExport(exportFormat, exportScale)}
+          title={
+            !activeRunComplete
+              ? "Select a completed run to export"
+              : "Render what's on screen at the chosen resolution"
+          }
+        >
+          {props.exporting ? "Rendering export…" : "Export current view"}
+        </button>
+      </section>
     </aside>
   );
 }

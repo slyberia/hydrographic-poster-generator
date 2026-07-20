@@ -2,10 +2,10 @@
 
 /** components/MapView.tsx — Leaflet map rendering ~19.5k H3 cells on canvas. */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type MutableRefObject } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { VolatilityRecord, Zone } from "@/lib/droneApi";
+import { VolatilityRecord, Zone, type ViewportSnapshot } from "@/lib/droneApi";
 import { CONSTRAINT_LOCKED_FILL, VOLATILITY_FILL, ZONE_FILL } from "@/lib/zoneTheme";
 import LoadingBar from "@/components/drone/LoadingBar";
 
@@ -20,6 +20,9 @@ export default function MapView(props: {
   loading?: boolean;
   /** When set, fly the map to this point and drop a marker (georeference search). */
   focusPoint?: { lat: number; lon: number } | null;
+  /** Populated with a reader for the live viewport (bbox + zoom) — the export
+   * contract. Null until the map has initialised. */
+  viewportRef?: MutableRefObject<(() => ViewportSnapshot) | null>;
 }) {
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.GeoJSON | null>(null);
@@ -73,10 +76,32 @@ export default function MapView(props: {
       maxZoom: 18,
     }).addTo(map);
     mapRef.current = map;
+
+    // Expose a reader for the current extent so the export control can send the
+    // exact bbox + zoom on screen. Reads live state each call; no re-renders.
+    const vpRef = props.viewportRef;
+    if (vpRef) {
+      vpRef.current = () => {
+        const b = map.getBounds();
+        return {
+          bbox: {
+            west: b.getWest(),
+            south: b.getSouth(),
+            east: b.getEast(),
+            north: b.getNorth(),
+          },
+          zoom: Math.round(map.getZoom()),
+        };
+      };
+    }
+
     return () => {
+      if (vpRef) vpRef.current = null;
       map.remove();
       mapRef.current = null;
     };
+    // props.viewportRef is a stable ref container; init must run exactly once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // swap data layer when a run's geojson arrives

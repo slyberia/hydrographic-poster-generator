@@ -4,7 +4,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone } from "@/lib/droneApi";
+import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone, type ViewportSnapshot } from "@/lib/droneApi";
 import ControlRail from "@/components/drone/ControlRail";
 import ReportDrawer from "@/components/drone/ReportDrawer";
 import { MapDisplayMode } from "@/components/drone/SensitivityPanel";
@@ -25,10 +25,15 @@ export default function Page() {
   const [hiddenZones, setHiddenZones] = useState<Set<Zone>>(new Set());
   const [displayMode, setDisplayMode] = useState<MapDisplayMode>("zones");
   const [focusPoint, setFocusPoint] = useState<{ lat: number; lon: number } | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   // Monotonic guard: only the most recent selectRun may write results, so
   // fast run switches can't render an earlier response over a later one.
   const loadSeq = useRef(0);
+
+  // Populated by MapView with a reader for the live map extent (the export
+  // contract). Reads current bbox + zoom on demand; never triggers re-renders.
+  const viewportRef = useRef<(() => ViewportSnapshot) | null>(null);
 
   const sensitivity = useSensitivity(activeRun);
 
@@ -164,6 +169,53 @@ export default function Page() {
     [activeRun]
   );
 
+  const exportView = useCallback(
+    async (format: "png" | "svg" | "pdf", scale: number) => {
+      if (!activeRun) {
+        setStatus({ text: "Select a run before exporting.", error: true });
+        return;
+      }
+      const reader = viewportRef.current;
+      if (!reader) {
+        setStatus({ text: "Map isn't ready yet — try again in a moment.", error: true });
+        return;
+      }
+      const { bbox, zoom } = reader();
+      // Volatility export needs the completed sweep; fall back to zones otherwise.
+      const useVolatility =
+        displayMode === "volatility" &&
+        sensitivity.phase === "complete" &&
+        !!sensitivity.status?.sweep_id;
+      setExporting(true);
+      setStatus({ text: "Rendering export…" });
+      try {
+        const { blob, filename } = await api.exportView(activeRun, {
+          bbox,
+          zoom,
+          format,
+          scale,
+          display_mode: useVolatility ? "volatility" : "zones",
+          sweep_id: useVolatility ? sensitivity.status!.sweep_id : null,
+          hidden_zones: useVolatility ? null : Array.from(hiddenZones),
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        setStatus({ text: `Exported ${filename}.` });
+      } catch (e) {
+        setStatus({ text: `Export failed — ${String(e)}`, error: true });
+      } finally {
+        setExporting(false);
+      }
+    },
+    [activeRun, displayMode, hiddenZones, sensitivity.phase, sensitivity.status]
+  );
+
   const toggleZone = useCallback((zone: Zone) => {
     setHiddenZones((prev) => {
       const next = new Set(prev);
@@ -203,6 +255,8 @@ export default function Page() {
           onTriggerSensitivity={sensitivity.trigger}
           onDisplayMode={setDisplayMode}
           onGeoPick={onGeoPick}
+          onExport={exportView}
+          exporting={exporting}
         />
         <div className="mapwrap">
           <MapView
@@ -213,6 +267,7 @@ export default function Page() {
             hiddenZones={hiddenZones}
             loading={busy}
             focusPoint={focusPoint}
+            viewportRef={viewportRef}
           />
           {report && (
             <ReportDrawer

@@ -32,6 +32,11 @@ export const OPERATION_INFO = {
     body:
       "Takes a completed zoning run and nudges each factor’s weight up and down one at a time (e.g. ±10%), re-scoring the whole grid each time. Answers: “how fragile is this map to my weighting choices — which factors, if changed slightly, flip the most cells between zones?” Produces volatility stats and a factor ranking, not a new map.",
   },
+  export: {
+    title: "Export current view",
+    body:
+      "Renders exactly what’s framed in the map right now — the current pan/zoom, the active Zones or Volatility colouring, and any hidden zones — as a high-resolution image. Pan and zoom to the area you want (a neighbourhood or the whole region), then export. Basemap and attribution are included; a transparent hex-only asset is a future option.",
+  },
 } as const;
 
 /** Data-confidence categories shown in the location report. */

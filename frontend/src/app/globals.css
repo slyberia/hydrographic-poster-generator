@@ -803,3 +803,16 @@ body {
   background: var(--surface, rgba(0,0,0,0.06)); color: var(--ink-soft);
   vertical-align: middle;
 }
+
+/* export current view */
+.drone-console .exportrow {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 8px;
+}
+.drone-console .exportlabel { font-size: 0.8rem; color: var(--ink-soft); }
+.drone-console .exportrow select {
+  font: inherit; font-size: 0.82rem; padding: 6px 8px;
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  background: var(--paper); color: var(--ink); min-width: 8.5rem;
+}
+.drone-console .exportrow select:disabled { opacity: 0.5; cursor: not-allowed; }
