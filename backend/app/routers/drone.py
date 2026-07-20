@@ -16,6 +16,30 @@ class WeightUpdateRequest(BaseModel):
     weight: float
 
 
+class BBox(BaseModel):
+    west: float = Field(..., ge=-180, le=180)
+    south: float = Field(..., ge=-90, le=90)
+    east: float = Field(..., ge=-180, le=180)
+    north: float = Field(..., ge=-90, le=90)
+
+
+class ExportViewRequest(BaseModel):
+    """Render the zoning map for an arbitrary map viewport (Option B).
+
+    The bbox is the whole contract — full region is bbox = region extent, a
+    neighbourhood is bbox = that neighbourhood, same code path. `zoom` is the
+    frontend's current basemap zoom (clamped server-side to bound tile fetches).
+    """
+    bbox: BBox
+    zoom: int = Field(11, ge=1, le=18, description="Frontend basemap zoom")
+    format: Literal["png", "svg", "pdf"] = "png"
+    scale: float = Field(2.0, ge=1.0, le=4.0,
+        description="Output resolution multiplier over native tile pixels")
+    display_mode: Literal["zones", "volatility"] = "zones"
+    sweep_id: Optional[str] = Field(None, description="Required when display_mode='volatility'")
+    hidden_zones: Optional[List[str]] = None
+
+
 # ---- Sensitivity models ----
 
 class SensitivityTriggerRequest(BaseModel):
@@ -137,6 +161,46 @@ async def get_run_geojson(
         return await drone_service.results_geojson(pool, run_id, zone)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
+
+
+@router.post("/runs/{run_id}/export", tags=["Drone Runs"])
+async def export_view(
+    run_id: str,
+    body: ExportViewRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool),
+):
+    """Render the zoning map for the given viewport (bbox + zoom) to PNG/SVG/PDF.
+
+    Basemap tiles match the frontend (CARTO light_all) and attribution is baked
+    into the image. Cells are filtered to the bbox, so a sub-area render never
+    pulls the whole grid.
+    """
+    from app.services import drone_export_service as export_svc
+
+    vp = export_svc.Viewport(
+        west=body.bbox.west, south=body.bbox.south,
+        east=body.bbox.east, north=body.bbox.north,
+    )
+    try:
+        payload, media_type, filename = await export_svc.render_export(
+            pool,
+            run_id,
+            vp,
+            requested_zoom=body.zoom,
+            fmt=body.format,
+            scale=body.scale,
+            display_mode=body.display_mode,
+            sweep_id=body.sweep_id,
+            hidden_zones=set(body.hidden_zones) if body.hidden_zones else None,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+    return Response(
+        content=payload,
+        media_type=media_type,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 # ---- Sensitivity ----

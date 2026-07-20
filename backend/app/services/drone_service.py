@@ -2,7 +2,7 @@ import asyncio
 import json
 import uuid
 import logging
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List, Any, Tuple
 import asyncpg
 
 logger = logging.getLogger(__name__)
@@ -408,8 +408,18 @@ async def location_report(pool: asyncpg.Pool, run_id: str, h3_index: str) -> Opt
     }
 
 
-async def results_geojson(pool: asyncpg.Pool, run_id: str, zone: Optional[str] = None) -> Dict[str, Any]:
-    """Retrieve full grid results formatted as a GeoJSON FeatureCollection."""
+async def results_geojson(
+    pool: asyncpg.Pool,
+    run_id: str,
+    zone: Optional[str] = None,
+    bbox: Optional[Tuple[float, float, float, float]] = None,
+) -> Dict[str, Any]:
+    """Retrieve grid results as a GeoJSON FeatureCollection.
+
+    When ``bbox`` (west, south, east, north in EPSG:4326) is given, only cells
+    whose geometry intersects the envelope are returned — the export path sends
+    the map viewport so a sub-area render never fetches the whole ~19.5k grid.
+    """
     q = """
         SELECT r.h3_index, r.final_zone::text AS zone, r.total_score,
                r.dominant_reason, r.min_confidence::text AS confidence,
@@ -418,11 +428,17 @@ async def results_geojson(pool: asyncpg.Pool, run_id: str, zone: Optional[str] =
         JOIN mcda_grid g USING (h3_index)
         WHERE r.run_id = $1::uuid
     """
-    params = [run_id]
+    params: List[Any] = [run_id]
     if zone:
-        q += " AND r.final_zone = CAST($2 AS drone_zone)"
         params.append(zone)
-        
+        q += f" AND r.final_zone = CAST(${len(params)} AS drone_zone)"
+    if bbox:
+        w, s, e, n = bbox
+        params.extend([w, s, e, n])
+        q += (f" AND ST_Intersects(g.geom, "
+              f"ST_MakeEnvelope(${len(params)-3}, ${len(params)-2}, "
+              f"${len(params)-1}, ${len(params)}, 4326))")
+
     async with pool.acquire() as conn:
         rows = await conn.fetch(q, *params)
         
