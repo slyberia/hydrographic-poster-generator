@@ -24,6 +24,9 @@ export interface RunSummary {
   weights_snapshot: Record<string, number>;
   created_at: string;
   completed_at: string | null;
+  /** Scored cells persisted for this run. 0 = complete but empty (nothing to
+   * draw on the map) — the UI shows an explicit empty state for these. */
+  cell_count: number;
 }
 
 export interface FactorWeight {
@@ -86,6 +89,35 @@ export interface VolatilityRecord {
   baseline_score: number | null;
 }
 
+// ---- Export (Option B: server-side static-map composite of the viewport) ----
+
+export interface ExportBBox {
+  west: number;
+  south: number;
+  east: number;
+  north: number;
+}
+
+export interface ExportViewParams {
+  bbox: ExportBBox;
+  zoom: number;
+  format: "png" | "svg" | "pdf";
+  scale?: number;
+  display_mode?: "zones" | "volatility";
+  sweep_id?: string | null;
+  hidden_zones?: string[] | null;
+  show_boundary?: boolean;
+}
+
+/** A read of the live map's current extent — the whole export contract. */
+export type ViewportSnapshot = { bbox: ExportBBox; zoom: number };
+
+function filenameFromDisposition(header: string | null, fallback: string): string {
+  if (!header) return fallback;
+  const m = /filename="?([^"]+)"?/.exec(header);
+  return m?.[1] ?? fallback;
+}
+
 async function http<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
     ...init,
@@ -95,6 +127,7 @@ async function http<T>(path: string, init?: RequestInit): Promise<T> {
     const body = await res.text().catch(() => "");
     throw new Error(`${res.status} ${res.statusText} — ${body.slice(0, 300)}`);
   }
+  if (res.status === 204) return undefined as T; // e.g. DELETE
   return res.json() as Promise<T>;
 }
 
@@ -124,6 +157,9 @@ export const droneApi = {
   getRunStats: (runId: string) =>
     http<{ stats?: RunStats } & RunSummary>(`/runs/${runId}`),
 
+  deleteRun: (runId: string) =>
+    http<void>(`/runs/${runId}`, { method: "DELETE" }),
+
   getLocationReport: (runId: string, h3: string) =>
     http<LocationReport>(`/runs/${runId}/report/${h3}`),
 
@@ -138,4 +174,25 @@ export const droneApi = {
 
   getVolatility: (runId: string, sweepId: string) =>
     http<VolatilityRecord[]>(`/runs/${runId}/sensitivity/${sweepId}/volatility`),
+
+  exportView: async (
+    runId: string,
+    params: ExportViewParams
+  ): Promise<{ blob: Blob; filename: string }> => {
+    const res = await fetch(`${BASE}/runs/${runId}/export`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`${res.status} ${res.statusText} — ${body.slice(0, 300)}`);
+    }
+    const blob = await res.blob();
+    const filename = filenameFromDisposition(
+      res.headers.get("Content-Disposition"),
+      `drone_zoning.${params.format}`
+    );
+    return { blob, filename };
+  },
 };

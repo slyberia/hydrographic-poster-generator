@@ -4,6 +4,8 @@
 
 import { LocationReport, VolatilityRecord } from "@/lib/droneApi";
 import { VOLATILITY_FILL, ZONE_CSS } from "@/lib/zoneTheme";
+import InfoTip from "@/components/drone/InfoTip";
+import { CONFIDENCE_INFO, REPORT_INFO } from "@/lib/droneInfo";
 
 const FACTOR_NAMES: Record<string, string> = {
   population: "Population density",
@@ -45,7 +47,10 @@ export default function ReportDrawer(props: {
 
         {r.risk_score !== null && (
           <>
-            <dt>Weighted risk score</dt>
+            <dt>
+              Weighted risk score
+              <InfoTip text={REPORT_INFO.risk_score} label="What the weighted risk score means" />
+            </dt>
             <dd>{r.risk_score.toFixed(2)} / 5</dd>
           </>
         )}
@@ -63,7 +68,10 @@ export default function ReportDrawer(props: {
 
         {factors.length > 0 && (
           <>
-            <dt>Factor breakdown</dt>
+            <dt>
+              Factor breakdown
+              <InfoTip text={REPORT_INFO.factor_breakdown} label="What score × weight means" />
+            </dt>
             <dd>
               {factors.map(([key, f]) => (
                 <div className="factorline" key={key}>
@@ -79,7 +87,10 @@ export default function ReportDrawer(props: {
 
         {hasSweep && (
           <>
-            <dt>Stability</dt>
+            <dt>
+              Stability
+              <InfoTip text={REPORT_INFO.stability} label="What stability, σ and zone flips mean" />
+            </dt>
             <dd>
               {props.volatility ? (
                 <>
@@ -105,7 +116,15 @@ export default function ReportDrawer(props: {
           </>
         )}
 
-        <dt>Data confidence</dt>
+        <dt>
+          Data confidence
+          {CONFIDENCE_INFO[r.data_confidence.toLowerCase()] && (
+            <InfoTip
+              text={CONFIDENCE_INFO[r.data_confidence.toLowerCase()]}
+              label="What data confidence means"
+            />
+          )}
+        </dt>
         <dd>{r.data_confidence.replace("_", " ")}</dd>
 
         <dt>Cell</dt>

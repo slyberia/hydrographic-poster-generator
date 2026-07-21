@@ -28,6 +28,7 @@ from app.services.drone_service import (
     _SWEEP_SUMMARY_SQL,
     _VOLATILITY_SQL,
     SWEEP_STALE_MINUTES,
+    delete_run,
     get_sensitivity_status,
     get_volatility_data,
     list_runs,
@@ -152,6 +153,9 @@ class FakeConn:
     def __init__(self, db: FakeDB):
         self.db = db
 
+    def transaction(self):
+        return _AcquireCtx(None)  # no-op async context manager
+
     async def fetchrow(self, q, *args):
         if "SELECT status, region_id" in q:
             run = self.db.runs.get(args[0])
@@ -173,6 +177,8 @@ class FakeConn:
             return None
         if "SELECT region_key" in q:
             return self.db.region_key
+        if "WHERE run_id = $1::uuid" in q:  # delete_run existence probe
+            return 1 if args[0] in self.db.runs else None
         if "SELECT 1 FROM mcda_model_runs" in q:
             return 1 if any(self.db.sweep_children(args[0])) else None
         raise AssertionError(f"Unexpected fetchval: {q[:80]}")
@@ -189,10 +195,11 @@ class FakeConn:
         if "SELECT run_id::text, status" in q and "sweep_id" in q:
             return [{"run_id": rid, "status": run["status"]}
                     for rid, run in self.db.sweep_children(args[0])]
-        if "(params->>'parent_run_id') IS NULL" in q:
+        if "parent_run_id') IS NULL" in q:
             return [{"run_id": rid, "label": run["label"], "status": run["status"],
                      "weights_snapshot": run["weights_snapshot"],
-                     "created_at": str(run["created_at"]), "completed_at": None}
+                     "created_at": str(run["created_at"]), "completed_at": None,
+                     "cell_count": len(self.db.cells.get(rid, {}))}
                     for rid, run in self.db.runs.items()
                     if not (run["params"] or {}).get("parent_run_id")]
         raise AssertionError(f"Unexpected fetch: {q[:80]}")
@@ -212,6 +219,21 @@ class FakeConn:
             return
         if "SET status='failed' WHERE run_id" in q:
             self.db.runs[args[0]]["status"] = "failed"
+            return
+        if "DELETE FROM mcda_sweep_volatility" in q:
+            child_sweeps = {(r["params"] or {}).get("sweep_id")
+                            for r in self.db.runs.values()
+                            if (r["params"] or {}).get("parent_run_id") == args[0]}
+            for sid in child_sweeps:
+                self.db.sweep_volatility.pop(sid, None)
+            return
+        if "DELETE FROM mcda_model_runs WHERE params->>'parent_run_id'" in q:
+            for rid in [r for r, run in self.db.runs.items()
+                        if (run["params"] or {}).get("parent_run_id") == args[0]]:
+                del self.db.runs[rid]
+            return
+        if "DELETE FROM mcda_model_runs WHERE run_id" in q:
+            self.db.runs.pop(args[0], None)
             return
         raise AssertionError(f"Unexpected execute: {q[:80]}")
 
@@ -410,6 +432,25 @@ def test_list_runs_excludes_children(pool, db):
     rows = asyncio.run(list_runs(pool))
 
     assert [r["run_id"] for r in rows] == [base]
+
+
+def test_delete_run_removes_children_and_volatility(pool, db):
+    base, sweep = make_sweep(db, n_children=4)
+    db.sweep_volatility[sweep] = [{"h3_index": "c1"}]
+    other = db.add_run(status="complete", label="unrelated")
+
+    assert asyncio.run(delete_run(pool, base)) is True
+
+    # Base run and all its sweep children are gone; volatility cleared.
+    assert base not in db.runs
+    assert child_ids(db, sweep) == []
+    assert sweep not in db.sweep_volatility
+    # Unrelated run untouched.
+    assert other in db.runs
+
+
+def test_delete_run_missing_returns_false(pool, db):
+    assert asyncio.run(delete_run(pool, str(uuid.uuid4()))) is False
 
 
 def test_volatility_categories(pool, db):

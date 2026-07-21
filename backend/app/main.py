@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 import logging
 
 from app.settings import settings
@@ -42,6 +43,11 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
+
+# Compress large JSON/text responses. The drone GeoJSON payload (~5 MB of
+# ~19.5k polygons) compresses to a few hundred KB, cutting transfer + the
+# client's perceived run-load time. minimum_size skips tiny responses.
+app.add_middleware(GZipMiddleware, minimum_size=1024)
 
 # Configure CORS
 app.add_middleware(

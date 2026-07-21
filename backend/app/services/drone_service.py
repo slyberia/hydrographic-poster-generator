@@ -2,7 +2,7 @@ import asyncio
 import json
 import uuid
 import logging
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List, Any, Tuple
 import asyncpg
 
 logger = logging.getLogger(__name__)
@@ -69,13 +69,57 @@ async def list_runs(pool: asyncpg.Pool) -> List[Dict[str, Any]]:
     """
     async with pool.acquire() as conn:
         rows = await conn.fetch("""
-            SELECT run_id::text, label, status, weights_snapshot,
-                   created_at::text, completed_at::text
-            FROM mcda_model_runs
-            WHERE (params->>'parent_run_id') IS NULL
-            ORDER BY created_at DESC
+            SELECT m.run_id::text, m.label, m.status, m.weights_snapshot,
+                   m.created_at::text, m.completed_at::text,
+                   (SELECT count(*) FROM mcda_cell_results r
+                    WHERE r.run_id = m.run_id) AS cell_count
+            FROM mcda_model_runs m
+            WHERE (m.params->>'parent_run_id') IS NULL
+            ORDER BY m.created_at DESC
         """)
         return [dict(r) for r in rows]
+
+
+async def delete_run(pool: asyncpg.Pool, run_id: str) -> bool:
+    """Atomically delete a run and everything derived from it.
+
+    Returns False if the run does not exist. Cleanup covers, in one transaction:
+      - mcda_sweep_volatility rows for every sweep this run parents (NO FK, so
+        they will not cascade and must be removed explicitly);
+      - the run's sweep children (separate mcda_model_runs rows referencing this
+        run via params.parent_run_id);
+      - the run itself.
+    mcda_cell_results (FK ON DELETE CASCADE) and mcda_sweep_summary
+    (base_run_id FK ON DELETE CASCADE) are removed automatically by the row
+    deletes above.
+    """
+    async with pool.acquire() as conn:
+        async with conn.transaction():
+            exists = await conn.fetchval(
+                "SELECT 1 FROM mcda_model_runs WHERE run_id = $1::uuid", run_id
+            )
+            if not exists:
+                return False
+            # Volatility has no cascade path — clear it for sweeps this run parents.
+            await conn.execute("""
+                DELETE FROM mcda_sweep_volatility
+                WHERE sweep_id IN (
+                    SELECT DISTINCT (params->>'sweep_id')::uuid
+                    FROM mcda_model_runs
+                    WHERE params->>'parent_run_id' = $1
+                      AND params ? 'sweep_id'
+                )
+            """, run_id)
+            # Sweep children (their cell_results cascade with them).
+            await conn.execute(
+                "DELETE FROM mcda_model_runs WHERE params->>'parent_run_id' = $1",
+                run_id,
+            )
+            # The run itself: cascades its cell_results and its sweep_summary rows.
+            await conn.execute(
+                "DELETE FROM mcda_model_runs WHERE run_id = $1::uuid", run_id
+            )
+            return True
 
 
 async def get_run_details(pool: asyncpg.Pool, run_id: str) -> Optional[Dict[str, Any]]:
@@ -364,8 +408,18 @@ async def location_report(pool: asyncpg.Pool, run_id: str, h3_index: str) -> Opt
     }
 
 
-async def results_geojson(pool: asyncpg.Pool, run_id: str, zone: Optional[str] = None) -> Dict[str, Any]:
-    """Retrieve full grid results formatted as a GeoJSON FeatureCollection."""
+async def results_geojson(
+    pool: asyncpg.Pool,
+    run_id: str,
+    zone: Optional[str] = None,
+    bbox: Optional[Tuple[float, float, float, float]] = None,
+) -> Dict[str, Any]:
+    """Retrieve grid results as a GeoJSON FeatureCollection.
+
+    When ``bbox`` (west, south, east, north in EPSG:4326) is given, only cells
+    whose geometry intersects the envelope are returned — the export path sends
+    the map viewport so a sub-area render never fetches the whole ~19.5k grid.
+    """
     q = """
         SELECT r.h3_index, r.final_zone::text AS zone, r.total_score,
                r.dominant_reason, r.min_confidence::text AS confidence,
@@ -374,11 +428,17 @@ async def results_geojson(pool: asyncpg.Pool, run_id: str, zone: Optional[str] =
         JOIN mcda_grid g USING (h3_index)
         WHERE r.run_id = $1::uuid
     """
-    params = [run_id]
+    params: List[Any] = [run_id]
     if zone:
-        q += " AND r.final_zone = CAST($2 AS drone_zone)"
         params.append(zone)
-        
+        q += f" AND r.final_zone = CAST(${len(params)} AS drone_zone)"
+    if bbox:
+        w, s, e, n = bbox
+        params.extend([w, s, e, n])
+        q += (f" AND ST_Intersects(g.geom, "
+              f"ST_MakeEnvelope(${len(params)-3}, ${len(params)-2}, "
+              f"${len(params)-1}, ${len(params)}, 4326))")
+
     async with pool.acquire() as conn:
         rows = await conn.fetch(q, *params)
         
@@ -396,6 +456,22 @@ async def results_geojson(pool: asyncpg.Pool, run_id: str, zone: Optional[str] =
             },
         } for r in rows],
     }
+
+
+async def region_boundary_geojson(pool: asyncpg.Pool, run_id: str) -> Optional[Dict[str, Any]]:
+    """The study-area outline (Region 4) for a run's region, as a GeoJSON
+    geometry — used as an optional overlay line on exports. Returns None if the
+    run or its boundary is unknown."""
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow("""
+            SELECT ST_AsGeoJSON(b.geom) AS geometry
+            FROM mcda_model_runs r
+            JOIN mcda_region_boundary b USING (region_id)
+            WHERE r.run_id = $1::uuid
+        """, run_id)
+    if not row or not row["geometry"]:
+        return None
+    return json.loads(row["geometry"])
 
 
 # =============================================================================

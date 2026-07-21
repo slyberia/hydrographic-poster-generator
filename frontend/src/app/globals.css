@@ -413,6 +413,12 @@ body {
   margin: 0 0 8px;
   font-weight: 700;
 }
+.drone-console .fieldhint {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  margin: -2px 0 10px;
+  line-height: 1.35;
+}
 
 /* ---------- zone instrument strip (signature element) ---------- */
 .drone-console .zonestrip { display: flex; flex-direction: column; gap: 8px; }
@@ -650,3 +656,221 @@ body {
   cursor: pointer;
 }
 .drone-console .zonevis-label .zname { flex: 1; }
+
+/* ---------- drone console UX additions (progress, help, geosearch, delete) ---------- */
+
+/* ETA trickle bar — top of the map area */
+.drone-console .loadingbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 1200;
+  background: transparent;
+  overflow: hidden;
+}
+.drone-console .loadingbar-fill {
+  height: 100%;
+  background: var(--action);
+  transition: width 120ms linear;
+  box-shadow: 0 0 8px var(--action);
+}
+
+/* map overlays (loading spinner + empty state) */
+.drone-console .map-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  pointer-events: none;
+}
+.drone-console .map-overlay-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  max-width: 280px;
+  padding: 18px 22px;
+  border-radius: var(--radius-lg, 16px);
+  background: color-mix(in oklch, var(--paper-raised) 82%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 6px 24px oklch(0.3 0.02 160 / 0.18);
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+.drone-console .map-overlay-card strong { font-size: 0.95rem; }
+.drone-console .map-overlay-card span { color: var(--ink-soft); }
+.drone-console .map-spinner {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 3px solid var(--hairline);
+  border-top-color: var(--action);
+  animation: drone-spin 0.8s linear infinite;
+}
+@keyframes drone-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .drone-console .map-spinner { animation: none; }
+  .drone-console .loadingbar-fill { transition: none; }
+}
+
+/* "How this console works" button (opens the guide dialog) */
+.drone-console .helpbtn {
+  display: flex; align-items: center; gap: 7px;
+  width: 100%; font: inherit; font-size: 0.82rem; font-weight: 600;
+  padding: 9px 12px; cursor: pointer; text-align: left;
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  background: var(--paper); color: var(--ink);
+}
+.drone-console .helpbtn:hover { background: var(--paper-raised); border-color: var(--action); }
+.drone-console .helpbtn span { color: var(--action); font-size: 0.95rem; }
+
+/* ---------- guide dialog (first-visit + re-openable) ---------- */
+.guide-backdrop {
+  position: fixed; inset: 0; z-index: 4000;
+  background: oklch(0.2 0.02 160 / 0.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; overflow-y: auto;
+}
+.guide-dialog {
+  position: relative; width: min(680px, 100%); max-height: 88vh; overflow-y: auto;
+  background: var(--paper, #fff); color: var(--ink, #1a1a1a);
+  border-radius: 14px; padding: 28px 30px;
+  box-shadow: 0 24px 70px oklch(0.2 0.02 160 / 0.35);
+}
+.guide-dialog h2 { font-size: 1.35rem; font-weight: 800; margin: 0 0 6px; }
+.guide-dialog h3 { font-size: 1.02rem; font-weight: 700; margin: 0 0 6px; }
+.guide-intro { color: var(--ink-soft); line-height: 1.5; margin: 0 0 18px; font-size: 0.9rem; }
+.guide-topic { padding: 16px 0; border-top: 1px solid var(--hairline); }
+.guide-summary { line-height: 1.5; margin: 0 0 10px; }
+.guide-points { margin: 0 0 10px; padding-left: 18px; }
+.guide-points li { line-height: 1.45; margin: 4px 0; color: var(--ink); }
+.guide-detail summary {
+  cursor: pointer; font-size: 0.82rem; font-weight: 700; color: var(--action);
+  list-style: none; padding: 2px 0;
+}
+.guide-detail summary::-webkit-details-marker { display: none; }
+.guide-detail summary::before { content: "▸ "; }
+.guide-detail[open] summary::before { content: "▾ "; }
+.guide-detail p { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.55; margin: 8px 0 0; }
+.guide-actions {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--hairline);
+}
+.guide-actions .btn { width: auto; padding: 9px 18px; }
+.guide-link { font-size: 0.86rem; font-weight: 600; color: var(--action); text-decoration: none; }
+.guide-link:hover { text-decoration: underline; }
+
+/* ---------- full guide page (/drone/guide) ---------- */
+.guide-page-root { min-height: 100vh; background: var(--paper-raised, #f6f4ef); overflow-y: auto; }
+.guide-page { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; color: var(--ink); }
+.guide-page-head { margin-bottom: 12px; }
+.guide-back { font-size: 0.85rem; font-weight: 600; color: var(--action); text-decoration: none; }
+.guide-back:hover { text-decoration: underline; }
+.guide-page h1 { font-size: 1.7rem; font-weight: 800; margin: 14px 0 8px; }
+.guide-page-topic { padding: 26px 0; border-top: 1px solid var(--hairline); }
+.guide-page-topic h2 { font-size: 1.25rem; font-weight: 800; margin: 0 0 8px; }
+.guide-methodology {
+  margin-top: 12px; padding: 14px 16px; border-radius: 10px;
+  background: var(--paper); border: 1px solid var(--hairline);
+}
+.guide-methodology-label {
+  display: block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.09em; color: var(--ink-soft); margin-bottom: 6px;
+}
+.guide-methodology p { margin: 0; line-height: 1.6; color: var(--ink); font-size: 0.92rem; }
+.guide-page-foot { margin-top: 32px; }
+.guide-page-foot .btn { width: auto; display: inline-block; padding: 10px 22px; }
+
+/* inline info tooltip */
+.drone-console .infotip { position: relative; display: inline-flex; margin-left: 5px; }
+.drone-console .infotip-btn {
+  font: inherit;
+  font-size: 0.72rem;
+  line-height: 1;
+  width: 16px; height: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; border-radius: 50%;
+  background: var(--surface, rgba(0,0,0,0.06));
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.drone-console .infotip-btn:hover { color: var(--ink); }
+.drone-console .infotip-pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 240px;
+  z-index: 1300;
+  padding: 8px 10px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 24px oklch(0.3 0.02 160 / 0.2);
+}
+
+/* geosearch */
+.drone-console .geosearch-box { position: relative; }
+.drone-console .geosearch-box input {
+  width: 100%; font: inherit; padding: 8px 10px;
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  background: var(--paper); color: var(--ink);
+}
+.drone-console .geosearch-list {
+  list-style: none; margin: 4px 0 0; padding: 4px;
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 1300;
+  background: var(--paper-raised);
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  box-shadow: 0 6px 24px oklch(0.3 0.02 160 / 0.2);
+  max-height: 240px; overflow-y: auto;
+}
+.drone-console .geosearch-opt {
+  width: 100%; text-align: left; font: inherit; font-size: 0.82rem;
+  padding: 7px 9px; border: none; border-radius: 8px;
+  background: transparent; color: var(--ink); cursor: pointer;
+}
+.drone-console .geosearch-opt:hover { background: var(--paper); }
+
+/* runs list: row wrapper + delete + empty badge */
+.drone-console .runrow { display: flex; align-items: stretch; gap: 6px; margin-bottom: 6px; }
+.drone-console .runrow .runitem { flex: 1; margin-bottom: 0; }
+.drone-console .runitem-del {
+  flex: none; width: 34px;
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  background: transparent; cursor: pointer; color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+.drone-console .runitem-del:hover { background: var(--paper); color: var(--z-prohibited); border-color: var(--z-prohibited); }
+.drone-console .rbadge {
+  margin-left: 6px; font-size: 0.64rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 1px 5px; border-radius: 6px;
+  background: var(--surface, rgba(0,0,0,0.06)); color: var(--ink-soft);
+  vertical-align: middle;
+}
+
+/* export current view */
+.drone-console .exportrow {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 8px;
+}
+.drone-console .exportlabel { font-size: 0.8rem; color: var(--ink-soft); }
+.drone-console .exportrow select {
+  font: inherit; font-size: 0.82rem; padding: 6px 8px;
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  background: var(--paper); color: var(--ink); min-width: 8.5rem;
+}
+.drone-console .exportrow select:disabled { opacity: 0.5; cursor: not-allowed; }
+.drone-console .exportrow--check { justify-content: flex-start; gap: 8px; }
+.drone-console .exportrow--check label { cursor: pointer; }
