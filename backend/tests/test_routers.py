@@ -42,6 +42,22 @@ def mock_clip_result():
         )
     )
 
+def test_cors_exposes_download_and_manifest_headers():
+    """The frontend is a different origin, so these response headers are only
+    readable in the browser when CORS explicitly exposes them (allow_headers
+    governs request headers, not response exposure). Regression guard for the
+    export download filename + poster manifest headers."""
+    from fastapi.middleware.cors import CORSMiddleware
+
+    cors = next(
+        (m for m in app.user_middleware if m.cls is CORSMiddleware), None
+    )
+    assert cors is not None, "CORSMiddleware not configured"
+    exposed = cors.kwargs.get("expose_headers", [])
+    assert "Content-Disposition" in exposed
+    assert "X-Export-Manifest" in exposed
+
+
 def test_preview_endpoint(client, mock_clip_result):
     with patch("app.routers.preview.ClippingService.clip_rivers", new_callable=AsyncMock) as mock_clip, \
          patch("app.routers.preview.SVGRenderer") as mock_renderer_class:
