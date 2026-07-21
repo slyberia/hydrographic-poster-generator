@@ -458,6 +458,22 @@ async def results_geojson(
     }
 
 
+async def region_boundary_geojson(pool: asyncpg.Pool, run_id: str) -> Optional[Dict[str, Any]]:
+    """The study-area outline (Region 4) for a run's region, as a GeoJSON
+    geometry — used as an optional overlay line on exports. Returns None if the
+    run or its boundary is unknown."""
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow("""
+            SELECT ST_AsGeoJSON(b.geom) AS geometry
+            FROM mcda_model_runs r
+            JOIN mcda_region_boundary b USING (region_id)
+            WHERE r.run_id = $1::uuid
+        """, run_id)
+    if not row or not row["geometry"]:
+        return None
+    return json.loads(row["geometry"])
+
+
 # =============================================================================
 # Phase C: Sensitivity Analysis (OAT weight perturbation sweeps)
 # =============================================================================

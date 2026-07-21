@@ -170,7 +170,7 @@ export default function Page() {
   );
 
   const exportView = useCallback(
-    async (format: "png" | "svg" | "pdf", scale: number) => {
+    async (format: "png" | "svg" | "pdf", scale: number, showBoundary: boolean) => {
       if (!activeRun) {
         setStatus({ text: "Select a run before exporting.", error: true });
         return;
@@ -197,6 +197,7 @@ export default function Page() {
           display_mode: useVolatility ? "volatility" : "zones",
           sweep_id: useVolatility ? sensitivity.status!.sweep_id : null,
           hidden_zones: useVolatility ? null : Array.from(hiddenZones),
+          show_boundary: showBoundary,
         });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");

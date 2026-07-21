@@ -106,6 +106,7 @@ export interface ExportViewParams {
   display_mode?: "zones" | "volatility";
   sweep_id?: string | null;
   hidden_zones?: string[] | null;
+  show_boundary?: boolean;
 }
 
 /** A read of the live map's current extent — the whole export contract. */

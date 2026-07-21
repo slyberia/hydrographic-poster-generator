@@ -816,3 +816,5 @@ body {
   background: var(--paper); color: var(--ink); min-width: 8.5rem;
 }
 .drone-console .exportrow select:disabled { opacity: 0.5; cursor: not-allowed; }
+.drone-console .exportrow--check { justify-content: flex-start; gap: 8px; }
+.drone-console .exportrow--check label { cursor: pointer; }

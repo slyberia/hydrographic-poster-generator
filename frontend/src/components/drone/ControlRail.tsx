@@ -81,7 +81,7 @@ export default function ControlRail(props: {
   onTriggerSensitivity: (delta: number) => void;
   onDisplayMode: (mode: MapDisplayMode) => void;
   onGeoPick: (pick: { lat: number; lon: number; h3: string; label: string }) => void;
-  onExport: (format: "png" | "svg" | "pdf", scale: number) => void;
+  onExport: (format: "png" | "svg" | "pdf", scale: number, showBoundary: boolean) => void;
   exporting: boolean;
 }) {
   const { factors, runs, activeRun, stats, busy, status } = props;
@@ -89,6 +89,7 @@ export default function ControlRail(props: {
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [exportFormat, setExportFormat] = useState<"png" | "svg" | "pdf">("png");
   const [exportScale, setExportScale] = useState(2);
+  const [showBoundary, setShowBoundary] = useState(false);
 
   const WEIGHT_MAX = 10;
 
@@ -287,10 +288,21 @@ export default function ControlRail(props: {
             <option value={4}>4× (poster)</option>
           </select>
         </div>
+        <div className="exportrow exportrow--check">
+          <input
+            type="checkbox"
+            id="export-boundary"
+            checked={showBoundary}
+            onChange={(e) => setShowBoundary(e.target.checked)}
+          />
+          <label htmlFor="export-boundary" className="exportlabel">
+            Include Region 4 outline
+          </label>
+        </div>
         <button
           className="btn"
           disabled={!activeRunComplete || busy || props.exporting}
-          onClick={() => props.onExport(exportFormat, exportScale)}
+          onClick={() => props.onExport(exportFormat, exportScale, showBoundary)}
           title={
             !activeRunComplete
               ? "Select a completed run to export"

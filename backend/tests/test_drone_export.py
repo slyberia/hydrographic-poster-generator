@@ -108,6 +108,19 @@ def test_build_svg_volatility_mode_uses_category_colour():
     assert e.CONSTRAINT_LOCKED_FILL in svg2
 
 
+def test_build_svg_boundary_overlay_is_stroked_not_filled():
+    vp, z = _vp_zoom()
+    boundary = {"type": "MultiPolygon", "coordinates": [[[
+        [-58.12, 6.58], [-58.07, 6.58], [-58.07, 6.63],
+        [-58.12, 6.63], [-58.12, 6.58],
+    ]]]}
+    with_b, _, _ = e.build_svg(vp, z, {}, [_HEX], "zones", None, set(), False, boundary=boundary)
+    without_b, _, _ = e.build_svg(vp, z, {}, [_HEX], "zones", None, set(), False)
+    assert e.BOUNDARY_STROKE in with_b
+    assert 'fill="none"' in with_b       # outline only, no fill over the map
+    assert e.BOUNDARY_STROKE not in without_b  # off by default
+
+
 def test_build_svg_degrades_without_tiles():
     # No tiles fetched (e.g. CDN unreachable) still yields a valid image with a
     # paper background rather than failing the export.

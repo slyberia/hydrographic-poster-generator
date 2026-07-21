@@ -35,7 +35,7 @@ export const OPERATION_INFO = {
   export: {
     title: "Export current view",
     body:
-      "Renders exactly what’s framed in the map right now — the current pan/zoom, the active Zones or Volatility colouring, and any hidden zones — as a high-resolution image. Pan and zoom to the area you want (a neighbourhood or the whole region), then export. Basemap and attribution are included; a transparent hex-only asset is a future option.",
+      "Renders exactly what’s framed in the map right now — the current pan/zoom, the active Zones or Volatility colouring, and any hidden zones — as a high-resolution image. Pan and zoom to the area you want (a neighbourhood or the whole region), then export. Basemap and attribution are included, and you can optionally overlay the Region 4 study-area outline.",
   },
 } as const;
 

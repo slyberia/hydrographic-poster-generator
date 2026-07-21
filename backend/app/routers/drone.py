@@ -38,6 +38,7 @@ class ExportViewRequest(BaseModel):
     display_mode: Literal["zones", "volatility"] = "zones"
     sweep_id: Optional[str] = Field(None, description="Required when display_mode='volatility'")
     hidden_zones: Optional[List[str]] = None
+    show_boundary: bool = Field(False, description="Overlay the Region-4 study-area outline")
 
 
 # ---- Sensitivity models ----
@@ -192,6 +193,7 @@ async def export_view(
             display_mode=body.display_mode,
             sweep_id=body.sweep_id,
             hidden_zones=set(body.hidden_zones) if body.hidden_zones else None,
+            show_boundary=body.show_boundary,
         )
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc))

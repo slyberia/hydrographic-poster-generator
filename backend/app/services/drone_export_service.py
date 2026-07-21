@@ -47,6 +47,10 @@ VOLATILITY_FILL: Dict[str, str] = {
 CONSTRAINT_LOCKED_FILL = "#c8c8c8"
 FALLBACK_FILL = "#999999"
 
+# Region-4 study-area outline (optional overlay). Dark ink, no fill.
+BOUNDARY_STROKE = "#1a1a1a"
+BOUNDARY_STROKE_OPACITY = 0.85
+
 # Match MapView.styleFor: fillOpacity 0.55, stroke = fill, weight 0.3, opacity 0.6.
 FILL_OPACITY = 0.55
 STROKE_OPACITY = 0.6
@@ -192,6 +196,7 @@ def build_svg(
     volatility_by_h3: Optional[Dict[str, str]],
     hidden_zones: Optional[set],
     retina: bool,
+    boundary: Optional[Dict[str, Any]] = None,
 ) -> Tuple[str, int, int]:
     """Compose the export SVG in zoom-z pixel space. Returns (svg, w_px, h_px)."""
     x_tl = _lon_to_px(vp.west, zoom)
@@ -248,6 +253,17 @@ def build_svg(
                 f'stroke="{fill}" stroke-opacity="{STROKE_OPACITY}" '
                 f'stroke-width="{STROKE_WIDTH}"/>'
             )
+    # Region-4 study-area outline (optional) — over the hexes, still clipped.
+    if boundary:
+        bw = max(1.0, canvas_h * 0.004)
+        for ring in _polygon_rings(boundary):
+            pts = " ".join(f"{cx:.2f},{cy:.2f}" for cx, cy in (px(lon, lat) for lon, lat in ring))
+            parts.append(
+                f'<polygon points="{pts}" fill="none" stroke="{BOUNDARY_STROKE}" '
+                f'stroke-opacity="{BOUNDARY_STROKE_OPACITY}" stroke-width="{bw:.2f}" '
+                f'stroke-linejoin="round"/>'
+            )
+
     parts.append('</g>')  # end clip
 
     # Attribution (required by CARTO/OSM ToS) — bottom-right, on a legibility plate.
@@ -282,6 +298,7 @@ async def render_export(
     display_mode: str,
     sweep_id: Optional[str],
     hidden_zones: Optional[set],
+    show_boundary: bool = False,
 ) -> Tuple[bytes, str, str]:
     """Fetch geometry + tiles for the viewport and render to bytes.
 
@@ -310,10 +327,13 @@ async def render_export(
         records = await drone_service.get_volatility_data(pool, run_id, sweep_id)
         volatility_by_h3 = {r["h3_index"]: r["volatility_category"] for r in records}
 
+    boundary = await drone_service.region_boundary_geojson(pool, run_id) if show_boundary else None
+
     tiles = await _fetch_tiles(vp, zoom, retina)
 
     svg, w_px, h_px = build_svg(
-        vp, zoom, tiles, features, display_mode, volatility_by_h3, hidden_zones, retina
+        vp, zoom, tiles, features, display_mode, volatility_by_h3, hidden_zones, retina,
+        boundary=boundary,
     )
 
     filename = f"drone_zoning_{display_mode}.{fmt}"
