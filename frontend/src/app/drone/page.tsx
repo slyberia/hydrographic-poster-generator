@@ -7,8 +7,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone, type ViewportSnapshot } from "@/lib/droneApi";
 import ControlRail from "@/components/drone/ControlRail";
 import ReportDrawer from "@/components/drone/ReportDrawer";
+import GuideDialog from "@/components/drone/GuideDialog";
 import { MapDisplayMode } from "@/components/drone/SensitivityPanel";
 import { useSensitivity } from "@/lib/useSensitivity";
+
+const GUIDE_SEEN_KEY = "drone.guideSeen.v1";
 
 // Leaflet touches `window`; render map client-side only.
 const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
@@ -26,6 +29,7 @@ export default function Page() {
   const [displayMode, setDisplayMode] = useState<MapDisplayMode>("zones");
   const [focusPoint, setFocusPoint] = useState<{ lat: number; lon: number } | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
 
   // Monotonic guard: only the most recent selectRun may write results, so
   // fast run switches can't render an earlier response over a later one.
@@ -36,6 +40,27 @@ export default function Page() {
   const viewportRef = useRef<(() => ViewportSnapshot) | null>(null);
 
   const sensitivity = useSensitivity(activeRun);
+
+  // First visit: auto-open the plain-language guide once, then remember it.
+  // Read in an effect (not render) so SSR and first client render agree.
+  useEffect(() => {
+    try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (!localStorage.getItem(GUIDE_SEEN_KEY)) setGuideOpen(true);
+    } catch {
+      /* storage blocked — skip the auto-open, the button still works */
+    }
+  }, []);
+
+  const openGuide = useCallback(() => setGuideOpen(true), []);
+  const closeGuide = useCallback(() => {
+    setGuideOpen(false);
+    try {
+      localStorage.setItem(GUIDE_SEEN_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const refreshConfig = useCallback(async () => {
     try {
@@ -235,8 +260,10 @@ export default function Page() {
 
   return (
     <div className="drone-console h-full w-full">
+      <GuideDialog open={guideOpen} onClose={closeGuide} />
       <div className="shell">
         <ControlRail
+          onOpenGuide={openGuide}
           factors={factors}
           runs={runs}
           activeRun={activeRun}

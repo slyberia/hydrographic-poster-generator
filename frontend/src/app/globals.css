@@ -717,23 +717,73 @@ body {
   .drone-console .loadingbar-fill { transition: none; }
 }
 
-/* help disclosure */
-.drone-console .helppanel {
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  background: var(--paper);
-  padding: 4px 12px;
+/* "How this console works" button (opens the guide dialog) */
+.drone-console .helpbtn {
+  display: flex; align-items: center; gap: 7px;
+  width: 100%; font: inherit; font-size: 0.82rem; font-weight: 600;
+  padding: 9px 12px; cursor: pointer; text-align: left;
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  background: var(--paper); color: var(--ink);
 }
-.drone-console .helppanel summary {
-  cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 6px 0;
-  color: var(--ink);
+.drone-console .helpbtn:hover { background: var(--paper-raised); border-color: var(--action); }
+.drone-console .helpbtn span { color: var(--action); font-size: 0.95rem; }
+
+/* ---------- guide dialog (first-visit + re-openable) ---------- */
+.guide-backdrop {
+  position: fixed; inset: 0; z-index: 4000;
+  background: oklch(0.2 0.02 160 / 0.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; overflow-y: auto;
 }
-.drone-console .helppanel-body { font-size: 0.8rem; color: var(--ink-soft); padding-bottom: 8px; }
-.drone-console .helppanel-body p { margin: 6px 0; line-height: 1.45; }
-.drone-console .helppanel-body strong { color: var(--ink); }
+.guide-dialog {
+  position: relative; width: min(680px, 100%); max-height: 88vh; overflow-y: auto;
+  background: var(--paper, #fff); color: var(--ink, #1a1a1a);
+  border-radius: 14px; padding: 28px 30px;
+  box-shadow: 0 24px 70px oklch(0.2 0.02 160 / 0.35);
+}
+.guide-dialog h2 { font-size: 1.35rem; font-weight: 800; margin: 0 0 6px; }
+.guide-dialog h3 { font-size: 1.02rem; font-weight: 700; margin: 0 0 6px; }
+.guide-intro { color: var(--ink-soft); line-height: 1.5; margin: 0 0 18px; font-size: 0.9rem; }
+.guide-topic { padding: 16px 0; border-top: 1px solid var(--hairline); }
+.guide-summary { line-height: 1.5; margin: 0 0 10px; }
+.guide-points { margin: 0 0 10px; padding-left: 18px; }
+.guide-points li { line-height: 1.45; margin: 4px 0; color: var(--ink); }
+.guide-detail summary {
+  cursor: pointer; font-size: 0.82rem; font-weight: 700; color: var(--action);
+  list-style: none; padding: 2px 0;
+}
+.guide-detail summary::-webkit-details-marker { display: none; }
+.guide-detail summary::before { content: "▸ "; }
+.guide-detail[open] summary::before { content: "▾ "; }
+.guide-detail p { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.55; margin: 8px 0 0; }
+.guide-actions {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--hairline);
+}
+.guide-actions .btn { width: auto; padding: 9px 18px; }
+.guide-link { font-size: 0.86rem; font-weight: 600; color: var(--action); text-decoration: none; }
+.guide-link:hover { text-decoration: underline; }
+
+/* ---------- full guide page (/drone/guide) ---------- */
+.guide-page-root { min-height: 100vh; background: var(--paper-raised, #f6f4ef); overflow-y: auto; }
+.guide-page { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; color: var(--ink); }
+.guide-page-head { margin-bottom: 12px; }
+.guide-back { font-size: 0.85rem; font-weight: 600; color: var(--action); text-decoration: none; }
+.guide-back:hover { text-decoration: underline; }
+.guide-page h1 { font-size: 1.7rem; font-weight: 800; margin: 14px 0 8px; }
+.guide-page-topic { padding: 26px 0; border-top: 1px solid var(--hairline); }
+.guide-page-topic h2 { font-size: 1.25rem; font-weight: 800; margin: 0 0 8px; }
+.guide-methodology {
+  margin-top: 12px; padding: 14px 16px; border-radius: 10px;
+  background: var(--paper); border: 1px solid var(--hairline);
+}
+.guide-methodology-label {
+  display: block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.09em; color: var(--ink-soft); margin-bottom: 6px;
+}
+.guide-methodology p { margin: 0; line-height: 1.6; color: var(--ink); font-size: 0.92rem; }
+.guide-page-foot { margin-top: 32px; }
+.guide-page-foot .btn { width: auto; display: inline-block; padding: 10px 22px; }
 
 /* inline info tooltip */
 .drone-console .infotip { position: relative; display: inline-flex; margin-left: 5px; }

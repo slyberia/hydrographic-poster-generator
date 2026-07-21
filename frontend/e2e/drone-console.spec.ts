@@ -14,6 +14,9 @@ import { installMockBackend, MockState } from "./mockBackend";
 
 async function openConsole(page: Page): Promise<MockState> {
   const state = await installMockBackend(page);
+  // Mark the first-visit guide as already seen so its modal doesn't overlay the
+  // console during the functional tests (first-visit behaviour has its own test).
+  await page.addInitScript(() => localStorage.setItem("drone.guideSeen.v1", "1"));
   await page.goto("/drone");
   // Loaded = zone strip rendered from run stats.
   await expect(page.locator(".zonestrip-row")).toHaveCount(4);
@@ -60,6 +63,30 @@ test("QA-2: trigger sweep — progress advances, sidebar unchanged", async ({ pa
   // Sidebar never fills with sweep children (client renders /runs verbatim;
   // server-side filtering is covered by backend test_list_runs_excludes_children).
   await expect(page.locator(".runitem")).toHaveCount(2);
+});
+
+test("QA-1b: first-visit guide dialog auto-opens once, dismiss persists", async ({ page }) => {
+  await installMockBackend(page);
+  // No guideSeen flag set → the dialog should auto-open on first load.
+  await page.goto("/drone");
+  const dialog = page.getByRole("dialog", { name: /How this console works/i });
+  await expect(dialog).toBeVisible();
+  // Layered content: both core topics and a "more detail" disclosure present.
+  await expect(dialog.getByRole("heading", { name: /What is a Zoning Model\?/i })).toBeVisible();
+  await expect(dialog.getByRole("heading", { name: /What is a Sensitivity Analysis\?/i })).toBeVisible();
+  await expect(dialog.getByText("More detail").first()).toBeVisible();
+
+  await dialog.getByRole("button", { name: "Got it" }).click();
+  await expect(dialog).toHaveCount(0);
+
+  // Reload: the flag persists, so it does not auto-open again.
+  await page.reload();
+  await expect(page.locator(".zonestrip-row")).toHaveCount(4);
+  await expect(page.getByRole("dialog", { name: /How this console works/i })).toHaveCount(0);
+
+  // …but the rail button re-opens it on demand.
+  await page.getByRole("button", { name: /How this console works/i }).click();
+  await expect(page.getByRole("dialog", { name: /How this console works/i })).toBeVisible();
 });
 
 test("QA-3: no duplicate trigger while running", async ({ page }) => {
@@ -164,7 +191,9 @@ test("QA-9: backend down — error surfaces, console stays usable", async ({ pag
   // Recoverable: re-trigger offered, rest of the console still interactive.
   state.failTrigger = false;
   await expect(page.getByRole("button", { name: "Re-run sensitivity analysis" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Run zoning model" })).toBeEnabled();
+  // exact: the run-action ⓘ tooltip ("What Run zoning model does") also
+  // substring-matches "Run zoning model"; we mean the run button itself.
+  await expect(page.getByRole("button", { name: "Run zoning model", exact: true })).toBeEnabled();
   await page.getByRole("button", { name: "Re-run sensitivity analysis" }).click();
   await expect(completeLine(page)).toBeVisible({ timeout: 15_000 });
 });

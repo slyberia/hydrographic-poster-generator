@@ -9,7 +9,6 @@ import { ZONE_CSS, ZONE_LABELS } from "@/lib/zoneTheme";
 import SensitivityPanel, { MapDisplayMode } from "@/components/drone/SensitivityPanel";
 import { SweepPhase } from "@/lib/useSensitivity";
 import InfoTip from "@/components/drone/InfoTip";
-import HelpPanel from "@/components/drone/HelpPanel";
 import GeoSearch from "@/components/drone/GeoSearch";
 import { FACTOR_INFO, OPERATION_INFO, WEIGHTING_INFO } from "@/lib/droneInfo";
 
@@ -83,6 +82,7 @@ export default function ControlRail(props: {
   onGeoPick: (pick: { lat: number; lon: number; h3: string; label: string }) => void;
   onExport: (format: "png" | "svg" | "pdf", scale: number, showBoundary: boolean) => void;
   exporting: boolean;
+  onOpenGuide: () => void;
 }) {
   const { factors, runs, activeRun, stats, busy, status } = props;
   const [label, setLabel] = useState("");
@@ -133,7 +133,9 @@ export default function ControlRail(props: {
         </h1>
       </header>
 
-      <HelpPanel />
+      <button type="button" className="helpbtn" onClick={props.onOpenGuide}>
+        <span aria-hidden="true">ⓘ</span> How this console works
+      </button>
 
       <ZoneStrip
         stats={stats}
