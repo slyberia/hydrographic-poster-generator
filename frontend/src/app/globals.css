@@ -874,3 +874,10 @@ body {
 .drone-console .exportrow select:disabled { opacity: 0.5; cursor: not-allowed; }
 .drone-console .exportrow--check { justify-content: flex-start; gap: 8px; }
 .drone-console .exportrow--check label { cursor: pointer; }
+.drone-console .exportname-label { display: block; margin: 2px 0 5px; }
+.drone-console .exporthint { color: var(--ink-soft); font-weight: 400; }
+.drone-console .exportname-input {
+  width: 100%; font: inherit; font-size: 0.82rem; padding: 7px 9px;
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  background: var(--paper); color: var(--ink); margin-bottom: 10px;
+}

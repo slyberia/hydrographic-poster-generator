@@ -80,7 +80,12 @@ export default function ControlRail(props: {
   onTriggerSensitivity: (delta: number) => void;
   onDisplayMode: (mode: MapDisplayMode) => void;
   onGeoPick: (pick: { lat: number; lon: number; h3: string; label: string }) => void;
-  onExport: (format: "png" | "svg" | "pdf", scale: number, showBoundary: boolean) => void;
+  onExport: (
+    format: "png" | "svg" | "pdf",
+    scale: number,
+    showBoundary: boolean,
+    name: string,
+  ) => void;
   exporting: boolean;
   onOpenGuide: () => void;
 }) {
@@ -90,6 +95,7 @@ export default function ControlRail(props: {
   const [exportFormat, setExportFormat] = useState<"png" | "svg" | "pdf">("png");
   const [exportScale, setExportScale] = useState(2);
   const [showBoundary, setShowBoundary] = useState(false);
+  const [exportName, setExportName] = useState("");
 
   const WEIGHT_MAX = 10;
 
@@ -308,10 +314,22 @@ export default function ControlRail(props: {
             Include Region 4 outline
           </label>
         </div>
+        <label htmlFor="export-name" className="exportlabel exportname-label">
+          File name <span className="exporthint">(optional)</span>
+        </label>
+        <input
+          type="text"
+          id="export-name"
+          className="exportname-input"
+          placeholder="e.g. georgetown-north-restricted"
+          value={exportName}
+          maxLength={80}
+          onChange={(e) => setExportName(e.target.value)}
+        />
         <button
           className="btn"
           disabled={!activeRunComplete || busy || props.exporting}
-          onClick={() => props.onExport(exportFormat, exportScale, showBoundary)}
+          onClick={() => props.onExport(exportFormat, exportScale, showBoundary, exportName)}
           title={
             !activeRunComplete
               ? "Select a completed run to export"

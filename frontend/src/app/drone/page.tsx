@@ -195,7 +195,12 @@ export default function Page() {
   );
 
   const exportView = useCallback(
-    async (format: "png" | "svg" | "pdf", scale: number, showBoundary: boolean) => {
+    async (
+      format: "png" | "svg" | "pdf",
+      scale: number,
+      showBoundary: boolean,
+      name: string,
+    ) => {
       if (!activeRun) {
         setStatus({ text: "Select a run before exporting.", error: true });
         return;
@@ -224,15 +229,28 @@ export default function Page() {
           hidden_zones: useVolatility ? null : Array.from(hiddenZones),
           show_boundary: showBoundary,
         });
+        // A user-supplied name overrides the server filename for the download.
+        // Sanitise to a safe base and force the correct extension.
+        const downloadName = (() => {
+          const clean = name
+            .trim()
+            .replace(/\.[a-z0-9]+$/i, "") // drop any extension the user typed
+            .replace(/[^a-z0-9 _-]+/gi, "-") // strip path/illegal chars
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-+|-+$/g, "")
+            .slice(0, 80);
+          return clean ? `${clean}.${format}` : filename;
+        })();
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = filename;
+        a.download = downloadName;
         document.body.appendChild(a);
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
-        setStatus({ text: `Exported ${filename}.` });
+        setStatus({ text: `Exported ${downloadName}.` });
       } catch (e) {
         setStatus({ text: `Export failed — ${String(e)}`, error: true });
       } finally {
