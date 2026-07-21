@@ -56,6 +56,16 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    # allow_headers governs REQUEST headers; browsers can only READ response
+    # headers listed here cross-origin. Without this the frontend (a different
+    # Cloud Run domain) cannot read the export filename or the poster manifest.
+    expose_headers=[
+        "Content-Disposition",   # export download filename (drone + poster)
+        "X-River-Count",         # poster QA signal
+        "X-Geography-Name",      # poster metadata
+        "X-Export-Manifest",     # poster export sidecar
+        "X-Feature-Summary",     # poster feature manifest
+    ],
 )
 
 # Exception Handlers
