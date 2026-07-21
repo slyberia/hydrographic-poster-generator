@@ -11,7 +11,7 @@ import { SweepPhase } from "@/lib/useSensitivity";
 import InfoTip from "@/components/drone/InfoTip";
 import HelpPanel from "@/components/drone/HelpPanel";
 import GeoSearch from "@/components/drone/GeoSearch";
-import { FACTOR_INFO, OPERATION_INFO } from "@/lib/droneInfo";
+import { FACTOR_INFO, OPERATION_INFO, WEIGHTING_INFO } from "@/lib/droneInfo";
 
 function ZoneStrip(props: {
   stats: RunStats | null;
@@ -170,7 +170,14 @@ export default function ControlRail(props: {
       </section>
 
       <section aria-label="Factor weights">
-        <p className="sectionlabel">Factor weights (AHP · provisional)</p>
+        <p className="sectionlabel">
+          Factor weights (AHP · provisional)
+          <InfoTip
+            text={`${WEIGHTING_INFO.scale} ${WEIGHTING_INFO.normalisation}`}
+            label="How factor weights and normalisation work"
+          />
+        </p>
+        <p className="fieldhint">0–10 scale · higher = more emphasis · shown normalised to a 100% share</p>
         {factors.map((f) => (
           <div className="weightrow" key={f.factor_key}>
             <div>
