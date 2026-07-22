@@ -1,0 +1,400 @@
+# Track A — Production Architecture: Implementation Plan & Execution Guide
+
+> This document governs **Track A only** (Production Architecture). Track B (Product
+> Experience) is out of scope here and is referenced only where it consumes a Track A
+> contract. This document is the source of truth for scope, sequence, and completion
+> for Track A. Do not expand a task because adjacent improvements appear useful.
+
+---
+
+## 1. Operating Directive
+
+Priority order for every Track A decision:
+
+1. Current approved task contract (the `TA-*` contract being executed)
+2. Track A milestone and dependency sequence (§5)
+3. Product objectives (§2)
+4. Follow-up backlog (§13)
+5. General best practices
+
+General best practices must not override an explicit scope decision unless there is an
+immediate **security, data-loss, or destructive-operation** risk. No `TA-*` task begins
+until its contract (§6) is accepted.
+
+---
+
+## 2. Product North Star
+
+- **Product purpose:** A protocol-driven hydrographic poster generator, plus a drone
+  MCDA (multi-criteria decision analysis) suitability console that classifies an H3 hex
+  grid into flight-suitability zones for a study region.
+- **Primary users (Track A relevant):** internal analysts/admins operating the drone
+  console; a future public/read audience consuming *published* authoritative runs.
+- **Primary workflows touched by Track A:** create/execute drone model runs; approve and
+  publish an authoritative run per region; serve published runs to a read surface.
+- **Current maturity & deployment state:** Backend + frontend containerized for Cloud
+  Run via `cloudbuild.yaml`. PR #20 (Supabase RLS lockdown + JWT auth + role-gated drone
+  mutations) is **merged to `main`** but **not verified in production**. No CI. No rate
+  limiting.
+- **Intended outcome of this iteration (Track A):** a coherent, deployable production
+  architecture — verified security posture, an authoritative run lifecycle, reproducible
+  deploys, a migration baseline, CI protection, and rate limiting before any public
+  exposure.
+- **Explicit non-goals (this iteration):** Public Explorer page, landing page, dashboard,
+  console redesign, Region 4 configuration, saved-scenario libraries, multi-tenancy,
+  microservices, Redis/Memorystore, materialized aggregates, a general audit-event
+  platform. (These are Track B or deferred.)
+- **Supported environments/devices:** hosted Supabase Postgres/PostGIS; Cloud Run
+  (`us-central1`); desktop browsers for the internal console. Mobile parity is not a
+  Track A goal.
+- **Constraints:** single client; cost-sensitive (no infra for hypothetical scale);
+  export is CPU-bound single-request work (Cloud Run sized at 2 GiB / concurrency 2,
+  no-CPU-throttling for background sweeps — do not regress this).
+
+Every `TA-*` task must trace to this North Star.
+
+---
+
+## 3. Current-State Record
+
+State vocabulary: *Implemented locally · Committed · In open PR · Merged · Deployed ·
+Verified in production · Deferred.* Never report an earlier state as "done."
+
+| Area | Current state | Evidence | Remaining gap | Dependency |
+|---|---|---|---|---|
+| Supabase Data API / RLS lockdown | Merged | `db/migrations/009_lock_down_data_api.sql`; merged in `cb6c355` | Migration applied + verified against live DB unconfirmed | Live DB access |
+| JWT auth + app roles | Merged | `backend/app/auth.py`; roles viewer/analyst/admin | Deployed behavior unverified | TA-1 |
+| Drone mutation authorization | Merged | `backend/app/routers/drone.py` role deps | Deployed behavior unverified | TA-1 |
+| Run **publication** lifecycle | Not implemented | `mcda_model_runs.status` is *execution* only (`pending/running/complete/failed`), `005_drone_mcda_schema.sql:369` | No authority/publish state; hard-delete cascades (`delete_run`) | TA-2 |
+| Published-run read contract | Not implemented | no endpoint returns "published only" | Needed by Track B Public Explorer | TA-2 |
+| Deployment / client config | Deployed (mechanism exists) | `cloudbuild.yaml`, manual `gcloud builds submit` | No confirmed post-#20 deploy; config verification | TA-1, TA-3 |
+| Migration baseline | Not implemented | raw SQL `db/migrations/001–009` + `scripts/run_migrations.py` | No applied-migration tracking / idempotent baseline | TA-4 |
+| CI | Absent | no `.github/workflows/` | No automated test/build gate | — |
+| Rate limiting | Absent | no `slowapi`/limiter in `backend/` | No abuse protection before public exposure | TA-2 (contract), release |
+| Production verification | Not done | — | Smoke tests against live services | TA-1 |
+
+---
+
+## 4. Workstream Structure (Track A)
+
+Track A spans five workstreams. Independent workstreams must not be combined inside one
+implementation task.
+
+### 4.1 Security & Deployment Verification
+- **Desired outcome:** PR #20's security posture is provably live.
+- **Ordered tasks:** TA-1.
+- **Completion criteria:** RLS/roles observably enforced against deployed services.
+
+### 4.2 Database — Run Lifecycle
+- **Desired outcome:** every run carries an authoritative lifecycle; published runs are
+  protected from silent destruction; a published-only read path exists.
+- **Ordered tasks:** TA-2 (depends on TA-4 decision for migration mechanics; see §5).
+- **Completion criteria:** DoD in TA-2 contract.
+
+### 4.3 Migration Baseline
+- **Desired outcome:** migrations are tracked, ordered, and idempotently re-appliable.
+- **Ordered tasks:** TA-4.
+- **Completion criteria:** applied-state tracking + documented apply procedure.
+
+### 4.4 Testing & CI
+- **Desired outcome:** every new route/schema ships behind an automated gate.
+- **Ordered tasks:** TA-5.
+- **Completion criteria:** CI runs backend tests + frontend build/lint on PRs.
+
+### 4.5 Abuse Protection
+- **Desired outcome:** public-facing read paths cannot be trivially overloaded.
+- **Ordered tasks:** TA-6.
+- **Completion criteria:** rate limiting on unauthenticated/read endpoints; **blocks
+  public release only**, not local UI construction.
+
+---
+
+## 5. Dependency Map
+
+| Task | Must happen after | Must happen before | Can run independently | Blocks release? |
+|---|---|---|---|---|
+| **TA-1** Verify #20 deploy | (nothing) | TA-7 | — | Yes |
+| **TA-4** Migration baseline | (nothing) | TA-2 apply step | Yes (design) | No (but de-risks TA-2) |
+| **TA-2** Run lifecycle | TA-4 (for clean apply) | Track B Explorer/Dashboard | — | No |
+| **TA-5** CI | (nothing) | adding multiple new routes | Yes | No |
+| **TA-6** Rate limiting | TA-2 (published read exists) | Public launch | Partly | Yes (for public) |
+| **TA-3** Deploy/client config | TA-1 | TA-7 | Partly | Yes |
+| **TA-7** Production verification | TA-1, TA-3 | Public launch | — | Yes |
+
+Dependencies reflect technical requirements, not preference. Notable real gates:
+- **TA-2 published-read** is a hard prerequisite for the Track B Public Explorer.
+- **TA-6** need only precede *public exposure*; it must not block local/console work.
+- **TA-5 (CI)** should precede TA-2 landing so the new schema/routes ship protected —
+  recommended ordering: **TA-1 → TA-5 → TA-4 → TA-2 → TA-3 → TA-6 → TA-7.**
+
+---
+
+## 6. Task Contracts
+
+Only `TA-1` and `TA-2` are contract-complete below (the immediate, agreed work). TA-3–TA-7
+carry outline contracts to be expanded to full form when they become the active task
+(per §12, estimates are set only when a contract is approved).
+
+---
+
+### TA-1 — Verify PR #20 security posture in the deployed environment
+
+- **Task ID:** TA-1
+- **Title:** Confirm RLS lockdown + JWT roles are enforced on the live services.
+- **Objective:** Produce evidence that migration `009` is applied to the live database and
+  that role-gated drone mutations reject unauthorized callers on the deployed backend.
+- **Problem solved:** PR #20 is *merged* but its protection is *unverified*; "merged" is
+  not "enforced." A silent gap here undermines every later public-facing decision.
+- **Evidence:** `009_lock_down_data_api.sql`; `backend/app/auth.py`; role deps in
+  `backend/app/routers/drone.py`; `cloudbuild.yaml`.
+- **Included:** read-only live checks — query `anon`/`authenticated` privileges and
+  `rowsecurity` on the listed public tables; call a role-gated endpoint (e.g.
+  `PATCH /drone/config/factors/{key}`) without/with insufficient token and observe
+  401/403; confirm the deployed revision includes `cb6c355`.
+- **Excluded:** any code change, redeploy, new migration, or lifecycle work. If a gap is
+  found, **stop and report** — remediation is a separate contract.
+- **Dependencies:** live DB read access (Supabase MCP or `DATABASE_URL`); deployed backend
+  URL; a test JWT (or confirmation that missing-token path 401s).
+- **Assumptions:** the currently deployed revision is intended to be at/after `cb6c355`.
+- **Implementation approach:** verification only — no repository changes.
+- **Definition of done:** a written verification record stating, per check, PASS/FAIL with
+  the observed value and the DB/deploy state it was observed against.
+- **Verification:** SQL privilege/RLS introspection; 2–3 HTTP probes against the deployed
+  backend.
+- **Deployment requirement:** none (read-only against existing deploy).
+- **Approval gates:** none to *read*; any *remediation* requires a new approved contract.
+- **Stop point:** once every check is recorded. Do not fix findings in this task.
+- **Expected effort:** implementation ~0.5–1.5 h; excludes any wait for credential/access
+  provisioning.
+- **Risk:** Low (read-only).
+- **Rollback:** n/a (no changes).
+
+---
+
+### TA-2 — Authoritative run lifecycle + published-run read contract
+
+- **Task ID:** TA-2
+- **Title:** Give every drone model run a publication lifecycle and a protected published
+  read path.
+- **Objective:** Add `lifecycle_state ∈ {draft, approved, published, archived}` to model
+  runs, enforce valid transitions and a one-published-run-per-region invariant
+  server-side, expose admin approve/publish/archive endpoints, surface lifecycle in run
+  responses, add minimal console badges/actions, and add a viewer-gated published-only
+  read endpoint. Make published runs undestroyable while published (archive-first).
+- **Problem solved:** experimental runs are indistinguishable from authoritative results,
+  and `delete_run` hard-cascades — destroying provenance. No way to serve an authoritative
+  result to a read audience.
+- **Evidence:** `mcda_model_runs` (`005_drone_mcda_schema.sql:362`) has only execution
+  `status`; `delete_run` in `backend/app/services/drone_service.py` cascades via
+  `ON DELETE CASCADE`; sweep-aggregate views in `008_sweep_aggregates.sql` filter
+  `status = 'complete'`.
+- **Included:**
+  - New migration `db/migrations/010_run_lifecycle.sql`:
+    - `ALTER TABLE mcda_model_runs ADD COLUMN lifecycle_state TEXT NOT NULL DEFAULT 'draft'
+      CHECK (lifecycle_state IN ('draft','approved','published','archived'));`
+    - Partial unique index: `CREATE UNIQUE INDEX one_published_per_region ON
+      mcda_model_runs (region_id) WHERE lifecycle_state = 'published';`
+    - A guard so a `published` run cannot be deleted (trigger `BEFORE DELETE`, or enforce
+      in `delete_run`; DB-level preferred for the cascade path).
+  - Transition rules enforced server-side: `draft→approved→published`,
+    `published→archived`, `approved→archived`, `archived→draft` (revive) — reject others
+    with 409.
+  - Admin endpoints (role `admin`): `POST /drone/runs/{run_id}/approve`,
+    `/publish`, `/archive`.
+  - Lifecycle fields added to `list_runs` / `get_run_details` responses.
+  - Viewer-gated read: `GET /drone/runs/published` (and/or `/published/{region_key}`)
+    returning only `lifecycle_state = 'published'`, never draft/archived.
+  - Minimal console: a lifecycle badge per run and approve/publish/archive buttons wired
+    to the new endpoints (existing `ControlRail`/run list; no redesign).
+  - Tests: migration applies cleanly; transition guard (valid + rejected); partial-unique
+    invariant; published-delete guard; published endpoint excludes non-published.
+- **Excluded:** Public Explorer page, landing page, console redesign, dashboard, saved
+  scenarios, full audit-event ledger, Region 4 configuration, rate limiting (TA-6), and
+  any role-UI refinement beyond these lifecycle actions. **Do not modify the execution
+  `status` column** or the `008` views.
+- **Dependencies:** TA-4 recommended first (clean apply/tracking); the auth roles from
+  PR #20 (present).
+- **Assumptions:** `region_id` is the authoritative "study area" key (agreed); "one
+  published per region" is keyed on `region_id`, independent of Region 4 config.
+- **Implementation approach:** additive column + partial index + DB guard; thin endpoint
+  layer reusing existing `drone_service` patterns (mirror the `parent_run_id` convention
+  for filtering). Smallest change that satisfies the invariants in the DB, not the app.
+- **Definition of done:** migration committed **and applied**; transitions enforced
+  server-side (invalid → 409); published read endpoint cannot return draft/archived;
+  published runs cannot be silently deleted or modified into a non-published duplicate;
+  minimal console controls function; tests pass; **separate PR** created; deployed behavior
+  verified.
+- **Verification:** backend unit/integration tests (transition matrix, invariants, read
+  filter); migration validation on a scratch/branch DB; frontend build + a manual console
+  pass on the badges/actions; post-deploy smoke of the published endpoint.
+- **Deployment requirement:** PR + deploy; migration applied to the target DB as an
+  approval-gated step.
+- **Approval gates:** applying the migration to any shared/live database; deploying.
+- **Stop point:** once lifecycle behavior is verified. Record adjacent findings (§13); do
+  not build the Explorer/dashboard.
+- **Expected effort:** implementation ~2–4 h (migration, guards, ~4 endpoints, response
+  plumbing, minimal badges, focused tests); excludes deploy/wait time. Revisit only if the
+  contract changes.
+- **Risk:** Medium — touches a core table and the delete path; mitigated by additive-only
+  schema, DB-level invariants, and not touching `status`/`008` views.
+- **Rollback:** `DROP INDEX one_published_per_region; DROP TRIGGER …; ALTER TABLE
+  mcda_model_runs DROP COLUMN lifecycle_state;` revert endpoints/console via PR revert. No
+  data loss (column is additive; default `draft`).
+
+---
+
+### TA-4 — Migration baseline (outline)
+- **Objective:** applied-migration tracking + documented, idempotent apply procedure over
+  the existing `db/migrations/*.sql` + `scripts/run_migrations.py`.
+- **Included (draft):** a `schema_migrations` tracking table (or adopt a runner that keeps
+  one); make `run_migrations.py` record/skip applied files; document apply order and the
+  live-vs-local procedure.
+- **Excluded:** switching to Alembic/Supabase-migrations wholesale unless justified; no
+  rewrite of existing SQL.
+- **Blocks release:** No. **De-risks TA-2.** Full contract on activation.
+
+### TA-3 — Deployment / client configuration (outline)
+- **Objective:** confirm and document the reproducible deploy path post-#20 (substitutions,
+  secrets `hydro-database-url` / `hydro-admin-api-key`, `_SUPABASE_URL`, publishable key,
+  CORS) so a deploy is repeatable without tribal knowledge.
+- **Excluded:** a generalized client-branding product; new infra. Full contract on
+  activation.
+
+### TA-5 — CI (outline)
+- **Objective:** a `.github/workflows` pipeline running backend tests (`backend/tests`) and
+  frontend build/lint on PRs to `main`.
+- **Excluded:** deploy-on-merge, matrix builds, coverage gates "for completeness." Keep to
+  test + build. Full contract on activation.
+
+### TA-6 — Rate limiting (outline)
+- **Objective:** rate-limit unauthenticated/read endpoints (notably the TA-2 published
+  read and any heavy GeoJSON path) using the smallest viable mechanism (e.g. `slowapi`),
+  no Redis unless measured demand requires it.
+- **Blocks release:** Yes, for public exposure only. Full contract on activation.
+
+### TA-7 — Production verification (outline)
+- **Objective:** post-deploy smoke tests across security, lifecycle, and read paths against
+  live services; record results with the deployed revision.
+- **Depends:** TA-1, TA-3. Full contract on activation.
+
+---
+
+## 7. Execution Protocol (per task)
+
+For each `TA-*` task the executor must:
+1. Restate the active objective and exclusions.
+2. Inspect only the context the objective needs.
+3. Confirm branch, worktree, deployed revision, and DB state before changing anything.
+4. Implement the smallest solution satisfying the contract.
+5. Run verification proportional to blast radius (§11).
+6. Stop at the contract's stop point.
+7. Record adjacent findings in §13 without implementing them.
+8. Report repository / PR / deployment / production states **separately**.
+
+Branch discipline: develop on `claude/recent-pr-repo-review-39oloc` (or the task's
+designated branch); one PR per task (TA-2 DoD requires a *separate* PR).
+
+---
+
+## 8. Change-Control Rule
+
+Classify newly discovered work as **Blocking / Critical / Adjacent / Optional**. Only
+*blocking* work may be added automatically, using the minimum fix. *Critical* (security /
+data-loss / destructive) must be surfaced immediately and, if it changes scope, pause for
+approval. *Adjacent* and *optional* go to §13. Any scope amendment updates the contract,
+estimate, risk, and verification plan before work continues.
+
+---
+
+## 9. Anti-Overengineering Rules (binding for Track A)
+
+No multi-tenancy; no abstractions without demonstrated duplication; no infra for
+hypothetical scale; no opportunistic refactors of unrelated modules; no full UI systems for
+a narrow control (TA-2 console = badges + buttons, not a redesign); no new dependencies
+where existing tools suffice; no "for completeness" states/roles/endpoints; verification
+stays proportional (§11). Prefer reversible, incremental changes matching existing
+repository patterns.
+
+---
+
+## 10. Operational-Drift Controls
+
+Tooling/auth/dependency/environment work is supporting, not the objective. Before any such
+work ask: is it required for the active DoD? Is a connector/tool already available? Can
+verification use the established environment? Will it modify the user's machine, cloud,
+DB, or repo — and does that need approval? If operational work exceeds the task's expected
+effort or crosses an unapproved system boundary (e.g. applying a migration to a shared DB,
+deploying), **stop and report**.
+
+---
+
+## 11. Verification Budget
+
+- **TA-1:** read-only SQL introspection + 2–3 HTTP probes. No suites.
+- **TA-2:** focused backend unit/integration tests (transition matrix, partial-unique
+  invariant, published-delete guard, read-filter); migration validation on a scratch DB;
+  frontend build + manual console pass; one post-deploy smoke.
+- **TA-4/5/6/7:** defined on activation.
+- Do not rerun expensive suites when no relevant code changed; reuse valid results and cite
+  the commit/DB state they were observed against.
+
+---
+
+## 12. Estimation Policy
+
+Estimates cover only approved required scope, separate implementation time from external
+waiting (deploy, credential provisioning), state assumptions, and exclude backlog. They are
+revised only when the contract changes. Do not sum the roadmap into one range. Current
+per-task estimates: **TA-1 ≈ 0.5–1.5 h**, **TA-2 ≈ 2–4 h** (implementation only). TA-3–TA-7
+estimated on activation.
+
+---
+
+## 13. Follow-Up Log
+
+| ID | Finding | Why deferred | Impact | Suggested priority | Dependency |
+|---|---|---|---|---|---|
+| FU-1 | `origin/main` local ref was stale; confirm CI/deploy triggers point at the right `main` | Not needed for TA-1 read checks | Low–Med | Med | — |
+| FU-2 | Drone MCDA subsystem is outside the CLAUDE.md MVP spec | Product decision, not architecture | Med | Med (doc) | — |
+
+*(A follow-up entry is not authorization to implement it.)*
+
+---
+
+## 14. Session Handoff Record
+
+_Update at every interruption/compaction/session end. Read before resuming; do not
+reconstruct the objective from memory._
+
+- **Active task contract:** _none in execution — plan drafted, awaiting task selection._
+- **Branch / commit:** `claude/recent-pr-repo-review-39oloc` @ `cb6c355` (matches
+  `origin/main` after fresh fetch).
+- **Modified / untracked files:** `docs/TRACK_A_IMPLEMENTATION_PLAN.md` (this file).
+- **Work completed:** current-state verified; two design decisions agreed (separate
+  `lifecycle_state`; viewer-gated published read); plan authored.
+- **Work remaining:** execute chosen `TA-*` starting from TA-1 (or TA-5→TA-2 per §5).
+- **Tests run:** none (planning only).
+- **Live DB / cloud changes:** none.
+- **Open PR / deployment state:** none opened this session; PR #20 merged, deploy
+  unverified.
+- **Blockers:** TA-1 needs live DB read access + deployed backend URL + a test token.
+- **Exact next action:** select and open the TA-1 (or TA-5) contract; confirm access.
+- **Explicit exclusions:** no Track B surfaces; no `status`-column changes; no migration
+  applied to a shared DB without approval.
+
+---
+
+## 15. Completion Report (template — one per completed task)
+
+- Objective achieved
+- Concrete changes (files/systems)
+- Verification results (with commit / DB / deploy state observed)
+- Commit, branch, PR state
+- Migration & deployment state
+- Known limitations
+- Deferred findings (→ §13)
+- Rollback information
+- Recommended next approved task
+
+_Do not merge, deploy, modify live data, install system software, or broaden scope unless
+the active task contract explicitly authorizes it._
