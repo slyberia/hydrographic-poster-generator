@@ -12,6 +12,8 @@ import fs from "node:fs";
 
 const sandboxChromium = "/opt/pw-browsers/chromium";
 const executablePath = fs.existsSync(sandboxChromium) ? sandboxChromium : undefined;
+const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000);
+const baseURL = `http://localhost:${port}`;
 
 export default defineConfig({
   testDir: "./e2e",
@@ -20,13 +22,13 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [["list"]],
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL,
     launchOptions: executablePath ? { executablePath } : {},
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
+    command: `npm run dev -- --port ${port}`,
+    url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

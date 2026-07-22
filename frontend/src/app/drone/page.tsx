@@ -4,7 +4,9 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone, type ViewportSnapshot } from "@/lib/droneApi";
+import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 import ControlRail from "@/components/drone/ControlRail";
 import ReportDrawer from "@/components/drone/ReportDrawer";
 import GuideDialog from "@/components/drone/GuideDialog";
@@ -16,7 +18,49 @@ const GUIDE_SEEN_KEY = "drone.guideSeen.v1";
 // Leaflet touches `window`; render map client-side only.
 const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
 
+const CONSOLE_ROLES = new Set(["viewer", "analyst", "admin"]);
+
 export default function Page() {
+  const router = useRouter();
+  const localAuthBypass =
+    !isSupabaseConfigured && process.env.NODE_ENV !== "production";
+  const [authorized, setAuthorized] = useState(localAuthBypass);
+
+  useEffect(() => {
+    if (localAuthBypass) return;
+    const supabase = createClient();
+    void supabase.auth.getUser().then(({ data, error }) => {
+      if (error || !data.user) {
+        router.replace("/login?next=/drone");
+        return;
+      }
+      if (!CONSOLE_ROLES.has(data.user.app_metadata.app_role)) {
+        router.replace("/login?error=role");
+        return;
+      }
+      setAuthorized(true);
+    });
+  }, [localAuthBypass, router]);
+
+  if (!authorized) {
+    return (
+      <main className="grid min-h-screen place-items-center bg-[#f5f5f0] text-sm text-[#53645b]">
+        Checking access…
+      </main>
+    );
+  }
+
+  const signOut = isSupabaseConfigured
+    ? async () => {
+        await createClient().auth.signOut();
+        router.replace("/login");
+      }
+    : undefined;
+
+  return <Console onSignOut={signOut} />;
+}
+
+function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
   const [factors, setFactors] = useState<FactorWeight[]>([]);
   const [runs, setRuns] = useState<RunSummary[]>([]);
   const [activeRun, setActiveRun] = useState<string | null>(null);
@@ -124,19 +168,6 @@ export default function Page() {
       }
     },
     [refreshConfig, selectRun]
-  );
-
-  const saveWeight = useCallback(
-    async (key: string, weight: number) => {
-      try {
-        const updated = await api.patchFactor(key, weight);
-        setFactors(updated);
-        setStatus({ text: `Saved weight for ${key}. Run the model to apply.` });
-      } catch (e) {
-        setStatus({ text: String(e), error: true });
-      }
-    },
-    []
   );
 
   const onCellClick = useCallback(
@@ -282,6 +313,7 @@ export default function Page() {
       <div className="shell">
         <ControlRail
           onOpenGuide={openGuide}
+          onSignOut={onSignOut}
           factors={factors}
           runs={runs}
           activeRun={activeRun}
@@ -294,7 +326,6 @@ export default function Page() {
           sensitivityError={sensitivity.error}
           displayMode={displayMode}
           onRunModel={runModel}
-          onSaveWeight={saveWeight}
           onSelectRun={selectRun}
           onDeleteRun={deleteRun}
           onToggleZone={toggleZone}

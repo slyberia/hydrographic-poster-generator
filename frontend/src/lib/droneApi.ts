@@ -1,5 +1,7 @@
 /** lib/droneApi.ts — typed client for the Drone Zoning FastAPI backend. */
 
+import { createClient } from "@/utils/supabase/client";
+
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 export type Zone = "PROHIBITED" | "RESTRICTED" | "CONDITIONAL" | "SUITABLE";
@@ -119,9 +121,10 @@ function filenameFromDisposition(header: string | null, fallback: string): strin
 }
 
 async function http<T>(path: string, init?: RequestInit): Promise<T> {
+  const authHeaders = await authorizationHeaders();
   const res = await fetch(`${BASE}${path}`, {
     ...init,
-    headers: { "Content-Type": "application/json", ...init?.headers },
+    headers: { "Content-Type": "application/json", ...authHeaders, ...init?.headers },
   });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
@@ -129,6 +132,20 @@ async function http<T>(path: string, init?: RequestInit): Promise<T> {
   }
   if (res.status === 204) return undefined as T; // e.g. DELETE
   return res.json() as Promise<T>;
+}
+
+async function authorizationHeaders(): Promise<Record<string, string>> {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  ) {
+    return {};
+  }
+
+  const { data } = await createClient().auth.getSession();
+  return data.session?.access_token
+    ? { Authorization: `Bearer ${data.session.access_token}` }
+    : {};
 }
 
 export const droneApi = {
@@ -179,9 +196,10 @@ export const droneApi = {
     runId: string,
     params: ExportViewParams
   ): Promise<{ blob: Blob; filename: string }> => {
+    const authHeaders = await authorizationHeaders();
     const res = await fetch(`${BASE}/runs/${runId}/export`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...authHeaders },
       body: JSON.stringify(params),
     });
     if (!res.ok) {

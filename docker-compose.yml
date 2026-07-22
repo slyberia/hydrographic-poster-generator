@@ -13,6 +13,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL to your PostGIS connection string}
       CORS_ORIGINS: http://localhost:3000
+      SUPABASE_URL: ${SUPABASE_URL:-}
       # Local-dev conveniences; both default OFF in production deploys.
       ENABLE_DEBUG_ENDPOINTS: "true"
       ADMIN_API_KEY: ${ADMIN_API_KEY:-local-dev-admin-key}
@@ -24,6 +25,8 @@ services:
         # Inlined into the client bundle at build time; the browser calls
         # this URL directly, so it must be reachable from the host.
         NEXT_PUBLIC_API_URL: http://localhost:8000
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-}
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:-}
     ports:
       - "3000:3000"
     depends_on:
