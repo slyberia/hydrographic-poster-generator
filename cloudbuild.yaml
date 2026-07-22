@@ -40,6 +40,10 @@ substitutions:
   # (deny-all when the env var is absent). Create it before deploying:
   #   printf 'your-key' | gcloud secrets create hydro-admin-api-key --data-file=-
   _ADMIN_KEY_SECRET: hydro-admin-api-key
+  # Public issuer used to verify Supabase Auth JWTs locally in FastAPI.
+  _SUPABASE_URL: https://iyijaywownhftzjwqhzj.supabase.co
+  # Browser-safe value supplied by the build trigger or --substitutions.
+  _SUPABASE_PUBLISHABLE_KEY: ''
 
 steps:
   # ---- 1. Build Backend ----
@@ -88,7 +92,7 @@ steps:
           --no-cpu-throttling \
           --set-secrets=DATABASE_URL=${_DB_SECRET}:latest \
           --set-secrets=ADMIN_API_KEY=${_ADMIN_KEY_SECRET}:latest \
-          --set-env-vars="^@@^CORS_ORIGINS=$$CORS" \
+          --set-env-vars="^@@^CORS_ORIGINS=$$CORS@@SUPABASE_URL=${_SUPABASE_URL}" \
           --allow-unauthenticated
 
   # ---- 4. Discover Backend URL ----
@@ -107,11 +111,18 @@ steps:
     args:
       - '-c'
       - |
+        set -euo pipefail
+        if [ -z '${_SUPABASE_PUBLISHABLE_KEY}' ]; then
+          echo 'Set _SUPABASE_PUBLISHABLE_KEY in the build trigger or --substitutions.' >&2
+          exit 1
+        fi
         BACKEND_URL=$$(cat /workspace/backend_url.txt)
         echo "Using API URL: $$BACKEND_URL"
         docker build \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$BUILD_ID \
           --build-arg NEXT_PUBLIC_API_URL=$$BACKEND_URL \
+          --build-arg NEXT_PUBLIC_SUPABASE_URL=${_SUPABASE_URL} \
+          --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${_SUPABASE_PUBLISHABLE_KEY} \
           frontend
 
   # ---- 6. Push Frontend ----

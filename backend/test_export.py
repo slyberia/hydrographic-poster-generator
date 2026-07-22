@@ -19,6 +19,11 @@ payload = {
     }
 }
 
-res = requests.post("https://hydro-backend-54n4ik523a-uc.a.run.app/export", json=payload)
-print(res.status_code)
-print(res.text[:500])
+if __name__ == "__main__":
+    res = requests.post(
+        "https://hydro-backend-54n4ik523a-uc.a.run.app/export",
+        json=payload,
+        timeout=300,
+    )
+    print(res.status_code)
+    print(res.text[:500])

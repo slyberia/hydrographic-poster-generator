@@ -73,7 +73,6 @@ export default function ControlRail(props: {
   sensitivityError: string | null;
   displayMode: MapDisplayMode;
   onRunModel: (label: string, overrides?: Record<string, number>) => void;
-  onSaveWeight: (key: string, weight: number) => void;
   onSelectRun: (runId: string) => void;
   onDeleteRun: (runId: string) => void;
   onToggleZone: (zone: Zone) => void;
@@ -88,6 +87,7 @@ export default function ControlRail(props: {
   ) => void;
   exporting: boolean;
   onOpenGuide: () => void;
+  onSignOut?: () => Promise<void>;
 }) {
   const { factors, runs, activeRun, stats, busy, status } = props;
   const [label, setLabel] = useState("");
@@ -106,9 +106,8 @@ export default function ControlRail(props: {
 
   const commitWeight = (f: FactorWeight) => {
     const v = parseFloat(draftValue(f));
-    if (!Number.isNaN(v) && v >= 0 && v !== f.raw_weight) {
-      props.onSaveWeight(f.factor_key, clampWeight(v));
-    }
+    const next = Number.isNaN(v) ? f.raw_weight : clampWeight(v);
+    setDrafts((draft) => ({ ...draft, [f.factor_key]: String(next) }));
   };
 
   // Draft weights typed but not yet blurred/saved, so "Run zoning model" uses
@@ -142,6 +141,11 @@ export default function ControlRail(props: {
       <button type="button" className="helpbtn" onClick={props.onOpenGuide}>
         <span aria-hidden="true">ⓘ</span> How this console works
       </button>
+      {props.onSignOut && (
+        <button type="button" className="helpbtn" onClick={() => void props.onSignOut?.()}>
+          Sign out
+        </button>
+      )}
 
       <ZoneStrip
         stats={stats}
@@ -179,13 +183,15 @@ export default function ControlRail(props: {
 
       <section aria-label="Factor weights">
         <p className="sectionlabel">
-          Factor weights (AHP · provisional)
+          Scenario factor weights (AHP · provisional)
           <InfoTip
             text={`${WEIGHTING_INFO.scale} ${WEIGHTING_INFO.normalisation}`}
             label="How factor weights and normalisation work"
           />
         </p>
-        <p className="fieldhint">0–10 scale · higher = more emphasis · shown normalised to a 100% share</p>
+        <p className="fieldhint">
+          0–10 scale · applied to the next run · organization defaults stay unchanged
+        </p>
         {factors.map((f) => (
           <div className="weightrow" key={f.factor_key}>
             <div>

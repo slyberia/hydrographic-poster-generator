@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
 import asyncpg
 
 from app.database import get_db_pool
+from app.auth import require_admin, require_analyst, require_viewer
 from app.services import drone_service
 from pydantic import BaseModel, Field
 
@@ -88,7 +89,11 @@ async def get_factors(pool: asyncpg.Pool = Depends(get_db_pool)):
     return await drone_service.get_factors(pool)
 
 
-@router.patch("/config/factors/{key}", tags=["Drone Config"])
+@router.patch(
+    "/config/factors/{key}",
+    tags=["Drone Config"],
+    dependencies=[Depends(require_admin)],
+)
 async def patch_factor(
     key: str,
     body: WeightUpdateRequest,
@@ -109,7 +114,11 @@ async def list_runs(pool: asyncpg.Pool = Depends(get_db_pool)):
     return await drone_service.list_runs(pool)
 
 
-@router.post("/runs", tags=["Drone Runs"])
+@router.post(
+    "/runs",
+    tags=["Drone Runs"],
+    dependencies=[Depends(require_analyst)],
+)
 async def create_and_execute_run(
     body: RunCreateRequest,
     pool: asyncpg.Pool = Depends(get_db_pool)
@@ -141,7 +150,12 @@ async def get_run_details(run_id: str, pool: asyncpg.Pool = Depends(get_db_pool)
     return details
 
 
-@router.delete("/runs/{run_id}", status_code=204, tags=["Drone Runs"])
+@router.delete(
+    "/runs/{run_id}",
+    status_code=204,
+    tags=["Drone Runs"],
+    dependencies=[Depends(require_admin)],
+)
 async def delete_run(run_id: str, pool: asyncpg.Pool = Depends(get_db_pool)):
     """Delete a run and everything derived from it (sweep children, volatility,
     summary, cell results). Returns 204 on success, 404 if the run is unknown."""
@@ -164,7 +178,11 @@ async def get_run_geojson(
         raise HTTPException(status_code=500, detail=str(exc))
 
 
-@router.post("/runs/{run_id}/export", tags=["Drone Runs"])
+@router.post(
+    "/runs/{run_id}/export",
+    tags=["Drone Runs"],
+    dependencies=[Depends(require_viewer)],
+)
 async def export_view(
     run_id: str,
     body: ExportViewRequest,
@@ -207,8 +225,13 @@ async def export_view(
 
 # ---- Sensitivity ----
 
-@router.post("/runs/{run_id}/sensitivity", tags=["Drone Sensitivity"],
-             status_code=202, response_model=SensitivityStatus)
+@router.post(
+    "/runs/{run_id}/sensitivity",
+    tags=["Drone Sensitivity"],
+    status_code=202,
+    response_model=SensitivityStatus,
+    dependencies=[Depends(require_analyst)],
+)
 async def trigger_sensitivity(
     run_id: str,
     body: SensitivityTriggerRequest,
