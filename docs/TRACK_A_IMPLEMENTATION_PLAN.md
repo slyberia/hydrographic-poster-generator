@@ -356,6 +356,7 @@ estimated on activation.
 |---|---|---|---|---|---|
 | FU-1 | `origin/main` local ref was stale; confirm CI/deploy triggers point at the right `main` | Not needed for TA-1 read checks | Low–Med | Med | — |
 | FU-2 | Drone MCDA subsystem is outside the CLAUDE.md MVP spec | Product decision, not architecture | Med | Med (doc) | — |
+| FU-3 | `anon`/`authenticated` retain grants (incl. INSERT/UPDATE/DELETE) on PostGIS system objects `spatial_ref_sys`, `geometry_columns`, `geography_columns`; these are not RLS-protected. Migration `009` targeted application tables only. Worst case: a browser role could write junk SRID rows. Not application data. | Not an application-data leak; PostGIS/Supabase default | Low | Low–Med | — |
 
 *(A follow-up entry is not authorization to implement it.)*
 
@@ -366,21 +367,49 @@ estimated on activation.
 _Update at every interruption/compaction/session end. Read before resuming; do not
 reconstruct the objective from memory._
 
-- **Active task contract:** _none in execution — plan drafted, awaiting task selection._
-- **Branch / commit:** `claude/recent-pr-repo-review-39oloc` @ `cb6c355` (matches
-  `origin/main` after fresh fetch).
+- **Active task contract:** TA-1 — **partially complete** (DB checks done; deployed-backend
+  checks BLOCKED on GCP access). See §14a.
+- **Branch / commit:** `claude/recent-pr-repo-review-39oloc` (matches `origin/main` +
+  this plan's commits). PR #21 (draft, docs-only).
 - **Modified / untracked files:** `docs/TRACK_A_IMPLEMENTATION_PLAN.md` (this file).
-- **Work completed:** current-state verified; two design decisions agreed (separate
-  `lifecycle_state`; viewer-gated published read); plan authored.
-- **Work remaining:** execute chosen `TA-*` starting from TA-1 (or TA-5→TA-2 per §5).
-- **Tests run:** none (planning only).
-- **Live DB / cloud changes:** none.
-- **Open PR / deployment state:** none opened this session; PR #20 merged, deploy
-  unverified.
-- **Blockers:** TA-1 needs live DB read access + deployed backend URL + a test token.
-- **Exact next action:** select and open the TA-1 (or TA-5) contract; confirm access.
+- **Work completed:** plan authored; TA-1 DB verification done — RLS + application-table
+  privilege lockdown confirmed live (§14a).
+- **Work remaining:** TA-1 deployed-backend probes (need GCP access or backend URL + test
+  JWT); then TA-5 → TA-4 → TA-2 per §5.
+- **Tests run:** two read-only SQL introspection queries against `iyijaywownhftzjwqhzj`
+  (results in §14a).
+- **Live DB / cloud changes:** none (read-only).
+- **Open PR / deployment state:** PR #21 open (draft); PR #20 merged, deploy unverified.
+- **Blockers:** GCP credentials unavailable → cannot reach Cloud Run or read deployed
+  revision; deployed backend URL not recorded in repo.
+- **Exact next action:** obtain GCP access (or deployed backend URL + a test JWT) to finish
+  TA-1's two BLOCKED checks; otherwise proceed to TA-5.
 - **Explicit exclusions:** no Track B surfaces; no `status`-column changes; no migration
   applied to a shared DB without approval.
+
+---
+
+## 14a. TA-1 Verification Record (2026-07-22)
+
+Observed against Supabase project `iyijaywownhftzjwqhzj` (the `_SUPABASE_URL` the
+deployed backend verifies JWTs against). Repo state `2a81186`.
+
+| Check | Result | Observed |
+|---|---|---|
+| RLS enabled on all 22 `009` application tables | **PASS** | `relrowsecurity = true` for every listed table |
+| No `anon`/`authenticated` privileges on the 22 application tables | **PASS** | none of the 22 appear in `role_table_grants` for either role |
+| No residual browser-role grants anywhere in `public` | **PARTIAL** | only PostGIS system objects retain grants (`spatial_ref_sys`, `geometry_columns`, `geography_columns`) — not application data → FU-3 |
+| Role-gated drone mutation rejects unauthorized caller (401/403) | **BLOCKED** | GCP credentials unavailable; deployed backend URL is discovered at deploy time and not recorded in repo |
+| Deployed revision includes `cb6c355` | **BLOCKED** | requires Cloud Run access (GCP creds unavailable) |
+
+**Blocker:** GCP credentials are not available in this environment (`gcloud` unconfigured;
+`mcp__cloud-run__list_projects` → "GCP credentials are not available"). The two BLOCKED
+checks require either GCP access to Cloud Run, or the deployed backend URL + a test JWT
+supplied directly. Per §10 this operational work was not attempted.
+
+**Database posture conclusion:** migration `009`'s intended lockdown (RLS + zero
+browser-role privileges on application tables) **is applied and verified live**. The
+deployed-backend authorization behavior remains **unverified**.
 
 ---
 
