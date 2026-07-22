@@ -41,9 +41,12 @@ until its contract (§6) is accepted.
   deploys, a migration baseline, CI protection, and rate limiting before any public
   exposure.
 - **Explicit non-goals (this iteration):** Public Explorer page, landing page, dashboard,
-  console redesign, Region 4 configuration, saved-scenario libraries, multi-tenancy,
-  microservices, Redis/Memorystore, materialized aggregates, a general audit-event
-  platform. (These are Track B or deferred.)
+  console redesign, saved-scenario libraries, multi-tenancy, microservices,
+  Redis/Memorystore, materialized aggregates, a general audit-event platform. (These are
+  Track B or deferred.) **Note:** *single-client* Region 4 / study-area configuration is
+  **in Track A scope** under TA-3B (§6) — it is a configuration change, not multi-tenancy
+  or a client-branding product. (Restored after external review flagged its accidental
+  drop; pending user confirmation of the TA-3A/TA-3B split.)
 - **Supported environments/devices:** hosted Supabase Postgres/PostGIS; Cloud Run
   (`us-central1`); desktop browsers for the internal console. Mobile parity is not a
   Track A goal.
@@ -147,10 +150,18 @@ carry outline contracts to be expanded to full form when they become the active 
   not "enforced." A silent gap here undermines every later public-facing decision.
 - **Evidence:** `009_lock_down_data_api.sql`; `backend/app/auth.py`; role deps in
   `backend/app/routers/drone.py`; `cloudbuild.yaml`.
-- **Included:** read-only live checks — query `anon`/`authenticated` privileges and
-  `rowsecurity` on the listed public tables; call a role-gated endpoint (e.g.
-  `PATCH /drone/config/factors/{key}`) without/with insufficient token and observe
-  401/403; confirm the deployed revision includes `cb6c355`.
+- **Included:** read-only live checks —
+  1. query `anon`/`authenticated` privileges and `rowsecurity` on the listed public tables;
+  2. call a role-gated endpoint (e.g. `PATCH /drone/config/factors/{key}`) with **no token**
+     → expect `401`, and with a **valid but insufficient-role token** → expect `403`;
+  3. confirm the deployed image corresponds to source at/after `cb6c355`.
+- **Revision-provenance method (check 3):** Cloud Run image tags use `$BUILD_ID`, **not**
+  the git SHA, so inspecting the service alone does not prove the source commit. Use one of,
+  in order of preference: (a) inspect the Cloud Build record for the deployed image digest
+  and read its source commit; (b) match the running image digest to a build record; (c) if
+  neither is reachable, verify runtime *behavior* (checks 1–2) and explicitly record that
+  commit provenance is unavailable. Adding commit labels to deployments for future
+  traceability is **TA-3 work, not TA-1 remediation**.
 - **Excluded:** any code change, redeploy, new migration, or lifecycle work. If a gap is
   found, **stop and report** — remediation is a separate contract.
 - **Dependencies:** live DB read access (Supabase MCP or `DATABASE_URL`); deployed backend
@@ -209,9 +220,9 @@ carry outline contracts to be expanded to full form when they become the active 
   - Tests: migration applies cleanly; transition guard (valid + rejected); partial-unique
     invariant; published-delete guard; published endpoint excludes non-published.
 - **Excluded:** Public Explorer page, landing page, console redesign, dashboard, saved
-  scenarios, full audit-event ledger, Region 4 configuration, rate limiting (TA-6), and
-  any role-UI refinement beyond these lifecycle actions. **Do not modify the execution
-  `status` column** or the `008` views.
+  scenarios, full audit-event ledger, Region 4 / study-area configuration (owned by TA-3B,
+  not TA-2), rate limiting (TA-6), and any role-UI refinement beyond these lifecycle
+  actions. **Do not modify the execution `status` column** or the `008` views.
 - **Dependencies:** TA-4 recommended first (clean apply/tracking); the auth roles from
   PR #20 (present).
 - **Assumptions:** `region_id` is the authoritative "study area" key (agreed); "one
@@ -253,12 +264,25 @@ carry outline contracts to be expanded to full form when they become the active 
   rewrite of existing SQL.
 - **Blocks release:** No. **De-risks TA-2.** Full contract on activation.
 
-### TA-3 — Deployment / client configuration (outline)
+### TA-3A — Reproducible deployment configuration (outline)
 - **Objective:** confirm and document the reproducible deploy path post-#20 (substitutions,
   secrets `hydro-database-url` / `hydro-admin-api-key`, `_SUPABASE_URL`, publishable key,
-  CORS) so a deploy is repeatable without tribal knowledge.
+  CORS) so a deploy is repeatable without tribal knowledge. Includes adding commit-provenance
+  labels to deployments (satisfies TA-1 check-3 traceability going forward).
 - **Excluded:** a generalized client-branding product; new infra. Full contract on
   activation.
+
+### TA-3B — Study-area / client deployment configuration (outline)
+- **Objective:** move Region 4 / study-area assumptions into deployment/client
+  configuration so the single deployed instance is configured for its study area rather than
+  relying on hard-coded assumptions. Restored after external review flagged its accidental
+  drop.
+- **Scope guard:** **single-client configuration only** — NOT multi-tenancy, NOT a
+  branding platform, NOT per-tenant isolation. If it starts to look like any of those, stop
+  and re-scope.
+- **Consumes:** the `region_id`-keyed lifecycle from TA-2 (published-run-per-region).
+- **Excluded:** multi-region runtime switching UI; tenant management. Full contract on
+  activation, **pending user confirmation of this split.**
 
 ### TA-5 — CI (outline)
 - **Objective:** a `.github/workflows` pipeline running backend tests (`backend/tests`) and
@@ -336,7 +360,9 @@ deploying), **stop and report**.
   frontend build + manual console pass; one post-deploy smoke.
 - **TA-4/5/6/7:** defined on activation.
 - Do not rerun expensive suites when no relevant code changed; reuse valid results and cite
-  the commit/DB state they were observed against.
+  the commit/DB state they were observed against. **The TA-1 DB checks (§14a) may be reused
+  unless migrations, grants, policies, roles, or the target project have changed since the
+  recorded observation** — re-run if any of those changed.
 
 ---
 
@@ -356,7 +382,7 @@ estimated on activation.
 |---|---|---|---|---|---|
 | FU-1 | `origin/main` local ref was stale; confirm CI/deploy triggers point at the right `main` | Not needed for TA-1 read checks | Low–Med | Med | — |
 | FU-2 | Drone MCDA subsystem is outside the CLAUDE.md MVP spec | Product decision, not architecture | Med | Med (doc) | — |
-| FU-3 | `anon`/`authenticated` retain grants (incl. INSERT/UPDATE/DELETE) on PostGIS system objects `spatial_ref_sys`, `geometry_columns`, `geography_columns`; these are not RLS-protected. Migration `009` targeted application tables only. Worst case: a browser role could write junk SRID rows. Not application data. | Not an application-data leak; PostGIS/Supabase default | Low | Low–Med | — |
+| FU-3 | `anon`/`authenticated` retain grants (incl. INSERT/UPDATE/DELETE) on PostGIS system objects `spatial_ref_sys`, `geometry_columns`, `geography_columns`; these are not RLS-protected. Migration `009` targeted application tables only. Worst case: a browser role could write junk SRID rows. Not application data. | **Keep deferred** — these objects are PostGIS-extension-managed; revoking grants without confirming Supabase/PostGIS expectations risks compatibility breakage. Accept the provider default unless a concrete write-path exploit or explicit security requirement justifies intervention. | Low | Low (do not action absent justification) | — |
 
 *(A follow-up entry is not authorization to implement it.)*
 
@@ -367,23 +393,26 @@ estimated on activation.
 _Update at every interruption/compaction/session end. Read before resuming; do not
 reconstruct the objective from memory._
 
-- **Active task contract:** TA-1 — **partially complete** (DB checks done; deployed-backend
-  checks BLOCKED on GCP access). See §14a.
+- **Active task contract:** TA-1 — **partially complete** (DB checks PASS; deployed-backend
+  checks F1a/F1b/F2 BLOCKED — environment egress + missing test JWT/GCP access). See §14a.
 - **Branch / commit:** `claude/recent-pr-repo-review-39oloc` (matches `origin/main` +
   this plan's commits). PR #21 (draft, docs-only).
 - **Modified / untracked files:** `docs/TRACK_A_IMPLEMENTATION_PLAN.md` (this file).
 - **Work completed:** plan authored; TA-1 DB verification done — RLS + application-table
-  privilege lockdown confirmed live (§14a).
-- **Work remaining:** TA-1 deployed-backend probes (need GCP access or backend URL + test
-  JWT); then TA-5 → TA-4 → TA-2 per §5.
+  privilege lockdown confirmed live (§14a); external-review corrections applied.
+- **Work remaining:** TA-1 F1a (no-token 401 — runnable in an env with `*.run.app` egress),
+  F1b (needs lower-role JWT), F2 (needs Cloud Build provenance). Then, per §5 and the
+  single-active-contract rule: **finish or formally close TA-1, expand TA-5 to a full
+  contract, get approval, then activate TA-5.**
 - **Tests run:** two read-only SQL introspection queries against `iyijaywownhftzjwqhzj`
-  (results in §14a).
+  (results in §14a); one HTTP probe attempt (egress-denied, no result).
 - **Live DB / cloud changes:** none (read-only).
 - **Open PR / deployment state:** PR #21 open (draft); PR #20 merged, deploy unverified.
-- **Blockers:** GCP credentials unavailable → cannot reach Cloud Run or read deployed
-  revision; deployed backend URL not recorded in repo.
-- **Exact next action:** obtain GCP access (or deployed backend URL + a test JWT) to finish
-  TA-1's two BLOCKED checks; otherwise proceed to TA-5.
+- **Blockers:** this environment denies egress to `*.run.app`; no lower-role test JWT; no
+  GCP/Cloud Build access. All environment-specific, not user-level defects.
+- **Exact next action:** either (a) resume TA-1 F1a/F1b/F2 in an environment with host
+  egress / GCP access, or (b) formally mark TA-1's residual checks blocked, then expand
+  TA-5 into a full contract for approval before activating it (single-active-contract rule).
 - **Explicit exclusions:** no Track B surfaces; no `status`-column changes; no migration
   applied to a shared DB without approval.
 
@@ -399,13 +428,18 @@ deployed backend verifies JWTs against). Repo state `2a81186`.
 | RLS enabled on all 22 `009` application tables | **PASS** | `relrowsecurity = true` for every listed table |
 | No `anon`/`authenticated` privileges on the 22 application tables | **PASS** | none of the 22 appear in `role_table_grants` for either role |
 | No residual browser-role grants anywhere in `public` | **PARTIAL** | only PostGIS system objects retain grants (`spatial_ref_sys`, `geometry_columns`, `geography_columns`) — not application data → FU-3 |
-| Role-gated drone mutation rejects unauthorized caller (401/403) | **BLOCKED** | GCP credentials unavailable; deployed backend URL is discovered at deploy time and not recorded in repo |
-| Deployed revision includes `cb6c355` | **BLOCKED** | requires Cloud Run access (GCP creds unavailable) |
+| F1a — no-token role-gated request → `401` | **BLOCKED (env)** | URL **is** in repo (`backend/test_export.py:24` → `https://hydro-backend-54n4ik523a-uc.a.run.app`); probe attempted; agent proxy denied egress to `*.run.app` (`connect_rejected`, gateway 403). Runnable in an env with outbound access to that host. |
+| F1b — insufficient-role token → `403` | **BLOCKED** | requires a valid lower-role user/JWT (none available) **and** egress to the host |
+| F2 — deployed image corresponds to source ⊇ `cb6c355` | **BLOCKED** | requires Cloud Build/Cloud Run provenance (GCP access); note image tags use `$BUILD_ID`, not git SHA — see TA-1 revision-provenance method |
 
-**Blocker:** GCP credentials are not available in this environment (`gcloud` unconfigured;
-`mcp__cloud-run__list_projects` → "GCP credentials are not available"). The two BLOCKED
-checks require either GCP access to Cloud Run, or the deployed backend URL + a test JWT
-supplied directly. Per §10 this operational work was not attempted.
+**Blocker (corrected — environment-specific, not user-level):** the earlier claim "backend
+URL not recorded in repo" was **wrong** — the URL is in `backend/test_export.py`. The real
+constraints are: (1) this Claude Code execution environment's network policy denies outbound
+egress to `*.run.app` (verified via `$HTTPS_PROXY/__agentproxy/status`), and (2) no
+lower-role test JWT and no GCP/Cloud Build access here. TA-1 may be **resumed in an
+environment that has outbound access to the deployed host and/or authenticated Google Cloud
+access** (e.g. a Codex environment with authenticated `gcloud`); F1a needs only host egress.
+Do not create new credentials unless required. Per §10 no auth setup was attempted here.
 
 **Database posture conclusion:** migration `009`'s intended lockdown (RLS + zero
 browser-role privileges on application tables) **is applied and verified live**. The
