@@ -280,16 +280,16 @@ export default function InteractiveCanvas({ svg, transforms, onTransformsChange,
     <div className="relative w-full h-full flex items-center justify-center">
       {/* Active Element Indicator / Toolbar */}
       <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel z-10 opacity-0 hover:opacity-100 transition-opacity" style={{ opacity: activeElement || Object.keys(transforms).length > 0 ? 1 : 0 }}>
-        <span className="text-[11px] font-medium text-[var(--foreground)] uppercase tracking-wider">
+        <span className="text-[11px] font-medium text-[var(--ui-text)] uppercase tracking-wider">
           {activeElement ? `Moving ${activeElement.replace("_", " ")}` : "Layout Editor"}
         </span>
         
         {Object.keys(transforms).length > 0 && (
           <>
-            <div className="w-px h-3 bg-[var(--foreground)]/20 mx-1" />
+            <div className="w-px h-3 bg-[var(--ui-text)]/20 mx-1" />
             <button 
               onClick={onReset}
-              className="text-[11px] text-[var(--accent)] hover:text-[var(--foreground)] transition-colors"
+              className="text-[11px] text-[var(--ui-action)] hover:text-[var(--ui-text)] transition-colors"
             >
               Reset
             </button>

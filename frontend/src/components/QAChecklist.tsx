@@ -27,8 +27,8 @@ export default function QAChecklist({ items }: { items: QAItem[] }) {
             {SEVERITY_LABELS[item.severity]}
           </span>
           <span className="min-w-0">
-            <span className="font-medium text-slate-200">{item.label}</span>
-            <span className="block text-slate-400">{item.message}</span>
+            <span className="font-medium text-[var(--ui-text)]">{item.label}</span>
+            <span className="block text-[var(--ui-text-muted)]">{item.message}</span>
           </span>
         </li>
       ))}

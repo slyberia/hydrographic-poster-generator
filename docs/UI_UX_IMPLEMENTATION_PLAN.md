@@ -249,12 +249,12 @@ the estimate unless the user approves a contract amendment.
 ## 11. Handoff Record
 
 - **Active plan:** UI/UX Implementation Plan
-- **Active task:** UX-1
+- **Completed task:** UX-1 - Semantic UI foundations and shared poster shell
+- **Next candidate:** UX-2 - Homepage product proof; contract approval required
 - **Paused plan:** Track A Production Architecture
-- **Current repository change:** planning documents only
 - **Architecture work authorized:** none
-- **Next action:** create a task branch from the latest approved base, restate UX-1,
-  inspect the rendered baseline, and implement only UX-1.
+- **Next action:** review the UX-1 result, expand UX-2 into a full task contract,
+  and obtain approval before implementation.
 - **Do not start:** TA-5, migration work, run lifecycle, rate limiting, deployment,
   Public Explorer backend contracts, or dashboard APIs.
 
@@ -271,3 +271,18 @@ the estimate unless the user approves a contract amendment.
 - Architecture dependencies discovered but not implemented
 - Recommended next UI task
 
+## 13. UX-1 Completion Record
+
+- **Date:** 2026-07-22
+- **Branch:** `codex/ux-1-semantic-shell`
+- **Outcome:** Added semantic application-interface tokens, a shared poster header,
+  corrected cross-route contrast and navigation, removed ambient decorations, and
+  preserved poster-generation behavior.
+- **Routes verified:** `/`, `/about`, and `/docs` at 390, 768, 1024, and 1440
+  pixels; `/studio` at 1440 pixels.
+- **Browser result:** No horizontal page overflow, all navigation links visible,
+  correct active-page state, visible keyboard focus, and reduced-motion support.
+- **Automated checks:** frontend lint passed; production build passed; 14 affected
+  Studio Playwright tests passed.
+- **Deferred by contract:** homepage product proof, Studio information
+  architecture, About content/visual redesign, and Docs information architecture.

@@ -7,7 +7,7 @@ discarding their work.
 
 - **Plan:** [UI/UX Implementation Plan](UI_UX_IMPLEMENTATION_PLAN.md)
 - **Status:** Active
-- **Current task:** UX-1 - Semantic UI foundations and shared poster shell
+- **Current task:** UX-1 complete; UX-2 awaits an approved task contract
 - **Primary objective:** Implement the visible UI/UX improvements identified in
   the design audit.
 - **Execution prompt:** [UI/UX New-Session Prompt](UI_UX_NEW_SESSION_PROMPT.md)
@@ -32,4 +32,3 @@ Only one plan may be active at a time. Switching plans requires:
 4. Preserve unfinished work as paused or deferred; do not silently absorb it.
 
 Architecture recommendations are not authorization to interrupt the UI/UX plan.
-
