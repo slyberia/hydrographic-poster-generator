@@ -4,7 +4,7 @@
  *
  * Plain-language, layered: each topic shows a summary + points, with the
  * methodology behind a "More detail" disclosure. Links out to the fuller
- * /drone/guide page. Content is shared via lib/droneGuide so the two agree. */
+ * /drone/methodology page. Content is shared via lib/droneGuide. */
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -70,8 +70,8 @@ export default function GuideDialog(props: { open: boolean; onClose: () => void 
         ))}
 
         <div className="guide-actions">
-          <Link href="/drone/guide" className="guide-link">
-            Read the full guide →
+          <Link href="/drone/methodology" className="guide-link">
+            Read the full methodology →
           </Link>
           <button className="btn" onClick={props.onClose}>
             Got it

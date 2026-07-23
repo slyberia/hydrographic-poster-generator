@@ -3,7 +3,7 @@
  * Layered by design: each topic has a `summary` a non-expert can read at a
  * glance, a few plain `points`, and a `detail` block with the methodology for
  * anyone who wants it. Shared by the first-visit GuideDialog and the fuller
- * /drone/guide page so the two never drift.
+ * /drone/methodology page so the two never drift.
  */
 
 export interface GuideTopic {

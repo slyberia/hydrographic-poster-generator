@@ -308,11 +308,50 @@ proposed in a draft PR. Do not include UX-6 in the same branch.
 
 ### UX-6 - Drone landing page and route shell
 
-Make `/drone` the product landing page using real zoning output. Provide explicit
-entry points for a future Public Explorer and the authorized Planning Console. Move
-the existing console to `/drone/console` and methodology to `/drone/methodology`,
-with compatibility redirects for old routes. Do not build the Explorer or dashboard
-inside this task.
+**Objective:** Give the Drone product a clear public front door while preserving the
+existing analysis console as an authorized, separately named workspace.
+
+**Problem solved:** `/drone` currently opens a dense internal console without first
+explaining the product, its intended NDC use, the distinction between guidance and
+authorization, or the future public and internal product surfaces.
+
+**Included:**
+
+- Make `/drone` a server-rendered product landing page using a representative image
+  of the current Region 4 zoning output.
+- Present the NDC decision-support use case, geographic pilot scope, primary
+  constraints considered, methodology link, and authorization limitation.
+- Provide an active entry point to the Planning Console and an honest planned state
+  for the future Public Explorer.
+- Move the existing console unchanged in behavior to `/drone/console`.
+- Move the full guide to a server-rendered `/drone/methodology` page.
+- Redirect `/drone/guide` to `/drone/methodology`.
+- Update internal links, authentication return paths, comments, and affected browser
+  tests for the new route structure.
+- Add focused initial-HTML, route, redirect, responsive, asset, and console-regression
+  checks.
+
+**Excluded:** Public Explorer implementation, dashboard implementation, internal
+console redesign, infrastructure layers, attribute tables, backend or database
+changes, auth-role changes, study-area configuration, publication lifecycle,
+rate limiting, deployment, and Track A work.
+
+**Acceptance criteria:**
+
+- `/drone` explains the product before offering entry to the analysis workspace.
+- The Region 4 pilot and decision-support limitation are visible without opening the
+  console.
+- The Planning Console remains functional at `/drone/console`.
+- The Public Explorer is not presented as available before it exists.
+- `/drone/methodology` is meaningful in the initial HTML and `/drone/guide`
+  redirects to it.
+- New navigation is keyboard accessible, focus-visible, and responsive without
+  clipped text or page-level overflow at 390, 768, 1024, and 1440 pixels.
+- Frontend lint, production build, focused browser tests, existing Drone console
+  tests, and responsive screenshots pass.
+
+**Stop point:** Stop after the landing page and route shell are implemented, verified,
+and proposed in a draft PR. Do not begin UX-7 or build a placeholder Explorer route.
 
 ### UX-7 - Internal drone console usability
 
@@ -453,3 +492,29 @@ the estimate unless the user approves a contract amendment.
   responsive homepage Playwright tests passed.
 - **Deferred by contract:** Studio workspace hierarchy and preview controls,
   About content/visual redesign, and Docs information architecture.
+
+## 15. UX-6 Completion Record
+
+- **Date:** 2026-07-23
+- **Branch:** `codex/ux-6-drone-route-shell`
+- **Outcome:** Added a server-rendered Drone product landing page, moved the
+  unchanged internal console to `/drone/console`, moved the full guide to the
+  server-rendered `/drone/methodology` route, and retained `/drone/guide` as a
+  compatibility redirect.
+- **Product-state treatment:** The Planning Console is presented as available and
+  authorized; the Public Explorer is clearly marked as planned and has no placeholder
+  route.
+- **Asset provenance:** The landing hero uses a static capture of an actual completed
+  Region 4 run fetched from the deployed read-only Drone endpoints and rendered
+  through the existing Leaflet console. The landing page makes no runtime API or
+  database request.
+- **Routes verified:** `/drone` and `/drone/methodology` at 390, 768, 1024, and
+  1440 pixels; `/drone/guide` redirect; `/drone/console` functional regression.
+- **Browser result:** No page-level horizontal overflow, the hero leaves the next
+  product section visible, the representative zoning asset loads, keyboard focus is
+  visible, and methodology content is meaningful in the initial HTML.
+- **Automated checks:** frontend lint passed; production build passed; 17 focused
+  Drone route and existing console Playwright tests passed.
+- **Deferred by contract:** Public Explorer, dashboard, internal console redesign,
+  infrastructure layers, attribute tables, study-area configuration, publication
+  lifecycle, and backend or deployment work.

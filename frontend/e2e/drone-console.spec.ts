@@ -17,7 +17,7 @@ async function openConsole(page: Page): Promise<MockState> {
   // Mark the first-visit guide as already seen so its modal doesn't overlay the
   // console during the functional tests (first-visit behaviour has its own test).
   await page.addInitScript(() => localStorage.setItem("drone.guideSeen.v1", "1"));
-  await page.goto("/drone");
+  await page.goto("/drone/console");
   // Loaded = zone strip rendered from run stats.
   await expect(page.locator(".zonestrip-row")).toHaveCount(4);
   return state;
@@ -68,7 +68,7 @@ test("QA-2: trigger sweep — progress advances, sidebar unchanged", async ({ pa
 test("QA-1b: first-visit guide dialog auto-opens once, dismiss persists", async ({ page }) => {
   await installMockBackend(page);
   // No guideSeen flag set → the dialog should auto-open on first load.
-  await page.goto("/drone");
+  await page.goto("/drone/console");
   const dialog = page.getByRole("dialog", { name: /How this console works/i });
   await expect(dialog).toBeVisible();
   // Layered content: both core topics and a "more detail" disclosure present.
