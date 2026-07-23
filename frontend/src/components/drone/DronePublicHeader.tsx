@@ -15,6 +15,7 @@ export default function DronePublicHeader({ active }: DronePublicHeaderProps) {
         </span>
       </Link>
       <nav aria-label="Drone product navigation">
+        <Link href="/">Platform</Link>
         <Link href="/drone" aria-current={active === "home" ? "page" : undefined}>
           Overview
         </Link>
