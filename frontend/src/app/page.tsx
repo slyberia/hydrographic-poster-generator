@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import PosterHeader from "@/components/PosterHeader";
 
 const STEPS = [
   {
@@ -61,55 +61,29 @@ const STEPS = [
 
 export default function LandingPage() {
   return (
-    <main className="relative min-h-screen bg-slate-50 overflow-hidden flex flex-col items-center">
-      {/* ── Header ── */}
-      <header className="absolute top-0 left-0 w-full p-6 z-50 flex justify-between items-center max-w-6xl mx-auto">
-        <div>
-          <h1
-            className="text-xl font-semibold tracking-tight text-gray-900"
-            style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
-          >
-            Hydro Poster
-          </h1>
-        </div>
-        <nav className="flex gap-6">
-          <Link
-            href="/about"
-            className="text-[13px] font-medium text-gray-600 hover:text-dodger-blue transition-colors duration-200"
-          >
-            About
-          </Link>
-          <Link
-            href="/docs"
-            className="text-[13px] font-medium text-gray-600 hover:text-dodger-blue transition-colors duration-200"
-          >
-            API Docs
-          </Link>
-        </nav>
-      </header>
-
-      {/* ── Ambient glow blobs (Multiply for light mode) ── */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full opacity-40 mix-blend-multiply filter blur-[100px] bg-turquoise pointer-events-none" aria-hidden="true" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full opacity-40 mix-blend-multiply filter blur-[120px] bg-amber pointer-events-none" aria-hidden="true" />
+    <main className="relative min-h-screen overflow-hidden flex flex-col items-center bg-[var(--ui-page)] text-[var(--ui-text)]">
+      <div className="w-full">
+        <PosterHeader current="home" />
+      </div>
 
       {/* ── Hero Section ── */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pt-32 lg:pt-40 pb-16 flex flex-col items-center text-center mt-12">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pt-20 lg:pt-28 pb-16 flex flex-col items-center text-center">
         <p className="text-[12px] font-bold uppercase tracking-[0.2em] text-wild-melon mb-6">
           Generative Cartography
         </p>
         <h1
-          className="text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-gray-900 mb-6"
+          className="text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-[var(--ui-text)] mb-6"
           style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
         >
           Hydrographic <br className="hidden lg:block" /> Poster Generator
         </h1>
-        <p className="text-lg lg:text-xl text-gray-600 max-w-2xl leading-relaxed mb-10">
+        <p className="text-lg lg:text-xl text-[var(--ui-text-muted)] max-w-2xl leading-relaxed mb-10">
           Create stunning, high-resolution river network poster maps from HydroRIVERS data. Select a geography, customize your style, and export print-ready posters or transparent design assets.
         </p>
         
         <Link 
           href="/studio"
-          className="bg-dodger-blue text-white font-medium text-base px-8 py-4 rounded-xl shadow-[0_8px_30px_rgba(1,122,255,0.3)] hover:shadow-[0_8px_30px_rgba(1,122,255,0.5)] hover:scale-[1.02] transition-all duration-300"
+          className="bg-[var(--ui-action)] hover:bg-[var(--ui-action-hover)] text-[var(--ui-text-inverse)] font-medium text-base px-8 py-4 rounded-lg shadow-sm transition-colors duration-200"
         >
           Launch Generator
         </Link>
@@ -118,7 +92,7 @@ export default function LandingPage() {
       {/* ── How It Works ── */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 py-24">
         <h2
-          className="text-3xl font-semibold text-gray-900 mb-12 text-center"
+          className="text-3xl font-semibold text-[var(--ui-text)] mb-12 text-center"
           style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
         >
           How It Works
@@ -133,10 +107,10 @@ export default function LandingPage() {
                 {step.icon}
               </div>
               <div className="min-w-0">
-                <p className="text-lg font-semibold text-gray-900 leading-snug mb-2">
+                <p className="text-lg font-semibold text-[var(--ui-text)] leading-snug mb-2">
                   {step.title}
                 </p>
-                <p className="text-sm leading-relaxed text-gray-600">
+                <p className="text-sm leading-relaxed text-[var(--ui-text-muted)]">
                   {step.description}
                 </p>
               </div>
@@ -167,8 +141,8 @@ export default function LandingPage() {
             </svg>
           </div>
           <div>
-            <h3 className="text-base font-semibold text-gray-900 mb-2">Design Asset Mode</h3>
-            <p className="text-sm leading-relaxed text-gray-700">
+            <h3 className="text-base font-semibold text-[var(--ui-text)] mb-2">Design Asset Mode</h3>
+            <p className="text-sm leading-relaxed text-[var(--ui-text-muted)]">
               Toggle &ldquo;Design asset mode&rdquo; in the generator to export transparent river-network layers. This skips the poster background, text, and metadata — perfect for DTG printing, screenprinting, or layering in Adobe Illustrator.
             </p>
           </div>

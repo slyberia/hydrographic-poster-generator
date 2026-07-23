@@ -1,32 +1,34 @@
 @import "tailwindcss";
 
 :root {
-  /* ── Light Vibrant Palette (Based on User Screenshot) ── */
-  --bg-deep: #FAFAFA;
-  --bg-base: #FFFFFF;
-  --bg-elevated: #F3F4F6;
-  --surface: rgba(0, 0, 0, 0.03);
-  --surface-hover: rgba(0, 0, 0, 0.06);
-  --foreground: #111827;
-  --foreground-muted: #4B5563;
-  --accent: #017AFF;
-  --accent-hover: #6C47FF;
-  --accent-glow: rgba(1, 122, 255, 0.25);
-  --border: rgba(0, 0, 0, 0.1);
-  --border-focus: rgba(1, 122, 255, 0.5);
-  --radius: 12px;
-  --radius-lg: 16px;
+  /* Application interface roles. Poster artwork has its own palette model. */
+  --ui-page: #f8fafc;
+  --ui-panel: #ffffff;
+  --ui-surface: #f1f5f9;
+  --ui-surface-muted: #f8fafc;
+  --ui-text: #172033;
+  --ui-text-muted: #526071;
+  --ui-text-inverse: #ffffff;
+  --ui-border: #d8dee8;
+  --ui-border-strong: #aab4c2;
+  --ui-action: #0868cf;
+  --ui-action-hover: #0754a6;
+  --ui-action-soft: #e7f1fc;
+  --ui-focus: #0868cf;
+  --ui-success: #047857;
+  --ui-warning: #a94b08;
+  --ui-danger: #b42318;
+  --radius: 8px;
+  --radius-lg: 8px;
   --easing: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* ── Glass variables ── */
-  --glass-blur: 15px;
-  --glass-opacity: 0.8;
-  --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+  --glass-blur: 12px;
+  --glass-border: 1px solid var(--ui-border);
 }
 
 @theme inline {
-  --color-background: var(--bg-deep);
-  --color-foreground: var(--foreground);
+  --color-background: var(--ui-page);
+  --color-foreground: var(--ui-text);
   --color-dodger-blue: #017AFF;
   --color-neon: #6C47FF;
   --color-turquoise: #39C0C8;
@@ -43,71 +45,129 @@
 
 /* ── Base ── */
 body {
-  background: var(--bg-deep);
-  color: var(--foreground);
+  background: var(--ui-page);
+  color: var(--ui-text);
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Cinematic gradient backdrop ── */
 .cinematic-bg {
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(57, 192, 200, 0.15) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(249, 99, 0, 0.1) 0%, transparent 70%),
-    linear-gradient(180deg, #FFFFFF 0%, var(--bg-deep) 100%);
+  background: var(--ui-page);
 }
 
-/* ── Glassmorphic panel ── */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--ui-panel) 94%, transparent);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border-right: var(--glass-border);
-  box-shadow: 2px 0 10px rgba(0,0,0,0.02);
+  box-shadow: 2px 0 10px rgba(23, 32, 51, 0.04);
 }
 
-/* ── Glassmorphic card ── */
 .glass-card {
-  background: var(--surface);
+  background: var(--ui-surface);
   border: var(--glass-border);
   border-radius: var(--radius);
 }
 
-/* ── Ambient glow blobs ── */
-@keyframes blob-drift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(30px, -20px) scale(1.05); }
-  50% { transform: translate(-15px, 25px) scale(0.95); }
-  75% { transform: translate(20px, 10px) scale(1.02); }
+/* ── Shared poster-product header ── */
+.poster-header {
+  position: relative;
+  z-index: 50;
+  flex: none;
+  border-bottom: 1px solid var(--ui-border);
+  background: color-mix(in srgb, var(--ui-panel) 96%, transparent);
+  color: var(--ui-text);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.ambient-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.15;
-  pointer-events: none;
-  animation: blob-drift 20s ease-in-out infinite;
-  mix-blend-mode: multiply;
+.poster-header--public {
+  position: sticky;
+  top: 0;
 }
 
-.ambient-blob-1 {
-  width: 400px;
-  height: 400px;
-  background: var(--color-turquoise);
-  top: 15%;
-  right: 10%;
-  animation-delay: 0s;
+.poster-header__inner {
+  width: min(100%, 72rem);
+  min-height: 4.25rem;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
 }
 
-.ambient-blob-2 {
-  width: 300px;
-  height: 300px;
-  background: var(--color-amber);
-  bottom: 20%;
-  left: 15%;
-  animation-delay: -7s;
+.poster-header__brand {
+  color: var(--ui-text);
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.poster-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.poster-header__link {
+  min-height: 2.5rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius);
+  color: var(--ui-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.poster-header__link:hover {
+  color: var(--ui-text);
+  background: var(--ui-surface);
+}
+
+.poster-header__link[aria-current="page"] {
+  color: var(--ui-action);
+  background: var(--ui-action-soft);
+}
+
+.poster-header--workspace .poster-header__inner {
+  min-height: auto;
+  padding: 0.875rem 1.25rem;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.poster-header--workspace .poster-header__nav {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.poster-header--workspace .poster-header__link {
+  min-height: 2rem;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 520px) {
+  .poster-header__inner {
+    padding-inline: 1rem;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .poster-header__nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .poster-header__link {
+    padding-inline: 0.5rem;
+  }
 }
 
 /* ── Fade-in animation ── */
@@ -147,7 +207,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--foreground-muted);
+  color: var(--ui-text-muted);
 }
 
 /* ── Form controls (glassmorphic) ── */
@@ -155,26 +215,26 @@ body {
 .glass-input {
   width: 100%;
   border-radius: var(--radius);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--ui-border);
+  background: var(--ui-panel);
   padding: 0.5rem 0.75rem;
   font-size: 0.8125rem;
-  color: var(--foreground);
+  color: var(--ui-text);
   transition: all 0.25s var(--easing);
   outline: none;
 }
 
 .glass-select:hover,
 .glass-input:hover {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.2);
+  background: var(--ui-surface-muted);
+  border-color: var(--ui-border-strong);
 }
 
 .glass-select:focus,
 .glass-input:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(1, 122, 255, 0.15);
-  background: rgba(0, 0, 0, 0.02);
+  border-color: var(--ui-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-focus) 18%, transparent);
+  background: var(--ui-panel);
 }
 
 .glass-select:disabled,
@@ -184,8 +244,8 @@ body {
 }
 
 .glass-select option {
-  background: var(--bg-base);
-  color: var(--foreground);
+  background: var(--ui-panel);
+  color: var(--ui-text);
 }
 
 /* ── Checkbox (custom) ── */
@@ -194,8 +254,8 @@ body {
   width: 1rem;
   height: 1rem;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--ui-border-strong);
+  background: var(--ui-panel);
   cursor: pointer;
   transition: all 0.2s var(--easing);
   position: relative;
@@ -203,8 +263,8 @@ body {
 }
 
 .glass-checkbox:checked {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--ui-action);
+  border-color: var(--ui-action);
 }
 
 .glass-checkbox:checked::after {
@@ -220,7 +280,7 @@ body {
 }
 
 .glass-checkbox:hover {
-  border-color: rgba(0, 0, 0, 0.4);
+  border-color: var(--ui-text-muted);
 }
 
 .glass-checkbox:disabled {
@@ -235,8 +295,8 @@ body {
   padding: 0.625rem 1rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #FFFFFF;
-  background: var(--accent);
+  color: var(--ui-text-inverse);
+  background: var(--ui-action);
   border: none;
   cursor: pointer;
   transition: all 0.3s var(--easing);
@@ -245,8 +305,8 @@ body {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--accent-hover);
-  box-shadow: 0 4px 20px var(--accent-glow);
+  background: var(--ui-action-hover);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--ui-action) 24%, transparent);
   transform: translateY(-1px);
 }
 
@@ -255,8 +315,8 @@ body {
 }
 
 .btn-primary:disabled {
-  background: rgba(0, 0, 0, 0.1);
-  color: var(--foreground-muted);
+  background: var(--ui-surface);
+  color: var(--ui-text-muted);
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -269,13 +329,13 @@ body {
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--foreground-muted);
+  color: var(--ui-text-muted);
 }
 
 /* ── QA status pills ── */
-.qa-pass { color: #10B981; }
-.qa-warning { color: #F59E0B; }
-.qa-block { color: #EF4444; }
+.qa-pass { color: var(--ui-success); }
+.qa-warning { color: var(--ui-warning); }
+.qa-block { color: var(--ui-danger); }
 
 /*
  * Preview display contract (docs/PROJECTION_SCALEBAR_NOTES.md §14):
@@ -298,7 +358,7 @@ body {
     linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%);
   background-size: 24px 24px;
   background-position: 0 0, 0 12px, 12px -12px, -12px 0;
-  background-color: var(--bg-elevated);
+  background-color: var(--ui-surface);
 }
 
 /* ── Scrollbar styling ── */
@@ -321,9 +381,35 @@ body {
 
 /* ── SVG focus accessibility ── */
 .interactive-svg-container svg g:focus {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ui-focus);
   outline-offset: 4px;
   border-radius: 4px;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-fade-in,
+  .pulse-ring,
+  .spin-smooth {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 /* ── Drone Zoning Console Namespaced Styles ── */

@@ -384,7 +384,7 @@ export default function ControlPanel({
                 <button
                   type="button"
                   onClick={() => setShowTypographyOverrides(!showTypographyOverrides)}
-                  className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors focus-visible:outline-none"
+                  className="flex items-center gap-1.5 text-xs text-[var(--ui-text-muted)] hover:text-[var(--ui-text)] transition-colors focus-visible:outline-none"
                 >
                   <span
                     className="text-[10px] transform transition-transform duration-200"
@@ -397,20 +397,20 @@ export default function ControlPanel({
                   </span>
                   <span>Advanced Customization</span>
                   {Object.keys(settings.typography_overrides || {}).length > 0 && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" title="Overrides active" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--ui-action)]" title="Overrides active" />
                   )}
                 </button>
               </div>
 
               {showTypographyOverrides && (
-                <div className="pl-3 border-l border-white/10 space-y-4 pt-1 pb-1">
+                <div className="pl-3 border-l border-[var(--ui-border)] space-y-4 pt-1 pb-1">
                   {/* Reset All button */}
                   {Object.keys(settings.typography_overrides || {}).length > 0 && (
                     <div className="flex justify-end">
                       <button
                         type="button"
                         onClick={() => onSettingsChange({ typography_overrides: {} })}
-                        className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
+                        className="text-[10px] uppercase tracking-wider text-[var(--ui-action)] hover:text-[var(--ui-text)] transition-colors cursor-pointer"
                       >
                         Reset Overrides
                       </button>
@@ -419,11 +419,11 @@ export default function ControlPanel({
 
                   {/* Title Settings Group */}
                   <div className="space-y-2.5">
-                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Title Text</h4>
+                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ui-text-muted)]">Title Text</h4>
                     
                     {/* Title Font */}
                     <div className="space-y-1">
-                      <label htmlFor="title-font" className="text-[11px] text-[var(--text-secondary)]">Font Family</label>
+                      <label htmlFor="title-font" className="text-[11px] text-[var(--ui-text-muted)]">Font Family</label>
                       <select
                         id="title-font"
                         className="glass-select !py-1 text-xs"
@@ -444,7 +444,7 @@ export default function ControlPanel({
 
                     {/* Title Weight */}
                     <div className="space-y-1">
-                      <label htmlFor="title-weight" className="text-[11px] text-[var(--text-secondary)]">Font Weight</label>
+                      <label htmlFor="title-weight" className="text-[11px] text-[var(--ui-text-muted)]">Font Weight</label>
                       <select
                         id="title-weight"
                         className="glass-select !py-1 text-xs"
@@ -467,7 +467,7 @@ export default function ControlPanel({
 
                     {/* Title Tracking */}
                     <div className="space-y-1">
-                      <label htmlFor="title-tracking" className="text-[11px] text-[var(--text-secondary)]">Letter Spacing (Tracking)</label>
+                      <label htmlFor="title-tracking" className="text-[11px] text-[var(--ui-text-muted)]">Letter Spacing (Tracking)</label>
                       <select
                         id="title-tracking"
                         className="glass-select !py-1 text-xs"
@@ -493,12 +493,12 @@ export default function ControlPanel({
                   </div>
 
                   {/* Subtitle Settings Group */}
-                  <div className="space-y-2.5 pt-2 border-t border-white/5">
-                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Subtitle Text</h4>
+                  <div className="space-y-2.5 pt-2 border-t border-[var(--ui-border)]">
+                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ui-text-muted)]">Subtitle Text</h4>
                     
                     {/* Subtitle Font */}
                     <div className="space-y-1">
-                      <label htmlFor="subtitle-font" className="text-[11px] text-[var(--text-secondary)]">Font Family</label>
+                      <label htmlFor="subtitle-font" className="text-[11px] text-[var(--ui-text-muted)]">Font Family</label>
                       <select
                         id="subtitle-font"
                         className="glass-select !py-1 text-xs"
@@ -519,7 +519,7 @@ export default function ControlPanel({
 
                     {/* Subtitle Weight */}
                     <div className="space-y-1">
-                      <label htmlFor="subtitle-weight" className="text-[11px] text-[var(--text-secondary)]">Font Weight</label>
+                      <label htmlFor="subtitle-weight" className="text-[11px] text-[var(--ui-text-muted)]">Font Weight</label>
                       <select
                         id="subtitle-weight"
                         className="glass-select !py-1 text-xs"
@@ -542,7 +542,7 @@ export default function ControlPanel({
 
                     {/* Subtitle Tracking */}
                     <div className="space-y-1">
-                      <label htmlFor="subtitle-tracking" className="text-[11px] text-[var(--text-secondary)]">Letter Spacing (Tracking)</label>
+                      <label htmlFor="subtitle-tracking" className="text-[11px] text-[var(--ui-text-muted)]">Letter Spacing (Tracking)</label>
                       <select
                         id="subtitle-tracking"
                         className="glass-select !py-1 text-xs"
@@ -579,7 +579,7 @@ export default function ControlPanel({
           {settings.style?.overrides && Object.keys(settings.style.overrides).length > 0 && (
             <button
               onClick={() => onSettingsChange({ style: { ...settings.style!, overrides: {} } })}
-              className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-[var(--foreground)] transition-colors"
+              className="text-[10px] uppercase tracking-wider text-[var(--ui-action)] hover:text-[var(--ui-text)] transition-colors"
             >
               Reset to Preset
             </button>
@@ -614,15 +614,15 @@ export default function ControlPanel({
               <>
                 {Object.keys(tokens || {}).map((key) => (
                   <div key={key} className="flex items-center justify-between group">
-                    <label className="text-[11px] text-[var(--foreground-muted)] capitalize w-24">
+                    <label className="text-[11px] text-[var(--ui-text-muted)] capitalize w-24">
                       {key.replace(/_/g, " ")}
                     </label>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-[var(--foreground-muted)] w-16 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-[10px] font-mono text-[var(--ui-text-muted)] w-16 opacity-0 group-hover:opacity-100 transition-opacity">
                         {getColor(key)}
                       </span>
                       <button
-                        className="w-5 h-5 rounded-full border border-white/20 shadow-sm cursor-pointer"
+                        className="w-5 h-5 rounded-full border border-[var(--ui-border-strong)] shadow-sm cursor-pointer"
                         style={{ backgroundColor: getColor(key) }}
                         title={`Customize ${key}`}
                         onClick={(e) => {
@@ -689,7 +689,7 @@ export default function ControlPanel({
       {/* ── Toggles ── */}
       <section className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
         <h2 className="section-header mb-2.5">Layers</h2>
-        <div className="space-y-2 text-[13px] text-[var(--foreground)]">
+        <div className="space-y-2 text-[13px] text-[var(--ui-text)]">
           <label className="flex items-center gap-2.5 cursor-pointer group">
             <input
               type="checkbox"
@@ -706,11 +706,11 @@ export default function ControlPanel({
                 })
               }
             />
-            <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
+            <span className="transition-colors duration-200 group-hover:text-[var(--ui-text)]">
               Legend
             </span>
           </label>
-          <div className="space-y-2 border-l border-white/10 pl-3 ml-2">
+          <div className="space-y-2 border-l border-[var(--ui-border)] pl-3 ml-2">
               {[
                 { key: "show_title", label: "Title" },
                 { key: "show_subtitle", label: "Subtitle" },
@@ -721,7 +721,7 @@ export default function ControlPanel({
               ].map(({ key, label }) => {
                 const optKey = key as keyof typeof settings.metadata_options;
                 return (
-                  <label key={key} className="flex items-center gap-2.5 cursor-pointer group text-xs text-[var(--foreground-muted)] hover:text-[var(--foreground)]">
+                  <label key={key} className="flex items-center gap-2.5 cursor-pointer group text-xs text-[var(--ui-text-muted)] hover:text-[var(--ui-text)]">
                     <input
                       type="checkbox"
                       className="glass-checkbox scale-90"
@@ -754,7 +754,7 @@ export default function ControlPanel({
                   onSettingsChange({ design_asset_mode: e.target.checked })
                 }
               />
-              <span className="transition-colors duration-200 group-hover:text-[var(--foreground)]">
+              <span className="transition-colors duration-200 group-hover:text-[var(--ui-text)]">
                 Design asset mode
               </span>
             </label>
@@ -770,7 +770,7 @@ export default function ControlPanel({
             <Tooltip content="Reset all manual position overrides">
               <button
                 onClick={() => onSettingsChange({ layout_overrides: {} })}
-                className="text-[10px] uppercase tracking-wider text-[var(--accent)] hover:text-[var(--foreground)] transition-colors"
+                className="text-[10px] uppercase tracking-wider text-[var(--ui-action)] hover:text-[var(--ui-text)] transition-colors"
               >
                 Reset All
               </button>
@@ -784,9 +784,9 @@ export default function ControlPanel({
             const isActive = !!settings.layout_overrides?.[key];
             
             return (
-              <div key={id} className={`space-y-1.5 p-2 rounded-lg border transition-colors ${isActive ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/5 hover:border-white/10'}`}>
+              <div key={id} className={`space-y-1.5 p-2 rounded-lg border transition-colors ${isActive ? 'bg-[var(--ui-action-soft)] border-[var(--ui-action)]' : 'bg-[var(--ui-surface-muted)] border-[var(--ui-border)] hover:border-[var(--ui-border-strong)]'}`}>
                 <div className="flex items-center justify-between">
-                  <label className="text-[10px] text-[var(--foreground)] capitalize font-medium">
+                  <label className="text-[10px] text-[var(--ui-text)] capitalize font-medium">
                     {id.replace("_", " ")}
                   </label>
                   {isActive && (
@@ -796,7 +796,7 @@ export default function ControlPanel({
                         delete newOverrides[key];
                         onSettingsChange({ layout_overrides: newOverrides });
                       }}
-                      className="text-[9px] text-white/50 hover:text-white"
+                      className="text-[9px] text-[var(--ui-text-muted)] hover:text-[var(--ui-text)]"
                       title="Reset"
                     >
                       ↺
@@ -805,7 +805,7 @@ export default function ControlPanel({
                 </div>
                 <div className="flex gap-1.5">
                   <div className="flex-1">
-                    <label htmlFor={`layout-${id}-x`} className="text-[8px] text-white/40 uppercase block mb-0.5">X</label>
+                    <label htmlFor={`layout-${id}-x`} className="text-[8px] text-[var(--ui-text-muted)] uppercase block mb-0.5">X</label>
                     <input 
                       id={`layout-${id}-x`}
                       type="number" 
@@ -824,7 +824,7 @@ export default function ControlPanel({
                     />
                   </div>
                   <div className="flex-1">
-                    <label htmlFor={`layout-${id}-y`} className="text-[8px] text-white/40 uppercase block mb-0.5">Y</label>
+                    <label htmlFor={`layout-${id}-y`} className="text-[8px] text-[var(--ui-text-muted)] uppercase block mb-0.5">Y</label>
                     <input 
                       id={`layout-${id}-y`}
                       type="number" 
@@ -851,7 +851,7 @@ export default function ControlPanel({
 
       {/* ── Export ── */}
       <section
-        className="mt-auto border-t border-white/[0.06] pt-4 animate-fade-in"
+        className="mt-auto border-t border-[var(--ui-border)] pt-4 animate-fade-in"
         style={{ animationDelay: "0.25s" }}
       >
         <h2 className="section-header mb-2.5">Export</h2>

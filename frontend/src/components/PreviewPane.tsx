@@ -50,7 +50,7 @@ export default function PreviewPane({
         className={`relative w-full max-w-xl overflow-hidden rounded-2xl transition-shadow duration-500 ${
           designAssetMode
             ? "preview-checkerboard"
-            : "bg-[var(--bg-elevated)]"
+            : "bg-[var(--ui-surface)]"
         } ${
           svg
             ? "shadow-[0_8px_60px_-12px_rgba(94,106,210,0.15)]"
@@ -72,7 +72,7 @@ export default function PreviewPane({
             />
           </div>
         ) : (
-          <div className="flex h-full items-center justify-center px-8 text-center text-sm text-[var(--foreground-muted)]">
+          <div className="flex h-full items-center justify-center px-8 text-center text-sm text-[var(--ui-text-muted)]">
             {loading
               ? null
               : error
@@ -85,11 +85,11 @@ export default function PreviewPane({
         {loading && (
           <div
             role="status"
-            className="absolute inset-0 flex items-center justify-center bg-[var(--bg-deep)]/60 backdrop-blur-sm"
+            className="absolute inset-0 flex items-center justify-center bg-[var(--ui-page)]/60 backdrop-blur-sm"
           >
             <div className="relative flex items-center justify-center">
-              <div className="absolute h-12 w-12 rounded-full pulse-ring bg-[var(--accent)]/20" />
-              <div className="h-10 w-10 spin-smooth rounded-full border-2 border-[var(--accent)]/20 border-t-[var(--accent)]" />
+              <div className="absolute h-12 w-12 rounded-full pulse-ring bg-[var(--ui-action)]/20" />
+              <div className="h-10 w-10 spin-smooth rounded-full border-2 border-[var(--ui-action)]/20 border-t-[var(--ui-action)]" />
             </div>
             <span className="sr-only">Rendering preview…</span>
           </div>
@@ -97,7 +97,7 @@ export default function PreviewPane({
       </div>
 
       {/* ── Status & Actions ── */}
-      <div className="flex w-full max-w-xl items-center justify-between text-xs text-[var(--foreground-muted)]">
+      <div className="flex w-full max-w-xl items-center justify-between text-xs text-[var(--ui-text-muted)]">
         <div className="flex-1 truncate">
           {error ? (
             <span className="text-red-400" title={error}>

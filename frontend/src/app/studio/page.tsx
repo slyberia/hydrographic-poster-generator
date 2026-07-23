@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 
 import ControlPanel, {
   type ExportSettings,
   type PosterSettings,
 } from "@/components/ControlPanel";
 import PreviewPane from "@/components/PreviewPane";
+import PosterHeader from "@/components/PosterHeader";
 import {
   getGeographies,
   getPresets,
@@ -222,49 +222,13 @@ export default function Page() {
   };
 
   return (
-    <main className="relative flex h-screen overflow-hidden cinematic-bg">
-      {/* ── Ambient glow blobs ── */}
-      <div className="ambient-blob ambient-blob-1" aria-hidden="true" />
-      <div className="ambient-blob ambient-blob-2" aria-hidden="true" />
-
+    <main className="relative flex h-screen overflow-hidden bg-[var(--ui-page)]">
       {/* ── Sidebar ── */}
       <aside className="glass-panel relative z-10 flex w-80 shrink-0 flex-col lg:w-96">
-        <header className="border-b border-white/[0.06] px-5 py-4 flex justify-between items-center">
-          <div>
-            <h1
-              className="text-base font-semibold tracking-tight"
-              style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
-            >
-              Hydro Poster
-            </h1>
-            <p className="text-[11px] text-[var(--foreground-muted)] mt-0.5">
-              Preset-driven river network posters
-            </p>
-          </div>
-          <div className="flex gap-4">
-            <Link
-              href="/"
-              className="text-[11px] text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors duration-200"
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              className="text-[11px] text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors duration-200"
-            >
-              About
-            </Link>
-            <Link
-              href="/docs"
-              className="text-[11px] text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors duration-200"
-            >
-              Docs
-            </Link>
-          </div>
-        </header>
+        <PosterHeader current="studio" variant="workspace" />
 
         {bootError ? (
-          <div className="m-4 glass-card p-3 text-sm text-red-300 border-red-500/20">
+          <div className="m-4 glass-card p-3 text-sm text-[var(--ui-danger)] border-[var(--ui-danger)]/20">
             Failed to reach the API: {bootError}
           </div>
         ) : (
@@ -280,7 +244,7 @@ export default function Page() {
         )}
 
         {exportError && (
-          <div className="mx-4 mb-4 glass-card p-2.5 text-xs text-red-300 border-red-500/20">
+          <div className="mx-4 mb-4 glass-card p-2.5 text-xs text-[var(--ui-danger)] border-[var(--ui-danger)]/20">
             Export failed: {exportError}
           </div>
         )}
