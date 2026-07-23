@@ -65,7 +65,7 @@ test("a11y-1: tab order traverses geography → presets → typography → metad
 test("a11y-2: every sidebar form control has an accessible name", async ({ page }) => {
   await openStudio(page);
   // Include collapsed sections' controls.
-  await page.getByRole("button", { name: /Advanced Customization/ }).click();
+  await page.getByRole("button", { name: /Advanced typography/ }).click();
 
   const unnamed = await page.evaluate(() => {
     const controls = Array.from(
@@ -100,7 +100,7 @@ test("a11y-3: metadata checkboxes and export operable by keyboard; QA list is a 
   const state = await openStudio(page);
 
   // Space toggles a granular metadata checkbox.
-  const granular = page.locator("section", { hasText: "Layers" }).locator("div.border-l");
+  const granular = page.locator("section", { hasText: "Content" }).locator("div.border-l");
   const northArrow = granular.getByRole("checkbox", { name: "North Arrow", exact: true });
   await northArrow.focus();
   await page.keyboard.press("Space");

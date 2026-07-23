@@ -132,7 +132,7 @@ test("resilience-5: V1 localStorage state migrates on load with no data loss", a
   await expect(page.getByRole("textbox", { name: "Subtitle", exact: true })).toHaveValue("Saved Subtitle");
 
   // show_metadata:false fans out to the granular toggles; show_legend stays true.
-  const granular = page.locator("section", { hasText: "Layers" }).locator("div.border-l");
+  const granular = page.locator("section", { hasText: "Content" }).locator("div.border-l");
   await expect(granular.getByRole("checkbox", { name: "Title", exact: true })).not.toBeChecked();
   await expect(granular.getByRole("checkbox", { name: "Scale Bar", exact: true })).not.toBeChecked();
   await expect(granular.getByRole("checkbox", { name: "Legend", exact: true })).toBeChecked();

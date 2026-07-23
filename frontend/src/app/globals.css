@@ -349,6 +349,33 @@ body {
   display: block;
 }
 
+.studio-view-button {
+  display: flex;
+  height: 100%;
+  min-width: 2rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--ui-text-muted);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.studio-view-button:hover:not(:disabled) {
+  background: var(--ui-surface-muted);
+  color: var(--ui-text);
+}
+
+.studio-view-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.studio-view-button:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--ui-focus);
+  outline-offset: -2px;
+}
+
 /* Checkerboard backdrop so design-asset transparency is visible. */
 .preview-checkerboard {
   background-image:
