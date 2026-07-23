@@ -10,22 +10,24 @@
 
 import { latLngToCell } from "h3-js";
 
+import { DEFAULT_STUDY_AREA } from "@/lib/studyArea";
+
 const PHOTON_URL = "https://photon.komoot.io/api/";
 
-// Approximate bounding box of the Region-4 zoning coverage (Demerara-Mahaica,
-// Guyana). Used only to *bias* Photon results; the authoritative coverage
-// check is the /report lookup returning 404 for cells outside the grid.
-// Refine from ST_Extent(mcda_grid.geom) if coverage changes.
+// Approximate bounding box of the study-area zoning coverage. Used only to
+// *bias* Photon results; the authoritative coverage check is the /report lookup
+// returning 404 for cells outside the grid. Sourced from the study-area config
+// (see lib/studyArea.ts) rather than hardcoded here.
 export const COVERAGE_BBOX = {
-  minLon: -58.9,
-  minLat: 6.0,
-  maxLon: -57.3,
-  maxLat: 7.3,
+  minLon: DEFAULT_STUDY_AREA.bbox.west,
+  minLat: DEFAULT_STUDY_AREA.bbox.south,
+  maxLon: DEFAULT_STUDY_AREA.bbox.east,
+  maxLat: DEFAULT_STUDY_AREA.bbox.north,
 };
 
-// H3 resolution the grid was built at (mcda_grid.resolution = 9). Must match,
-// or computed indexes won't line up with stored cell rows.
-const GRID_RESOLUTION = 9;
+// H3 resolution the grid was built at (mcda_grid.resolution). Must match, or
+// computed indexes won't line up with stored cell rows.
+const GRID_RESOLUTION = DEFAULT_STUDY_AREA.h3Resolution;
 
 export interface GeoResult {
   label: string;

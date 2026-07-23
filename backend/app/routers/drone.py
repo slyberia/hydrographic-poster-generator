@@ -3,8 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
 import asyncpg
 
 from app.database import get_db_pool
-from app.auth import require_admin, require_analyst, require_viewer
+from app.auth import require_admin, require_analyst, require_viewer, Principal
 from app.services import drone_service
+from app.services import drone_publication_service as drone_pub
 from pydantic import BaseModel, Field
 
 router = APIRouter()
@@ -108,9 +109,9 @@ async def patch_factor(
 
 # ---- Runs ----
 
-@router.get("/runs", tags=["Drone Runs"])
+@router.get("/runs", tags=["Drone Runs"], dependencies=[Depends(require_viewer)])
 async def list_runs(pool: asyncpg.Pool = Depends(get_db_pool)):
-    """List all recorded model runs."""
+    """List all recorded model runs (internal; viewer role required)."""
     return await drone_service.list_runs(pool)
 
 
@@ -141,9 +142,9 @@ async def create_and_execute_run(
         raise HTTPException(status_code=400, detail=str(exc))
 
 
-@router.get("/runs/{run_id}", tags=["Drone Runs"])
+@router.get("/runs/{run_id}", tags=["Drone Runs"], dependencies=[Depends(require_viewer)])
 async def get_run_details(run_id: str, pool: asyncpg.Pool = Depends(get_db_pool)):
-    """Retrieve details and aggregated statistics for a specific run."""
+    """Retrieve details and aggregated statistics for a specific run (internal; viewer role required)."""
     details = await drone_service.get_run_details(pool, run_id)
     if not details:
         raise HTTPException(status_code=404, detail=f"Run {run_id} not found")
@@ -165,13 +166,13 @@ async def delete_run(run_id: str, pool: asyncpg.Pool = Depends(get_db_pool)):
     return Response(status_code=204)
 
 
-@router.get("/runs/{run_id}/geojson", tags=["Drone Runs"])
+@router.get("/runs/{run_id}/geojson", tags=["Drone Runs"], dependencies=[Depends(require_viewer)])
 async def get_run_geojson(
     run_id: str,
     zone: Optional[str] = None,
     pool: asyncpg.Pool = Depends(get_db_pool)
 ):
-    """Get the model run results as a GeoJSON FeatureCollection."""
+    """Get the model run results as a GeoJSON FeatureCollection (internal; viewer role required)."""
     try:
         return await drone_service.results_geojson(pool, run_id, zone)
     except Exception as exc:
@@ -275,13 +276,13 @@ async def get_volatility(
         raise HTTPException(status_code=404, detail=str(exc))
 
 
-@router.get("/runs/{run_id}/report/{h3_index}", tags=["Drone Runs"])
+@router.get("/runs/{run_id}/report/{h3_index}", tags=["Drone Runs"], dependencies=[Depends(require_viewer)])
 async def get_location_report(
     run_id: str,
     h3_index: str,
     pool: asyncpg.Pool = Depends(get_db_pool)
 ):
-    """Generate a detailed click-based location report for a specific cell."""
+    """Generate a detailed click-based location report for a specific cell (internal; viewer role required)."""
     report = await drone_service.location_report(pool, run_id, h3_index)
     if not report:
         raise HTTPException(
@@ -289,3 +290,54 @@ async def get_location_report(
             detail=f"Report not found for run {run_id} and cell {h3_index}"
         )
     return report
+
+
+# ---- Publication lifecycle (administrator-only) ----
+# lifecycle_state (draft -> approved -> published, published -> archived) is a
+# separate axis from execution `status`. Only an administrator moves it.
+
+async def _run_transition(coro, run_id: str):
+    """Map publication-service errors onto HTTP: 404 unknown run, 409 invalid
+    transition from the current state."""
+    try:
+        return await coro
+    except drone_pub.NotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except drone_pub.LifecycleError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+
+
+@router.post("/runs/{run_id}/approve", tags=["Drone Lifecycle"])
+async def approve_run(
+    run_id: str,
+    principal: Principal = Depends(require_admin),
+    pool: asyncpg.Pool = Depends(get_db_pool),
+):
+    """Mark a completed draft run as approved for publication."""
+    return await _run_transition(
+        drone_pub.approve_run(pool, run_id, principal.user_id), run_id
+    )
+
+
+@router.post("/runs/{run_id}/publish", tags=["Drone Lifecycle"])
+async def publish_run(
+    run_id: str,
+    principal: Principal = Depends(require_admin),
+    pool: asyncpg.Pool = Depends(get_db_pool),
+):
+    """Publish an approved run, atomically superseding the current published run."""
+    return await _run_transition(
+        drone_pub.publish_run(pool, run_id, principal.user_id), run_id
+    )
+
+
+@router.post("/runs/{run_id}/archive", tags=["Drone Lifecycle"])
+async def archive_run(
+    run_id: str,
+    principal: Principal = Depends(require_admin),
+    pool: asyncpg.Pool = Depends(get_db_pool),
+):
+    """Retire a run (draft, approved, or published) by archiving it."""
+    return await _run_transition(
+        drone_pub.archive_run(pool, run_id, principal.user_id), run_id
+    )

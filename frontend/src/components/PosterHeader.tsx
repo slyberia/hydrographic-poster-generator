@@ -8,7 +8,7 @@ type PosterHeaderProps = {
 };
 
 const NAV_ITEMS: Array<{ href: string; label: string; route: PosterRoute }> = [
-  { href: "/", label: "Home", route: "home" },
+  { href: "/poster", label: "Home", route: "home" },
   { href: "/studio", label: "Studio", route: "studio" },
   { href: "/about", label: "About", route: "about" },
   { href: "/docs", label: "Docs", route: "docs" },
@@ -23,16 +23,19 @@ export default function PosterHeader({
       <div className="poster-header__inner">
         {variant === "workspace" ? (
           <h1>
-            <Link className="poster-header__brand" href="/">
+            <Link className="poster-header__brand" href="/poster">
               Hydro Poster
             </Link>
           </h1>
         ) : (
-          <Link className="poster-header__brand" href="/">
+          <Link className="poster-header__brand" href="/poster">
             Hydro Poster
           </Link>
         )}
         <nav className="poster-header__nav" aria-label="Hydro Poster">
+          <Link href="/" className="poster-header__link">
+            Platform
+          </Link>
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.route}

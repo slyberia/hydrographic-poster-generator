@@ -19,7 +19,7 @@ from app.exceptions import (
 logger = logging.getLogger(__name__)
 
 # To be imported as we build them:
-from app.routers import geographies, clip, presets, preview, export, drone
+from app.routers import geographies, clip, presets, preview, export, drone, public_drone
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -82,6 +82,7 @@ app.include_router(clip.router, tags=["Spatial Processing"])
 app.include_router(preview.router, tags=["Render Pipeline"])
 app.include_router(export.router, tags=["Export Pipeline"])
 app.include_router(drone.router, tags=["Drone Zoning"])
+app.include_router(public_drone.router, prefix="/public/drone", tags=["Drone Public"])
 
 from app.routers import admin
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
