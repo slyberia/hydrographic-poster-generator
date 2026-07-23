@@ -182,12 +182,47 @@ not begin UX-3.
 
 ### UX-3 - Poster studio workspace
 
-Make the preview the dominant workspace and reorganize controls around the user's
-decision sequence: Place, Appearance, Content, Layout, Export. Add fit, zoom,
-fullscreen, and reset-view controls. Collapse typography overrides, individual
-colors, and numeric coordinates under Advanced. Replace duplicate legend controls
-with one Poster Elements state. Render palette previews from existing preset tokens;
-do not generate a backend preview per palette.
+**Objective:** Turn `/studio` into a canvas-first poster workspace while preserving
+the existing renderer, request, export, and interactive-layout contracts.
+
+**Problem solved:** The fixed desktop rail, undersized preview, flat control sequence,
+duplicate Legend controls, and always-visible precision settings make the primary
+poster workflow harder to scan and use.
+
+**Included:**
+
+- Make the preview the dominant workspace at desktop and compact widths.
+- Use a persistent desktop control rail and an off-canvas compact control drawer.
+- Reorganize controls as Place, Appearance, Content, Layout, and Export.
+- Render palette choices from existing preset tokens without new preview requests.
+- Collapse typography overrides, individual colors, and numeric coordinates under
+  explicit Advanced controls.
+- Expose one canonical Legend control while synchronizing the legacy request field.
+- Add fit, zoom, fullscreen, and reset-view controls around the preview.
+- Preserve direct poster-element dragging, keyboard movement, QA, and export behavior.
+- Add focused browser tests and update affected parity/accessibility selectors.
+
+**Excluded:** backend, API, database, renderer, deployment, saved-settings migration,
+new dependencies, new palette assets, About/Docs/Drone routes, and full phone editing
+parity.
+
+**Acceptance criteria:**
+
+- The preview is the dominant Studio surface and no longer uses the old `max-w-xl`
+  constraint.
+- The control sequence is Place, Appearance, Content, Layout, Export.
+- Standard palettes have token-derived visual previews and add no API calls.
+- Exactly one visible Legend checkbox controls both metadata and legacy payload state.
+- Typography overrides, color overrides, and numeric coordinates are collapsed by
+  default.
+- Fit, 50-200% zoom, fullscreen, and reset-view controls are keyboard accessible.
+- Compact widths use a control drawer without horizontal page overflow.
+- Existing Studio parity, resilience, and accessibility behavior remains green.
+- Frontend lint, production build, focused browser tests, and responsive screenshots
+  pass.
+
+**Stop point:** Stop after the Studio workspace is implemented, verified, and proposed
+in a draft PR. Do not begin UX-4 or any Track A task.
 
 ### UX-4 - About page
 
@@ -277,12 +312,18 @@ the estimate unless the user approves a contract amendment.
 
 - **Active plan:** UI/UX Implementation Plan
 - **Completed tasks:** UX-1 - Semantic UI foundations and shared poster shell;
-  UX-2 - Homepage product proof
-- **Next candidate:** UX-3 - Poster Studio workspace; contract approval required
+  UX-2 - Homepage product proof; UX-3 - Poster Studio workspace
+- **Next candidate:** UX-4 - About page; contract approval required
 - **Paused plan:** Track A Production Architecture
 - **Architecture work authorized:** none
-- **Next action:** review the UX-2 result, expand UX-3 into a full task contract,
-  and obtain approval before implementation.
+- **UX-3 verification:** frontend lint and production build pass; 17 focused Studio
+  accessibility, parity, resilience, and workspace tests pass; mocked responsive
+  screenshots checked at 390, 768, and 1440 pixels.
+- **Deferred finding:** persisted localStorage state can produce a hydration warning
+  during migration tests; the behavior predates UX-3 and remains covered by passing
+  resilience tests.
+- **Next action:** review the UX-3 result and expand UX-4 into a full task contract
+  before implementation.
 - **Do not start:** TA-5, migration work, run lifecycle, rate limiting, deployment,
   Public Explorer backend contracts, or dashboard APIs.
 

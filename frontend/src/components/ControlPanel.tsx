@@ -80,6 +80,8 @@ export default function ControlPanel({
 }: ControlPanelProps) {
   const [activeColorPicker, setActiveColorPicker] = useState<ActiveColorPickerState | null>(null);
   const [showTypographyOverrides, setShowTypographyOverrides] = useState(false);
+  const [showColorOverrides, setShowColorOverrides] = useState(false);
+  const [showLayoutCoordinates, setShowLayoutCoordinates] = useState(false);
 
   // Cascading geography picker state.
   const [regionCode, setRegionCode] = useState("");
@@ -149,9 +151,9 @@ export default function ControlPanel({
 
   return (
     <div className="flex h-full flex-col gap-5 overflow-y-auto px-5 py-4">
-      {/* ── Geography ── */}
+      {/* ── Place ── */}
       <section className="animate-fade-in" style={{ animationDelay: "0.05s" }}>
-        <h2 className="section-header mb-2.5">Geography</h2>
+        <h2 className="section-header mb-2.5">Place</h2>
         <div className="space-y-2.5">
           <div>
             <label htmlFor="region" className="glass-label">
@@ -237,9 +239,9 @@ export default function ControlPanel({
         </div>
       </section>
 
-      {/* ── Style presets ── */}
+      {/* ── Appearance ── */}
       <section className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
-        <h2 className="section-header mb-2.5">Style</h2>
+        <h2 className="section-header mb-2.5">Appearance</h2>
         <div className="space-y-2.5">
           <div>
             <label htmlFor="density" className="glass-label">
@@ -261,49 +263,87 @@ export default function ControlPanel({
             </select>
           </div>
           <div>
-            <label htmlFor="palette" className="glass-label">
-              Theme / Palette
-            </label>
-            <select
-              id="palette"
-              className="glass-select"
-              value={settings.style?.mode === "flag" ? "mode_flag" : `standard:${settings.style?.preset_id}`}
-              onChange={(e) => {
-                const val = e.target.value;
-                if (val === "mode_flag") {
-                  // Switch to flag mode, select first available flag
-                  const firstFlag = presets?.flags?.[0]?.id || "";
+            <span className="glass-label">Palette</span>
+            <div
+              className="grid grid-cols-2 gap-2"
+              role="radiogroup"
+              aria-label="Palette"
+            >
+              {(presets?.palette ?? []).map((palette) => {
+                const selected =
+                  settings.style?.mode === "standard" &&
+                  settings.style.preset_id === palette.id;
+                const swatches = [
+                  palette.tokens.background,
+                  palette.tokens.feature_major,
+                  palette.tokens.feature_secondary,
+                  palette.tokens.text_primary,
+                ];
+                return (
+                  <button
+                    key={palette.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() =>
+                      onSettingsChange({
+                        style: {
+                          schema_version: 2,
+                          mode: "standard",
+                          preset_id: palette.id,
+                          variant: settings.style?.variant,
+                          overrides: {},
+                        },
+                      })
+                    }
+                    className={`min-w-0 rounded-md border p-2 text-left transition-colors ${
+                      selected
+                        ? "border-[var(--ui-action)] bg-[var(--ui-action-soft)]"
+                        : "border-[var(--ui-border)] bg-[var(--ui-surface)] hover:border-[var(--ui-border-strong)]"
+                    }`}
+                  >
+                    <span className="mb-2 flex h-4 overflow-hidden rounded-sm border border-black/10">
+                      {swatches.map((color, index) => (
+                        <span
+                          key={`${palette.id}-${index}`}
+                          className="flex-1"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </span>
+                    <span className="block truncate text-xs font-medium text-[var(--ui-text)]">
+                      {palette.name}
+                    </span>
+                    <span className="block text-[10px] capitalize text-[var(--ui-text-muted)]">
+                      {palette.type}
+                    </span>
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                role="radio"
+                aria-checked={settings.style?.mode === "flag"}
+                onClick={() =>
                   onSettingsChange({
                     style: {
                       schema_version: 2,
                       mode: "flag",
-                      preset_id: firstFlag,
+                      preset_id: presets?.flags?.[0]?.id || "",
                       variant: settings.style?.variant || "light",
                       overrides: {},
                     },
-                  });
-                } else {
-                  // Standard mode
-                  const [, presetId] = val.split(":");
-                  onSettingsChange({
-                    style: {
-                      schema_version: 2,
-                      mode: "standard",
-                      preset_id: presetId,
-                      variant: settings.style?.variant,
-                      overrides: {},
-                    },
-                  });
+                  })
                 }
-              }}
-            >
-              {(presets?.palette ?? []).map((p) => (
-                <option key={`standard:${p.id}`} value={`standard:${p.id}`}>
-                  {p.name} ({p.type})
-                </option>
-              ))}
-              <option value="mode_flag">Country Flags…</option>
-            </select>
+                className={`rounded-md border p-2 text-left text-xs font-medium transition-colors ${
+                  settings.style?.mode === "flag"
+                    ? "border-[var(--ui-action)] bg-[var(--ui-action-soft)] text-[var(--ui-text)]"
+                    : "border-[var(--ui-border)] bg-[var(--ui-surface)] text-[var(--ui-text-muted)] hover:border-[var(--ui-border-strong)]"
+                }`}
+              >
+                Country flags
+              </button>
+            </div>
           </div>
 
           {settings.style?.mode === "flag" && (
@@ -395,7 +435,7 @@ export default function ControlPanel({
                   >
                     ▶
                   </span>
-                  <span>Advanced Customization</span>
+                  <span>Advanced typography</span>
                   {Object.keys(settings.typography_overrides || {}).length > 0 && (
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--ui-action)]" title="Overrides active" />
                   )}
@@ -573,10 +613,21 @@ export default function ControlPanel({
       </section>
 
       {/* ── Custom Colors ── */}
-      <section className="animate-fade-in" style={{ animationDelay: "0.12s" }}>
-        <div className="flex items-center justify-between mb-2.5">
-          <h2 className="section-header !mb-0">Colors</h2>
-          {settings.style?.overrides && Object.keys(settings.style.overrides).length > 0 && (
+      <section className="animate-fade-in border-l border-[var(--ui-border)] pl-3" style={{ animationDelay: "0.12s" }}>
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setShowColorOverrides((current) => !current)}
+            className="flex items-center gap-1.5 text-xs text-[var(--ui-text-muted)] transition-colors hover:text-[var(--ui-text)]"
+            aria-expanded={showColorOverrides}
+          >
+            <span aria-hidden="true">{showColorOverrides ? "v" : ">"}</span>
+            <span>Advanced colors</span>
+            {settings.style?.overrides && Object.keys(settings.style.overrides).length > 0 && (
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--ui-action)]" title="Overrides active" />
+            )}
+          </button>
+          {showColorOverrides && settings.style?.overrides && Object.keys(settings.style.overrides).length > 0 && (
             <button
               onClick={() => onSettingsChange({ style: { ...settings.style!, overrides: {} } })}
               className="text-[10px] uppercase tracking-wider text-[var(--ui-action)] hover:text-[var(--ui-text)] transition-colors"
@@ -585,7 +636,7 @@ export default function ControlPanel({
             </button>
           )}
         </div>
-        <div className="space-y-0.5">
+        {showColorOverrides && <div className="mt-3 space-y-1">
           {(() => {
             let tokens: Record<string, string> = {};
             if (settings.style?.mode === "flag") {
@@ -648,12 +699,12 @@ export default function ControlPanel({
               </>
             );
           })()}
-        </div>
+        </div>}
       </section>
 
-      {/* ── Poster text ── */}
+      {/* ── Content ── */}
       <section className="animate-fade-in" style={{ animationDelay: "0.15s" }}>
-        <h2 className="section-header mb-2.5">Text</h2>
+        <h2 className="section-header mb-2.5">Content</h2>
         <div className="space-y-2.5">
           <div>
             <label htmlFor="title" className="glass-label">
@@ -684,33 +735,9 @@ export default function ControlPanel({
             />
           </div>
         </div>
-      </section>
-
-      {/* ── Toggles ── */}
-      <section className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
-        <h2 className="section-header mb-2.5">Layers</h2>
+        <h3 className="glass-label mb-2 mt-4">Poster elements</h3>
         <div className="space-y-2 text-[13px] text-[var(--ui-text)]">
-          <label className="flex items-center gap-2.5 cursor-pointer group">
-            <input
-              type="checkbox"
-              className="glass-checkbox"
-              checked={settings.show_legend}
-              disabled={settings.design_asset_mode}
-              onChange={(e) =>
-                onSettingsChange({
-                  show_legend: e.target.checked,
-                  metadata_options: {
-                    ...settings.metadata_options,
-                    show_legend: e.target.checked,
-                  },
-                })
-              }
-            />
-            <span className="transition-colors duration-200 group-hover:text-[var(--ui-text)]">
-              Legend
-            </span>
-          </label>
-          <div className="space-y-2 border-l border-[var(--ui-border)] pl-3 ml-2">
+          <div className="space-y-2 border-l border-[var(--ui-border)] pl-3">
               {[
                 { key: "show_title", label: "Title" },
                 { key: "show_subtitle", label: "Subtitle" },
@@ -777,7 +804,19 @@ export default function ControlPanel({
             </Tooltip>
           )}
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={() => setShowLayoutCoordinates((current) => !current)}
+          className="flex items-center gap-1.5 text-xs text-[var(--ui-text-muted)] transition-colors hover:text-[var(--ui-text)]"
+          aria-expanded={showLayoutCoordinates}
+        >
+          <span aria-hidden="true">{showLayoutCoordinates ? "v" : ">"}</span>
+          <span>Advanced coordinates</span>
+          {Object.keys(settings.layout_overrides || {}).length > 0 && (
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--ui-action)]" title="Overrides active" />
+          )}
+        </button>
+        {showLayoutCoordinates && <div className="mt-3 grid grid-cols-2 gap-2">
           {["title_block", "metadata", "legend", "north_arrow"].map((id) => {
             const key = id as keyof typeof settings.layout_overrides;
             const transform = settings.layout_overrides?.[key] || { x: 0, y: 0, scale: 1 };
@@ -846,7 +885,7 @@ export default function ControlPanel({
               </div>
             );
           })}
-        </div>
+        </div>}
       </section>
 
       {/* ── Export ── */}

@@ -57,6 +57,7 @@ const DEFAULT_EXPORT: ExportSettings = {
 };
 
 export default function Page() {
+  const [controlsOpen, setControlsOpen] = useState(false);
   const [regions, setRegions] = useState<GeographyRegion[]>([]);
   const [presets, setPresets] = useState<PresetsResponse | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
@@ -222,10 +223,31 @@ export default function Page() {
   };
 
   return (
-    <main className="relative flex h-screen overflow-hidden bg-[var(--ui-page)]">
-      {/* ── Sidebar ── */}
-      <aside className="glass-panel relative z-10 flex w-80 shrink-0 flex-col lg:w-96">
+    <main className="relative flex h-dvh overflow-hidden bg-[var(--ui-page)]">
+      {controlsOpen && (
+        <button
+          type="button"
+          className="fixed inset-0 z-30 bg-black/25 lg:hidden"
+          aria-label="Close poster controls"
+          onClick={() => setControlsOpen(false)}
+        />
+      )}
+
+      <aside
+        id="poster-controls"
+        className={`glass-panel fixed inset-y-0 left-0 z-40 flex w-[min(24rem,calc(100vw-3rem))] shrink-0 flex-col transition-transform duration-200 lg:relative lg:w-96 lg:translate-x-0 ${
+          controlsOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <PosterHeader current="studio" variant="workspace" />
+        <button
+          type="button"
+          className="absolute right-3 top-3 z-[60] flex h-9 w-9 items-center justify-center rounded-md border border-[var(--ui-border)] bg-[var(--ui-surface)] text-lg text-[var(--ui-text-muted)] lg:hidden"
+          aria-label="Close poster controls"
+          onClick={() => setControlsOpen(false)}
+        >
+          ×
+        </button>
 
         {bootError ? (
           <div className="m-4 glass-card p-3 text-sm text-[var(--ui-danger)] border-[var(--ui-danger)]/20">
@@ -250,8 +272,16 @@ export default function Page() {
         )}
       </aside>
 
-      {/* ── Preview ── */}
-      <section className="relative z-10 min-w-0 flex-1 overflow-y-auto">
+      <section className="relative z-10 min-w-0 flex-1">
+        <button
+          type="button"
+          className="absolute left-2 top-1.5 z-20 rounded-md border border-[var(--ui-border)] bg-[var(--ui-surface)] px-3 py-2 text-xs font-semibold text-[var(--ui-text)] shadow-sm lg:hidden"
+          aria-expanded={controlsOpen}
+          aria-controls="poster-controls"
+          onClick={() => setControlsOpen(true)}
+        >
+          Controls
+        </button>
         <PreviewPane
           svg={svg}
           loading={previewLoading}

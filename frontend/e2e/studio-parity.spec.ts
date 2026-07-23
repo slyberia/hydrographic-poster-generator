@@ -99,7 +99,7 @@ test.describe("pointer drag", () => {
 
 test("parity-3: metadata checkboxes — payload metadata_options mirror UI state exactly", async ({ page }) => {
   const state = await openStudio(page);
-  const granular = page.locator("section", { hasText: "Layers" }).locator("div.border-l");
+  const granular = page.locator("section", { hasText: "Content" }).locator("div.border-l");
 
   const expected: Record<string, boolean> = {
     show_title: true,
@@ -141,7 +141,7 @@ test("parity-3: metadata checkboxes — payload metadata_options mirror UI state
 
 test("parity-4: typography overrides — payload fidelity and preset-change reset", async ({ page }) => {
   const state = await openStudio(page);
-  await page.getByRole("button", { name: /Advanced Customization/ }).click();
+  await page.getByRole("button", { name: /Advanced typography/ }).click();
 
   let payload = await payloadAfter(page, state, async () => {
     await page.locator("#title-font").selectOption("Roboto Mono");
