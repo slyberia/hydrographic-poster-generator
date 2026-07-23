@@ -267,10 +267,44 @@ draft PR. Do not begin UX-5 or any Track A task.
 
 ### UX-5 - Documentation experience
 
-Create a curated documentation hierarchy before Swagger: Overview, Architecture,
-Quick start, Render, Export, Presets, Errors and limits, Interactive schema. Correct
-known terminology claims without changing backend behavior. Keep Swagger as the
-reference layer, not the whole experience.
+**Objective:** Turn `/docs` into a usable poster-API guide, with Swagger retained as
+the final reference layer.
+
+**Problem solved:** The current page combines a glossary, two FAQ items, and raw
+Swagger without orienting a developer through the request lifecycle. It also describes
+river lines as polygons and claims an active repair metric the current clipping service
+does not produce.
+
+**Included:**
+
+- Render the curated documentation shell on the server.
+- Add Overview, Architecture, Quick start, Render, Export, Presets, Errors and
+  limits, Glossary, and Interactive schema sections.
+- Add request examples that match the current versioned style and export models.
+- Document response headers, format combinations, custom dimensions, regional
+  coverage, and data-driven IDs.
+- Correct geometry and repair language without changing backend behavior.
+- Embed the backend-hosted Swagger UI and retain it as the final reference.
+- Add focused initial-HTML, responsive, navigation, schema, code-overflow, and
+  public-shell regression checks.
+
+**Excluded:** backend or OpenAPI filtering, endpoint changes, authentication, Drone
+API separation, rate limiting, generated SDKs, new dependencies, deployment, UX-6,
+and Track A work.
+
+**Acceptance criteria:**
+
+- The curated hierarchy and examples are present in the initial HTML.
+- Preview and export examples match current backend models.
+- Swagger remains available after the curated guide.
+- Unsupported river-polygon and active-repair-percentage claims are removed.
+- Long code blocks scroll internally without causing page overflow.
+- No clipped text or incoherent overlap at 390, 768, 1024, and 1440 pixels.
+- Frontend lint, production build, focused browser tests, and responsive screenshots
+  pass.
+
+**Stop point:** Stop after the documentation experience is implemented, verified, and
+proposed in a draft PR. Do not include UX-6 in the same branch.
 
 ### UX-6 - Drone landing page and route shell
 
@@ -344,8 +378,9 @@ the estimate unless the user approves a contract amendment.
 
 - **Active plan:** UI/UX Implementation Plan
 - **Completed tasks:** UX-1 - Semantic UI foundations and shared poster shell;
-  UX-2 - Homepage product proof; UX-3 - Poster Studio workspace; UX-4 - About page
-- **Next candidate:** UX-5 - Documentation experience; contract approval required
+  UX-2 - Homepage product proof; UX-3 - Poster Studio workspace; UX-4 - About page;
+  UX-5 - Documentation experience
+- **Active task:** none; UX-5 is ready for review in a draft pull request
 - **Paused plan:** Track A Production Architecture
 - **Architecture work authorized:** none
 - **UX-3 verification:** frontend lint and production build pass; 17 focused Studio
@@ -357,8 +392,15 @@ the estimate unless the user approves a contract amendment.
 - **UX-4 verification:** meaningful content confirmed in the initial HTML; frontend
   lint and production build pass; 9 focused About and shared-homepage browser tests
   pass; responsive screenshots checked at 390, 768, 1024, and 1440 pixels.
-- **Next action:** review the UX-4 result and expand UX-5 into a full task contract
-  before implementation.
+- **UX-5 verification:** curated guide content confirmed in the initial HTML; frontend
+  lint and production build pass; 10 focused Docs and shared-About browser tests pass
+  at 390, 768, 1024, and 1440 pixels; responsive screenshots checked at 390, 768,
+  and 1440 pixels.
+- **Deferred finding:** `swagger-ui-react` 5.32 fails while refracting the backend's
+  OpenAPI 3.1 schema under the current Next.js development runtime. UX-5 embeds the
+  backend-hosted Swagger UI instead. Dependency upgrade or removal is deferred.
+- **Next action:** review the UX-5 draft pull request, then execute the separately
+  authorized UX-6 route-shell contract from the merged baseline.
 - **Do not start:** TA-5, migration work, run lifecycle, rate limiting, deployment,
   Public Explorer backend contracts, or dashboard APIs.
 
