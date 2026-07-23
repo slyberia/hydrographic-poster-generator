@@ -226,12 +226,44 @@ in a draft PR. Do not begin UX-4 or any Track A task.
 
 ### UX-4 - About page
 
-Remove the client-only mount gate, correct navigation, and replace the abstract
-database circle with a truthful process presentation:
+**Objective:** Make `/about` explain the product's value, verified spatial pipeline,
+supported scope, output modes, and intentional constraints without requiring client
+hydration.
 
-`Boundary selection -> PostGIS clipping -> Classification -> SVG renderer -> Export`
+**Problem solved:** The current page is hidden until hydration, leads with an abstract
+database visual, overstates global runtime behavior, and foregrounds implementation
+language before explaining what the product does for a user.
 
-Clarify regional coverage and separate user value from implementation detail.
+**Included:**
+
+- Convert the route from a client-gated component to a server-rendered page.
+- Replace the abstract database circle with the verified five-stage pipeline:
+  Boundary selection, PostGIS clipping, Network classification, SVG composition,
+  Export.
+- Clarify that current runtime coverage uses South America and North/Central America
+  regional datasets.
+- Separate user value, output modes, data sources, and intentional constraints.
+- Reuse an existing generated Guyana poster as product evidence.
+- Preserve the shared poster header and correct Studio navigation.
+- Add focused initial-HTML, responsive, accessibility, image, and overflow checks.
+
+**Excluded:** homepage or Studio changes, new assets, new dependencies, backend, API,
+database, renderer, Docs, Drone, deployment, and Track A work.
+
+**Acceptance criteria:**
+
+- Meaningful About content is present in the initial server response.
+- The five pipeline stages and regional runtime coverage match repository contracts.
+- The abstract circle and unsupported global-runtime claim are removed.
+- A real generated poster is visible and its image loads successfully.
+- The Studio action points to `/studio` and has visible keyboard focus.
+- No horizontal overflow, clipped text, or incoherent overlap at 390, 768, 1024,
+  and 1440 pixels.
+- Frontend lint, production build, focused browser tests, and responsive screenshots
+  pass.
+
+**Stop point:** Stop after the About page is implemented, verified, and proposed in a
+draft PR. Do not begin UX-5 or any Track A task.
 
 ### UX-5 - Documentation experience
 
@@ -312,8 +344,8 @@ the estimate unless the user approves a contract amendment.
 
 - **Active plan:** UI/UX Implementation Plan
 - **Completed tasks:** UX-1 - Semantic UI foundations and shared poster shell;
-  UX-2 - Homepage product proof; UX-3 - Poster Studio workspace
-- **Next candidate:** UX-4 - About page; contract approval required
+  UX-2 - Homepage product proof; UX-3 - Poster Studio workspace; UX-4 - About page
+- **Next candidate:** UX-5 - Documentation experience; contract approval required
 - **Paused plan:** Track A Production Architecture
 - **Architecture work authorized:** none
 - **UX-3 verification:** frontend lint and production build pass; 17 focused Studio
@@ -322,7 +354,10 @@ the estimate unless the user approves a contract amendment.
 - **Deferred finding:** persisted localStorage state can produce a hydration warning
   during migration tests; the behavior predates UX-3 and remains covered by passing
   resilience tests.
-- **Next action:** review the UX-3 result and expand UX-4 into a full task contract
+- **UX-4 verification:** meaningful content confirmed in the initial HTML; frontend
+  lint and production build pass; 9 focused About and shared-homepage browser tests
+  pass; responsive screenshots checked at 390, 768, 1024, and 1440 pixels.
+- **Next action:** review the UX-4 result and expand UX-5 into a full task contract
   before implementation.
 - **Do not start:** TA-5, migration work, run lifecycle, rate limiting, deployment,
   Public Explorer backend contracts, or dashboard APIs.

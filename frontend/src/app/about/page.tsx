@@ -1,140 +1,308 @@
-"use client";
+import Image from "next/image";
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
 import PosterHeader from "@/components/PosterHeader";
 
+const PROCESS_STEPS = [
+  {
+    number: "01",
+    title: "Boundary selection",
+    description:
+      "Choose a supported country or administrative area from the geography registry.",
+    detail: "Input: geoBoundaries geometry",
+  },
+  {
+    number: "02",
+    title: "PostGIS clipping",
+    description:
+      "Intersect HydroRIVERS line geometries with the selected boundary and retain the relevant network.",
+    detail: "Operation: spatial intersection",
+  },
+  {
+    number: "03",
+    title: "Network classification",
+    description:
+      "Apply the selected density rules and translate source hierarchy into a restrained visual system.",
+    detail: "Result: display classes",
+  },
+  {
+    number: "04",
+    title: "SVG composition",
+    description:
+      "Combine the classified network with typography, legend, scale, orientation, and source details.",
+    detail: "Renderer: shared preview/export path",
+  },
+  {
+    number: "05",
+    title: "Export",
+    description:
+      "Render the reviewed composition for print, digital display, or continued vector design work.",
+    detail: "Formats: SVG, PNG, PDF",
+  },
+];
+
+const USE_CASES = [
+  {
+    title: "Cartographic posters",
+    description:
+      "Create high-resolution compositions for print or digital display without rebuilding the spatial workflow in desktop GIS software.",
+  },
+  {
+    title: "Vector design assets",
+    description:
+      "Export a transparent river network as SVG or PNG for use inside a broader design composition.",
+  },
+  {
+    title: "Spatial communication",
+    description:
+      "Show the density and hierarchy of a river network through a consistent, readable visual protocol.",
+  },
+];
+
+const CONSTRAINTS = [
+  "No custom dataset uploads in the current product.",
+  "No unrestricted cartographic styling or full GIS toolset.",
+  "No global runtime dataset; current coverage is regional.",
+  "Design assets use SVG or PNG, while poster exports also support PDF.",
+];
+
 export default function AboutPage() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-[var(--ui-page)] text-[var(--ui-text)] font-sans pb-32">
+    <main className="min-h-screen overflow-x-hidden bg-[var(--ui-page)] text-[var(--ui-text)]">
       <PosterHeader current="about" />
 
-      {/* ── Asymmetric Layout Container ── */}
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-12 pt-24 flex flex-col gap-32">
-        
-        {/* ── Hero / The Engine ── */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center animate-fade-in">
-          <div className="lg:col-span-7 flex flex-col gap-6">
-            <h1 
-              className="font-semibold leading-[1.1] tracking-tight text-[var(--ui-text)]"
-              style={{ 
+      <section className="border-b border-[var(--ui-border)] bg-[var(--ui-panel)] px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-5 text-xs font-bold uppercase text-[#b4234f]">
+            About Hydro Poster
+          </p>
+          <h1
+            className="max-w-[14ch] text-4xl font-semibold leading-[1.05] text-[var(--ui-text)] sm:text-5xl lg:text-6xl"
+            style={{
+              fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+            }}
+          >
+            River data, composed for print.
+          </h1>
+          <p className="mt-7 max-w-3xl text-lg leading-relaxed text-[var(--ui-text-muted)] sm:text-xl">
+            Hydro Poster turns a professional GIS workflow into a constrained
+            creative tool. It clips real hydrographic data to a selected place,
+            applies a consistent cartographic hierarchy, and produces a finished
+            poster or reusable vector asset.
+          </p>
+
+          <dl className="mt-12 grid border-t border-[var(--ui-border-strong)] sm:grid-cols-3">
+            <div className="border-b border-[var(--ui-border)] py-5 sm:border-b-0 sm:border-r sm:pr-6">
+              <dt className="text-xs font-bold uppercase text-[var(--ui-text-muted)]">
+                Runtime coverage
+              </dt>
+              <dd className="mt-2 text-sm font-medium text-[var(--ui-text)]">
+                South America and North/Central America
+              </dd>
+            </div>
+            <div className="border-b border-[var(--ui-border)] py-5 sm:border-b-0 sm:border-r sm:px-6">
+              <dt className="text-xs font-bold uppercase text-[var(--ui-text-muted)]">
+                Spatial sources
+              </dt>
+              <dd className="mt-2 text-sm font-medium text-[var(--ui-text)]">
+                HydroRIVERS v1.0 and geoBoundaries
+              </dd>
+            </div>
+            <div className="py-5 sm:pl-6">
+              <dt className="text-xs font-bold uppercase text-[var(--ui-text-muted)]">
+                Output
+              </dt>
+              <dd className="mt-2 text-sm font-medium text-[var(--ui-text)]">
+                Print posters and transparent design assets
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section className="px-5 py-20 sm:px-8 lg:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 max-w-3xl">
+            <p className="mb-3 text-xs font-bold uppercase text-[#a94b08]">
+              From boundary to finished artwork
+            </p>
+            <h2
+              className="text-3xl font-semibold text-[var(--ui-text)] sm:text-4xl"
+              style={{
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
-                fontSize: "clamp(3rem, 6vw, 5.5rem)"
               }}
             >
-              The Architecture of Aesthetics.
-            </h1>
-            <p 
-              className="text-[var(--ui-text-muted)] font-light leading-relaxed max-w-[65ch]"
-              style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)" }}
-            >
-              This isn&apos;t just a design tool. It&apos;s a lens into the unique intersection of rigorous geographic information systems (GIS) and minimalist cartographic art.
+              A visible result backed by a spatial pipeline.
+            </h2>
+            <p className="mt-5 leading-relaxed text-[var(--ui-text-muted)]">
+              The interface presents a short creative workflow. Underneath it,
+              each render moves through five explicit stages.
             </p>
           </div>
-          <div className="lg:col-span-5 relative">
-            {/* Abstract visual reference to a database/rendering engine */}
-            <div className="w-full aspect-square rounded-full border border-[var(--ui-border)] bg-[var(--ui-surface)] flex items-center justify-center relative overflow-hidden">
-              <div className="text-[10px] text-[var(--ui-text-muted)] uppercase tracking-[0.2em] font-mono opacity-70">
-                POSTGIS_GEOM_CLIP
+
+          <ol className="grid gap-8 md:grid-cols-2 lg:grid-cols-5 lg:gap-0">
+            {PROCESS_STEPS.map((step) => (
+              <li
+                key={step.number}
+                className="border-t border-[var(--ui-border-strong)] pt-4 lg:px-4 lg:first:pl-0 lg:last:pr-0"
+              >
+                <p className="mb-6 font-mono text-xs font-semibold text-[var(--ui-action)]">
+                  {step.number}
+                </p>
+                <h3 className="text-base font-semibold text-[var(--ui-text)]">
+                  {step.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--ui-text-muted)]">
+                  {step.description}
+                </p>
+                <p className="mt-5 border-l-2 border-[var(--ui-border-strong)] pl-3 font-mono text-[11px] leading-relaxed text-[var(--ui-text-muted)]">
+                  {step.detail}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="border-y border-[var(--ui-border)] bg-[#172033] px-5 py-20 text-white sm:px-8 lg:py-24">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,25rem)] lg:gap-20">
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase text-[#9dc8ff]">
+              One source, two working modes
+            </p>
+            <h2
+              className="max-w-[15ch] text-3xl font-semibold sm:text-4xl"
+              style={{
+                fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+              }}
+            >
+              Finished composition or reusable geometry.
+            </h2>
+            <div className="mt-8 grid gap-8 sm:grid-cols-2">
+              <div className="border-t border-white/30 pt-4">
+                <h3 className="font-semibold">Poster mode</h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/70">
+                  Preserves the complete composition, including typography,
+                  cartographic elements, and source information.
+                </p>
               </div>
-              <div className="absolute top-1/2 left-0 w-full h-[1px] bg-[var(--ui-border)]" />
-              <div className="absolute left-1/2 top-0 h-full w-[1px] bg-[var(--ui-border)]" />
+              <div className="border-t border-white/30 pt-4">
+                <h3 className="font-semibold">Design asset mode</h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/70">
+                  Removes the poster chrome and exports the river network on a
+                  transparent background for continued design work.
+                </p>
+              </div>
             </div>
+            <p className="mt-10 max-w-2xl text-sm leading-relaxed text-white/60">
+              Preview and export use the same SVG renderer, so layout, type,
+              color, and metadata choices follow the reviewed composition into
+              the final file.
+            </p>
           </div>
-        </section>
 
-        {/* ── The Data & PostGIS Backbone ── */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start">
-          <div className="lg:col-span-4 lg:col-start-2 pt-4">
-            <h2 
-              className="font-medium text-[var(--ui-text)] tracking-tight"
-              style={{ 
+          <figure className="mx-auto w-full max-w-[22rem]">
+            <Image
+              src="/posters/guyana-parchment.webp"
+              alt="Generated Guyana river network poster using the Parchment palette"
+              width={600}
+              height={900}
+              sizes="(max-width: 1023px) 352px, 400px"
+              loading="eager"
+              className="h-auto w-full border border-white/20 shadow-2xl"
+            />
+            <figcaption className="mt-3 font-mono text-[11px] text-white/60">
+              Guyana / balanced density / Parchment palette
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section className="bg-[var(--ui-panel)] px-5 py-20 sm:px-8 lg:py-24">
+        <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-2 lg:gap-24">
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase text-[var(--ui-action)]">
+              Where it fits
+            </p>
+            <h2
+              className="text-3xl font-semibold text-[var(--ui-text)]"
+              style={{
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
-                fontSize: "clamp(2rem, 3vw, 2.5rem)"
               }}
             >
-              PostgreSQL <br/> Backbone
+              Useful outputs, without GIS overhead.
             </h2>
+            <div className="mt-9 space-y-8">
+              {USE_CASES.map((useCase) => (
+                <div
+                  key={useCase.title}
+                  className="border-t border-[var(--ui-border)] pt-4"
+                >
+                  <h3 className="font-semibold text-[var(--ui-text)]">
+                    {useCase.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--ui-text-muted)]">
+                    {useCase.description}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="lg:col-span-6 flex flex-col gap-8">
-            <p className="text-lg leading-relaxed text-[var(--ui-text)]">
-              Behind the glassmorphic controls lies a heavy-duty spatial engine. We use PostgreSQL and PostGIS to query and dynamically clip the massive <span className="text-[var(--ui-text)] font-medium">HydroRIVERS dataset</span> — mapping over 32 million kilometers of global river networks.
-            </p>
-            <p className="text-[var(--ui-text-muted)] leading-relaxed">
-              When you select a geography, the engine isn&apos;t just loading a static image. It is executing complex spatial intersections in real-time, calculating upstream areas, and assigning cartographic display classes to raw geometric data before translating it into vector art.
-            </p>
-          </div>
-        </section>
 
-        {/* ── Best Uses ── */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
-           <div className="lg:col-span-4 lg:col-start-2 pt-4">
-            <h2 
-              className="font-medium text-[var(--ui-text)] tracking-tight"
-              style={{ 
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase text-[#a94b08]">
+              Intentional constraints
+            </p>
+            <h2
+              className="text-3xl font-semibold text-[var(--ui-text)]"
+              style={{
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
-                fontSize: "clamp(2rem, 3vw, 2.5rem)"
               }}
             >
-              Best Uses
+              A generator, not a general-purpose GIS.
             </h2>
+            <p className="mt-6 leading-relaxed text-[var(--ui-text-muted)]">
+              The product narrows a complex cartographic process to the choices
+              that materially shape the output. Presets protect consistency and
+              make the result reproducible.
+            </p>
+            <ul className="mt-9 divide-y divide-[var(--ui-border)] border-y border-[var(--ui-border)]">
+              {CONSTRAINTS.map((constraint) => (
+                <li
+                  key={constraint}
+                  className="py-4 text-sm leading-relaxed text-[var(--ui-text)]"
+                >
+                  {constraint}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="lg:col-span-6 flex flex-col gap-12">
-            <div className="flex flex-col gap-3">
-              <h3 className="text-xl text-[var(--ui-text)] font-medium">Cartographic Posters</h3>
-              <p className="text-[var(--ui-text-muted)] leading-relaxed">
-                Export high-resolution PDF or PNG posters for physical printing or digital display. The rigid typographic rules ensure the output always feels like a gallery piece.
-              </p>
-            </div>
-            
-            <div className="flex flex-col gap-3">
-              <h3 className="text-xl text-[var(--ui-text)] font-medium">Design Assets</h3>
-              <p className="text-[var(--ui-text-muted)] leading-relaxed">
-                Switch to &quot;Design Asset Mode&quot; to strip away the background, text, and metadata. Export the raw, transparent SVG river network to incorporate real spatial data into your own Adobe Illustrator or Figma workflows.
-              </p>
-            </div>
+        </div>
+      </section>
 
-            <div className="flex flex-col gap-3">
-              <h3 className="text-xl text-[var(--ui-text)] font-medium">Data Visualization</h3>
-              <p className="text-[var(--ui-text-muted)] leading-relaxed">
-                Communicate the density, scale, and beauty of watersheds and river basins instantly, without the steep learning curve of traditional GIS software.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Limitations & Philosophy ── */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start">
-           <div className="lg:col-span-4 lg:col-start-2 pt-4">
-            <h2 
-              className="font-medium text-[var(--ui-text)] tracking-tight"
-              style={{ 
+      <section className="border-t border-[var(--ui-border)] bg-[var(--ui-surface)] px-5 py-16 sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-7 sm:flex-row sm:items-center">
+          <div>
+            <h2
+              className="text-2xl font-semibold text-[var(--ui-text)] sm:text-3xl"
+              style={{
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
-                fontSize: "clamp(2rem, 3vw, 2.5rem)"
               }}
             >
-              Intentional <br/> Constraints
+              Build from the network.
             </h2>
-          </div>
-          <div className="lg:col-span-6 flex flex-col gap-8">
-            <p className="text-lg leading-relaxed text-[var(--ui-text)]">
-              This is a protocol-driven generator, not a full-fledged GIS viewer. The limitations are a feature, not a bug.
-            </p>
-            <p className="text-[var(--ui-text-muted)] leading-relaxed">
-              We intentionally omitted custom data uploads, manual shapefile styling, and unrestricted layout editing. By constraining customization to curated color palettes, specific typography scales, and density presets, we ensure that every generated output adheres to a strict, high-end aesthetic standard.
+            <p className="mt-2 text-sm text-[var(--ui-text-muted)]">
+              Select a supported geography and review the rendered composition.
             </p>
           </div>
-        </section>
-
-      </div>
+          <Link
+            href="/studio"
+            className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-lg bg-[var(--ui-action)] px-6 py-3 font-semibold text-[var(--ui-text-inverse)] transition-colors hover:bg-[var(--ui-action-hover)]"
+          >
+            Open the Studio
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
