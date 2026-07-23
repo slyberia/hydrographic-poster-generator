@@ -7,7 +7,7 @@ discarding their work.
 
 - **Plan:** [UI/UX Implementation Plan](UI_UX_IMPLEMENTATION_PLAN.md)
 - **Status:** Active
-- **Current task:** UX-1 complete; UX-2 awaits an approved task contract
+- **Current task:** UX-2 complete; UX-3 awaits an approved task contract
 - **Primary objective:** Implement the visible UI/UX improvements identified in
   the design audit.
 - **Execution prompt:** [UI/UX New-Session Prompt](UI_UX_NEW_SESSION_PROMPT.md)
