@@ -7,6 +7,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { VolatilityRecord, Zone, type ViewportSnapshot } from "@/lib/droneApi";
 import { CONSTRAINT_LOCKED_FILL, VOLATILITY_FILL, ZONE_FILL } from "@/lib/zoneTheme";
+import { DEFAULT_STUDY_AREA } from "@/lib/studyArea";
 import LoadingBar from "@/components/drone/LoadingBar";
 
 export type MapDisplayMode = "zones" | "volatility";
@@ -67,8 +68,8 @@ export default function MapView(props: {
     if (!containerRef.current || mapRef.current) return;
     const map = L.map(containerRef.current, {
       preferCanvas: true, // 19.5k polygons need canvas, not SVG DOM nodes
-      center: [6.6, -58.1], // Region 4
-      zoom: 10,
+      center: [DEFAULT_STUDY_AREA.center.lat, DEFAULT_STUDY_AREA.center.lng],
+      zoom: DEFAULT_STUDY_AREA.defaultZoom,
     });
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
       attribution:

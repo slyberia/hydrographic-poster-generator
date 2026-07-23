@@ -70,6 +70,8 @@ async def list_runs(pool: asyncpg.Pool) -> List[Dict[str, Any]]:
     async with pool.acquire() as conn:
         rows = await conn.fetch("""
             SELECT m.run_id::text, m.label, m.status, m.weights_snapshot,
+                   m.lifecycle_state::text, m.published_at::text, m.approved_at::text,
+                   m.archived_at::text, m.supersedes_run_id::text,
                    m.created_at::text, m.completed_at::text,
                    (SELECT count(*) FROM mcda_cell_results r
                     WHERE r.run_id = m.run_id) AS cell_count
@@ -127,6 +129,8 @@ async def get_run_details(pool: asyncpg.Pool, run_id: str) -> Optional[Dict[str,
     async with pool.acquire() as conn:
         run = await conn.fetchrow("""
             SELECT run_id::text, label, status, weights_snapshot,
+                   lifecycle_state::text, published_at::text, approved_at::text,
+                   archived_at::text, supersedes_run_id::text,
                    created_at::text, completed_at::text
             FROM mcda_model_runs
             WHERE run_id = $1::uuid
