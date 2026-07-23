@@ -1514,3 +1514,73 @@ body {
   border: 1px solid var(--hairline); border-radius: var(--radius);
   background: var(--paper); color: var(--ink); margin-bottom: 10px;
 }
+
+/* ---------- Public Explorer (UX-8) ---------- */
+.drone-console .explore-nav {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+}
+.drone-console .explore-nav a {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--action);
+  text-decoration: none;
+}
+.drone-console .explore-nav a:hover { text-decoration: underline; }
+.drone-console .explore-nav a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.drone-console .explore-banner {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--z-restricted);
+  border-radius: var(--radius);
+  background: var(--paper);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.drone-console .explore-banner strong { color: var(--ink); }
+
+.drone-console .explore-legend {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.drone-console .explore-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.drone-console .explore-legend-row:hover { background: var(--paper); }
+.drone-console .explore-legend-row:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.drone-console .explore-legend-row:disabled { cursor: default; opacity: 0.6; }
+.drone-console .explore-legend-row .swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex: none;
+  border: 1px solid oklch(0 0 0 / 0.15);
+}
+
+.drone-console .explore-meta p { margin: 2px 0 0; font-size: 0.85rem; }
+.drone-console .muted { color: var(--ink-soft); }

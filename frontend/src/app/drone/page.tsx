@@ -72,14 +72,14 @@ export default function DroneLandingPage() {
                 <Link href="/drone/console">Open the console</Link>
               </article>
               <article>
-                <p className="drone-entry-status">Planned</p>
+                <p className="drone-entry-status drone-entry-status-live">Public</p>
                 <h3>Public Explorer</h3>
                 <p>
                   A simplified published-result map for checking a location,
                   understanding its classification, and viewing approved public
                   guidance without model controls.
                 </p>
-                <span>Not yet available</span>
+                <Link href="/drone/explore">Open the Explorer</Link>
               </article>
             </div>
           </div>

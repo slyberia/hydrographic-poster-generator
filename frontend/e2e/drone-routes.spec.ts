@@ -24,7 +24,10 @@ test("Drone landing is server-rendered and exposes truthful product entry points
     page.getByRole("heading", { name: "Drone Zoning Decision Support" }),
   ).toBeVisible();
   await expect(page.getByText("Public Explorer").first()).toBeVisible();
-  await expect(page.getByText("Not yet available")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open the Explorer" })).toHaveAttribute(
+    "href",
+    "/drone/explore",
+  );
   await expect(page.getByRole("link", { name: "Open Planning Console" })).toHaveAttribute(
     "href",
     "/drone/console",
