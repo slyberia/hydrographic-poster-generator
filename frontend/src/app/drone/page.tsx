@@ -1,361 +1,152 @@
-"use client";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
-/** app/drone/page.tsx — Zoning console. Rail (controls) + map + report drawer. */
+import DronePublicHeader from "@/components/drone/DronePublicHeader";
 
-import dynamic from "next/dynamic";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone, type ViewportSnapshot } from "@/lib/droneApi";
-import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
-import ControlRail from "@/components/drone/ControlRail";
-import ReportDrawer from "@/components/drone/ReportDrawer";
-import GuideDialog from "@/components/drone/GuideDialog";
-import { MapDisplayMode } from "@/components/drone/SensitivityPanel";
-import { useSensitivity } from "@/lib/useSensitivity";
+export const metadata: Metadata = {
+  title: "Drone Zoning Decision Support",
+  description:
+    "A Region 4 pilot for examining drone zoning constraints, model sensitivity, and location-level guidance.",
+};
 
-const GUIDE_SEEN_KEY = "drone.guideSeen.v1";
+const CONSTRAINTS = [
+  ["Population", "Built-up areas and the concentration of people."],
+  ["Sensitive sites", "Hospitals, schools, utilities, and other critical places."],
+  ["Environment", "Protected and environmentally sensitive areas."],
+  ["Airspace", "Airports, flight activity, and aviation-related constraints."],
+];
 
-// Leaflet touches `window`; render map client-side only.
-const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
-
-const CONSOLE_ROLES = new Set(["viewer", "analyst", "admin"]);
-
-export default function Page() {
-  const router = useRouter();
-  const localAuthBypass =
-    !isSupabaseConfigured && process.env.NODE_ENV !== "production";
-  const [authorized, setAuthorized] = useState(localAuthBypass);
-
-  useEffect(() => {
-    if (localAuthBypass) return;
-    const supabase = createClient();
-    void supabase.auth.getUser().then(({ data, error }) => {
-      if (error || !data.user) {
-        router.replace("/login?next=/drone");
-        return;
-      }
-      if (!CONSOLE_ROLES.has(data.user.app_metadata.app_role)) {
-        router.replace("/login?error=role");
-        return;
-      }
-      setAuthorized(true);
-    });
-  }, [localAuthBypass, router]);
-
-  if (!authorized) {
-    return (
-      <main className="grid min-h-screen place-items-center bg-[#f5f5f0] text-sm text-[#53645b]">
-        Checking access…
-      </main>
-    );
-  }
-
-  const signOut = isSupabaseConfigured
-    ? async () => {
-        await createClient().auth.signOut();
-        router.replace("/login");
-      }
-    : undefined;
-
-  return <Console onSignOut={signOut} />;
-}
-
-function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
-  const [factors, setFactors] = useState<FactorWeight[]>([]);
-  const [runs, setRuns] = useState<RunSummary[]>([]);
-  const [activeRun, setActiveRun] = useState<string | null>(null);
-  const [stats, setStats] = useState<RunStats | null>(null);
-  const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
-  const [report, setReport] = useState<LocationReport | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [status, setStatus] = useState<{ text: string; error?: boolean }>({ text: "" });
-  const [hiddenZones, setHiddenZones] = useState<Set<Zone>>(new Set());
-  const [displayMode, setDisplayMode] = useState<MapDisplayMode>("zones");
-  const [focusPoint, setFocusPoint] = useState<{ lat: number; lon: number } | null>(null);
-  const [exporting, setExporting] = useState(false);
-  const [guideOpen, setGuideOpen] = useState(false);
-
-  // Monotonic guard: only the most recent selectRun may write results, so
-  // fast run switches can't render an earlier response over a later one.
-  const loadSeq = useRef(0);
-
-  // Populated by MapView with a reader for the live map extent (the export
-  // contract). Reads current bbox + zoom on demand; never triggers re-renders.
-  const viewportRef = useRef<(() => ViewportSnapshot) | null>(null);
-
-  const sensitivity = useSensitivity(activeRun);
-
-  // First visit: auto-open the plain-language guide once, then remember it.
-  // Read in an effect (not render) so SSR and first client render agree.
-  useEffect(() => {
-    try {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (!localStorage.getItem(GUIDE_SEEN_KEY)) setGuideOpen(true);
-    } catch {
-      /* storage blocked — skip the auto-open, the button still works */
-    }
-  }, []);
-
-  const openGuide = useCallback(() => setGuideOpen(true), []);
-  const closeGuide = useCallback(() => {
-    setGuideOpen(false);
-    try {
-      localStorage.setItem(GUIDE_SEEN_KEY, "1");
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  const refreshConfig = useCallback(async () => {
-    try {
-      const [f, r] = await Promise.all([api.getFactors(), api.listRuns()]);
-      setFactors(f);
-      setRuns(r);
-      return r;
-    } catch (e) {
-      setStatus({ text: `Backend unreachable — ${String(e)}`, error: true });
-      return [];
-    }
-  }, []);
-
-  const selectRun = useCallback(async (runId: string) => {
-    const seq = ++loadSeq.current;
-    setBusy(true);
-    setReport(null);
-    setFocusPoint(null);
-    setDisplayMode("zones");
-    setHiddenZones(new Set());
-    setStatus({ text: "Loading results…" });
-    try {
-      const [fc, detail] = await Promise.all([
-        api.getRunGeoJSON(runId),
-        api.getRunStats(runId),
-      ]);
-      if (seq !== loadSeq.current) return; // superseded by a newer selection
-      setGeojson(fc);
-      setStats(detail.stats ?? null);
-      setActiveRun(runId);
-      setStatus({ text: "" });
-    } catch (e) {
-      if (seq !== loadSeq.current) return;
-      setStatus({ text: String(e), error: true });
-    } finally {
-      if (seq === loadSeq.current) setBusy(false);
-    }
-  }, []);
-
-  // initial load: config + most recent completed run
-  useEffect(() => {
-    (async () => {
-      const r = await refreshConfig();
-      const latest = r.find((x) => x.status === "complete");
-      if (latest) await selectRun(latest.run_id);
-    })();
-  }, [refreshConfig, selectRun]);
-
-  const runModel = useCallback(
-    async (label: string, overrides?: Record<string, number>) => {
-      setBusy(true);
-      setStatus({ text: "Running model — scoring 19,471 cells…" });
-      try {
-        const result = await api.createRun(label, overrides);
-        setStatus({ text: "Run complete." });
-        await refreshConfig();
-        await selectRun(result.run_id);
-      } catch (e) {
-        setStatus({ text: String(e), error: true });
-        setBusy(false);
-      }
-    },
-    [refreshConfig, selectRun]
-  );
-
-  const onCellClick = useCallback(
-    async (h3: string) => {
-      if (!activeRun) return;
-      try {
-        setReport(await api.getLocationReport(activeRun, h3));
-      } catch (e) {
-        setStatus({ text: String(e), error: true });
-      }
-    },
-    [activeRun]
-  );
-
-  const deleteRun = useCallback(
-    async (runId: string) => {
-      try {
-        await api.deleteRun(runId);
-        if (runId === activeRun) {
-          // Resetting activeRun also tears down the sensitivity poll (the hook
-          // keys on it) and clears the drawer — the domino guard for deletion.
-          setActiveRun(null);
-          setGeojson(null);
-          setStats(null);
-          setReport(null);
-        }
-        await refreshConfig();
-        setStatus({ text: "Run deleted." });
-      } catch (e) {
-        setStatus({ text: String(e), error: true });
-      }
-    },
-    [activeRun, refreshConfig]
-  );
-
-  const onGeoPick = useCallback(
-    async (pick: { lat: number; lon: number; h3: string; label: string }) => {
-      setFocusPoint({ lat: pick.lat, lon: pick.lon });
-      if (!activeRun) {
-        setStatus({ text: "Select a run first to see its zoning at that location.", error: true });
-        return;
-      }
-      try {
-        setReport(await api.getLocationReport(activeRun, pick.h3));
-        setStatus({ text: `Showing zoning at ${pick.label}.` });
-      } catch {
-        // report endpoint 404s for cells outside the grid.
-        setReport(null);
-        setStatus({
-          text: `"${pick.label}" is outside the covered zoning area (Region 4).`,
-          error: true,
-        });
-      }
-    },
-    [activeRun]
-  );
-
-  const exportView = useCallback(
-    async (
-      format: "png" | "svg" | "pdf",
-      scale: number,
-      showBoundary: boolean,
-      name: string,
-    ) => {
-      if (!activeRun) {
-        setStatus({ text: "Select a run before exporting.", error: true });
-        return;
-      }
-      const reader = viewportRef.current;
-      if (!reader) {
-        setStatus({ text: "Map isn't ready yet — try again in a moment.", error: true });
-        return;
-      }
-      const { bbox, zoom } = reader();
-      // Volatility export needs the completed sweep; fall back to zones otherwise.
-      const useVolatility =
-        displayMode === "volatility" &&
-        sensitivity.phase === "complete" &&
-        !!sensitivity.status?.sweep_id;
-      setExporting(true);
-      setStatus({ text: "Rendering export…" });
-      try {
-        const { blob, filename } = await api.exportView(activeRun, {
-          bbox,
-          zoom,
-          format,
-          scale,
-          display_mode: useVolatility ? "volatility" : "zones",
-          sweep_id: useVolatility ? sensitivity.status!.sweep_id : null,
-          hidden_zones: useVolatility ? null : Array.from(hiddenZones),
-          show_boundary: showBoundary,
-        });
-        // A user-supplied name overrides the server filename for the download.
-        // Sanitise to a safe base and force the correct extension.
-        const downloadName = (() => {
-          const clean = name
-            .trim()
-            .replace(/\.[a-z0-9]+$/i, "") // drop any extension the user typed
-            .replace(/[^a-z0-9 _-]+/gi, "-") // strip path/illegal chars
-            .replace(/\s+/g, "-")
-            .replace(/-+/g, "-")
-            .replace(/^-+|-+$/g, "")
-            .slice(0, 80);
-          return clean ? `${clean}.${format}` : filename;
-        })();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = downloadName;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-        setStatus({ text: `Exported ${downloadName}.` });
-      } catch (e) {
-        setStatus({ text: `Export failed — ${String(e)}`, error: true });
-      } finally {
-        setExporting(false);
-      }
-    },
-    [activeRun, displayMode, hiddenZones, sensitivity.phase, sensitivity.status]
-  );
-
-  const toggleZone = useCallback((zone: Zone) => {
-    setHiddenZones((prev) => {
-      const next = new Set(prev);
-      if (next.has(zone)) next.delete(zone);
-      else next.add(zone);
-      return next;
-    });
-  }, []);
-
-  // Volatility lookup for the drawer: undefined = no completed sweep,
-  // null = sweep exists but this cell is constraint-locked.
-  const reportVolatility =
-    report && sensitivity.phase === "complete" && sensitivity.volatilityByH3
-      ? sensitivity.volatilityByH3.get(report.h3_index) ?? null
-      : undefined;
-
+export default function DroneLandingPage() {
   return (
-    <div className="drone-console h-full w-full">
-      <GuideDialog open={guideOpen} onClose={closeGuide} />
-      <div className="shell">
-        <ControlRail
-          onOpenGuide={openGuide}
-          onSignOut={onSignOut}
-          factors={factors}
-          runs={runs}
-          activeRun={activeRun}
-          stats={stats}
-          busy={busy}
-          status={status}
-          hiddenZones={hiddenZones}
-          sensitivityPhase={sensitivity.phase}
-          sensitivityStatus={sensitivity.status}
-          sensitivityError={sensitivity.error}
-          displayMode={displayMode}
-          onRunModel={runModel}
-          onSelectRun={selectRun}
-          onDeleteRun={deleteRun}
-          onToggleZone={toggleZone}
-          onTriggerSensitivity={sensitivity.trigger}
-          onDisplayMode={setDisplayMode}
-          onGeoPick={onGeoPick}
-          onExport={exportView}
-          exporting={exporting}
-        />
-        <div className="mapwrap">
-          <MapView
-            geojson={geojson}
-            onCellClick={onCellClick}
-            displayMode={displayMode}
-            volatilityByH3={sensitivity.volatilityByH3}
-            hiddenZones={hiddenZones}
-            loading={busy}
-            focusPoint={focusPoint}
-            viewportRef={viewportRef}
+    <div className="drone-console drone-public">
+      <DronePublicHeader active="home" />
+      <main>
+        <section className="drone-hero" aria-labelledby="drone-title">
+          <Image
+            src="/drone/region-4-zoning.png"
+            alt="Region 4 drone zoning output showing classified cells around Georgetown"
+            fill
+            priority
+            sizes="100vw"
+            className="drone-hero-image"
           />
-          {report && (
-            <ReportDrawer
-              report={report}
-              onClose={() => setReport(null)}
-              volatility={reportVolatility}
-              totalPerturbations={sensitivity.status?.total_runs}
-            />
-          )}
-        </div>
-      </div>
+          <div className="drone-hero-shade" />
+          <div className="drone-hero-content">
+            <p className="drone-eyebrow">Geospatial decision support for NDC planning</p>
+            <h1 id="drone-title">Drone Zoning Decision Support</h1>
+            <p className="drone-hero-summary">
+              Examine where drone operations face identified constraints, understand
+              why an area received its classification, and test how planning
+              assumptions change the result.
+            </p>
+            <div className="drone-hero-actions">
+              <Link href="/drone/console" className="drone-primary-link">
+                Open Planning Console
+              </Link>
+              <Link href="/drone/methodology" className="drone-secondary-link">
+                Review Methodology
+              </Link>
+            </div>
+            <p className="drone-hero-caption">
+              Current pilot: Region 4, Demerara-Mahaica, Guyana
+            </p>
+          </div>
+        </section>
+
+        <section className="drone-entry-band" aria-labelledby="product-surfaces">
+          <div className="drone-public-inner">
+            <header className="drone-section-heading">
+              <p className="drone-eyebrow">Two product surfaces</p>
+              <h2 id="product-surfaces">The right level of detail for each audience</h2>
+            </header>
+            <div className="drone-entry-grid">
+              <article>
+                <p className="drone-entry-status drone-entry-status-live">Authorized</p>
+                <h3>Planning Console</h3>
+                <p>
+                  Internal workspace for NDC analysts to run scenarios, adjust factor
+                  weights, inspect cells, review sensitivity, and export the current
+                  map view.
+                </p>
+                <Link href="/drone/console">Open the console</Link>
+              </article>
+              <article>
+                <p className="drone-entry-status">Planned</p>
+                <h3>Public Explorer</h3>
+                <p>
+                  A simplified published-result map for checking a location,
+                  understanding its classification, and viewing approved public
+                  guidance without model controls.
+                </p>
+                <span>Not yet available</span>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section className="drone-purpose-band" aria-labelledby="planning-purpose">
+          <div className="drone-public-inner drone-purpose-layout">
+            <header className="drone-section-heading">
+              <p className="drone-eyebrow">Planning purpose</p>
+              <h2 id="planning-purpose">Turn separate constraints into an explainable view</h2>
+            </header>
+            <div className="drone-purpose-copy">
+              <p>
+                The pilot divides the study area into small cells, evaluates six
+                planning factors, and classifies each cell from Suitable to
+                Prohibited. Selecting a cell reveals its score, primary reason,
+                factor contributions, hard constraints, and data confidence.
+              </p>
+              <p>
+                Sensitivity analysis then tests whether modest changes to factor
+                weights alter the classification, helping analysts distinguish stable
+                conclusions from areas that deserve closer review.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="drone-constraints-band" aria-labelledby="constraints-title">
+          <div className="drone-public-inner">
+            <header className="drone-section-heading">
+              <p className="drone-eyebrow">Model inputs</p>
+              <h2 id="constraints-title">What the pilot considers</h2>
+            </header>
+            <div className="drone-constraint-grid">
+              {CONSTRAINTS.map(([title, description], index) => (
+                <article key={title}>
+                  <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="drone-limit-band" aria-labelledby="decision-support">
+          <div className="drone-public-inner drone-limit-layout">
+            <div>
+              <p className="drone-eyebrow">Important limitation</p>
+              <h2 id="decision-support">Guidance is not authorization</h2>
+            </div>
+            <div>
+              <p>
+                This tool supports planning decisions. It does not replace permission
+                from the aviation authority or account for every live operational
+                condition, including temporary restrictions, weather, aircraft
+                condition, and operator qualifications.
+              </p>
+              <Link href="/drone/methodology">Read how classifications are calculated</Link>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer className="drone-public-footer">
+        <span>Drone Zoning Decision Support</span>
+        <span>Region 4 decision-support prototype</span>
+      </footer>
     </div>
   );
 }
