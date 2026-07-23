@@ -42,8 +42,9 @@ substitutions:
   _ADMIN_KEY_SECRET: hydro-admin-api-key
   # Public issuer used to verify Supabase Auth JWTs locally in FastAPI.
   _SUPABASE_URL: https://iyijaywownhftzjwqhzj.supabase.co
-  # Browser-safe value supplied by the build trigger or --substitutions.
-  _SUPABASE_PUBLISHABLE_KEY: ''
+  # Browser-safe value embedded in the frontend bundle. Trigger/manual
+  # substitutions can override it when the key is rotated.
+  _SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_4f6zmW-USKi4qCk9r20lHg_hx5N7ArS'
 
 steps:
   # ---- 1. Build Backend ----
