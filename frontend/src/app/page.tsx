@@ -1,154 +1,226 @@
+import Image from "next/image";
 import Link from "next/link";
+
 import PosterHeader from "@/components/PosterHeader";
 
-const STEPS = [
+const POSTERS = [
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M2 12h20" />
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-      </svg>
-    ),
-    title: "Select Geography",
-    description:
-      "Choose a region and country from the CARICOM nations and surrounding areas. Optionally drill down to a state or province.",
-    colorClass: "text-dodger-blue border-dodger-blue/30 bg-dodger-blue/10",
+    src: "/posters/guyana-abyss.webp",
+    palette: "Abyss",
+    tone: "Dark",
+    description: "Cool blue hierarchy on deep navy.",
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="13.5" cy="6.5" r="2.5" />
-        <path d="M17.5 10.5c1.7 0 3 1.3 3 3v1H21" />
-        <circle cx="8.5" cy="6.5" r="2.5" />
-        <path d="M3 14.5c0-1.7 1.3-3 3-3h5c1.7 0 3 1.3 3 3v1H3v-1z" />
-        <path d="M5 20h14" />
-        <path d="M8 20v-2" />
-        <path d="M16 20v-2" />
-      </svg>
-    ),
-    title: "Customize Style",
-    description:
-      "Pick a density preset, color palette, and typography style. These presets control how your river network is classified and rendered.",
-    colorClass: "text-safety-orange border-safety-orange/30 bg-safety-orange/10",
+    src: "/posters/guyana-parchment.webp",
+    palette: "Parchment",
+    tone: "Light",
+    description: "Fine blue linework on warm paper.",
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20h9" />
-        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-      </svg>
-    ),
-    title: "Add Text",
+    src: "/posters/guyana-obsidian.webp",
+    palette: "Obsidian",
+    tone: "Dark",
+    description: "High-contrast rivers on near black.",
+  },
+];
+
+const PROCESS_STEPS = [
+  {
+    number: "01",
+    title: "Clip a boundary",
     description:
-      'Enter a poster title and subtitle. These are rendered directly onto the map in the typography style you selected.',
-    colorClass: "text-neon border-neon/30 bg-neon/10",
+      "Choose a supported geography. PostGIS clips the HydroRIVERS network to its exact boundary.",
+    src: "/posters/guyana-abyss.webp",
+    imageClass: "object-cover object-[50%_48%] scale-[1.7]",
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-        <polyline points="7 10 12 15 17 10" />
-        <line x1="12" y1="15" x2="12" y2="3" />
-      </svg>
-    ),
-    title: "Export",
+    number: "02",
+    title: "Classify the network",
     description:
-      "Choose PNG, SVG, or PDF. Select a preset size or enter custom dimensions. Review the QA checklist, then generate your export.",
-    colorClass: "text-wild-melon border-wild-melon/30 bg-wild-melon/10",
+      "Density rules sort rivers into a restrained visual hierarchy, from primary channels to minor tributaries.",
+    src: "/posters/guyana-abyss.webp",
+    imageClass: "object-cover object-[50%_50%] scale-[2.1]",
+  },
+  {
+    number: "03",
+    title: "Compose the poster",
+    description:
+      "Typography, legend, north arrow, scale, and source details are placed through a consistent poster protocol.",
+    src: "/posters/guyana-abyss.webp",
+    imageClass: "object-cover object-top",
+  },
+  {
+    number: "04",
+    title: "Render for use",
+    description:
+      "Review the finished composition, then export it for print or continue working with the vector design asset.",
+    src: "/posters/guyana-obsidian.webp",
+    imageClass: "object-cover object-bottom",
   },
 ];
 
 export default function LandingPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden flex flex-col items-center bg-[var(--ui-page)] text-[var(--ui-text)]">
-      <div className="w-full">
-        <PosterHeader current="home" />
-      </div>
+    <main className="min-h-screen bg-[var(--ui-page)] text-[var(--ui-text)]">
+      <PosterHeader current="home" />
 
-      {/* ── Hero Section ── */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pt-20 lg:pt-28 pb-16 flex flex-col items-center text-center">
-        <p className="text-[12px] font-bold uppercase tracking-[0.2em] text-wild-melon mb-6">
-          Generative Cartography
-        </p>
-        <h1
-          className="text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-[var(--ui-text)] mb-6"
-          style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
-        >
-          Hydrographic <br className="hidden lg:block" /> Poster Generator
-        </h1>
-        <p className="text-lg lg:text-xl text-[var(--ui-text-muted)] max-w-2xl leading-relaxed mb-10">
-          Create stunning, high-resolution river network poster maps from HydroRIVERS data. Select a geography, customize your style, and export print-ready posters or transparent design assets.
-        </p>
-        
-        <Link 
-          href="/studio"
-          className="bg-[var(--ui-action)] hover:bg-[var(--ui-action-hover)] text-[var(--ui-text-inverse)] font-medium text-base px-8 py-4 rounded-lg shadow-sm transition-colors duration-200"
-        >
-          Launch Generator
-        </Link>
-      </div>
-
-      {/* ── How It Works ── */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 py-24">
-        <h2
-          className="text-3xl font-semibold text-[var(--ui-text)] mb-12 text-center"
-          style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}
-        >
-          How It Works
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-          {STEPS.map((step, i) => (
-            <div key={i} className="flex gap-5 group">
-              <div
-                className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border transition-colors duration-200 ${step.colorClass}`}
+      <section className="relative w-full overflow-hidden border-b border-[var(--ui-border)] bg-[#e6edf2]">
+        <div className="relative mx-auto min-h-[680px] w-full max-w-[90rem] px-5 sm:px-8 lg:min-h-[720px] lg:px-12">
+          <div className="relative z-20 max-w-[35rem] pt-12 sm:pt-16 lg:flex lg:min-h-[720px] lg:flex-col lg:justify-center lg:pt-0">
+            <p className="mb-5 text-xs font-bold uppercase text-[#b4234f]">
+              Live data. Deliberate composition.
+            </p>
+            <h1
+              className="mb-6 max-w-[12ch] text-[2.85rem] font-semibold leading-[1.03] text-[var(--ui-text)] sm:text-[3.5rem] lg:text-[4.25rem]"
+              style={{
+                fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+              }}
+            >
+              Hydrographic Poster Generator
+            </h1>
+            <p className="mb-8 max-w-[34rem] text-base leading-relaxed text-[var(--ui-text-muted)] sm:text-lg">
+              Turn HydroRIVERS data into print-ready cartography. Select a
+              geography, choose a visual protocol, and generate a poster from
+              the underlying river network.
+            </p>
+            <div>
+              <Link
+                href="/studio"
+                className="inline-flex min-h-12 items-center justify-center rounded-lg bg-[var(--ui-action)] px-6 py-3 text-base font-semibold text-[var(--ui-text-inverse)] shadow-sm transition-colors duration-200 hover:bg-[var(--ui-action-hover)]"
               >
-                {step.icon}
-              </div>
-              <div className="min-w-0">
-                <p className="text-lg font-semibold text-[var(--ui-text)] leading-snug mb-2">
-                  {step.title}
+                Create a poster
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative mt-5 h-[290px] lg:absolute lg:inset-y-0 lg:left-[50%] lg:right-0 lg:mt-0 lg:h-auto">
+            <Image
+              src="/posters/guyana-parchment.webp"
+              alt=""
+              width={600}
+              height={900}
+              loading="eager"
+              className="absolute bottom-3 left-[3%] h-[220px] w-auto border border-white shadow-lg sm:left-[15%] sm:h-[245px] lg:left-auto lg:right-[2%] lg:top-[12%] lg:h-[76%]"
+            />
+            <Image
+              src="/posters/guyana-obsidian.webp"
+              alt=""
+              width={600}
+              height={900}
+              loading="eager"
+              className="absolute bottom-3 right-[3%] h-[220px] w-auto border border-white/20 shadow-lg sm:right-[15%] sm:h-[245px] lg:right-[31%] lg:top-[18%] lg:h-[68%]"
+            />
+            <Image
+              src="/posters/guyana-abyss.webp"
+              alt="Generated Guyana river network poster using the Abyss palette"
+              width={600}
+              height={900}
+              priority
+              className="absolute bottom-0 left-1/2 z-10 h-[285px] w-auto -translate-x-1/2 border border-white/20 shadow-2xl lg:left-[4%] lg:top-[6%] lg:h-[88%] lg:translate-x-0"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[var(--ui-panel)] px-5 py-20 sm:px-8 lg:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 max-w-2xl">
+            <p className="mb-3 text-xs font-bold uppercase text-[var(--ui-action)]">
+              One geography, three treatments
+            </p>
+            <h2
+              className="mb-4 text-3xl font-semibold text-[var(--ui-text)] sm:text-4xl"
+              style={{
+                fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+              }}
+            >
+              The data stays fixed. The visual protocol changes.
+            </h2>
+            <p className="leading-relaxed text-[var(--ui-text-muted)]">
+              Each example below was generated from the same Guyana river
+              network using a current application palette.
+            </p>
+          </div>
+
+          <div className="-mx-5 flex snap-x gap-4 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:gap-8">
+            {POSTERS.map((poster) => (
+              <figure
+                key={poster.palette}
+                className="w-[15rem] shrink-0 snap-start overflow-hidden rounded-lg border border-[var(--ui-border)] bg-[var(--ui-surface-muted)] sm:w-auto"
+              >
+                <Image
+                  src={poster.src}
+                  alt={`Guyana river network poster in the ${poster.palette} palette`}
+                  width={600}
+                  height={900}
+                  loading="eager"
+                  className="h-auto w-full"
+                />
+                <figcaption className="border-t border-[var(--ui-border)] p-2 sm:p-4">
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
+                    <span className="text-xs font-semibold text-[var(--ui-text)] sm:text-base">
+                      {poster.palette}
+                    </span>
+                    <span className="text-[0.625rem] uppercase text-[var(--ui-text-muted)] sm:text-xs">
+                      {poster.tone}
+                    </span>
+                  </div>
+                  <p className="mt-2 hidden text-sm leading-relaxed text-[var(--ui-text-muted)] sm:block">
+                    {poster.description}
+                  </p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-[var(--ui-border)] bg-[var(--ui-surface)] px-5 py-20 sm:px-8 lg:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 max-w-2xl">
+            <p className="mb-3 text-xs font-bold uppercase text-[#a94b08]">
+              From spatial data to finished artwork
+            </p>
+            <h2
+              className="text-3xl font-semibold text-[var(--ui-text)] sm:text-4xl"
+              style={{
+                fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+              }}
+            >
+              A constrained workflow with a clear result.
+            </h2>
+          </div>
+
+          <ol className="grid gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+            {PROCESS_STEPS.map((step) => (
+              <li
+                key={step.number}
+                className="border-t border-[var(--ui-border-strong)] pt-4 lg:px-5 lg:first:pl-0 lg:last:pr-0"
+              >
+                <div className="relative mb-5 aspect-[4/3] overflow-hidden rounded-lg bg-[var(--ui-panel)]">
+                  <Image
+                    src={step.src}
+                    alt=""
+                    fill
+                    loading="eager"
+                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw"
+                    className={step.imageClass}
+                  />
+                </div>
+                <p className="mb-2 text-xs font-bold text-[var(--ui-action)]">
+                  {step.number}
                 </p>
+                <h3 className="mb-2 text-lg font-semibold text-[var(--ui-text)]">
+                  {step.title}
+                </h3>
                 <p className="text-sm leading-relaxed text-[var(--ui-text-muted)]">
                   {step.description}
                 </p>
-              </div>
-            </div>
-          ))}
+              </li>
+            ))}
+          </ol>
         </div>
-      </div>
-
-      {/* ── Pro Tip ── */}
-      <div className="relative z-10 w-full max-w-3xl mx-auto px-6 pb-32">
-        <div
-          className="flex flex-col md:flex-row items-center md:items-start gap-4 rounded-2xl p-6 md:p-8 text-center md:text-left bg-celery/10 border border-celery/30"
-        >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-celery/20 text-celery">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 16v-4" />
-              <path d="M12 8h.01" />
-            </svg>
-          </div>
-          <div>
-            <h3 className="text-base font-semibold text-[var(--ui-text)] mb-2">Design Asset Mode</h3>
-            <p className="text-sm leading-relaxed text-[var(--ui-text-muted)]">
-              Toggle &ldquo;Design asset mode&rdquo; in the generator to export transparent river-network layers. This skips the poster background, text, and metadata — perfect for DTG printing, screenprinting, or layering in Adobe Illustrator.
-            </p>
-          </div>
-        </div>
-      </div>
-
+      </section>
     </main>
   );
 }
