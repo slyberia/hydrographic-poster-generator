@@ -2,6 +2,7 @@
 
 /** components/ReportDrawer.tsx — the methodology's location report, rendered. */
 
+import { useEffect } from "react";
 import { LocationReport, VolatilityRecord } from "@/lib/droneApi";
 import { VOLATILITY_FILL, ZONE_CSS } from "@/lib/zoneTheme";
 import InfoTip from "@/components/drone/InfoTip";
@@ -27,6 +28,16 @@ export default function ReportDrawer(props: {
   const r = props.report;
   const factors = Object.entries(r.factor_breakdown ?? {});
   const hasSweep = props.volatility !== undefined;
+
+  // Escape closes the report — quicker than reaching for the ✕ after a click.
+  const { onClose } = props;
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   return (
     <div className="drawer" role="dialog" aria-label="Location report">
