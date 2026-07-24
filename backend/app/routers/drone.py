@@ -6,6 +6,7 @@ from app.database import get_db_pool
 from app.auth import require_admin, require_analyst, require_viewer, Principal
 from app.services import drone_service
 from app.services import drone_publication_service as drone_pub
+from app.services import drone_dashboard_service as drone_dash
 from pydantic import BaseModel, Field
 
 router = APIRouter()
@@ -105,6 +106,19 @@ async def patch_factor(
         return await drone_service.patch_factor(pool, key, body.weight)
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
+
+
+# ---- Dashboard (internal reporting surface) ----
+
+@router.get("/dashboard", tags=["Drone Dashboard"], dependencies=[Depends(require_viewer)])
+async def get_dashboard(pool: asyncpg.Pool = Depends(get_db_pool)):
+    """Bounded aggregate metrics for the internal dashboard (viewer role).
+
+    Returns published zone distribution, run/publish recency, recent-run
+    classification history, the latest sensitivity summary, model version, and
+    data freshness — computed in SQL, never from full cell geometry.
+    """
+    return await drone_dash.get_dashboard(pool)
 
 
 # ---- Runs ----

@@ -1675,3 +1675,80 @@ body {
   flex-direction: column;
   gap: 18px;
 }
+
+/* ---------- Internal Dashboard (UX-9) ---------- */
+.drone-console .dash {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.drone-console .dash--center {
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+}
+.drone-console .dash-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.drone-console .dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.drone-console .dash-card {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.drone-console .dash-card strong { font-size: 0.95rem; }
+.drone-console .dash-card .zonestrip-bar { height: 14px; border-radius: 4px; overflow: hidden; }
+.drone-console .dash-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 14px;
+  margin: 0;
+  font-size: 0.85rem;
+}
+.drone-console .dash-dl dt { color: var(--ink-soft); }
+.drone-console .dash-dl dd { margin: 0; text-align: right; }
+.drone-console .dash-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.drone-console .dash-table th {
+  text-align: left;
+  color: var(--ink-soft);
+  font-weight: 600;
+  padding: 5px 6px;
+  border-bottom: 1px solid var(--hairline);
+}
+.drone-console .dash-table td {
+  padding: 5px 6px;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: middle;
+}
+.drone-console .dash-table .swatch {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+.drone-console .dash-histbar { min-width: 120px; }
+.drone-console .dash-histbar .zonestrip-bar { height: 10px; border-radius: 3px; overflow: hidden; }
+.drone-console .dash-banner { margin: 0; padding: 12px 14px; border-radius: var(--radius); font-size: 0.85rem; }
+.drone-console .dash-banner--warn {
+  border: 1px solid var(--z-restricted);
+  background: color-mix(in oklch, var(--z-restricted) 12%, var(--paper-raised));
+  color: var(--ink);
+}

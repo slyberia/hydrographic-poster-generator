@@ -110,6 +110,22 @@ unauthenticated):
 (`lifecycle_state`, `published_at`, `approved_at`, `archived_at`,
 `supersedes_run_id`).
 
+### `GET /dashboard` (viewer role) — internal reporting aggregate (UX-9)
+
+Bounded aggregate metrics for the internal dashboard, computed in SQL — **no
+cell geometry is returned**, so the browser never downloads the ~19.5k-cell
+grid. Well-formed even when nothing is published (nulls + empty lists drive the
+UI's empty state). Shape:
+
+- `study_area`: `{ slug, display_name, methodology_version }` (or null)
+- `published`: `{ run_id, label, lifecycle_state, published_at, published_by, total_cells, analyzed_area_km2, zone_distribution[] }` (or null)
+- `latest_run`: most recent completed run `{ run_id, label, status, created_at, completed_at }` (or null)
+- `run_history[]`: recent completed runs (bounded), each with its `zone_distribution` — the classification-change view
+- `sensitivity`: latest sweep summary `{ base_run_id, avg_stddev, max_stddev, total_zone_flips, pct_cells_flipped, factor_rankings[] }` (or null)
+- `freshness`: `{ published_at, days_since_published, is_stale, stale_threshold_days, methodology_version }`
+
+Every metric is traceable to a run id and the study area's methodology version.
+
 ### Administrator-only lifecycle transitions
 
 All require the **`admin`** role. The acting user id (`published_by` etc.) is

@@ -54,6 +54,66 @@ export interface LocationReport {
   disclaimer: string;
 }
 
+// ---- Dashboard (UX-9 internal aggregate — mirror of drone_dashboard_service) ----
+
+export interface DashZone {
+  zone: Zone;
+  cells: number;
+  area_km2?: number;
+  pct: number;
+}
+
+export interface DashboardData {
+  study_area: {
+    slug: string;
+    display_name: string;
+    methodology_version: string;
+  } | null;
+  published: {
+    run_id: string;
+    label: string | null;
+    lifecycle_state: string;
+    published_at: string | null;
+    published_by: string | null;
+    total_cells: number;
+    analyzed_area_km2: number;
+    zone_distribution: DashZone[];
+  } | null;
+  latest_run: {
+    run_id: string;
+    label: string | null;
+    status: string;
+    created_at: string;
+    completed_at: string | null;
+  } | null;
+  run_history: Array<{
+    run_id: string;
+    label: string | null;
+    lifecycle_state: string;
+    created_at: string;
+    total_cells: number;
+    zone_distribution: DashZone[];
+  }>;
+  sensitivity: {
+    sweep_id: string;
+    base_run_id: string;
+    base_label: string | null;
+    created_at: string;
+    avg_stddev: number;
+    max_stddev: number;
+    total_zone_flips: number;
+    pct_cells_flipped: number;
+    factor_rankings: SensitivityFactorRank[];
+  } | null;
+  freshness: {
+    published_at: string | null;
+    days_since_published: number | null;
+    is_stale: boolean;
+    stale_threshold_days: number;
+    methodology_version: string | null;
+  };
+}
+
 // ---- Sensitivity (Phase C backend contract — mirror of drone.py Pydantic models) ----
 
 export interface SensitivityFactorRank {
@@ -156,6 +216,8 @@ export const droneApi = {
       method: "PATCH",
       body: JSON.stringify({ weight }),
     }),
+
+  getDashboard: () => http<DashboardData>("/dashboard"),
 
   listRuns: () => http<RunSummary[]>("/runs"),
 
