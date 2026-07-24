@@ -14,3 +14,18 @@ export const createClient = () => {
     supabaseKey!,
   );
 };
+
+export const createInviteClient = () => {
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Supabase Auth is not configured.");
+  }
+  return createBrowserClient(
+    supabaseUrl,
+    supabaseKey,
+    {
+      auth: {
+        detectSessionInUrl: false,
+      },
+    },
+  );
+};
