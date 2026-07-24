@@ -1,9 +1,11 @@
 "use client";
 
-/** components/ControlRail.tsx — left rail: identity, zone strip, weights, runs,
- * sensitivity. */
+/** components/ControlRail.tsx — left rail, grouped into collapsible sections
+ * (Scenario, Factors, Sensitivity, Layers, Export) with progressive disclosure.
+ * Analytical behaviour is unchanged from the flat rail — only layout moved. */
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
+import Link from "next/link";
 import { FactorWeight, RunStats, RunSummary, SensitivityStatus, Zone } from "@/lib/droneApi";
 import { ZONE_CSS, ZONE_LABELS } from "@/lib/zoneTheme";
 import SensitivityPanel, { MapDisplayMode } from "@/components/drone/SensitivityPanel";
@@ -12,16 +14,49 @@ import InfoTip from "@/components/drone/InfoTip";
 import GeoSearch from "@/components/drone/GeoSearch";
 import { FACTOR_INFO, OPERATION_INFO, WEIGHTING_INFO } from "@/lib/droneInfo";
 
+/** Controlled disclosure group. React owns `open` (summary click is intercepted)
+ * so the state survives the rail's frequent re-renders instead of fighting the
+ * browser's native toggle. */
+function Group(props: {
+  title: string;
+  defaultOpen?: boolean;
+  hint?: string;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(props.defaultOpen ?? true);
+  return (
+    <details className="railgroup" open={open}>
+      <summary
+        className="railgroup-summary"
+        onClick={(e) => {
+          e.preventDefault();
+          setOpen((o) => !o);
+        }}
+      >
+        <span>{props.title}</span>
+        {props.hint && <span className="railgroup-hint">{props.hint}</span>}
+        <span className="railgroup-chevron" aria-hidden="true">
+          {open ? "▾" : "▸"}
+        </span>
+      </summary>
+      <div className="railgroup-body">{props.children}</div>
+    </details>
+  );
+}
+
 function ZoneStrip(props: {
   stats: RunStats | null;
   hiddenZones: Set<Zone>;
   onToggleZone: (zone: Zone) => void;
 }) {
   const { stats, hiddenZones } = props;
-  if (!stats) return null;
+  if (!stats) {
+    return (
+      <p className="statusline">Run or select a model to see the zone distribution.</p>
+    );
+  }
   return (
     <section className="zonestrip" aria-label="Zone distribution">
-      <p className="sectionlabel">Region 4 zoning</p>
       <div className="zonestrip-bar" role="img"
            aria-label={stats.zones.map((z) => `${z.zone} ${z.pct}%`).join(", ")}>
         {stats.zones.map((z) => (
@@ -88,6 +123,7 @@ export default function ControlRail(props: {
   exporting: boolean;
   onOpenGuide: () => void;
   onSignOut?: () => Promise<void>;
+  onCollapseRail?: () => void;
 }) {
   const { factors, runs, activeRun, stats, busy, status } = props;
   const [label, setLabel] = useState("");
@@ -132,10 +168,27 @@ export default function ControlRail(props: {
   return (
     <aside className="rail">
       <header>
-        <h1 className="brand">
-          Drone Airspace Zoning
-          <small>Region 4 · Demerara-Mahaica · decision-support prototype</small>
-        </h1>
+        <div className="rail-headrow">
+          <h1 className="brand">
+            Drone Airspace Zoning
+            <small>Region 4 · Demerara-Mahaica · decision-support prototype</small>
+          </h1>
+          {props.onCollapseRail && (
+            <button
+              type="button"
+              className="rail-collapse"
+              onClick={props.onCollapseRail}
+              aria-label="Hide controls and expand the map"
+              title="Hide controls"
+            >
+              «
+            </button>
+          )}
+        </div>
+        <nav className="rail-nav" aria-label="Drone sections">
+          <Link href="/drone/dashboard">Dashboard</Link>
+          <Link href="/drone/methodology">Methodology</Link>
+        </nav>
       </header>
 
       <button type="button" className="helpbtn" onClick={props.onOpenGuide}>
@@ -147,204 +200,217 @@ export default function ControlRail(props: {
         </button>
       )}
 
-      <ZoneStrip
-        stats={stats}
-        hiddenZones={props.hiddenZones}
-        onToggleZone={props.onToggleZone}
-      />
-
-      <section aria-label="Run model">
-        <p className="sectionlabel">
-          Run model
-          <InfoTip text={OPERATION_INFO.zoning.body} label="What Run zoning model does" />
-        </p>
-        <input
-          type="text"
-          placeholder="Run label (e.g. baseline)"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-          style={{
-            width: "100%", font: "inherit", padding: "8px 10px",
-            border: "1px solid var(--hairline)", borderRadius: "var(--radius)",
-            marginBottom: 8, background: "var(--paper)", color: "var(--ink)",
-          }}
-        />
-        <button
-          className="btn"
-          disabled={busy}
-          onClick={() => props.onRunModel(label || "unlabelled run", pendingOverrides())}
-        >
-          {busy ? "Scoring cells…" : "Run zoning model"}
-        </button>
-        <p className={`statusline${status.error ? " error" : ""}`} role="status">
-          {status.text}
-        </p>
-      </section>
-
-      <section aria-label="Factor weights">
-        <p className="sectionlabel">
-          Scenario factor weights (AHP · provisional)
-          <InfoTip
-            text={`${WEIGHTING_INFO.scale} ${WEIGHTING_INFO.normalisation}`}
-            label="How factor weights and normalisation work"
-          />
-        </p>
-        <p className="fieldhint">
-          0–10 scale · applied to the next run · organization defaults stay unchanged
-        </p>
-        {factors.map((f) => (
-          <div className="weightrow" key={f.factor_key}>
-            <div>
-              <label htmlFor={`w-${f.factor_key}`}>
-                {f.factor_name}
-                {FACTOR_INFO[f.factor_key] && (
-                  <InfoTip text={FACTOR_INFO[f.factor_key]} label={`About ${f.factor_name}`} />
-                )}
-              </label>
-              <div className="norm">normalised {f.normalised_weight}</div>
-            </div>
-            <input
-              id={`w-${f.factor_key}`}
-              type="number"
-              min={0}
-              max={WEIGHT_MAX}
-              step={0.01}
-              value={draftValue(f)}
-              onChange={(e) =>
-                setDrafts((d) => ({ ...d, [f.factor_key]: e.target.value }))
-              }
-              onBlur={() => commitWeight(f)}
-              onKeyDown={(e) => e.key === "Enter" && commitWeight(f)}
-            />
-          </div>
-        ))}
-      </section>
-
-      <section aria-label="Previous runs">
-        <p className="sectionlabel">Runs</p>
-        {runs.length === 0 && (
-          <p className="statusline">No runs yet — run the model to generate zoning.</p>
-        )}
-        {runs.map((r) => {
-          const empty = r.status === "complete" && r.cell_count === 0;
-          return (
-            <div className="runrow" key={r.run_id}>
-              <button
-                className="runitem"
-                aria-pressed={r.run_id === activeRun}
-                onClick={() => props.onSelectRun(r.run_id)}
-                disabled={r.status !== "complete"}
-                title={empty ? "This run has no scored cells" : undefined}
-              >
-                <span className="rlabel">
-                  {r.label ?? "unlabelled"}
-                  {empty && <span className="rbadge">no results</span>}
-                </span>
-                <span className="rmeta">
-                  {r.status} · {new Date(r.created_at).toLocaleString()}
-                </span>
-              </button>
-              <button
-                className="runitem-del"
-                aria-label={`Delete run ${r.label ?? "unlabelled"}`}
-                title="Delete run"
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      `Delete "${r.label ?? "unlabelled"}"? This removes the run and any sensitivity results derived from it.`
-                    )
-                  ) {
-                    props.onDeleteRun(r.run_id);
-                  }
-                }}
-              >
-                🗑
-              </button>
-            </div>
-          );
-        })}
-      </section>
-
       <GeoSearch onPick={props.onGeoPick} disabled={busy} />
 
-      <SensitivityPanel
-        phase={props.sensitivityPhase}
-        status={props.sensitivityStatus}
-        error={props.sensitivityError}
-        canTrigger={activeRunComplete && !busy}
-        displayMode={props.displayMode}
-        factorNames={factorNames}
-        onTrigger={props.onTriggerSensitivity}
-        onDisplayMode={props.onDisplayMode}
-      />
-
-      <section aria-label="Export">
-        <p className="sectionlabel">
-          Export current view
-          <InfoTip text={OPERATION_INFO.export.body} label="What Export does" />
-        </p>
-        <div className="exportrow">
-          <label htmlFor="export-format" className="exportlabel">Format</label>
-          <select
-            id="export-format"
-            value={exportFormat}
-            onChange={(e) => setExportFormat(e.target.value as "png" | "svg" | "pdf")}
-          >
-            <option value="png">PNG (raster)</option>
-            <option value="svg">SVG (vector)</option>
-            <option value="pdf">PDF (print)</option>
-          </select>
-        </div>
-        <div className="exportrow">
-          <label htmlFor="export-scale" className="exportlabel">Resolution</label>
-          <select
-            id="export-scale"
-            value={exportScale}
-            onChange={(e) => setExportScale(Number(e.target.value))}
-            disabled={exportFormat === "svg"}
-            title={exportFormat === "svg" ? "SVG is resolution-independent" : undefined}
-          >
-            <option value={1}>1× (screen)</option>
-            <option value={2}>2× (sharp)</option>
-            <option value={4}>4× (poster)</option>
-          </select>
-        </div>
-        <div className="exportrow exportrow--check">
+      <Group title="Scenario">
+        <section aria-label="Run model">
+          <p className="sectionlabel">
+            Run model
+            <InfoTip text={OPERATION_INFO.zoning.body} label="What Run zoning model does" />
+          </p>
           <input
-            type="checkbox"
-            id="export-boundary"
-            checked={showBoundary}
-            onChange={(e) => setShowBoundary(e.target.checked)}
+            type="text"
+            placeholder="Run label (e.g. baseline)"
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            style={{
+              width: "100%", font: "inherit", padding: "8px 10px",
+              border: "1px solid var(--hairline)", borderRadius: "var(--radius)",
+              marginBottom: 8, background: "var(--paper)", color: "var(--ink)",
+            }}
           />
-          <label htmlFor="export-boundary" className="exportlabel">
-            Include Region 4 outline
-          </label>
-        </div>
-        <label htmlFor="export-name" className="exportlabel exportname-label">
-          File name <span className="exporthint">(optional)</span>
-        </label>
-        <input
-          type="text"
-          id="export-name"
-          className="exportname-input"
-          placeholder="e.g. georgetown-north-restricted"
-          value={exportName}
-          maxLength={80}
-          onChange={(e) => setExportName(e.target.value)}
+          <button
+            className="btn"
+            disabled={busy}
+            onClick={() => props.onRunModel(label || "unlabelled run", pendingOverrides())}
+          >
+            {busy ? "Scoring cells…" : "Run zoning model"}
+          </button>
+          <p className={`statusline${status.error ? " error" : ""}`} role="status">
+            {status.text}
+          </p>
+        </section>
+
+        <section aria-label="Previous runs">
+          <p className="sectionlabel">Runs</p>
+          {runs.length === 0 && (
+            <p className="statusline">No runs yet — run the model to generate zoning.</p>
+          )}
+          {runs.map((r) => {
+            const empty = r.status === "complete" && r.cell_count === 0;
+            return (
+              <div className="runrow" key={r.run_id}>
+                <button
+                  className="runitem"
+                  aria-pressed={r.run_id === activeRun}
+                  onClick={() => props.onSelectRun(r.run_id)}
+                  disabled={r.status !== "complete"}
+                  title={empty ? "This run has no scored cells" : undefined}
+                >
+                  <span className="rlabel">
+                    {r.label ?? "unlabelled"}
+                    {empty && <span className="rbadge">no results</span>}
+                  </span>
+                  <span className="rmeta">
+                    {r.status} · {new Date(r.created_at).toLocaleString()}
+                  </span>
+                </button>
+                <button
+                  className="runitem-del"
+                  aria-label={`Delete run ${r.label ?? "unlabelled"}`}
+                  title="Delete run"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        `Delete "${r.label ?? "unlabelled"}"? This removes the run and any sensitivity results derived from it.`
+                      )
+                    ) {
+                      props.onDeleteRun(r.run_id);
+                    }
+                  }}
+                >
+                  🗑
+                </button>
+              </div>
+            );
+          })}
+        </section>
+      </Group>
+
+      <Group title="Factors" defaultOpen={false} hint="AHP weights">
+        <section aria-label="Factor weights">
+          <p className="sectionlabel">
+            Scenario factor weights (AHP · provisional)
+            <InfoTip
+              text={`${WEIGHTING_INFO.scale} ${WEIGHTING_INFO.normalisation}`}
+              label="How factor weights and normalisation work"
+            />
+          </p>
+          <p className="fieldhint">
+            0–10 scale · applied to the next run · organization defaults stay unchanged
+          </p>
+          {factors.map((f) => (
+            <div className="weightrow" key={f.factor_key}>
+              <div>
+                <label htmlFor={`w-${f.factor_key}`}>
+                  {f.factor_name}
+                  {FACTOR_INFO[f.factor_key] && (
+                    <InfoTip text={FACTOR_INFO[f.factor_key]} label={`About ${f.factor_name}`} />
+                  )}
+                </label>
+                <div className="norm">normalised {f.normalised_weight}</div>
+              </div>
+              <input
+                id={`w-${f.factor_key}`}
+                type="number"
+                min={0}
+                max={WEIGHT_MAX}
+                step={0.01}
+                value={draftValue(f)}
+                onChange={(e) =>
+                  setDrafts((d) => ({ ...d, [f.factor_key]: e.target.value }))
+                }
+                onBlur={() => commitWeight(f)}
+                onKeyDown={(e) => e.key === "Enter" && commitWeight(f)}
+              />
+            </div>
+          ))}
+        </section>
+      </Group>
+
+      <Group title="Sensitivity">
+        <SensitivityPanel
+          phase={props.sensitivityPhase}
+          status={props.sensitivityStatus}
+          error={props.sensitivityError}
+          canTrigger={activeRunComplete && !busy}
+          displayMode={props.displayMode}
+          factorNames={factorNames}
+          onTrigger={props.onTriggerSensitivity}
+          onDisplayMode={props.onDisplayMode}
         />
-        <button
-          className="btn"
-          disabled={!activeRunComplete || busy || props.exporting}
-          onClick={() => props.onExport(exportFormat, exportScale, showBoundary, exportName)}
-          title={
-            !activeRunComplete
-              ? "Select a completed run to export"
-              : "Render what's on screen at the chosen resolution"
-          }
-        >
-          {props.exporting ? "Rendering export…" : "Export current view"}
-        </button>
-      </section>
+      </Group>
+
+      <Group title="Layers">
+        <section aria-label="Map layers">
+          <p className="sectionlabel">Zone visibility</p>
+          <ZoneStrip
+            stats={stats}
+            hiddenZones={props.hiddenZones}
+            onToggleZone={props.onToggleZone}
+          />
+        </section>
+      </Group>
+
+      <Group title="Export" defaultOpen={false} hint="current view">
+        <section aria-label="Export">
+          <p className="sectionlabel">
+            Export current view
+            <InfoTip text={OPERATION_INFO.export.body} label="What Export does" />
+          </p>
+          <div className="exportrow">
+            <label htmlFor="export-format" className="exportlabel">Format</label>
+            <select
+              id="export-format"
+              value={exportFormat}
+              onChange={(e) => setExportFormat(e.target.value as "png" | "svg" | "pdf")}
+            >
+              <option value="png">PNG (raster)</option>
+              <option value="svg">SVG (vector)</option>
+              <option value="pdf">PDF (print)</option>
+            </select>
+          </div>
+          <div className="exportrow">
+            <label htmlFor="export-scale" className="exportlabel">Resolution</label>
+            <select
+              id="export-scale"
+              value={exportScale}
+              onChange={(e) => setExportScale(Number(e.target.value))}
+              disabled={exportFormat === "svg"}
+              title={exportFormat === "svg" ? "SVG is resolution-independent" : undefined}
+            >
+              <option value={1}>1× (screen)</option>
+              <option value={2}>2× (sharp)</option>
+              <option value={4}>4× (poster)</option>
+            </select>
+          </div>
+          <div className="exportrow exportrow--check">
+            <input
+              type="checkbox"
+              id="export-boundary"
+              checked={showBoundary}
+              onChange={(e) => setShowBoundary(e.target.checked)}
+            />
+            <label htmlFor="export-boundary" className="exportlabel">
+              Include Region 4 outline
+            </label>
+          </div>
+          <label htmlFor="export-name" className="exportlabel exportname-label">
+            File name <span className="exporthint">(optional)</span>
+          </label>
+          <input
+            type="text"
+            id="export-name"
+            className="exportname-input"
+            placeholder="e.g. georgetown-north-restricted"
+            value={exportName}
+            maxLength={80}
+            onChange={(e) => setExportName(e.target.value)}
+          />
+          <button
+            className="btn"
+            disabled={!activeRunComplete || busy || props.exporting}
+            onClick={() => props.onExport(exportFormat, exportScale, showBoundary, exportName)}
+            title={
+              !activeRunComplete
+                ? "Select a completed run to export"
+                : "Render what's on screen at the chosen resolution"
+            }
+          >
+            {props.exporting ? "Rendering export…" : "Export current view"}
+          </button>
+        </section>
+      </Group>
     </aside>
   );
 }

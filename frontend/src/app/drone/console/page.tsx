@@ -74,6 +74,9 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
   const [focusPoint, setFocusPoint] = useState<{ lat: number; lon: number } | null>(null);
   const [exporting, setExporting] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  // Rail collapse gives the map the whole workspace. Defaults open on desktop;
+  // a mount check collapses it on compact/tablet widths so the map leads there.
+  const [railOpen, setRailOpen] = useState(true);
 
   // Monotonic guard: only the most recent selectRun may write results, so
   // fast run switches can't render an earlier response over a later one.
@@ -94,6 +97,13 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
     } catch {
       /* storage blocked — skip the auto-open, the button still works */
     }
+  }, []);
+
+  // Compact/tablet widths lead with the map: collapse the rail on mount there.
+  // Runs once after hydration, so SSR and first client render still agree (open).
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (typeof window !== "undefined" && window.innerWidth <= 900) setRailOpen(false);
   }, []);
 
   const openGuide = useCallback(() => setGuideOpen(true), []);
@@ -291,6 +301,8 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
     [activeRun, displayMode, hiddenZones, sensitivity.phase, sensitivity.status]
   );
 
+  const closeReport = useCallback(() => setReport(null), []);
+
   const toggleZone = useCallback((zone: Zone) => {
     setHiddenZones((prev) => {
       const next = new Set(prev);
@@ -310,10 +322,11 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
   return (
     <div className="drone-console h-full w-full">
       <GuideDialog open={guideOpen} onClose={closeGuide} />
-      <div className="shell">
+      <div className={`shell${railOpen ? "" : " rail-collapsed"}`}>
         <ControlRail
           onOpenGuide={openGuide}
           onSignOut={onSignOut}
+          onCollapseRail={() => setRailOpen(false)}
           factors={factors}
           runs={runs}
           activeRun={activeRun}
@@ -336,6 +349,16 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
           exporting={exporting}
         />
         <div className="mapwrap">
+          {!railOpen && (
+            <button
+              type="button"
+              className="rail-reopen"
+              onClick={() => setRailOpen(true)}
+              aria-label="Show controls"
+            >
+              ☰ Controls
+            </button>
+          )}
           <MapView
             geojson={geojson}
             onCellClick={onCellClick}
@@ -349,7 +372,7 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
           {report && (
             <ReportDrawer
               report={report}
-              onClose={() => setReport(null)}
+              onClose={closeReport}
               volatility={reportVolatility}
               totalPerturbations={sensitivity.status?.total_runs}
             />
