@@ -22,6 +22,7 @@ import {
 import { ZONE_FILL, ZONE_LABELS } from "@/lib/zoneTheme";
 import GeoSearch from "@/components/drone/GeoSearch";
 import PublicReportDrawer from "@/components/drone/PublicReportDrawer";
+import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 
 // Leaflet touches `window`; render the map client-side only.
 const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
@@ -29,12 +30,18 @@ const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false
 const ZONE_ORDER: Zone[] = ["PROHIBITED", "RESTRICTED", "CONDITIONAL", "SUITABLE"];
 
 type Phase = "loading" | "ready" | "unavailable" | "error";
+type AppRole = "viewer" | "analyst" | "admin";
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
   return Number.isNaN(d.getTime())
     ? iso
-    : d.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    : d.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC",
+      });
 }
 
 export default function PublicExplorer() {
@@ -47,6 +54,7 @@ export default function PublicExplorer() {
   const [reportNote, setReportNote] = useState<{ text: string; error?: boolean } | null>(null);
   const [focusPoint, setFocusPoint] = useState<{ lat: number; lon: number } | null>(null);
   const [hiddenZones, setHiddenZones] = useState<Set<Zone>>(new Set());
+  const [appRole, setAppRole] = useState<AppRole | null>(null);
 
   const urlCellHandled = useRef(false);
 
@@ -117,6 +125,16 @@ export default function PublicExplorer() {
     void Promise.resolve().then(() => load());
   }, [load]);
 
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    void createClient().auth.getUser().then(({ data }) => {
+      const role = data.user?.app_metadata.app_role;
+      if (role === "viewer" || role === "analyst" || role === "admin") {
+        setAppRole(role);
+      }
+    });
+  }, []);
+
   // Shareable location URLs: once zoning is ready, resolve a ?cell= param once.
   useEffect(() => {
     if (phase !== "ready" || urlCellHandled.current) return;
@@ -179,6 +197,7 @@ export default function PublicExplorer() {
             <nav className="explore-nav" aria-label="Drone product navigation">
               <Link href="/drone">Overview</Link>
               <Link href="/drone/methodology">Methodology</Link>
+              <Link href="/drone/console">Planning Console</Link>
             </nav>
           </div>
 
@@ -188,7 +207,11 @@ export default function PublicExplorer() {
             temporary restrictions, weather, and operator qualifications still apply.
           </p>
 
-          <GeoSearch onPick={onGeoPick} disabled={phase !== "ready"} />
+          <GeoSearch
+            onPick={onGeoPick}
+            disabled={phase !== "ready"}
+            placeholder="Search for drone-zone guidance"
+          />
 
           {reportNote && (
             <p className={`statusline${reportNote.error ? " error" : ""}`} role="status">
@@ -246,9 +269,33 @@ export default function PublicExplorer() {
               <div className="map-overlay-card">
                 <strong>No published zoning yet</strong>
                 <span>
-                  Guidance for this study area hasn’t been published. Check back once
-                  an approved run is available.
+                  Guidance for this study area has not been published.
                 </span>
+                {appRole === "admin" || appRole === "analyst" ? (
+                  <>
+                    <span>
+                      Generate a zoning run in the Planning Console
+                      {appRole === "admin"
+                        ? ", then approve and publish it here."
+                        : ". An administrator must approve and publish the result."}
+                    </span>
+                    <Link className="btn map-overlay-action" href="/drone/console">
+                      Create zoning run
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <span>
+                      Authorized staff can generate a run in the Planning Console.
+                    </span>
+                    <Link
+                      className="btn map-overlay-action"
+                      href="/login?next=/drone/console"
+                    >
+                      Staff sign in
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           )}

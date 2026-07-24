@@ -54,10 +54,27 @@ test("the rail links to the dashboard and methodology", async ({ page }) => {
     "href",
     "/drone/dashboard",
   );
+  await expect(page.getByRole("link", { name: "Public Explorer" })).toHaveAttribute(
+    "href",
+    "/drone/explore",
+  );
   await expect(page.getByRole("link", { name: "Methodology" })).toHaveAttribute(
     "href",
     "/drone/methodology",
   );
+});
+
+test("admins can approve and publish completed runs", async ({ page }) => {
+  const state = await installMockBackend(page);
+  await page.addInitScript(() => localStorage.setItem("drone.guideSeen.v1", "1"));
+  await page.goto("/drone/console");
+
+  await page.getByRole("button", { name: "Approve", exact: true }).click();
+  await expect.poll(() => state.lifecyclePosts).toContain("run-1:approve");
+
+  await page.getByRole("button", { name: "Publish", exact: true }).click();
+  await expect.poll(() => state.lifecyclePosts).toContain("run-2:publish");
+  await expect(page.getByText("Run published. The Public Explorer is now updated.")).toBeVisible();
 });
 
 test("Escape closes the selected-cell report", async ({ page }) => {

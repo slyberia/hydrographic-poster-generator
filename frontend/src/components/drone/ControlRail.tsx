@@ -96,6 +96,7 @@ function ZoneStrip(props: {
 }
 
 export default function ControlRail(props: {
+  appRole: "viewer" | "analyst" | "admin";
   factors: FactorWeight[];
   runs: RunSummary[];
   activeRun: string | null;
@@ -110,6 +111,10 @@ export default function ControlRail(props: {
   onRunModel: (label: string, overrides?: Record<string, number>) => void;
   onSelectRun: (runId: string) => void;
   onDeleteRun: (runId: string) => void;
+  onTransitionRun: (
+    runId: string,
+    action: "approve" | "publish" | "archive",
+  ) => void;
   onToggleZone: (zone: Zone) => void;
   onTriggerSensitivity: (delta: number) => void;
   onDisplayMode: (mode: MapDisplayMode) => void;
@@ -126,6 +131,8 @@ export default function ControlRail(props: {
   onCollapseRail?: () => void;
 }) {
   const { factors, runs, activeRun, stats, busy, status } = props;
+  const canRun = props.appRole === "analyst" || props.appRole === "admin";
+  const canManagePublication = props.appRole === "admin";
   const [label, setLabel] = useState("");
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [exportFormat, setExportFormat] = useState<"png" | "svg" | "pdf">("png");
@@ -186,6 +193,8 @@ export default function ControlRail(props: {
           )}
         </div>
         <nav className="rail-nav" aria-label="Drone sections">
+          <Link href="/drone">Overview</Link>
+          <Link href="/drone/explore">Public Explorer</Link>
           <Link href="/drone/dashboard">Dashboard</Link>
           <Link href="/drone/methodology">Methodology</Link>
         </nav>
@@ -221,10 +230,14 @@ export default function ControlRail(props: {
           />
           <button
             className="btn"
-            disabled={busy}
+            disabled={busy || !canRun}
             onClick={() => props.onRunModel(label || "unlabelled run", pendingOverrides())}
           >
-            {busy ? "Scoring cells…" : "Run zoning model"}
+            {busy
+              ? "Scoring cells…"
+              : canRun
+                ? "Run zoning model"
+                : "Analyst access required"}
           </button>
           <p className={`statusline${status.error ? " error" : ""}`} role="status">
             {status.text}
@@ -239,38 +252,85 @@ export default function ControlRail(props: {
           {runs.map((r) => {
             const empty = r.status === "complete" && r.cell_count === 0;
             return (
-              <div className="runrow" key={r.run_id}>
-                <button
-                  className="runitem"
-                  aria-pressed={r.run_id === activeRun}
-                  onClick={() => props.onSelectRun(r.run_id)}
-                  disabled={r.status !== "complete"}
-                  title={empty ? "This run has no scored cells" : undefined}
-                >
-                  <span className="rlabel">
-                    {r.label ?? "unlabelled"}
-                    {empty && <span className="rbadge">no results</span>}
-                  </span>
-                  <span className="rmeta">
-                    {r.status} · {new Date(r.created_at).toLocaleString()}
-                  </span>
-                </button>
-                <button
-                  className="runitem-del"
-                  aria-label={`Delete run ${r.label ?? "unlabelled"}`}
-                  title="Delete run"
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        `Delete "${r.label ?? "unlabelled"}"? This removes the run and any sensitivity results derived from it.`
-                      )
-                    ) {
-                      props.onDeleteRun(r.run_id);
-                    }
-                  }}
-                >
-                  🗑
-                </button>
+              <div className="runstack" key={r.run_id}>
+                <div className="runrow">
+                  <button
+                    className="runitem"
+                    aria-pressed={r.run_id === activeRun}
+                    onClick={() => props.onSelectRun(r.run_id)}
+                    disabled={r.status !== "complete"}
+                    title={empty ? "This run has no scored cells" : undefined}
+                  >
+                    <span className="rlabel">
+                      {r.label ?? "unlabelled"}
+                      <span className={`rbadge rbadge--${r.lifecycle_state}`}>
+                        {r.lifecycle_state}
+                      </span>
+                      {empty && <span className="rbadge">no results</span>}
+                    </span>
+                    <span className="rmeta">
+                      {r.status} · {new Date(r.created_at).toLocaleString()}
+                    </span>
+                  </button>
+                  {canManagePublication &&
+                    r.lifecycle_state !== "published" &&
+                    r.lifecycle_state !== "archived" && (
+                      <button
+                        className="runitem-del"
+                        aria-label={`Delete run ${r.label ?? "unlabelled"}`}
+                        title="Delete run"
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              `Delete "${r.label ?? "unlabelled"}"? This removes the run and any sensitivity results derived from it.`
+                            )
+                          ) {
+                            props.onDeleteRun(r.run_id);
+                          }
+                        }}
+                      >
+                        ×
+                      </button>
+                    )}
+                </div>
+                {canManagePublication && r.status === "complete" && (
+                  <div className="run-actions" aria-label={`Publication actions for ${r.label ?? "unlabelled"}`}>
+                    {r.lifecycle_state === "draft" && (
+                      <button
+                        type="button"
+                        onClick={() => props.onTransitionRun(r.run_id, "approve")}
+                        disabled={busy}
+                      >
+                        Approve
+                      </button>
+                    )}
+                    {r.lifecycle_state === "approved" && (
+                      <button
+                        type="button"
+                        onClick={() => props.onTransitionRun(r.run_id, "publish")}
+                        disabled={busy}
+                      >
+                        Publish
+                      </button>
+                    )}
+                    {r.lifecycle_state !== "archived" && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (window.confirm(`Archive "${r.label ?? "unlabelled"}"?`)) {
+                            props.onTransitionRun(r.run_id, "archive");
+                          }
+                        }}
+                        disabled={busy}
+                      >
+                        Archive
+                      </button>
+                    )}
+                    {r.lifecycle_state === "published" && (
+                      <Link href="/drone/explore">View public map</Link>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}
@@ -306,6 +366,7 @@ export default function ControlRail(props: {
                 min={0}
                 max={WEIGHT_MAX}
                 step={0.01}
+                disabled={!canRun}
                 value={draftValue(f)}
                 onChange={(e) =>
                   setDrafts((d) => ({ ...d, [f.factor_key]: e.target.value }))
@@ -323,7 +384,7 @@ export default function ControlRail(props: {
           phase={props.sensitivityPhase}
           status={props.sensitivityStatus}
           error={props.sensitivityError}
-          canTrigger={activeRunComplete && !busy}
+          canTrigger={canRun && activeRunComplete && !busy}
           displayMode={props.displayMode}
           factorNames={factorNames}
           onTrigger={props.onTriggerSensitivity}

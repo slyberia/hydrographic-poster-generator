@@ -19,12 +19,16 @@ const GUIDE_SEEN_KEY = "drone.guideSeen.v1";
 const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
 
 const CONSOLE_ROLES = new Set(["viewer", "analyst", "admin"]);
+type AppRole = "viewer" | "analyst" | "admin";
 
 export default function Page() {
   const router = useRouter();
   const localAuthBypass =
     !isSupabaseConfigured && process.env.NODE_ENV !== "production";
   const [authorized, setAuthorized] = useState(localAuthBypass);
+  const [appRole, setAppRole] = useState<AppRole | null>(
+    localAuthBypass ? "admin" : null,
+  );
 
   useEffect(() => {
     if (localAuthBypass) return;
@@ -34,10 +38,12 @@ export default function Page() {
         router.replace("/login?next=/drone/console");
         return;
       }
-      if (!CONSOLE_ROLES.has(data.user.app_metadata.app_role)) {
+      const role = data.user.app_metadata.app_role;
+      if (!CONSOLE_ROLES.has(role)) {
         router.replace("/login?error=role");
         return;
       }
+      setAppRole(role as AppRole);
       setAuthorized(true);
     });
   }, [localAuthBypass, router]);
@@ -57,10 +63,16 @@ export default function Page() {
       }
     : undefined;
 
-  return <Console onSignOut={signOut} />;
+  return <Console appRole={appRole ?? "viewer"} onSignOut={signOut} />;
 }
 
-function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
+function Console({
+  appRole,
+  onSignOut,
+}: {
+  appRole: AppRole;
+  onSignOut?: () => Promise<void>;
+}) {
   const [factors, setFactors] = useState<FactorWeight[]>([]);
   const [runs, setRuns] = useState<RunSummary[]>([]);
   const [activeRun, setActiveRun] = useState<string | null>(null);
@@ -87,6 +99,8 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
   const viewportRef = useRef<(() => ViewportSnapshot) | null>(null);
 
   const sensitivity = useSensitivity(activeRun);
+  const canRun = appRole === "analyst" || appRole === "admin";
+  const canManagePublication = appRole === "admin";
 
   // First visit: auto-open the plain-language guide once, then remember it.
   // Read in an effect (not render) so SSR and first client render agree.
@@ -165,6 +179,10 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
 
   const runModel = useCallback(
     async (label: string, overrides?: Record<string, number>) => {
+      if (!canRun) {
+        setStatus({ text: "Analyst or administrator access is required to run the model.", error: true });
+        return;
+      }
       setBusy(true);
       setStatus({ text: "Running model — scoring 19,471 cells…" });
       try {
@@ -177,7 +195,41 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
         setBusy(false);
       }
     },
-    [refreshConfig, selectRun]
+    [canRun, refreshConfig, selectRun]
+  );
+
+  const transitionRun = useCallback(
+    async (runId: string, action: "approve" | "publish" | "archive") => {
+      if (!canManagePublication) {
+        setStatus({ text: "Administrator access is required for publication changes.", error: true });
+        return;
+      }
+      const progressLabel = {
+        approve: "Approving",
+        publish: "Publishing",
+        archive: "Archiving",
+      }[action];
+      setBusy(true);
+      setStatus({ text: `${progressLabel} run…` });
+      try {
+        if (action === "approve") await api.approveRun(runId);
+        if (action === "publish") await api.publishRun(runId);
+        if (action === "archive") await api.archiveRun(runId);
+        await refreshConfig();
+        if (runId === activeRun) await selectRun(runId);
+        setStatus({
+          text:
+            action === "publish"
+              ? "Run published. The Public Explorer is now updated."
+              : `Run ${action === "approve" ? "approved" : "archived"}.`,
+        });
+      } catch (e) {
+        setStatus({ text: String(e), error: true });
+      } finally {
+        setBusy(false);
+      }
+    },
+    [activeRun, canManagePublication, refreshConfig, selectRun],
   );
 
   const onCellClick = useCallback(
@@ -324,6 +376,7 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
       <GuideDialog open={guideOpen} onClose={closeGuide} />
       <div className={`shell${railOpen ? "" : " rail-collapsed"}`}>
         <ControlRail
+          appRole={appRole}
           onOpenGuide={openGuide}
           onSignOut={onSignOut}
           onCollapseRail={() => setRailOpen(false)}
@@ -341,6 +394,7 @@ function Console({ onSignOut }: { onSignOut?: () => Promise<void> }) {
           onRunModel={runModel}
           onSelectRun={selectRun}
           onDeleteRun={deleteRun}
+          onTransitionRun={transitionRun}
           onToggleZone={toggleZone}
           onTriggerSensitivity={sensitivity.trigger}
           onDisplayMode={setDisplayMode}
