@@ -28,8 +28,12 @@ const FACTOR_KEYS = [
 
 const RUNS = [
   { run_id: "run-1", label: "baseline", status: "complete",
+    lifecycle_state: "draft", approved_at: null, published_at: null,
+    archived_at: null, supersedes_run_id: null, cell_count: 4,
     weights_snapshot: {}, created_at: "2026-07-17T12:00:00Z", completed_at: "2026-07-17T12:00:09Z" },
   { run_id: "run-2", label: "alt weights", status: "complete",
+    lifecycle_state: "approved", approved_at: "2026-07-16T12:01:00Z", published_at: null,
+    archived_at: null, supersedes_run_id: null, cell_count: 4,
     weights_snapshot: {}, created_at: "2026-07-16T12:00:00Z", completed_at: "2026-07-16T12:00:09Z" },
 ];
 
@@ -90,11 +94,13 @@ export interface MockState {
   lastStatusPollAt: number;
   /** When true, POST /sensitivity is aborted to simulate a dead backend. */
   failTrigger: boolean;
+  lifecyclePosts: string[];
 }
 
 export async function installMockBackend(page: Page): Promise<MockState> {
   const state: MockState = {
     statusPolls: 0, triggerPosts: 0, lastStatusPollAt: 0, failTrigger: false,
+    lifecyclePosts: [],
   };
 
   const json = (route: Route, body: unknown, status = 200) =>
@@ -112,6 +118,19 @@ export async function installMockBackend(page: Page): Promise<MockState> {
       })));
     }
     if (path === "/runs" && method === "GET") return json(route, RUNS);
+
+    const lifecycle = path.match(/^\/runs\/([^/]+)\/(approve|publish|archive)$/);
+    if (lifecycle && method === "POST") {
+      state.lifecyclePosts.push(`${lifecycle[1]}:${lifecycle[2]}`);
+      const run = RUNS.find((r) => r.run_id === lifecycle[1]) ?? RUNS[0];
+      const nextState =
+        lifecycle[2] === "approve"
+          ? "approved"
+          : lifecycle[2] === "publish"
+            ? "published"
+            : "archived";
+      return json(route, { ...run, lifecycle_state: nextState });
+    }
 
     const geo = path.match(/^\/runs\/([^/]+)\/geojson$/);
     if (geo) return json(route, geojson());

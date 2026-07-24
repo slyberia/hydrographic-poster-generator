@@ -15,6 +15,7 @@ const DEBOUNCE_MS = 300;
 export default function GeoSearch(props: {
   onPick: (pick: { lat: number; lon: number; h3: string; label: string }) => void;
   disabled?: boolean;
+  placeholder?: string;
 }) {
   const [q, setQ] = useState("");
   const [results, setResults] = useState<GeoResult[]>([]);
@@ -65,7 +66,7 @@ export default function GeoSearch(props: {
         <input
           type="search"
           role="combobox"
-          placeholder="Search a place — is it safe to fly?"
+          placeholder={props.placeholder ?? "Search a place or address"}
           value={q}
           disabled={props.disabled}
           onChange={(e) => setQ(e.target.value)}

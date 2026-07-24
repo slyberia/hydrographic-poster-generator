@@ -161,6 +161,10 @@ test("shows an explicit unavailable state when nothing is published", async ({ p
   await page.goto("/drone/explore");
 
   await expect(page.getByText("No published zoning yet")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Staff sign in" })).toHaveAttribute(
+    "href",
+    "/login?next=/drone/console",
+  );
   // Search is disabled with nothing published.
   await expect(page.getByRole("combobox")).toBeDisabled();
 });

@@ -23,6 +23,11 @@ export interface RunSummary {
   run_id: string;
   label: string | null;
   status: string;
+  lifecycle_state: "draft" | "approved" | "published" | "archived";
+  approved_at: string | null;
+  published_at: string | null;
+  archived_at: string | null;
+  supersedes_run_id: string | null;
   weights_snapshot: Record<string, number>;
   created_at: string;
   completed_at: string | null;
@@ -238,6 +243,15 @@ export const droneApi = {
 
   deleteRun: (runId: string) =>
     http<void>(`/runs/${runId}`, { method: "DELETE" }),
+
+  approveRun: (runId: string) =>
+    http<RunSummary>(`/runs/${runId}/approve`, { method: "POST" }),
+
+  publishRun: (runId: string) =>
+    http<RunSummary>(`/runs/${runId}/publish`, { method: "POST" }),
+
+  archiveRun: (runId: string) =>
+    http<RunSummary>(`/runs/${runId}/archive`, { method: "POST" }),
 
   getLocationReport: (runId: string, h3: string) =>
     http<LocationReport>(`/runs/${runId}/report/${h3}`),
