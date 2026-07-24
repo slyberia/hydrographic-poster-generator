@@ -392,7 +392,7 @@ TA-3A/TA-3B and TA-4–TA-7 are estimated on activation.
 |---|---|---|---|---|---|
 | FU-1 | `origin/main` local ref was stale; confirm CI/deploy triggers point at the right `main` | Not needed for TA-1 read checks | Low–Med | Med | — |
 | FU-2 | Drone MCDA subsystem is outside the CLAUDE.md MVP spec | Product decision, not architecture | Med | Med (doc) | — |
-| FU-3 | `anon`/`authenticated` retain grants (incl. INSERT/UPDATE/DELETE) on PostGIS system objects `spatial_ref_sys`, `geometry_columns`, `geography_columns`; these are not RLS-protected. Migration `009` targeted application tables only. Worst case: a browser role could write junk SRID rows. Not application data. | **Keep deferred** — these objects are PostGIS-extension-managed; revoking grants without confirming Supabase/PostGIS expectations risks compatibility breakage. Accept the provider default unless a concrete write-path exploit or explicit security requirement justifies intervention. | Low | Low (do not action absent justification) | — |
+| FU-3 | **Resolved 2026-07-24.** PostGIS system objects retain provider-managed ACLs, but `public` is no longer an exposed Data API schema. Supabase now exposes the dedicated empty `api` schema; the dashboard reports zero exposed tables/functions and the Security Advisor reports zero errors. | Direct ACL/RLS changes were rejected because the objects are owned by Supabase's internal `supabase_admin` role. The provider-supported Data API boundary removes the browser path without altering extension-owned objects. | Resolved | — | Migration `011`; Supabase Data API project setting |
 | FU-4 | Cloud Build `d500f41d-1513-4149-a301-ee72ee5f75f8` deployed the backend successfully, then failed at `build-frontend` because `_SUPABASE_PUBLISHABLE_KEY` was empty. The frontend was not redeployed from `cb6c355`. | Deployment remediation belongs to TA-3A, not TA-1 verification | High for complete auth rollout | High | TA-3A |
 
 *(A follow-up entry is not authorization to implement it.)*
@@ -439,7 +439,7 @@ deployed backend verifies JWTs against). Repo state `2a81186`.
 |---|---|---|
 | RLS enabled on all 22 `009` application tables | **PASS** | `relrowsecurity = true` for every listed table |
 | No `anon`/`authenticated` privileges on the 22 application tables | **PASS** | none of the 22 appear in `role_table_grants` for either role |
-| No residual browser-role grants anywhere in `public` | **PARTIAL** | only PostGIS system objects retain grants (`spatial_ref_sys`, `geometry_columns`, `geography_columns`) — not application data → FU-3 |
+| No residual browser-role grants anywhere in `public` | **RESOLVED 2026-07-24** | PostGIS objects retain provider-managed ACLs, but `public` was removed from the Data API. The dedicated empty `api` schema is exposed instead; zero tables/functions are exposed → FU-3 |
 | F1a — no-token role-gated request → `401` | **PASS** | `PATCH /config/factors/__auth_probe__` with no token returned `401` and `{"detail":"Bearer access token required."}`. The nonexistent factor key guarantees no data mutation if auth were absent. |
 | F1b — insufficient-role token → `403` | **BLOCKED** | requires a valid lower-role user/JWT (none available) |
 | F2 — deployed image corresponds to source ⊇ `cb6c355` | **PASS** | Cloud Run revision `hydro-backend-00059-d6x` runs image tag `d500f41d-1513-4149-a301-ee72ee5f75f8`; the matching global Cloud Build record resolves source revision exactly to `cb6c3552a0df61cc5a17f10794588ba27f43c8ba`. |
