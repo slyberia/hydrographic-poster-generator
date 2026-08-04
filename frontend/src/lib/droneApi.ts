@@ -50,12 +50,12 @@ export interface LocationReport {
   risk_score: number | null;
   main_reason: string;
   authorization_note: string;
-  constraint_reasons: string[];
+  constraint_reasons: string[] | null;
   factor_breakdown: Record<
     string,
     { score: number; weight: number; reason: string }
   >;
-  data_confidence: string;
+  data_confidence: string | null;
   disclaimer: string;
 }
 

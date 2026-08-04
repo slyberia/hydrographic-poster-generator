@@ -83,7 +83,7 @@ function report(h3: string) {
     authorization_note: "Mock guidance.",
     constraint_reasons: cell.score === null ? ["Mock constraint"] : [],
     factor_breakdown: cell.score === null ? {} : { population: { score: 3, weight: 0.17, reason: "mock" } },
-    data_confidence: "high",
+    data_confidence: null,
     disclaimer: "Mock disclaimer.",
   };
 }

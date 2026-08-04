@@ -28,6 +28,9 @@ export default function ReportDrawer(props: {
   const r = props.report;
   const factors = Object.entries(r.factor_breakdown ?? {});
   const hasSweep = props.volatility !== undefined;
+  const confidence = r.data_confidence ?? "unknown";
+  const confidenceKey = confidence.toLowerCase();
+  const constraints = r.constraint_reasons ?? [];
 
   // Escape closes the report — quicker than reaching for the ✕ after a click.
   const { onClose } = props;
@@ -66,11 +69,11 @@ export default function ReportDrawer(props: {
           </>
         )}
 
-        {r.constraint_reasons.length > 0 && (
+        {constraints.length > 0 && (
           <>
             <dt>Active constraints</dt>
             <dd>
-              {r.constraint_reasons.map((c) => (
+              {constraints.map((c) => (
                 <div key={c}>{c}</div>
               ))}
             </dd>
@@ -129,14 +132,14 @@ export default function ReportDrawer(props: {
 
         <dt>
           Data confidence
-          {CONFIDENCE_INFO[r.data_confidence.toLowerCase()] && (
+          {CONFIDENCE_INFO[confidenceKey] && (
             <InfoTip
-              text={CONFIDENCE_INFO[r.data_confidence.toLowerCase()]}
+              text={CONFIDENCE_INFO[confidenceKey]}
               label="What data confidence means"
             />
           )}
         </dt>
-        <dd>{r.data_confidence.replace("_", " ")}</dd>
+        <dd>{confidence.replace(/_/g, " ")}</dd>
 
         <dt>Cell</dt>
         <dd style={{ fontVariantNumeric: "tabular-nums" }}>{r.h3_index}</dd>
