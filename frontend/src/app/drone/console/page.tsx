@@ -7,7 +7,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone, type ViewportSnapshot } from "@/lib/droneApi";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
-import ControlRail from "@/components/drone/ControlRail";
+import ControlRail, {
+  type DroneDownloadFormat,
+  type GeoJSONDownloadScope,
+} from "@/components/drone/ControlRail";
 import ReportDrawer from "@/components/drone/ReportDrawer";
 import GuideDialog from "@/components/drone/GuideDialog";
 import { MapDisplayMode } from "@/components/drone/SensitivityPanel";
@@ -101,6 +104,15 @@ function Console({
   const sensitivity = useSensitivity(activeRun);
   const canRun = appRole === "analyst" || appRole === "admin";
   const canManagePublication = appRole === "admin";
+
+  useEffect(() => {
+    const onWarning = (event: Event) => {
+      const warning = (event as CustomEvent<string>).detail;
+      if (warning) setStatus({ text: warning });
+    };
+    window.addEventListener("drone-usage-warning", onWarning);
+    return () => window.removeEventListener("drone-usage-warning", onWarning);
+  }, []);
 
   // First visit: auto-open the plain-language guide once, then remember it.
   // Read in an effect (not render) so SSR and first client render agree.
@@ -289,10 +301,11 @@ function Console({
 
   const exportView = useCallback(
     async (
-      format: "png" | "svg" | "pdf",
+      format: DroneDownloadFormat,
       scale: number,
       showBoundary: boolean,
       name: string,
+      geojsonScope: GeoJSONDownloadScope,
     ) => {
       if (!activeRun) {
         setStatus({ text: "Select a run before exporting.", error: true });
@@ -310,18 +323,24 @@ function Console({
         sensitivity.phase === "complete" &&
         !!sensitivity.status?.sweep_id;
       setExporting(true);
-      setStatus({ text: "Rendering export…" });
+      setStatus({ text: format === "geojson" ? "Preparing GeoJSON…" : "Rendering export…" });
       try {
-        const { blob, filename } = await api.exportView(activeRun, {
-          bbox,
-          zoom,
-          format,
-          scale,
-          display_mode: useVolatility ? "volatility" : "zones",
-          sweep_id: useVolatility ? sensitivity.status!.sweep_id : null,
-          hidden_zones: useVolatility ? null : Array.from(hiddenZones),
-          show_boundary: showBoundary,
-        });
+        const { blob, filename } =
+          format === "geojson"
+            ? await api.downloadRunGeoJSON(
+                activeRun,
+                geojsonScope === "viewport" ? bbox : null,
+              )
+            : await api.exportView(activeRun, {
+                bbox,
+                zoom,
+                format,
+                scale,
+                display_mode: useVolatility ? "volatility" : "zones",
+                sweep_id: useVolatility ? sensitivity.status!.sweep_id : null,
+                hidden_zones: useVolatility ? null : Array.from(hiddenZones),
+                show_boundary: showBoundary,
+              });
         // A user-supplied name overrides the server filename for the download.
         // Sanitise to a safe base and force the correct extension.
         const downloadName = (() => {

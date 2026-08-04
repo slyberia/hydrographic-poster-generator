@@ -14,6 +14,9 @@ import InfoTip from "@/components/drone/InfoTip";
 import GeoSearch from "@/components/drone/GeoSearch";
 import { FACTOR_INFO, OPERATION_INFO, WEIGHTING_INFO } from "@/lib/droneInfo";
 
+export type DroneDownloadFormat = "png" | "svg" | "pdf" | "geojson";
+export type GeoJSONDownloadScope = "viewport" | "full";
+
 /** Controlled disclosure group. React owns `open` (summary click is intercepted)
  * so the state survives the rail's frequent re-renders instead of fighting the
  * browser's native toggle. */
@@ -120,10 +123,11 @@ export default function ControlRail(props: {
   onDisplayMode: (mode: MapDisplayMode) => void;
   onGeoPick: (pick: { lat: number; lon: number; h3: string; label: string }) => void;
   onExport: (
-    format: "png" | "svg" | "pdf",
+    format: DroneDownloadFormat,
     scale: number,
     showBoundary: boolean,
     name: string,
+    geojsonScope: GeoJSONDownloadScope,
   ) => void;
   exporting: boolean;
   onOpenGuide: () => void;
@@ -135,9 +139,10 @@ export default function ControlRail(props: {
   const canManagePublication = props.appRole === "admin";
   const [label, setLabel] = useState("");
   const [drafts, setDrafts] = useState<Record<string, string>>({});
-  const [exportFormat, setExportFormat] = useState<"png" | "svg" | "pdf">("png");
+  const [exportFormat, setExportFormat] = useState<DroneDownloadFormat>("png");
   const [exportScale, setExportScale] = useState(2);
   const [showBoundary, setShowBoundary] = useState(false);
+  const [geojsonScope, setGeojsonScope] = useState<GeoJSONDownloadScope>("viewport");
   const [exportName, setExportName] = useState("");
 
   const WEIGHT_MAX = 10;
@@ -414,11 +419,12 @@ export default function ControlRail(props: {
             <select
               id="export-format"
               value={exportFormat}
-              onChange={(e) => setExportFormat(e.target.value as "png" | "svg" | "pdf")}
+              onChange={(e) => setExportFormat(e.target.value as DroneDownloadFormat)}
             >
               <option value="png">PNG (raster)</option>
               <option value="svg">SVG (vector)</option>
               <option value="pdf">PDF (print)</option>
+              <option value="geojson">GeoJSON (layer)</option>
             </select>
           </div>
           <div className="exportrow">
@@ -427,19 +433,39 @@ export default function ControlRail(props: {
               id="export-scale"
               value={exportScale}
               onChange={(e) => setExportScale(Number(e.target.value))}
-              disabled={exportFormat === "svg"}
-              title={exportFormat === "svg" ? "SVG is resolution-independent" : undefined}
+              disabled={exportFormat === "svg" || exportFormat === "geojson"}
+              title={
+                exportFormat === "svg"
+                  ? "SVG is resolution-independent"
+                  : exportFormat === "geojson"
+                    ? "GeoJSON exports layer geometry, not pixels"
+                    : undefined
+              }
             >
               <option value={1}>1× (screen)</option>
               <option value={2}>2× (sharp)</option>
               <option value={4}>4× (poster)</option>
             </select>
           </div>
+          {exportFormat === "geojson" && (
+            <div className="exportrow">
+              <label htmlFor="geojson-scope" className="exportlabel">Layer</label>
+              <select
+                id="geojson-scope"
+                value={geojsonScope}
+                onChange={(e) => setGeojsonScope(e.target.value as GeoJSONDownloadScope)}
+              >
+                <option value="viewport">Current map view</option>
+                <option value="full">Full model run</option>
+              </select>
+            </div>
+          )}
           <div className="exportrow exportrow--check">
             <input
               type="checkbox"
               id="export-boundary"
               checked={showBoundary}
+              disabled={exportFormat === "geojson"}
               onChange={(e) => setShowBoundary(e.target.checked)}
             />
             <label htmlFor="export-boundary" className="exportlabel">
@@ -461,14 +487,24 @@ export default function ControlRail(props: {
           <button
             className="btn"
             disabled={!activeRunComplete || busy || props.exporting}
-            onClick={() => props.onExport(exportFormat, exportScale, showBoundary, exportName)}
+            onClick={() =>
+              props.onExport(exportFormat, exportScale, showBoundary, exportName, geojsonScope)
+            }
             title={
               !activeRunComplete
                 ? "Select a completed run to export"
-                : "Render what's on screen at the chosen resolution"
+                : exportFormat === "geojson"
+                  ? "Download the selected run layer as GeoJSON"
+                  : "Render what's on screen at the chosen resolution"
             }
           >
-            {props.exporting ? "Rendering export…" : "Export current view"}
+            {props.exporting
+              ? exportFormat === "geojson"
+                ? "Preparing layer…"
+                : "Rendering export…"
+              : exportFormat === "geojson"
+                ? "Download GeoJSON"
+                : "Export current view"}
           </button>
         </section>
       </Group>

@@ -73,6 +73,31 @@ const BASE_DASHBOARD = {
 
 type Dashboard = typeof BASE_DASHBOARD;
 
+function geojson() {
+  return {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "Polygon",
+          coordinates: [[
+            [-58.12, 6.60], [-58.1, 6.60], [-58.1, 6.62],
+            [-58.12, 6.62], [-58.12, 6.60],
+          ]],
+        },
+        properties: {
+          h3_index: "cell_a",
+          zone: "SUITABLE",
+          total_score: 2.0,
+          dominant_reason: "mock",
+          confidence: "high",
+        },
+      },
+    ],
+  };
+}
+
 async function installDashboardMock(
   page: Page,
   opts: { body?: unknown; status?: number } = {},
@@ -88,12 +113,44 @@ async function installDashboardMock(
         body: JSON.stringify(opts.body ?? BASE_DASHBOARD),
       });
     }
+    if (path.match(/^\/runs\/[^/]+\/geojson$/)) {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(geojson()),
+      });
+    }
+    if (path.match(/^\/runs\/[^/]+\/geojson\/download$/)) {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/geo+json",
+        headers: { "Content-Disposition": 'attachment; filename="drone_zoning.geojson"' },
+        body: JSON.stringify(geojson()),
+      });
+    }
+    if (path.match(/^\/runs\/[^/]+\/report\/[^/]+$/)) {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          h3_index: "cell_a",
+          zone: "SUITABLE",
+          risk_score: 2,
+          main_reason: "Mock reason",
+          authorization_note: "Mock guidance.",
+          constraint_reasons: [],
+          factor_breakdown: { population: { score: 3, weight: 0.17, reason: "mock" } },
+          data_confidence: "high",
+          disclaimer: "Mock disclaimer.",
+        }),
+      });
+    }
     return route.fulfill({ status: 500, contentType: "application/json", body: "{}" });
   });
   return requested;
 }
 
-test("renders published metrics and never fetches geometry", async ({ page }) => {
+test("renders published metrics and integrated map layer", async ({ page }) => {
   const requested = await installDashboardMock(page);
   await page.goto("/drone/dashboard");
 
@@ -109,8 +166,9 @@ test("renders published metrics and never fetches geometry", async ({ page }) =>
   await expect(page.getByText("population")).toBeVisible();
   await expect(page.getByRole("cell", { name: "baseline" }).first()).toBeVisible();
 
-  // Bounded aggregate only — no cell geometry endpoints touched.
-  expect(requested.some((p) => p.includes("/geojson"))).toBe(false);
+  // Dashboard aggregate plus read-only map layer.
+  await expect(page.getByText("Interactive zoning map")).toBeVisible();
+  expect(requested.some((p) => p.includes("/geojson"))).toBe(true);
   expect(requested).toContain("/dashboard");
 });
 

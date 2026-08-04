@@ -1,12 +1,14 @@
 from typing import Optional, Dict, Any, List, Literal
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
 import asyncpg
+import json
 
 from app.database import get_db_pool
 from app.auth import require_admin, require_analyst, require_viewer, Principal
 from app.services import drone_service
 from app.services import drone_publication_service as drone_pub
 from app.services import drone_dashboard_service as drone_dash
+from app.services.usage_limits import usage_limit
 from pydantic import BaseModel, Field
 
 router = APIRouter()
@@ -110,7 +112,11 @@ async def patch_factor(
 
 # ---- Dashboard (internal reporting surface) ----
 
-@router.get("/dashboard", tags=["Drone Dashboard"], dependencies=[Depends(require_viewer)])
+@router.get(
+    "/dashboard",
+    tags=["Drone Dashboard"],
+    dependencies=[Depends(require_viewer), Depends(usage_limit("light"))],
+)
 async def get_dashboard(pool: asyncpg.Pool = Depends(get_db_pool)):
     """Bounded aggregate metrics for the internal dashboard (viewer role).
 
@@ -132,7 +138,7 @@ async def list_runs(pool: asyncpg.Pool = Depends(get_db_pool)):
 @router.post(
     "/runs",
     tags=["Drone Runs"],
-    dependencies=[Depends(require_analyst)],
+    dependencies=[Depends(require_analyst), Depends(usage_limit("model"))],
 )
 async def create_and_execute_run(
     body: RunCreateRequest,
@@ -180,7 +186,11 @@ async def delete_run(run_id: str, pool: asyncpg.Pool = Depends(get_db_pool)):
     return Response(status_code=204)
 
 
-@router.get("/runs/{run_id}/geojson", tags=["Drone Runs"], dependencies=[Depends(require_viewer)])
+@router.get(
+    "/runs/{run_id}/geojson",
+    tags=["Drone Runs"],
+    dependencies=[Depends(require_viewer), Depends(usage_limit("layer"))],
+)
 async def get_run_geojson(
     run_id: str,
     zone: Optional[str] = None,
@@ -193,10 +203,48 @@ async def get_run_geojson(
         raise HTTPException(status_code=500, detail=str(exc))
 
 
+@router.get(
+    "/runs/{run_id}/geojson/download",
+    tags=["Drone Runs"],
+    dependencies=[Depends(require_viewer), Depends(usage_limit("layer"))],
+)
+async def download_run_geojson(
+    run_id: str,
+    west: Optional[float] = None,
+    south: Optional[float] = None,
+    east: Optional[float] = None,
+    north: Optional[float] = None,
+    pool: asyncpg.Pool = Depends(get_db_pool),
+):
+    """Download a full-run or viewport-bounded GeoJSON layer for GIS use."""
+    bbox = None
+    coords = [west, south, east, north]
+    if any(v is not None for v in coords):
+        if any(v is None for v in coords):
+            raise HTTPException(
+                status_code=422,
+                detail="west, south, east, and north are all required for a bbox download.",
+            )
+        bbox = (west, south, east, north)
+
+    try:
+        fc = await drone_service.results_geojson(pool, run_id, bbox=bbox)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+    scope = "viewport" if bbox else "full"
+    filename = f"drone_zoning_{run_id}_{scope}.geojson"
+    return Response(
+        content=json.dumps(fc, separators=(",", ":")),
+        media_type="application/geo+json",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
 @router.post(
     "/runs/{run_id}/export",
     tags=["Drone Runs"],
-    dependencies=[Depends(require_viewer)],
+    dependencies=[Depends(require_viewer), Depends(usage_limit("export"))],
 )
 async def export_view(
     run_id: str,
@@ -245,7 +293,7 @@ async def export_view(
     tags=["Drone Sensitivity"],
     status_code=202,
     response_model=SensitivityStatus,
-    dependencies=[Depends(require_analyst)],
+    dependencies=[Depends(require_analyst), Depends(usage_limit("model"))],
 )
 async def trigger_sensitivity(
     run_id: str,
@@ -262,8 +310,12 @@ async def trigger_sensitivity(
         raise HTTPException(status_code=code, detail=str(exc))
 
 
-@router.get("/runs/{run_id}/sensitivity/{sweep_id}", tags=["Drone Sensitivity"],
-            response_model=SensitivityStatus)
+@router.get(
+    "/runs/{run_id}/sensitivity/{sweep_id}",
+    tags=["Drone Sensitivity"],
+    response_model=SensitivityStatus,
+    dependencies=[Depends(require_viewer), Depends(usage_limit("light"))],
+)
 async def get_sensitivity_status(
     run_id: str,
     sweep_id: str,
@@ -276,8 +328,12 @@ async def get_sensitivity_status(
         raise HTTPException(status_code=404, detail=str(exc))
 
 
-@router.get("/runs/{run_id}/sensitivity/{sweep_id}/volatility", tags=["Drone Sensitivity"],
-            response_model=List[VolatilityRecord])
+@router.get(
+    "/runs/{run_id}/sensitivity/{sweep_id}/volatility",
+    tags=["Drone Sensitivity"],
+    response_model=List[VolatilityRecord],
+    dependencies=[Depends(require_viewer), Depends(usage_limit("layer"))],
+)
 async def get_volatility(
     run_id: str,
     sweep_id: str,
@@ -290,7 +346,11 @@ async def get_volatility(
         raise HTTPException(status_code=404, detail=str(exc))
 
 
-@router.get("/runs/{run_id}/report/{h3_index}", tags=["Drone Runs"], dependencies=[Depends(require_viewer)])
+@router.get(
+    "/runs/{run_id}/report/{h3_index}",
+    tags=["Drone Runs"],
+    dependencies=[Depends(require_viewer), Depends(usage_limit("cell"))],
+)
 async def get_location_report(
     run_id: str,
     h3_index: str,
