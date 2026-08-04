@@ -406,7 +406,7 @@ async def location_report(pool: asyncpg.Pool, run_id: str, h3_index: str) -> Opt
         "authorization_note": notes[row["zone"]],
         "constraint_reasons": row["constraint_reasons"] or [],
         "factor_breakdown": json.loads(row["factor_scores"]) if isinstance(row["factor_scores"], str) else (row["factor_scores"] or {}),
-        "data_confidence": row["confidence"],
+        "data_confidence": row["confidence"] or "unknown",
         "disclaimer": ("Decision-support output only — not an official authorization. "
                        "GCAA approval requirements are unaffected by this classification."),
     }

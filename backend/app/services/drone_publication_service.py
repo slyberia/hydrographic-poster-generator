@@ -210,7 +210,7 @@ async def public_location_report(pool: asyncpg.Pool, h3_index: str) -> Dict[str,
         "main_reason": row["dominant_reason"],
         "guidance": _ZONE_GUIDANCE[row["zone"]],
         "constraint_reasons": row["constraint_reasons"] or [],
-        "data_confidence": row["confidence"],
+        "data_confidence": row["confidence"] or "unknown",
         "methodology_version": config["methodology_version"] if config else None,
         "disclaimer": _DISCLAIMER,
     }

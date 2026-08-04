@@ -15,6 +15,8 @@ export default function PublicReportDrawer(props: {
   onClose: () => void;
 }) {
   const r = props.report;
+  const confidence = r.data_confidence ?? "unknown";
+  const constraints = r.constraint_reasons ?? [];
 
   return (
     <div className="drawer" role="dialog" aria-label="Location guidance">
@@ -33,11 +35,11 @@ export default function PublicReportDrawer(props: {
         <dt>Guidance</dt>
         <dd>{r.guidance}</dd>
 
-        {r.constraint_reasons.length > 0 && (
+        {constraints.length > 0 && (
           <>
             <dt>Active constraints</dt>
             <dd>
-              {r.constraint_reasons.map((c) => (
+              {constraints.map((c) => (
                 <div key={c}>{c}</div>
               ))}
             </dd>
@@ -45,7 +47,7 @@ export default function PublicReportDrawer(props: {
         )}
 
         <dt>Data confidence</dt>
-        <dd>{r.data_confidence.replace(/_/g, " ")}</dd>
+        <dd>{confidence.replace(/_/g, " ")}</dd>
 
         {r.methodology_version && (
           <>

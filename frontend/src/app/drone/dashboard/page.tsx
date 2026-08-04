@@ -148,6 +148,8 @@ function Dashboard({ onSignOut }: { onSignOut?: () => Promise<void> }) {
               <small>{data?.study_area?.display_name ?? "Region 4 · decision-support prototype"}</small>
             </h1>
             <nav className="rail-nav" aria-label="Drone sections">
+              <Link href="/drone">Overview</Link>
+              <Link href="/drone/explore">Public Explorer</Link>
               <Link href="/drone/console">Console</Link>
               <Link href="/drone/methodology">Methodology</Link>
             </nav>

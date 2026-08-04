@@ -39,8 +39,8 @@ export interface PublicReport {
   classification: string;
   main_reason: string;
   guidance: string;
-  constraint_reasons: string[];
-  data_confidence: string;
+  constraint_reasons: string[] | null;
+  data_confidence: string | null;
   methodology_version: string | null;
   disclaimer: string;
 }

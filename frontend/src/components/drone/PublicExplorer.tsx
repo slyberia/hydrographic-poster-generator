@@ -196,6 +196,7 @@ export default function PublicExplorer() {
             </h1>
             <nav className="explore-nav" aria-label="Drone product navigation">
               <Link href="/drone">Overview</Link>
+              <Link href="/drone/dashboard">Dashboard</Link>
               <Link href="/drone/methodology">Methodology</Link>
               <Link href="/drone/console">Planning Console</Link>
             </nav>
