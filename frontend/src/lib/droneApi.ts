@@ -185,6 +185,12 @@ function filenameFromDisposition(header: string | null, fallback: string): strin
   return m?.[1] ?? fallback;
 }
 
+function emitUsageWarning(res: Response) {
+  const warning = res.headers.get("X-Usage-Warning");
+  if (!warning || typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent("drone-usage-warning", { detail: warning }));
+}
+
 async function http<T>(path: string, init?: RequestInit): Promise<T> {
   const authHeaders = await authorizationHeaders();
   const res = await fetch(`${BASE}${path}`, {
@@ -195,6 +201,7 @@ async function http<T>(path: string, init?: RequestInit): Promise<T> {
     const body = await res.text().catch(() => "");
     throw new Error(`${res.status} ${res.statusText} — ${body.slice(0, 300)}`);
   }
+  emitUsageWarning(res);
   if (res.status === 204) return undefined as T; // e.g. DELETE
   return res.json() as Promise<T>;
 }
@@ -237,6 +244,32 @@ export const droneApi = {
 
   getRunGeoJSON: (runId: string) =>
     http<GeoJSON.FeatureCollection>(`/runs/${runId}/geojson`),
+
+  downloadRunGeoJSON: async (
+    runId: string,
+    bbox?: ExportBBox | null
+  ): Promise<{ blob: Blob; filename: string }> => {
+    const authHeaders = await authorizationHeaders();
+    const query = bbox
+      ? `?west=${encodeURIComponent(bbox.west)}&south=${encodeURIComponent(
+          bbox.south
+        )}&east=${encodeURIComponent(bbox.east)}&north=${encodeURIComponent(bbox.north)}`
+      : "";
+    const res = await fetch(`${BASE}/runs/${runId}/geojson/download${query}`, {
+      headers: { ...authHeaders },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`${res.status} ${res.statusText} — ${body.slice(0, 300)}`);
+    }
+    emitUsageWarning(res);
+    const blob = await res.blob();
+    const filename = filenameFromDisposition(
+      res.headers.get("Content-Disposition"),
+      `drone_zoning_${runId}.geojson`
+    );
+    return { blob, filename };
+  },
 
   getRunStats: (runId: string) =>
     http<{ stats?: RunStats } & RunSummary>(`/runs/${runId}`),
@@ -282,6 +315,7 @@ export const droneApi = {
       const body = await res.text().catch(() => "");
       throw new Error(`${res.status} ${res.statusText} — ${body.slice(0, 300)}`);
     }
+    emitUsageWarning(res);
     const blob = await res.blob();
     const filename = filenameFromDisposition(
       res.headers.get("Content-Disposition"),

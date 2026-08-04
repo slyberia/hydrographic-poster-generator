@@ -8,15 +8,18 @@
  * cell geometry — the map editor is the console; this is the reporting view. */
 
 import { useCallback, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { droneApi as api, DashboardData, DashZone, Zone } from "@/lib/droneApi";
+import { droneApi as api, DashboardData, DashZone, LocationReport, Zone } from "@/lib/droneApi";
+import ReportDrawer from "@/components/drone/ReportDrawer";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 import { ZONE_CSS, ZONE_LABELS } from "@/lib/zoneTheme";
 
 const DASH_ROLES = new Set(["viewer", "analyst", "admin"]);
 const ZONE_ORDER: Zone[] = ["PROHIBITED", "RESTRICTED", "CONDITIONAL", "SUITABLE"];
+const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
 
 function fmtDate(iso: string | null): string {
   if (!iso) return "—";
@@ -28,6 +31,17 @@ function fmtDate(iso: string | null): string {
 
 function shortId(id: string): string {
   return id.length > 8 ? `${id.slice(0, 8)}…` : id;
+}
+
+function saveBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 export default function Page() {
@@ -98,6 +112,7 @@ function Dashboard({ onSignOut }: { onSignOut?: () => Promise<void> }) {
   const [data, setData] = useState<DashboardData | null>(null);
   const [phase, setPhase] = useState<"loading" | "ready" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
+  const [usageWarning, setUsageWarning] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setPhase("loading");
@@ -114,6 +129,14 @@ function Dashboard({ onSignOut }: { onSignOut?: () => Promise<void> }) {
   useEffect(() => {
     void Promise.resolve().then(() => load());
   }, [load]);
+
+  useEffect(() => {
+    const onWarning = (event: Event) => {
+      setUsageWarning((event as CustomEvent<string>).detail);
+    };
+    window.addEventListener("drone-usage-warning", onWarning);
+    return () => window.removeEventListener("drone-usage-warning", onWarning);
+  }, []);
 
   return (
     <div className="drone-console">
@@ -140,6 +163,12 @@ function Dashboard({ onSignOut }: { onSignOut?: () => Promise<void> }) {
           <p className="statusline" role="status">Loading dashboard…</p>
         )}
 
+        {usageWarning && (
+          <p className="dash-banner dash-banner--warn" role="status">
+            <strong>Admin usage warning</strong> — {usageWarning}
+          </p>
+        )}
+
         {phase === "error" && (
           <div className="dash-card" role="alert">
             <strong>Couldn’t load the dashboard</strong>
@@ -155,6 +184,99 @@ function Dashboard({ onSignOut }: { onSignOut?: () => Promise<void> }) {
 }
 
 function DashboardBody({ data }: { data: DashboardData }) {
+  const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
+  const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [mapPhase, setMapPhase] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [report, setReport] = useState<LocationReport | null>(null);
+  const [reportNote, setReportNote] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
+
+  const { published, latest_run, run_history, sensitivity, freshness } = data;
+  const runOptions = [
+    ...(published ? [{
+      run_id: published.run_id,
+      label: published.label,
+      lifecycle_state: published.lifecycle_state,
+    }] : []),
+    ...(latest_run ? [{
+      run_id: latest_run.run_id,
+      label: latest_run.label,
+      lifecycle_state: "latest",
+    }] : []),
+    ...run_history,
+  ].filter((run, idx, all) => all.findIndex((r) => r.run_id === run.run_id) === idx);
+
+  const preferredRunId =
+    published?.run_id ?? latest_run?.run_id ?? run_history[0]?.run_id ?? null;
+
+  useEffect(() => {
+    void Promise.resolve().then(() => {
+      setSelectedRunId((current) => current ?? preferredRunId);
+    });
+  }, [preferredRunId]);
+
+  useEffect(() => {
+    if (!selectedRunId) {
+      void Promise.resolve().then(() => {
+        setGeojson(null);
+        setMapPhase("idle");
+      });
+      return;
+    }
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (cancelled) return;
+      setMapPhase("loading");
+      setMapError(null);
+      setReport(null);
+      setReportNote(null);
+    });
+    void api.getRunGeoJSON(selectedRunId)
+      .then((fc) => {
+        if (cancelled) return;
+        setGeojson(fc);
+        setMapPhase("ready");
+      })
+      .catch((e) => {
+        if (cancelled) return;
+        setGeojson(null);
+        setMapError(e instanceof Error ? e.message : String(e));
+        setMapPhase("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedRunId]);
+
+  const onCellClick = useCallback((h3: string) => {
+    if (!selectedRunId) return;
+    setReportNote("Loading cell details…");
+    void api.getLocationReport(selectedRunId, h3)
+      .then((rep) => {
+        setReport(rep);
+        setReportNote(null);
+      })
+      .catch(() => {
+        setReport(null);
+        setReportNote("Couldn't load cell details.");
+      });
+  }, [selectedRunId]);
+
+  const downloadLayer = useCallback(async () => {
+    if (!selectedRunId) return;
+    setDownloading(true);
+    try {
+      const { blob, filename } = await api.downloadRunGeoJSON(selectedRunId);
+      saveBlob(blob, filename);
+      setReportNote("GeoJSON layer downloaded.");
+    } catch (e) {
+      setReportNote(`Download failed: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setDownloading(false);
+    }
+  }, [selectedRunId]);
+
   if (!data.study_area) {
     return (
       <div className="dash-card" role="status">
@@ -163,8 +285,6 @@ function DashboardBody({ data }: { data: DashboardData }) {
       </div>
     );
   }
-
-  const { published, latest_run, run_history, sensitivity, freshness } = data;
 
   return (
     <>
@@ -175,6 +295,84 @@ function DashboardBody({ data }: { data: DashboardData }) {
           re-running and publishing an updated model.
         </p>
       )}
+
+      <section className="dash-card dash-map-card" aria-labelledby="dash-map">
+        <div className="dash-map-head">
+          <div>
+            <p className="sectionlabel" id="dash-map">Interactive zoning map</p>
+            <p className="statusline">
+              Read-only inspection for the selected run. Click a cell to populate the report.
+            </p>
+          </div>
+          <div className="dash-map-actions">
+            <label htmlFor="dash-run" className="exportlabel">Run</label>
+            <select
+              id="dash-run"
+              value={selectedRunId ?? ""}
+              onChange={(e) => setSelectedRunId(e.target.value || null)}
+              disabled={runOptions.length === 0}
+            >
+              {runOptions.length === 0 ? (
+                <option value="">No completed run</option>
+              ) : (
+                runOptions.map((run) => (
+                  <option key={run.run_id} value={run.run_id}>
+                    {(run.label ?? shortId(run.run_id))} · {run.lifecycle_state}
+                  </option>
+                ))
+              )}
+            </select>
+            <button
+              type="button"
+              className="btn"
+              disabled={!selectedRunId || downloading}
+              onClick={() => void downloadLayer()}
+            >
+              {downloading ? "Preparing layer…" : "Download GeoJSON"}
+            </button>
+          </div>
+        </div>
+        <div className="dash-map-shell">
+          <div className="mapwrap">
+            <MapView
+              geojson={geojson}
+              onCellClick={onCellClick}
+              loading={mapPhase === "loading"}
+            />
+            {mapPhase === "idle" && (
+              <div className="map-overlay map-overlay--empty" role="status">
+                <div className="map-overlay-card">
+                  <strong>No run selected</strong>
+                  <span>Publish or complete a run to inspect cells here.</span>
+                </div>
+              </div>
+            )}
+            {mapPhase === "error" && (
+              <div className="map-overlay map-overlay--empty" role="alert">
+                <div className="map-overlay-card">
+                  <strong>Couldn’t load the map layer</strong>
+                  <span>{mapError}</span>
+                </div>
+              </div>
+            )}
+            {report && <ReportDrawer report={report} onClose={() => setReport(null)} />}
+          </div>
+          <aside className="dash-selection" aria-live="polite">
+            <p className="sectionlabel">Selected cell</p>
+            {report ? (
+              <dl className="dash-dl dash-dl--stacked">
+                <dt>Cell</dt><dd>{report.h3_index}</dd>
+                <dt>Zone</dt><dd>{ZONE_LABELS[report.zone]}</dd>
+                <dt>Risk score</dt>
+                <dd>{report.risk_score == null ? "Constraint only" : report.risk_score.toFixed(2)}</dd>
+                <dt>Main reason</dt><dd>{report.main_reason}</dd>
+              </dl>
+            ) : (
+              <p className="statusline">{reportNote ?? "Click a cell on the map."}</p>
+            )}
+          </aside>
+        </div>
+      </section>
 
       <div className="dash-grid">
         <section className="dash-card" aria-labelledby="dash-published">

@@ -65,6 +65,7 @@ app.add_middleware(
         "X-Geography-Name",      # poster metadata
         "X-Export-Manifest",     # poster export sidecar
         "X-Feature-Summary",     # poster feature manifest
+        "X-Usage-Warning",       # admin quota bypass warning
     ],
 )
 

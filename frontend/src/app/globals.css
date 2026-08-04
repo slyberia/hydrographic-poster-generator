@@ -1766,6 +1766,50 @@ body {
 }
 .drone-console .dash-card strong { font-size: 0.95rem; }
 .drone-console .dash-card .zonestrip-bar { height: 14px; border-radius: 4px; overflow: hidden; }
+.drone-console .dash-map-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.drone-console .dash-map-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+.drone-console .dash-map-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.drone-console .dash-map-actions select {
+  min-width: 220px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.drone-console .dash-map-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+  gap: 14px;
+  min-height: 520px;
+}
+.drone-console .dash-map-shell .mapwrap {
+  min-height: 520px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.drone-console .dash-selection {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--paper);
+}
 .drone-console .dash-dl {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -1775,6 +1819,16 @@ body {
 }
 .drone-console .dash-dl dt { color: var(--ink-soft); }
 .drone-console .dash-dl dd { margin: 0; text-align: right; }
+.drone-console .dash-dl--stacked {
+  display: block;
+}
+.drone-console .dash-dl--stacked dt {
+  margin-top: 10px;
+}
+.drone-console .dash-dl--stacked dd {
+  margin-top: 2px;
+  text-align: left;
+}
 .drone-console .dash-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
 .drone-console .dash-table th {
   text-align: left;
@@ -1802,4 +1856,21 @@ body {
   border: 1px solid var(--z-restricted);
   background: color-mix(in oklch, var(--z-restricted) 12%, var(--paper-raised));
   color: var(--ink);
+}
+@media (max-width: 900px) {
+  .drone-console .dash-map-head,
+  .drone-console .dash-map-actions {
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  .drone-console .dash-map-head,
+  .drone-console .dash-map-actions,
+  .drone-console .dash-map-shell {
+    display: flex;
+    flex-direction: column;
+  }
+  .drone-console .dash-map-actions select {
+    min-width: 0;
+    width: 100%;
+  }
 }
