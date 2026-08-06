@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 130" role="img" aria-labelledby="title desc">
+  <title id="title">HPS Geospatial horizontal logo lockup</title>
+  <desc id="desc">HPS connected monogram paired with HPS Geospatial and Spatial Systems, Decision Support.</desc>
+  <g transform="translate(0 5) scale(.72)">
+    <g fill="none" stroke="#1D6B4C" stroke-width="24" stroke-linecap="butt" stroke-linejoin="round">
+      <path d="M22 14V106M82 14V106M22 60H82"/>
+      <path d="M82 106V14H132C158 14 171 28 171 48C171 68 158 80 132 80H82"/>
+      <path d="M270 34C264 20 251 14 231 14C206 14 191 25 191 42C191 60 208 64 232 68C256 72 272 79 272 96C272 112 257 118 232 118C210 118 196 111 189 98"/>
+    </g>
+    <rect x="146" y="56" width="54" height="18" rx="1" fill="#D7A645"/>
+  </g>
+  <line x1="226" y1="24" x2="226" y2="106" stroke="#D9E2EC" stroke-width="2"/>
+  <text x="252" y="61" fill="#17332A" font-family="Libre Baskerville, Georgia, serif" font-size="31" font-weight="700">HPS Geospatial</text>
+  <text x="252" y="89" fill="#52606D" font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="2.2">SPATIAL SYSTEMS · DECISION SUPPORT</text>
+</svg>
