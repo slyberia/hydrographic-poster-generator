@@ -112,6 +112,15 @@ export default function DocsPage() {
     <main className="min-h-screen bg-[var(--ui-page)] text-[var(--ui-text)]">
       <PosterHeader current="docs" />
 
+      <nav aria-label="HPS system documentation" className="border-b border-[var(--ui-border)] bg-[var(--ui-surface-muted)] px-5 py-3 sm:px-8">
+        <div className="mx-auto flex max-w-7xl flex-wrap gap-x-5 gap-y-2 text-sm">
+          <a href="/documentation/drone-platform" className="font-semibold text-[var(--ui-action)] hover:underline">Drone Platform</a>
+          <a href="/documentation/poster-generator" className="text-[var(--ui-text-muted)] hover:text-[var(--ui-action)]">Poster Generator</a>
+          <a href="/documentation/hps-portal" className="text-[var(--ui-text-muted)] hover:text-[var(--ui-action)]">HPS Portal</a>
+          <a href="/documentation/ecosystem" className="text-[var(--ui-text-muted)] hover:text-[var(--ui-action)]">Ecosystem</a>
+        </div>
+      </nav>
+
       <section className="border-b border-[var(--ui-border)] bg-[var(--ui-panel)] px-5 py-14 sm:px-8 sm:py-18">
         <div className="mx-auto max-w-7xl">
           <p className="mb-4 text-xs font-bold uppercase text-[#b4234f]">
