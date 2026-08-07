@@ -1,142 +1,69 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
 import PlatformHeader from "@/components/PlatformHeader";
 
 export const metadata: Metadata = {
-  title: "Hydro Platform — Cartography and Drone Zoning",
-  description:
-    "One platform for two geospatial tools: the Hydrographic Poster Generator for print-ready river cartography, and Drone Zoning Decision Support for Region 4 planning guidance.",
+  title: "HPS Geospatial — Spatial systems and decision support",
+  description: "HPS Geospatial brings together Drone Zoning Decision Support and the Hydrographic Poster Generator.",
 };
 
 const PRODUCTS = [
-  {
-    key: "poster",
-    eyebrow: "Cartographic output",
-    title: "Hydrographic Poster Generator",
-    summary:
-      "Clip a supported geography, choose a visual protocol, and generate print-ready poster cartography from the HydroRIVERS network.",
-    image: "/posters/guyana-abyss.webp",
-    imageAlt:
-      "Generated Guyana river network poster using the Abyss palette",
-    imageClass: "object-cover object-top",
-    primary: { href: "/poster", label: "Explore the Poster Generator" },
-    secondary: { href: "/studio", label: "Open the Studio" },
-    accent: "#0868cf",
-  },
-  {
-    key: "drone",
-    eyebrow: "Decision support",
-    title: "Drone Zoning Decision Support",
-    summary:
-      "Examine where drone operations face identified constraints across Region 4, understand each classification, and test how planning assumptions change the result.",
-    image: "/drone/region-4-zoning.png",
-    imageAlt:
-      "Region 4 drone zoning output showing classified cells around Georgetown",
-    imageClass: "object-cover object-center",
-    primary: { href: "/drone", label: "Explore Drone Zoning" },
-    secondary: { href: "/executive-overview", label: "View the Executive Overview" },
-    accent: "#0f766e",
-  },
+  { key: "drone", eyebrow: "Decision support", title: "Drone Zoning", summary: "A configurable, policy-driven platform for evaluating operating suitability and explaining spatial decisions across Region 4.", image: "/drone/region-4-zoning.png", href: "/drone", linkLabel: "Open Drone Zoning" },
+  { key: "poster", eyebrow: "Spatial systems", title: "Hydrographic Poster Generator", summary: "Generate print-ready river cartography from supported HydroRIVERS geographies with a repeatable composition and export workflow.", image: "/posters/guyana-abyss.webp", href: "/poster", linkLabel: "Open Poster Generator" },
+  { key: "docs", eyebrow: "System library", title: "Documentation", summary: "Understand the software stack, architecture, operating model, and implementation status behind the HPS portal and its products.", image: "/hps/hps-lockup-horizontal.svg", href: "/docs", linkLabel: "Browse Documentation" },
 ] as const;
 
 export default function PlatformLandingPage() {
   return (
-    <main className="flex min-h-screen flex-col bg-[var(--ui-page)] text-[var(--ui-text)]">
+    <main className="hps-portal">
       <PlatformHeader current="platform" />
-
-      <section className="border-b border-[var(--ui-border)] bg-[var(--ui-panel)] px-5 pb-6 pt-8 sm:px-8 sm:pb-8 sm:pt-10">
-        <div className="mx-auto max-w-6xl">
-          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-[var(--ui-action)]">
-            One platform, two geospatial tools
-          </p>
-          <h1
-            className="max-w-[20ch] text-[2rem] font-semibold leading-[1.06] text-[var(--ui-text)] sm:text-[2.75rem]"
-            style={{
-              fontFamily: "var(--font-playfair), 'Playfair Display', serif",
-            }}
-          >
-            Turn spatial data into clear, defensible output.
-          </h1>
-          <p className="mt-4 max-w-[46rem] text-[0.95rem] leading-relaxed text-[var(--ui-text-muted)] sm:text-base">
-            Hydro brings together print-ready river cartography and drone-zoning
-            decision support. Both tools start from real data and end in output
-            you can use — a finished poster, or an explainable planning view.
-          </p>
+      <section className="hps-hero" aria-labelledby="portal-title">
+        <div className="hps-hero__inner">
+          <div>
+            <p className="hps-hero__eyebrow">HPS Geospatial / spatial systems / decision support</p>
+            <h1 id="portal-title">Turn spatial data into clear, defensible output.</h1>
+            <p className="hps-hero__copy">A focused family of tools for planning, communicating, and acting on spatial information—from a finished hydrographic poster to an explainable drone-zoning decision.</p>
+            <div className="hps-actions">
+              <Link className="hps-button hps-button--gold" href="/drone">Explore the platform</Link>
+              <Link className="hps-button hps-button--outline" href="/executive-overview">View executive overview</Link>
+            </div>
+          </div>
+          <div className="hps-hero__visual" role="img" aria-label="Drone zoning map preview for the Region 4 pilot" />
         </div>
       </section>
-
-      <section
-        className="flex-1 px-5 py-8 sm:px-8 sm:py-10"
-        aria-label="Platform products"
-      >
-        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2 lg:gap-8">
+      <section className="hps-section hps-section--bordered" aria-labelledby="products-title">
+        <div className="hps-section__heading">
+          <p className="hps-section__eyebrow">The HPS platform</p>
+          <h2 className="hps-section__title" id="products-title">One parent system, two working applications.</h2>
+          <p className="hps-section__copy">HPS Geospatial provides the shared foundation. Each product has a distinct purpose, workflow, and audience, with documentation tying the system together.</p>
+        </div>
+        <div className="hps-card-grid">
           {PRODUCTS.map((product) => (
-            <article
-              key={product.key}
-              className="flex flex-col overflow-hidden rounded-xl border border-[var(--ui-border)] bg-[var(--ui-panel)] shadow-sm"
-            >
-              <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--ui-surface)]">
-                <Image
-                  src={product.image}
-                  alt={product.imageAlt}
-                  fill
-                  priority
-                  sizes="(max-width: 767px) 100vw, 50vw"
-                  className={product.imageClass}
-                />
-              </div>
-              <div className="flex flex-1 flex-col p-6 sm:p-8">
-                <p
-                  className="mb-3 text-xs font-bold uppercase tracking-wide"
-                  style={{ color: product.accent }}
-                >
-                  {product.eyebrow}
-                </p>
-                <h2
-                  className="mb-3 text-2xl font-semibold text-[var(--ui-text)] sm:text-3xl"
-                  style={{
-                    fontFamily:
-                      "var(--font-playfair), 'Playfair Display', serif",
-                  }}
-                >
-                  {product.title}
-                </h2>
-                <p className="mb-6 flex-1 text-[0.95rem] leading-relaxed text-[var(--ui-text-muted)]">
-                  {product.summary}
-                </p>
-                <div className="flex flex-wrap items-center gap-3">
-                  <Link
-                    href={product.primary.href}
-                    className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[var(--ui-action)] px-5 py-2.5 text-sm font-semibold text-[var(--ui-text-inverse)] shadow-sm transition-colors duration-200 hover:bg-[var(--ui-action-hover)]"
-                  >
-                    {product.primary.label}
-                  </Link>
-                  <Link
-                    href={product.secondary.href}
-                    className="inline-flex min-h-11 items-center justify-center rounded-lg border border-[var(--ui-border-strong)] px-5 py-2.5 text-sm font-semibold text-[var(--ui-text)] transition-colors duration-200 hover:bg-[var(--ui-surface)]"
-                  >
-                    {product.secondary.label}
-                  </Link>
-                </div>
+            <article className="hps-card" key={product.key}>
+              <Image className="hps-card__image" src={product.image} alt="" width={900} height={500} />
+              <div className="hps-card__body">
+                <p className="hps-card__eyebrow">{product.eyebrow}</p>
+                <h3>{product.title}</h3>
+                <p>{product.summary}</p>
+                <Link href={product.href}>{product.linkLabel} →</Link>
               </div>
             </article>
           ))}
         </div>
       </section>
-
-      <footer className="border-t border-[var(--ui-border)] bg-[var(--ui-panel)] px-5 py-8 sm:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 text-sm text-[var(--ui-text-muted)] sm:flex-row sm:items-center sm:justify-between">
-          <span className="font-semibold text-[var(--ui-text)]">
-            Hydro Platform
-          </span>
-          <span>
-            Hydrographic Poster Generator · Drone Zoning Decision Support
-            (Region 4 pilot)
-          </span>
+      <section className="hps-section hps-section--bordered" aria-labelledby="value-title">
+        <div className="hps-section__heading">
+          <p className="hps-section__eyebrow">Designed for informed planning</p>
+          <h2 className="hps-section__title" id="value-title">From fragmented data to a shared decision surface.</h2>
         </div>
-      </footer>
+        <div className="hps-statband" aria-label="Platform principles">
+          <div className="hps-stat"><strong>01</strong><span>Consolidate authoritative spatial inputs.</span></div>
+          <div className="hps-stat"><strong>02</strong><span>Apply transparent rules and priorities.</span></div>
+          <div className="hps-stat"><strong>03</strong><span>Explain the result and export the work.</span></div>
+        </div>
+      </section>
+      <footer className="hps-footer"><div className="hps-footer__inner"><span>HPS Geospatial · Region 4 pilot</span><Link href="/docs">Documentation</Link></div></footer>
     </main>
   );
 }
