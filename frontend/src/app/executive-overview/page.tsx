@@ -53,7 +53,7 @@ export default function ExecutiveOverview() {
           <p className="hero-description">A configurable, policy-driven platform that consolidates spatial data, evaluates operating suitability, and presents clear, explainable results through an interactive map.</p>
           <div className="hero-actions">
             <a className="button button-gold" href="/drone">Explore Drone Zoning <span>↗</span></a>
-          <a className="button button-outline" href="/downloads/guyana-drone-executive-overview.md" download>▧&nbsp; Download executive overview</a>
+          <a className="button button-outline" href="/documentation/drone-platform/executive-overview">▧&nbsp; Read executive overview online</a>
           </div>
         </div>
         <figure className="hero-screenshot">
@@ -78,7 +78,7 @@ export default function ExecutiveOverview() {
 
       <section className="section audiences-section" aria-labelledby="audiences-title"><h2 id="audiences-title">Who it serves</h2><div className="audience-grid">{audiences.map((audience) => <div key={audience}><span>⌁</span><strong>{audience}</strong></div>)}</div></section>
 
-      <section className="overview-cta"><div className="cta-intro"><ProductMark /><div><p className="overline">Region 4 pilot</p><p>We are working with partners to validate data, refine policies, and demonstrate the platform’s value to inform future regional and national deployment.</p></div></div><nav aria-label="Executive overview actions"><a href="/drone/console">Open planning console</a><a href="/drone/explore">Explore map</a><a href="/drone/methodology">Review methodology</a><a href="/downloads/guyana-drone-executive-overview.md" download>Download overview</a><a href="mailto:info@hpsgeospatial.com">Contact HPS Geospatial</a></nav></section>
+      <section className="overview-cta"><div className="cta-intro"><ProductMark /><div><p className="overline">Region 4 pilot</p><p>We are working with partners to validate data, refine policies, and demonstrate the platform’s value to inform future regional and national deployment.</p></div></div><nav aria-label="Executive overview actions"><a href="/drone/console">Open planning console</a><a href="/drone/explore">Explore map</a><a href="/drone/methodology">Review methodology</a><a href="/documentation/drone-platform/executive-overview">Read brief online</a><a href="mailto:info@hpsgeospatial.com">Contact HPS Geospatial</a></nav></section>
     </main>
   );
 }
