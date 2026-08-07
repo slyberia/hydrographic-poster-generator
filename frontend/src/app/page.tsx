@@ -36,7 +36,7 @@ const PRODUCTS = [
       "Region 4 drone zoning output showing classified cells around Georgetown",
     imageClass: "object-cover object-center",
     primary: { href: "/drone", label: "Explore Drone Zoning" },
-    secondary: { href: "/drone/methodology", label: "Read the methodology" },
+    secondary: { href: "/executive-overview", label: "View the Executive Overview" },
     accent: "#0f766e",
   },
 ] as const;

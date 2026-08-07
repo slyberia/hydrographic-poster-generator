@@ -1,10 +1,12 @@
 import Link from "next/link";
 
-type PlatformRoute = "platform" | "poster" | "drone";
+type PlatformRoute = "platform" | "poster" | "drone" | "executive" | "docs";
 
 const NAV_ITEMS: Array<{ href: string; label: string; route: PlatformRoute }> = [
   { href: "/poster", label: "Posters", route: "poster" },
   { href: "/drone", label: "Drone Zoning", route: "drone" },
+  { href: "/executive-overview", label: "Executive Overview", route: "executive" },
+  { href: "/docs", label: "Documentation", route: "docs" },
 ];
 
 type PlatformHeaderProps = {
