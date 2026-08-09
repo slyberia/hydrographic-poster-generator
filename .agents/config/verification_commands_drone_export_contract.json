@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "drone_contract_tests",
+      "command": [
+        ".venv\\Scripts\\python",
+        "-m",
+        "pytest",
+        "backend/tests/test_drone_publication.py",
+        "backend/tests/test_drone_export.py",
+        "-q"
+      ],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "drone_grid_tests",
+      "command": [
+        ".venv\\Scripts\\python",
+        "-m",
+        "pytest",
+        "backend/tests/test_grid_generation.py",
+        "-q"
+      ],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "drone_sensitivity_tests",
+      "command": [
+        ".venv\\Scripts\\python",
+        "-m",
+        "pytest",
+        "backend/tests/test_drone_sensitivity.py",
+        "-q"
+      ],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Drone export contract phase: additive classification semantics, clipped H3 GeoJSON, and dissolved presentation layers. Database-backed PostGIS integration tests are required where configured."
+}
