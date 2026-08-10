@@ -16,6 +16,7 @@ import { FACTOR_INFO, OPERATION_INFO, WEIGHTING_INFO } from "@/lib/droneInfo";
 
 export type DroneDownloadFormat = "png" | "svg" | "pdf" | "geojson";
 export type GeoJSONDownloadScope = "viewport" | "full";
+export type GeoJSONGeometryMode = "cell" | "clipped_cell" | "dissolved";
 
 /** Controlled disclosure group. React owns `open` (summary click is intercepted)
  * so the state survives the rail's frequent re-renders instead of fighting the
@@ -128,6 +129,7 @@ export default function ControlRail(props: {
     showBoundary: boolean,
     name: string,
     geojsonScope: GeoJSONDownloadScope,
+    geojsonGeometryMode: GeoJSONGeometryMode,
   ) => void;
   exporting: boolean;
   onOpenGuide: () => void;
@@ -143,6 +145,7 @@ export default function ControlRail(props: {
   const [exportScale, setExportScale] = useState(2);
   const [showBoundary, setShowBoundary] = useState(false);
   const [geojsonScope, setGeojsonScope] = useState<GeoJSONDownloadScope>("viewport");
+  const [geojsonGeometryMode, setGeojsonGeometryMode] = useState<GeoJSONGeometryMode>("cell");
   const [exportName, setExportName] = useState("");
 
   const WEIGHT_MAX = 10;
@@ -448,17 +451,38 @@ export default function ControlRail(props: {
             </select>
           </div>
           {exportFormat === "geojson" && (
-            <div className="exportrow">
-              <label htmlFor="geojson-scope" className="exportlabel">Layer</label>
-              <select
-                id="geojson-scope"
-                value={geojsonScope}
-                onChange={(e) => setGeojsonScope(e.target.value as GeoJSONDownloadScope)}
-              >
-                <option value="viewport">Current map view</option>
-                <option value="full">Full model run</option>
-              </select>
-            </div>
+            <>
+              <div className="exportrow">
+                <label htmlFor="geojson-scope" className="exportlabel">Layer</label>
+                <select
+                  id="geojson-scope"
+                  value={geojsonScope}
+                  onChange={(e) => setGeojsonScope(e.target.value as GeoJSONDownloadScope)}
+                >
+                  <option value="viewport">Current map view</option>
+                  <option value="full">Full model run</option>
+                </select>
+              </div>
+              <div className="exportrow">
+                <label htmlFor="geojson-geometry" className="exportlabel">Geometry</label>
+                <select
+                  id="geojson-geometry"
+                  value={geojsonGeometryMode}
+                  onChange={(e) => setGeojsonGeometryMode(e.target.value as GeoJSONGeometryMode)}
+                >
+                  <option value="cell">Full H3 cells (analysis)</option>
+                  <option value="clipped_cell">Cells clipped to Region 4</option>
+                  <option value="dissolved">Dissolve by zone (presentation)</option>
+                </select>
+              </div>
+              <p className="statusline">
+                {geojsonGeometryMode === "cell"
+                  ? "Retains complete H3 cells and per-cell attributes; edge cells may extend beyond Region 4."
+                  : geojsonGeometryMode === "clipped_cell"
+                    ? "Retains per-cell attributes while trimming display geometry to Region 4."
+                    : "Creates one or more merged areas per zone; per-cell properties are not retained."}
+              </p>
+            </>
           )}
           <div className="exportrow exportrow--check">
             <input
@@ -488,7 +512,10 @@ export default function ControlRail(props: {
             className="btn"
             disabled={!activeRunComplete || busy || props.exporting}
             onClick={() =>
-              props.onExport(exportFormat, exportScale, showBoundary, exportName, geojsonScope)
+              props.onExport(
+                exportFormat, exportScale, showBoundary, exportName,
+                geojsonScope, geojsonGeometryMode,
+              )
             }
             title={
               !activeRunComplete

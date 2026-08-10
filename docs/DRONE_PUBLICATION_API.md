@@ -96,6 +96,40 @@ when nothing is published or the cell is outside the published grid.
 
 ---
 
+## Internal GeoJSON export contract
+
+`GET /runs/{run_id}/geojson/download` is the GIS download endpoint. It accepts
+an optional complete `west`, `south`, `east`, `north` bounding box and an
+optional `geometry_mode`:
+
+| `geometry_mode` | Geometry | Intended use |
+| --- | --- | --- |
+| `cell` (default) | Complete H3 cells | Analytical export. Boundary cells may legitimately extend outside Region 4 because the grid is centroid-included, not clipped. |
+| `clipped_cell` | Each H3 cell intersected with the run's authoritative Region-4 polygon | Cartographic/GIS presentation that still preserves per-cell properties. |
+| `dissolved` | Region-4-clipped cells merged by zone | Presentation layer with one or more merged masses per zone. It deliberately has no `h3_index`, per-cell score, or per-cell reason. |
+
+All cell exports carry these explicit properties:
+
+- `h3_index`, `zone`, `reason`, `confidence`, and `triggering_constraints`.
+- `classification_method`: `hard_constraint`, `weighted_mcda`, or
+  `default_no_mapped_factors`.
+- `score`: numeric only when a factor score exists; `null` does **not** mean a
+  zero score.
+- `score_applicability`: `classification_basis` (weighted score chose the
+  zone), `context_only` (a hard constraint chose the zone but factor overlap
+  also produced a score), or `not_applicable` (no factor score exists).
+- `provenance`: the analysis run identifier and export geometry mode.
+
+This distinguishes the three valid null-score cases without inventing a score:
+unmapped/default SUITABLE cells, hard-constrained cells without factor overlap,
+and dissolved presentation features where a per-cell score no longer applies.
+
+Historical published results are immutable. Migration 012 does not update those
+rows; when their two new semantic columns are null, the internal API derives the
+same values from the original `constraint_reasons` and `total_score` fields.
+
+---
+
 ## Internal endpoints (role-protected)
 
 The following internal reads now require the **`viewer`** role (previously
