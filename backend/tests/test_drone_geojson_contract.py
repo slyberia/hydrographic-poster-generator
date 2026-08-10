@@ -59,8 +59,9 @@ def test_legacy_published_rows_use_derived_semantics_at_read_time():
         "constraint_reasons": ["Within 5000 m of airport"],
         "dominant_reason": "Within 5000 m of airport",
         "confidence": "verified",
-        "classification_method": "hard_constraint",
-        "score_applicability": "not_applicable",
+        # Published rows are intentionally left unmodified by migration 012.
+        "classification_method": None,
+        "score_applicability": None,
         "geometry": '{"type":"Polygon","coordinates":[]}',
     }])
 
