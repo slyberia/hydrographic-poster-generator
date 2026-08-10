@@ -51,6 +51,29 @@ def test_cell_export_makes_null_score_semantics_explicit():
     assert properties["h3_index"] == "8928308280fffff"
 
 
+def test_legacy_published_rows_use_derived_semantics_at_read_time():
+    pool, conn = _pool_with_rows([{
+        "h3_index": "8928308280fffff",
+        "zone": "PROHIBITED",
+        "total_score": None,
+        "constraint_reasons": ["Within 5000 m of airport"],
+        "dominant_reason": "Within 5000 m of airport",
+        "confidence": "verified",
+        "classification_method": "hard_constraint",
+        "score_applicability": "not_applicable",
+        "geometry": '{"type":"Polygon","coordinates":[]}',
+    }])
+
+    asyncio.run(drone_service.results_geojson(pool, "published-run"))
+
+    query = conn.fetch.call_args.args[0]
+    assert "COALESCE(" in query
+    assert "r.classification_method" in query
+    assert "r.score_applicability" in query
+    assert "hard_constraint" in query
+    assert "context_only" in query
+
+
 def test_dissolved_export_omits_per_cell_attributes_and_uses_union_query():
     pool, conn = _pool_with_rows([{
         "zone": "PROHIBITED",
