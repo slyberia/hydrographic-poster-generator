@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/client";
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 export type Zone = "PROHIBITED" | "RESTRICTED" | "CONDITIONAL" | "SUITABLE";
+export type GeoJSONGeometryMode = "cell" | "clipped_cell" | "dissolved";
 
 export interface ZoneStat {
   zone: Zone;
@@ -247,14 +248,18 @@ export const droneApi = {
 
   downloadRunGeoJSON: async (
     runId: string,
-    bbox?: ExportBBox | null
+    bbox?: ExportBBox | null,
+    geometryMode: GeoJSONGeometryMode = "cell",
   ): Promise<{ blob: Blob; filename: string }> => {
     const authHeaders = await authorizationHeaders();
-    const query = bbox
-      ? `?west=${encodeURIComponent(bbox.west)}&south=${encodeURIComponent(
-          bbox.south
-        )}&east=${encodeURIComponent(bbox.east)}&north=${encodeURIComponent(bbox.north)}`
-      : "";
+    const params = new URLSearchParams({ geometry_mode: geometryMode });
+    if (bbox) {
+      params.set("west", String(bbox.west));
+      params.set("south", String(bbox.south));
+      params.set("east", String(bbox.east));
+      params.set("north", String(bbox.north));
+    }
+    const query = `?${params.toString()}`;
     const res = await fetch(`${BASE}/runs/${runId}/geojson/download${query}`, {
       headers: { ...authHeaders },
     });

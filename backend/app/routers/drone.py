@@ -214,9 +214,14 @@ async def download_run_geojson(
     south: Optional[float] = None,
     east: Optional[float] = None,
     north: Optional[float] = None,
+    geometry_mode: Literal["cell", "clipped_cell", "dissolved"] = "cell",
     pool: asyncpg.Pool = Depends(get_db_pool),
 ):
-    """Download a full-run or viewport-bounded GeoJSON layer for GIS use."""
+    """Download a full-run or viewport-bounded GeoJSON layer for GIS use.
+
+    ``cell`` retains full H3 analytical units, while ``clipped_cell`` and
+    ``dissolved`` are Region-4-constrained presentation exports.
+    """
     bbox = None
     coords = [west, south, east, north]
     if any(v is not None for v in coords):
@@ -228,12 +233,14 @@ async def download_run_geojson(
         bbox = (west, south, east, north)
 
     try:
-        fc = await drone_service.results_geojson(pool, run_id, bbox=bbox)
+        fc = await drone_service.results_geojson(
+            pool, run_id, bbox=bbox, geometry_mode=geometry_mode,
+        )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
     scope = "viewport" if bbox else "full"
-    filename = f"drone_zoning_{run_id}_{scope}.geojson"
+    filename = f"drone_zoning_{run_id}_{scope}_{geometry_mode}.geojson"
     return Response(
         content=json.dumps(fc, separators=(",", ":")),
         media_type="application/geo+json",

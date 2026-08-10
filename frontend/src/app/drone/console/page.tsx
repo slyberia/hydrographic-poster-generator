@@ -9,6 +9,7 @@ import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zo
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 import ControlRail, {
   type DroneDownloadFormat,
+  type GeoJSONGeometryMode,
   type GeoJSONDownloadScope,
 } from "@/components/drone/ControlRail";
 import ReportDrawer from "@/components/drone/ReportDrawer";
@@ -306,6 +307,7 @@ function Console({
       showBoundary: boolean,
       name: string,
       geojsonScope: GeoJSONDownloadScope,
+      geojsonGeometryMode: GeoJSONGeometryMode,
     ) => {
       if (!activeRun) {
         setStatus({ text: "Select a run before exporting.", error: true });
@@ -330,6 +332,7 @@ function Console({
             ? await api.downloadRunGeoJSON(
                 activeRun,
                 geojsonScope === "viewport" ? bbox : null,
+                geojsonGeometryMode,
               )
             : await api.exportView(activeRun, {
                 bbox,

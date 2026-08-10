@@ -297,7 +297,8 @@ async def execute_run(pool: asyncpg.Pool, run_id: str) -> Dict[str, Any]:
             await conn.execute("""
                 INSERT INTO mcda_cell_results
                     (run_id, h3_index, final_zone, total_score, factor_scores,
-                     constraint_reasons, dominant_reason, min_confidence)
+                     constraint_reasons, dominant_reason, min_confidence,
+                     classification_method, score_applicability)
                 SELECT
                     $1::uuid,
                     g.h3_index,
@@ -310,7 +311,18 @@ async def execute_run(pool: asyncpg.Pool, run_id: str) -> Dict[str, Any]:
                     s.factor_scores,
                     c.reasons,
                     COALESCE(c.dominant_constraint, s.dominant_factor_reason, 'No mapped risk factors') AS dominant_reason,
-                    GREATEST(c.worst_confidence, s.worst_confidence) AS min_confidence
+                    GREATEST(c.worst_confidence, s.worst_confidence) AS min_confidence,
+                    CASE
+                        WHEN c.worst_zone IS NOT NULL THEN 'hard_constraint'
+                        WHEN s.total_score IS NOT NULL THEN 'weighted_mcda'
+                        ELSE 'default_no_mapped_factors'
+                    END AS classification_method,
+                    CASE
+                        WHEN c.worst_zone IS NOT NULL AND s.total_score IS NOT NULL THEN 'context_only'
+                        WHEN c.worst_zone IS NOT NULL THEN 'not_applicable'
+                        WHEN s.total_score IS NOT NULL THEN 'classification_basis'
+                        ELSE 'not_applicable'
+                    END AS score_applicability
                 FROM mcda_grid g
                 LEFT JOIN (
                     SELECT h3_index,
@@ -383,7 +395,8 @@ async def location_report(pool: asyncpg.Pool, run_id: str, h3_index: str) -> Opt
     async with pool.acquire() as conn:
         row = await conn.fetchrow("""
             SELECT r.final_zone::text AS zone, r.total_score, r.factor_scores,
-                   r.constraint_reasons, r.dominant_reason, r.min_confidence::text AS confidence
+                   r.constraint_reasons, r.dominant_reason, r.min_confidence::text AS confidence,
+                   r.classification_method, r.score_applicability
             FROM mcda_cell_results r
             WHERE r.run_id = $1::uuid AND r.h3_index = $2
         """, run_id, h3_index)
@@ -407,6 +420,8 @@ async def location_report(pool: asyncpg.Pool, run_id: str, h3_index: str) -> Opt
         "constraint_reasons": row["constraint_reasons"] or [],
         "factor_breakdown": json.loads(row["factor_scores"]) if isinstance(row["factor_scores"], str) else (row["factor_scores"] or {}),
         "data_confidence": row["confidence"] or "unknown",
+        "classification_method": row["classification_method"],
+        "score_applicability": row["score_applicability"],
         "disclaimer": ("Decision-support output only — not an official authorization. "
                        "GCAA approval requirements are unaffected by this classification."),
     }
@@ -417,20 +432,36 @@ async def results_geojson(
     run_id: str,
     zone: Optional[str] = None,
     bbox: Optional[Tuple[float, float, float, float]] = None,
+    geometry_mode: str = "cell",
 ) -> Dict[str, Any]:
     """Retrieve grid results as a GeoJSON FeatureCollection.
 
+    ``cell`` preserves full H3 analytical units. ``clipped_cell`` intersects
+    them with the run's authoritative Region-4 geometry for presentation.
+    ``dissolved`` clips first, then emits one (possibly multipart) geometry per
+    zone; it deliberately omits per-cell attributes such as h3_index and score.
+
     When ``bbox`` (west, south, east, north in EPSG:4326) is given, only cells
-    whose geometry intersects the envelope are returned — the export path sends
-    the map viewport so a sub-area render never fetches the whole ~19.5k grid.
+    whose analytical geometry intersects the envelope are included.
     """
-    q = """
-        SELECT r.h3_index, r.final_zone::text AS zone, r.total_score,
-               r.dominant_reason, r.min_confidence::text AS confidence,
-               ST_AsGeoJSON(g.geom) AS geometry
-        FROM mcda_cell_results r
-        JOIN mcda_grid g USING (h3_index)
-        WHERE r.run_id = $1::uuid
+    if geometry_mode not in {"cell", "clipped_cell", "dissolved"}:
+        raise ValueError("geometry_mode must be cell, clipped_cell, or dissolved")
+
+    geometry_sql = "g.geom"
+    if geometry_mode != "cell":
+        geometry_sql = "ST_CollectionExtract(ST_MakeValid(ST_Intersection(g.geom, b.geom)), 3)"
+
+    q = f"""
+        WITH selected_cells AS (
+            SELECT r.h3_index, r.final_zone::text AS zone, r.total_score,
+                   r.constraint_reasons, r.dominant_reason,
+                   r.min_confidence::text AS confidence, r.classification_method,
+                   r.score_applicability, {geometry_sql} AS geom
+            FROM mcda_cell_results r
+            JOIN mcda_grid g USING (h3_index)
+            JOIN mcda_model_runs run ON run.run_id = r.run_id
+            JOIN mcda_region_boundary b ON b.region_id = run.region_id
+            WHERE r.run_id = $1::uuid
     """
     params: List[Any] = [run_id]
     if zone:
@@ -443,22 +474,69 @@ async def results_geojson(
               f"ST_MakeEnvelope(${len(params)-3}, ${len(params)-2}, "
               f"${len(params)-1}, ${len(params)}, 4326))")
 
+    q += ")"
+    if geometry_mode == "dissolved":
+        q += """
+            SELECT zone, COUNT(*) AS cell_count,
+                   ROUND((SUM(ST_Area(geom::geography)) / 1e6)::numeric, 4) AS area_km2,
+                   ARRAY_AGG(DISTINCT classification_method) AS classification_methods,
+                   ST_AsGeoJSON(ST_Multi(ST_UnaryUnion(ST_Collect(geom)))) AS geometry
+            FROM selected_cells
+            WHERE NOT ST_IsEmpty(geom)
+            GROUP BY zone
+            ORDER BY zone
+        """
+    else:
+        q += """
+            SELECT h3_index, zone, total_score, constraint_reasons,
+                   dominant_reason, confidence, classification_method,
+                   score_applicability, ST_AsGeoJSON(geom) AS geometry
+            FROM selected_cells
+            WHERE NOT ST_IsEmpty(geom)
+        """
+
     async with pool.acquire() as conn:
         rows = await conn.fetch(q, *params)
         
-    return {
-        "type": "FeatureCollection",
-        "features": [{
+    if geometry_mode == "dissolved":
+        features = [{
+            "type": "Feature",
+            "geometry": json.loads(r["geometry"]),
+            "properties": {
+                "zone": r["zone"],
+                "cell_count": r["cell_count"],
+                "area_km2": float(r["area_km2"]),
+                "classification_methods": r["classification_methods"],
+                "classification_method": "mixed_or_aggregated",
+                "score_applicability": "not_applicable",
+                "reason": "Dissolved presentation geometry; inspect cell export for per-cell reasons.",
+                "confidence": "aggregated",
+            },
+        } for r in rows]
+    else:
+        features = [{
             "type": "Feature",
             "geometry": json.loads(r["geometry"]),
             "properties": {
                 "h3_index": r["h3_index"],
                 "zone": r["zone"],
                 "score": float(r["total_score"]) if r["total_score"] is not None else None,
+                "score_applicability": r["score_applicability"],
+                "classification_method": r["classification_method"],
+                "triggering_constraints": r["constraint_reasons"] or [],
                 "reason": r["dominant_reason"],
-                "confidence": r["confidence"],
+                "confidence": r["confidence"] or "unknown",
+                "provenance": {
+                    "analysis_run_id": run_id,
+                    "geometry_mode": geometry_mode,
+                },
             },
-        } for r in rows],
+        } for r in rows]
+
+    return {
+        "type": "FeatureCollection",
+        "export_geometry_mode": geometry_mode,
+        "features": features,
     }
 
 
