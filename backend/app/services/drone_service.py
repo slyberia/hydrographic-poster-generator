@@ -396,7 +396,24 @@ async def location_report(pool: asyncpg.Pool, run_id: str, h3_index: str) -> Opt
         row = await conn.fetchrow("""
             SELECT r.final_zone::text AS zone, r.total_score, r.factor_scores,
                    r.constraint_reasons, r.dominant_reason, r.min_confidence::text AS confidence,
-                   r.classification_method, r.score_applicability
+                   COALESCE(
+                       r.classification_method,
+                       CASE
+                           WHEN COALESCE(cardinality(r.constraint_reasons), 0) > 0 THEN 'hard_constraint'
+                           WHEN r.total_score IS NOT NULL THEN 'weighted_mcda'
+                           ELSE 'default_no_mapped_factors'
+                       END
+                   ) AS classification_method,
+                   COALESCE(
+                       r.score_applicability,
+                       CASE
+                           WHEN COALESCE(cardinality(r.constraint_reasons), 0) > 0
+                                AND r.total_score IS NOT NULL THEN 'context_only'
+                           WHEN COALESCE(cardinality(r.constraint_reasons), 0) > 0 THEN 'not_applicable'
+                           WHEN r.total_score IS NOT NULL THEN 'classification_basis'
+                           ELSE 'not_applicable'
+                       END
+                   ) AS score_applicability
             FROM mcda_cell_results r
             WHERE r.run_id = $1::uuid AND r.h3_index = $2
         """, run_id, h3_index)
@@ -455,8 +472,24 @@ async def results_geojson(
         WITH selected_cells AS (
             SELECT r.h3_index, r.final_zone::text AS zone, r.total_score,
                    r.constraint_reasons, r.dominant_reason,
-                   r.min_confidence::text AS confidence, r.classification_method,
-                   r.score_applicability, {geometry_sql} AS geom
+                   r.min_confidence::text AS confidence, COALESCE(
+                       r.classification_method,
+                       CASE
+                           WHEN COALESCE(cardinality(r.constraint_reasons), 0) > 0 THEN 'hard_constraint'
+                           WHEN r.total_score IS NOT NULL THEN 'weighted_mcda'
+                           ELSE 'default_no_mapped_factors'
+                       END
+                   ) AS classification_method,
+                   COALESCE(
+                       r.score_applicability,
+                       CASE
+                           WHEN COALESCE(cardinality(r.constraint_reasons), 0) > 0
+                                AND r.total_score IS NOT NULL THEN 'context_only'
+                           WHEN COALESCE(cardinality(r.constraint_reasons), 0) > 0 THEN 'not_applicable'
+                           WHEN r.total_score IS NOT NULL THEN 'classification_basis'
+                           ELSE 'not_applicable'
+                       END
+                   ) AS score_applicability, {geometry_sql} AS geom
             FROM mcda_cell_results r
             JOIN mcda_grid g USING (h3_index)
             JOIN mcda_model_runs run ON run.run_id = r.run_id
