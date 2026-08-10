@@ -124,6 +124,10 @@ This distinguishes the three valid null-score cases without inventing a score:
 unmapped/default SUITABLE cells, hard-constrained cells without factor overlap,
 and dissolved presentation features where a per-cell score no longer applies.
 
+Historical published results are immutable. Migration 012 does not update those
+rows; when their two new semantic columns are null, the internal API derives the
+same values from the original `constraint_reasons` and `total_score` fields.
+
 ---
 
 ## Internal endpoints (role-protected)
