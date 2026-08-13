@@ -31,10 +31,12 @@ async def public_config(pool: asyncpg.Pool = Depends(get_db_pool)):
 
 
 @router.get("/zoning", tags=["Drone Public"], dependencies=[Depends(usage_limit("layer"))])
-async def public_zoning(pool: asyncpg.Pool = Depends(get_db_pool)):
+async def public_zoning(response: Response, pool: asyncpg.Pool = Depends(get_db_pool)):
     """The published zoning result as a public-safe GeoJSON FeatureCollection."""
     try:
-        return await pub.public_zoning_geojson(pool)
+        payload = await pub.public_zoning_geojson(pool)
+        response.headers["Cache-Control"] = "public, max-age=300, stale-while-revalidate=3600"
+        return payload
     except pub.NotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
 

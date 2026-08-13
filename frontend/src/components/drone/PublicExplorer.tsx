@@ -104,7 +104,8 @@ export default function PublicExplorer() {
         setPhase("unavailable");
         return;
       }
-      const geo = await publicDroneApi.getZoning();
+      const dissolved = cfg.published.artifacts?.find((artifact) => artifact.type === "dissolved");
+      const geo = await publicDroneApi.getZoning(dissolved?.url, cfg.published.published_at);
       setGeojson(geo);
       setPhase("ready");
     } catch (e) {

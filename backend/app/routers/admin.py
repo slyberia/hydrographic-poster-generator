@@ -7,6 +7,7 @@ import asyncpg
 from app.database import get_db_pool
 from app.services.rules_service import rules_service
 from app.services.spatial_cache import clip_cache, boundary_cache
+from app.services import drone_publication_service as drone_pub
 
 
 async def require_admin_key(x_admin_key: str = Header(default="", alias="X-Admin-Key")):
@@ -60,3 +61,15 @@ async def get_export_history(limit: int = 50, pool: asyncpg.Pool = Depends(get_d
         rows = await conn.fetch(query, limit)
     
     return [dict(row) for row in rows]
+
+
+@router.post("/materialize-published/{run_id}")
+async def materialize_published(run_id: str, pool: asyncpg.Pool = Depends(get_db_pool)):
+    """Materialize artifacts for an existing complete published run."""
+    try:
+        await drone_pub.materialize_published_run(pool, run_id)
+    except drone_pub.NotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except drone_pub.LifecycleError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+    return {"status": "materialized", "run_id": run_id}

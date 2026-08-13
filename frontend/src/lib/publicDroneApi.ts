@@ -25,6 +25,7 @@ export interface PublicStudyArea {
 export interface PublishedMeta {
   published_at: string;
   methodology_version: string;
+  artifacts?: Array<{ type: "dissolved" | "cell" | "clipped_cell"; url: string; sha256: string; byte_size: number }>;
 }
 
 export interface PublicConfig {
@@ -56,10 +57,10 @@ export class PublicApiError extends Error {
   }
 }
 
-async function get<T>(path: string): Promise<T> {
+async function get<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(`${BASE}${path}`); // no auth header — public by contract
+    res = await fetch(`${BASE}${path}`, init); // no auth header — public by contract
   } catch (e) {
     throw new PublicApiError(0, `Network error — ${String(e)}`);
   }
@@ -72,6 +73,19 @@ async function get<T>(path: string): Promise<T> {
 
 export const publicDroneApi = {
   getConfig: () => get<PublicConfig>("/public/drone/config"),
-  getZoning: () => get<GeoJSON.FeatureCollection>("/public/drone/zoning"),
+  getZoning: async (artifactUrl?: string, cacheKey?: string) => {
+    const key = cacheKey ? `drone-published-zoning:${cacheKey}` : null;
+    if (key && typeof window !== "undefined") {
+      const cached = window.sessionStorage.getItem(key);
+      if (cached) return JSON.parse(cached) as GeoJSON.FeatureCollection;
+    }
+    const geo = await get<GeoJSON.FeatureCollection>(artifactUrl ?? "/public/drone/zoning", {
+      cache: "force-cache",
+    });
+    if (key && typeof window !== "undefined") {
+      try { window.sessionStorage.setItem(key, JSON.stringify(geo)); } catch { /* private mode/quota */ }
+    }
+    return geo;
+  },
   getReport: (h3: string) => get<PublicReport>(`/public/drone/report/${encodeURIComponent(h3)}`),
 };
