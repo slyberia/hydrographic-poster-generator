@@ -73,6 +73,25 @@ function geojson() {
   };
 }
 
+function dissolvedGeojson() {
+  return {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "MultiPolygon",
+          coordinates: [[[
+            [-58.12, 6.6], [-58.1, 6.6], [-58.1, 6.62],
+            [-58.12, 6.62], [-58.12, 6.6],
+          ]]],
+        },
+        properties: { zone: "CONDITIONAL", cell_count: 2, area_km2: 1.2, aggregate_reason: "Mock" },
+      },
+    ],
+  };
+}
+
 function report(h3: string) {
   const cell = CELLS.find((c) => c.h3 === h3) ?? CELLS[0];
   return {
@@ -89,6 +108,7 @@ function report(h3: string) {
 }
 
 export interface MockState {
+  requested: string[];
   statusPolls: number;
   triggerPosts: number;
   lastStatusPollAt: number;
@@ -99,6 +119,7 @@ export interface MockState {
 
 export async function installMockBackend(page: Page): Promise<MockState> {
   const state: MockState = {
+    requested: [],
     statusPolls: 0, triggerPosts: 0, lastStatusPollAt: 0, failTrigger: false,
     lifecyclePosts: [],
   };
@@ -110,6 +131,7 @@ export async function installMockBackend(page: Page): Promise<MockState> {
     const url = new URL(route.request().url());
     const path = url.pathname;
     const method = route.request().method();
+    state.requested.push(path);
 
     if (path === "/config/factors") {
       return json(route, FACTOR_KEYS.map((k) => ({
@@ -118,6 +140,12 @@ export async function installMockBackend(page: Page): Promise<MockState> {
       })));
     }
     if (path === "/runs" && method === "GET") return json(route, RUNS);
+    if (path === "/public/drone/config") {
+      return json(route, {
+        study_area: { center: { lat: 6.6, lng: -58.1 }, default_zoom: 10 },
+        published: null,
+      });
+    }
 
     const lifecycle = path.match(/^\/runs\/([^/]+)\/(approve|publish|archive)$/);
     if (lifecycle && method === "POST") {
@@ -134,6 +162,8 @@ export async function installMockBackend(page: Page): Promise<MockState> {
 
     const geo = path.match(/^\/runs\/([^/]+)\/geojson$/);
     if (geo) return json(route, geojson());
+    const dissolved = path.match(/^\/runs\/([^/]+)\/geojson\/dissolved$/);
+    if (dissolved) return json(route, dissolvedGeojson());
 
     const rep = path.match(/^\/runs\/([^/]+)\/report\/([^/]+)$/);
     if (rep) return json(route, report(rep[2]));

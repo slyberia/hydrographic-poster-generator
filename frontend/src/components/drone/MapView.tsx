@@ -1,6 +1,6 @@
 "use client";
 
-/** components/MapView.tsx — Leaflet map rendering ~19.5k H3 cells on canvas. */
+/** components/MapView.tsx — shared Leaflet renderer for zoning areas and cells. */
 
 import { useEffect, useRef, type MutableRefObject } from "react";
 import L from "leaflet";
@@ -11,10 +11,13 @@ import { DEFAULT_STUDY_AREA } from "@/lib/studyArea";
 import LoadingBar from "@/components/drone/LoadingBar";
 
 export type MapDisplayMode = "zones" | "volatility";
+export type GeometryDisplayMode = "dissolved" | "cell";
 
 export default function MapView(props: {
   geojson: GeoJSON.FeatureCollection | null;
-  onCellClick: (h3: string) => void;
+  onCellClick?: (h3: string) => void;
+  onFeatureClick?: (feature: GeoJSON.Feature) => void;
+  geometryMode?: GeometryDisplayMode;
   displayMode?: MapDisplayMode;
   volatilityByH3?: Map<string, VolatilityRecord> | null;
   hiddenZones?: Set<Zone>;
@@ -24,18 +27,23 @@ export default function MapView(props: {
   /** Populated with a reader for the live viewport (bbox + zoom) — the export
    * contract. Null until the map has initialised. */
   viewportRef?: MutableRefObject<(() => ViewportSnapshot) | null>;
+  fitBoundsKey?: string | null;
 }) {
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.GeoJSON | null>(null);
   const markerRef = useRef<L.CircleMarker | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const clickRef = useRef(props.onCellClick);
+  const featureClickRef = useRef(props.onFeatureClick);
+  const hasFittedRef = useRef(false);
+  const lastFitKeyRef = useRef<string | null>(null);
 
   const isEmpty = props.geojson !== null && (props.geojson.features?.length ?? 0) === 0;
 
   // Style inputs live in refs so restyles never force a layer rebuild.
   const styleInputsRef = useRef({
     displayMode: props.displayMode ?? "zones",
+    geometryMode: props.geometryMode ?? "cell",
     volatilityByH3: props.volatilityByH3 ?? null,
     hiddenZones: props.hiddenZones ?? new Set<Zone>(),
   });
@@ -43,6 +51,10 @@ export default function MapView(props: {
   useEffect(() => {
     clickRef.current = props.onCellClick;
   }, [props.onCellClick]);
+
+  useEffect(() => {
+    featureClickRef.current = props.onFeatureClick;
+  }, [props.onFeatureClick]);
 
   function styleFor(feature?: GeoJSON.Feature): L.PathOptions {
     const { displayMode, volatilityByH3, hiddenZones } = styleInputsRef.current;
@@ -60,7 +72,14 @@ export default function MapView(props: {
     } else {
       fill = (zone && ZONE_FILL[zone]) || "#999";
     }
-    return { fillColor: fill, fillOpacity: 0.55, color: fill, weight: 0.3, opacity: 0.6 };
+    const dissolved = styleInputsRef.current.geometryMode === "dissolved";
+    return {
+      fillColor: fill,
+      fillOpacity: dissolved ? 0.58 : 0.55,
+      color: dissolved ? "#46544d" : fill,
+      weight: dissolved ? 1.2 : 0.3,
+      opacity: dissolved ? 0.78 : 0.6,
+    };
   }
 
   // init once
@@ -120,29 +139,39 @@ export default function MapView(props: {
         style: styleFor,
         onEachFeature: (feature, lyr) => {
           const h3 = feature.properties?.h3_index;
-          if (h3) lyr.on("click", () => clickRef.current(h3));
+          lyr.on("click", () => {
+            if (featureClickRef.current) featureClickRef.current(feature);
+            else if (h3 && clickRef.current) clickRef.current(h3);
+          });
         },
       }).addTo(map);
       layerRef.current = layer;
 
       const bounds = layer.getBounds();
-      if (bounds.isValid()) {
+      const fitKey = props.fitBoundsKey ?? null;
+      const shouldFit = fitKey
+        ? lastFitKeyRef.current !== fitKey
+        : !hasFittedRef.current;
+      if (bounds.isValid() && shouldFit) {
         map.fitBounds(bounds, { padding: [16, 16] });
+        hasFittedRef.current = true;
+        lastFitKeyRef.current = fitKey;
       }
     } catch (e) {
       console.error("Failed to render GeoJSON layer", e);
     }
-  }, [props.geojson]);
+  }, [props.geojson, props.fitBoundsKey]);
 
   // mode / volatility / visibility changes restyle the existing layer only
   useEffect(() => {
     styleInputsRef.current = {
       displayMode: props.displayMode ?? "zones",
+      geometryMode: props.geometryMode ?? "cell",
       volatilityByH3: props.volatilityByH3 ?? null,
       hiddenZones: props.hiddenZones ?? new Set<Zone>(),
     };
     layerRef.current?.setStyle(styleFor);
-  }, [props.displayMode, props.volatilityByH3, props.hiddenZones]);
+  }, [props.displayMode, props.geometryMode, props.volatilityByH3, props.hiddenZones]);
 
   // Georeference search: fly to the picked point and mark it.
   useEffect(() => {

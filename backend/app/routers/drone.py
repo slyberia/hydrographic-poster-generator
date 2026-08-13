@@ -204,6 +204,22 @@ async def get_run_geojson(
 
 
 @router.get(
+    "/runs/{run_id}/geojson/dissolved",
+    tags=["Drone Runs"],
+    dependencies=[Depends(require_viewer), Depends(usage_limit("layer"))],
+)
+async def get_run_dissolved_geojson(
+    run_id: str,
+    pool: asyncpg.Pool = Depends(get_db_pool),
+):
+    """Get dissolved zoning areas for a draft, approved, or published run."""
+    try:
+        return await drone_service.dissolved_results_geojson(pool, run_id)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@router.get(
     "/runs/{run_id}/geojson/download",
     tags=["Drone Runs"],
     dependencies=[Depends(require_viewer), Depends(usage_limit("layer"))],

@@ -60,7 +60,8 @@ export class PublicApiError extends Error {
 async function get<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(`${BASE}${path}`, init); // no auth header — public by contract
+    const url = /^https?:\/\//i.test(path) ? path : `${BASE}${path}`;
+    res = await fetch(url, init); // no auth header — public by contract
   } catch (e) {
     throw new PublicApiError(0, `Network error — ${String(e)}`);
   }
@@ -87,5 +88,7 @@ export const publicDroneApi = {
     }
     return geo;
   },
+  getLayer: (artifactUrl: string, cacheKey: string) =>
+    publicDroneApi.getZoning(artifactUrl, cacheKey),
   getReport: (h3: string) => get<PublicReport>(`/public/drone/report/${encodeURIComponent(h3)}`),
 };
