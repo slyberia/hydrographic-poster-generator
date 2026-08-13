@@ -59,6 +59,8 @@ export interface LocationReport {
   disclaimer: string;
 }
 
+export type GeometryDisplayMode = "dissolved" | "cell";
+
 // ---- Dashboard (UX-9 internal aggregate — mirror of drone_dashboard_service) ----
 
 export interface DashZone {
@@ -244,6 +246,25 @@ export const droneApi = {
 
   getRunGeoJSON: (runId: string) =>
     http<GeoJSON.FeatureCollection>(`/runs/${runId}/geojson`),
+
+  getRunDissolvedGeoJSON: (runId: string) =>
+    http<GeoJSON.FeatureCollection>(`/runs/${runId}/geojson/dissolved`),
+
+  getCachedLayer: async (
+    key: string,
+    loader: () => Promise<GeoJSON.FeatureCollection>,
+  ): Promise<GeoJSON.FeatureCollection> => {
+    const storageKey = `drone-layer:${key}`;
+    if (typeof window !== "undefined") {
+      const cached = window.sessionStorage.getItem(storageKey);
+      if (cached) return JSON.parse(cached) as GeoJSON.FeatureCollection;
+    }
+    const layer = await loader();
+    if (typeof window !== "undefined") {
+      try { window.sessionStorage.setItem(storageKey, JSON.stringify(layer)); } catch { /* quota/private mode */ }
+    }
+    return layer;
+  },
 
   downloadRunGeoJSON: async (
     runId: string,

@@ -44,12 +44,12 @@ class _TxnCtx:
         return False
 
 
-def make_conn(*, fetchrow=None, fetchval=None):
+def make_conn(*, fetchrow=None, fetchval=None, fetch=None):
     conn = MagicMock()
     conn.transaction = lambda: _TxnCtx()
     conn.fetchrow = AsyncMock(side_effect=list(fetchrow or []))
     conn.fetchval = AsyncMock(side_effect=list(fetchval or []))
-    conn.fetch = AsyncMock(return_value=[])
+    conn.fetch = AsyncMock(return_value=list(fetch or []))
     conn.execute = AsyncMock(return_value="UPDATE 1")
     return conn
 
@@ -272,6 +272,30 @@ def test_public_zoning_without_publication_is_not_found():
     conn = make_conn(fetchrow=[_CONFIG_ROW], fetchval=[None])  # no published run
     with pytest.raises(pub.NotFoundError):
         asyncio.run(pub.public_zoning_geojson(make_pool(conn)))
+
+
+def test_public_zoning_returns_dissolved_aggregate_features():
+    conn = make_conn(
+        fetchrow=[_CONFIG_ROW],
+        fetchval=["run-1"],
+        fetch=[{
+            "zone": "SUITABLE",
+            "cell_count": 12,
+            "area_km2": 42.5,
+            "aggregate_reason": "Low population; Outside airport buffer",
+            "geometry": '{"type":"MultiPolygon","coordinates":[]}',
+        }],
+    )
+    payload = asyncio.run(pub.public_zoning_geojson(make_pool(conn)))
+
+    feature = payload["features"][0]
+    assert feature["properties"] == {
+        "zone": "SUITABLE",
+        "cell_count": 12,
+        "area_km2": 42.5,
+        "aggregate_reason": "Low population; Outside airport buffer",
+    }
+    assert "h3_index" not in feature["properties"]
 
 
 # --------------------------------------------------------------------------- #

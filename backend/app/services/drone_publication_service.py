@@ -151,6 +151,12 @@ def _feature_collection(rows: List[asyncpg.Record], include_h3: bool = True) -> 
             "reason": row.get("dominant_reason"),
             "confidence": row.get("confidence"),
         }
+        if row.get("cell_count") is not None:
+            properties.update({
+                "cell_count": row["cell_count"],
+                "area_km2": float(row["area_km2"]) if row.get("area_km2") is not None else None,
+                "aggregate_reason": row.get("aggregate_reason"),
+            })
         if include_h3 and row.get("h3_index"):
             properties["h3_index"] = row["h3_index"]
         features.append({"type": "Feature", "geometry": json.loads(row["geometry"]), "properties": properties})
@@ -188,7 +194,11 @@ async def materialize_published_run(pool: asyncpg.Pool, run_id: str) -> None:
         """, run_id, run["region_id"])
         dissolved_rows = await conn.fetch("""
             SELECT r.final_zone::text AS zone,
+                   count(*)::int AS cell_count,
+                   round((sum(ST_Area(g.geom::geography)) / 1000000.0)::numeric, 3)::float8 AS area_km2,
                    NULL::text AS dominant_reason, NULL::text AS confidence,
+                   string_agg(DISTINCT NULLIF(r.dominant_reason, ''), '; '
+                              ORDER BY NULLIF(r.dominant_reason, '')) AS aggregate_reason,
                    ST_AsGeoJSON(ST_Multi(ST_CollectionExtract(
                        ST_MakeValid(ST_Union(g.geom)), 3))) AS geometry
             FROM mcda_cell_results r JOIN mcda_grid g USING (h3_index)
@@ -256,12 +266,17 @@ async def public_zoning_geojson(pool: asyncpg.Pool) -> Dict[str, Any]:
         if run_id is None:
             raise NotFoundError("No published zoning is available.")
         rows = await conn.fetch("""
-            SELECT r.h3_index, r.final_zone::text AS zone,
-                   r.dominant_reason, r.min_confidence::text AS confidence,
-                   ST_AsGeoJSON(g.geom) AS geometry
+            SELECT r.final_zone::text AS zone,
+                   count(*)::int AS cell_count,
+                   round((sum(ST_Area(g.geom::geography)) / 1000000.0)::numeric, 3)::float8 AS area_km2,
+                   string_agg(DISTINCT NULLIF(r.dominant_reason, ''), '; '
+                              ORDER BY NULLIF(r.dominant_reason, '')) AS aggregate_reason,
+                   ST_AsGeoJSON(ST_Multi(ST_CollectionExtract(
+                       ST_MakeValid(ST_Union(g.geom)), 3))) AS geometry
             FROM mcda_cell_results r
             JOIN mcda_grid g USING (h3_index)
             WHERE r.run_id = $1::uuid
+            GROUP BY r.final_zone
         """, run_id)
 
     return {
@@ -270,10 +285,10 @@ async def public_zoning_geojson(pool: asyncpg.Pool) -> Dict[str, Any]:
             "type": "Feature",
             "geometry": json.loads(row["geometry"]),
             "properties": {
-                "h3_index": row["h3_index"],
-                "zone": row["zone"],
-                "reason": row["dominant_reason"],
-                "confidence": row["confidence"],
+            "zone": row["zone"],
+            "cell_count": row["cell_count"],
+            "area_km2": float(row["area_km2"]) if row["area_km2"] is not None else None,
+            "aggregate_reason": row["aggregate_reason"],
             },
         } for row in rows],
     }

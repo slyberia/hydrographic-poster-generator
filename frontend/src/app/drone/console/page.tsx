@@ -5,7 +5,8 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone, type ViewportSnapshot } from "@/lib/droneApi";
+import { droneApi as api, FactorWeight, RunStats, RunSummary, LocationReport, Zone, type ViewportSnapshot, type GeometryDisplayMode } from "@/lib/droneApi";
+import { publicDroneApi } from "@/lib/publicDroneApi";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 import ControlRail, {
   type DroneDownloadFormat,
@@ -81,6 +82,10 @@ function Console({
   const [activeRun, setActiveRun] = useState<string | null>(null);
   const [stats, setStats] = useState<RunStats | null>(null);
   const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [geometryMode, setGeometryMode] = useState<GeometryDisplayMode>("dissolved");
+  const [layerLoading, setLayerLoading] = useState(false);
+  const [publishedArtifactUrls, setPublishedArtifactUrls] = useState<Partial<Record<"dissolved" | "cell", string>>>({});
+  const loadedLayersRef = useRef(new Map<string, GeoJSON.FeatureCollection>());
   const [report, setReport] = useState<LocationReport | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<{ text: string; error?: boolean }>({ text: "" });
@@ -96,6 +101,7 @@ function Console({
   // Monotonic guard: only the most recent selectRun may write results, so
   // fast run switches can't render an earlier response over a later one.
   const loadSeq = useRef(0);
+  const initialLoadStartedRef = useRef(false);
 
   // Populated by MapView with a reader for the live map extent (the export
   // contract). Reads current bbox + zoom on demand; never triggers re-renders.
@@ -144,31 +150,64 @@ function Console({
 
   const refreshConfig = useCallback(async () => {
     try {
-      const [f, r] = await Promise.all([api.getFactors(), api.listRuns()]);
+      const [f, r, publicConfig] = await Promise.all([
+        api.getFactors(),
+        api.listRuns(),
+        publicDroneApi.getConfig().catch(() => null),
+      ]);
       setFactors(f);
       setRuns(r);
-      return r;
+      const urls: Partial<Record<"dissolved" | "cell", string>> = {};
+      for (const artifact of publicConfig?.published?.artifacts ?? []) {
+        if (artifact.type === "dissolved" || artifact.type === "cell") urls[artifact.type] = artifact.url;
+      }
+      setPublishedArtifactUrls(urls);
+      return { runs: r, artifactUrls: urls };
     } catch (e) {
       setStatus({ text: `Backend unreachable — ${String(e)}`, error: true });
-      return [];
+      return { runs: [], artifactUrls: {} };
     }
   }, []);
 
-  const selectRun = useCallback(async (runId: string) => {
+  const loadLayer = useCallback(async (
+    runId: string,
+    mode: GeometryDisplayMode,
+    artifactUrlsOverride?: Partial<Record<"dissolved" | "cell", string>>,
+  ) => {
+    const selectedRun = runs.find((run) => run.run_id === runId);
+    const artifactUrlsForRun = artifactUrlsOverride ?? publishedArtifactUrls;
+    const artifactUrl = selectedRun?.lifecycle_state === "published"
+      ? artifactUrlsForRun[mode]
+      : undefined;
+    const cacheKey = `${runId}:${mode}:${artifactUrl ?? "dynamic"}`;
+    if (artifactUrl) {
+      return publicDroneApi.getLayer(artifactUrl, `drone-published:${cacheKey}`);
+    }
+    return api.getCachedLayer(cacheKey, () =>
+      mode === "dissolved" ? api.getRunDissolvedGeoJSON(runId) : api.getRunGeoJSON(runId),
+    );
+  }, [publishedArtifactUrls, runs]);
+
+  const selectRun = useCallback(async (
+    runId: string,
+    artifactUrlsOverride?: Partial<Record<"dissolved" | "cell", string>>,
+  ) => {
     const seq = ++loadSeq.current;
     setBusy(true);
     setReport(null);
     setFocusPoint(null);
     setDisplayMode("zones");
+    setGeometryMode("dissolved");
     setHiddenZones(new Set());
     setStatus({ text: "Loading results…" });
     try {
       const [fc, detail] = await Promise.all([
-        api.getRunGeoJSON(runId),
+        loadLayer(runId, "dissolved", artifactUrlsOverride),
         api.getRunStats(runId),
       ]);
       if (seq !== loadSeq.current) return; // superseded by a newer selection
       setGeojson(fc);
+      loadedLayersRef.current.set(`${runId}:dissolved`, fc);
       setStats(detail.stats ?? null);
       setActiveRun(runId);
       setStatus({ text: "" });
@@ -178,14 +217,47 @@ function Console({
     } finally {
       if (seq === loadSeq.current) setBusy(false);
     }
-  }, []);
+  }, [loadLayer]);
+
+  const selectGeometryMode = useCallback(async (mode: GeometryDisplayMode) => {
+    if (!activeRun || mode === geometryMode) return;
+    if (mode === "dissolved" && displayMode === "volatility") setDisplayMode("zones");
+    setGeometryMode(mode);
+    const cached = loadedLayersRef.current.get(`${activeRun}:${mode}`);
+    if (cached) {
+      setGeojson(cached);
+      return;
+    }
+    setLayerLoading(true);
+    setStatus({ text: mode === "cell" ? "Loading analytical cells…" : "Loading zoning areas…" });
+    try {
+      const fc = await loadLayer(activeRun, mode);
+      loadedLayersRef.current.set(`${activeRun}:${mode}`, fc);
+      setGeojson(fc);
+      setStatus({ text: "" });
+    } catch (e) {
+      setStatus({ text: String(e), error: true });
+    } finally {
+      setLayerLoading(false);
+    }
+  }, [activeRun, displayMode, geometryMode, loadLayer]);
+
+  const setSafeDisplayMode = useCallback((mode: MapDisplayMode) => {
+    if (mode === "volatility" && geometryMode !== "cell") {
+      void selectGeometryMode("cell").then(() => setDisplayMode(mode));
+      return;
+    }
+    setDisplayMode(mode);
+  }, [geometryMode, selectGeometryMode]);
 
   // initial load: config + most recent completed run
   useEffect(() => {
+    if (initialLoadStartedRef.current) return;
+    initialLoadStartedRef.current = true;
     (async () => {
-      const r = await refreshConfig();
-      const latest = r.find((x) => x.status === "complete");
-      if (latest) await selectRun(latest.run_id);
+      const config = await refreshConfig();
+      const latest = config.runs.find((x) => x.status === "complete");
+      if (latest) await selectRun(latest.run_id, config.artifactUrls);
     })();
   }, [refreshConfig, selectRun]);
 
@@ -410,13 +482,15 @@ function Console({
           sensitivityStatus={sensitivity.status}
           sensitivityError={sensitivity.error}
           displayMode={displayMode}
+          geometryMode={geometryMode}
+          onGeometryMode={selectGeometryMode}
           onRunModel={runModel}
           onSelectRun={selectRun}
           onDeleteRun={deleteRun}
           onTransitionRun={transitionRun}
           onToggleZone={toggleZone}
           onTriggerSensitivity={sensitivity.trigger}
-          onDisplayMode={setDisplayMode}
+          onDisplayMode={setSafeDisplayMode}
           onGeoPick={onGeoPick}
           onExport={exportView}
           exporting={exporting}
@@ -437,10 +511,12 @@ function Console({
             onCellClick={onCellClick}
             displayMode={displayMode}
             volatilityByH3={sensitivity.volatilityByH3}
+            geometryMode={geometryMode}
             hiddenZones={hiddenZones}
-            loading={busy}
+            loading={busy || layerLoading}
             focusPoint={focusPoint}
             viewportRef={viewportRef}
+            fitBoundsKey={activeRun}
           />
           {report && (
             <ReportDrawer

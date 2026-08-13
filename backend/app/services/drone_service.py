@@ -462,6 +462,49 @@ async def results_geojson(
     }
 
 
+async def dissolved_results_geojson(
+    pool: asyncpg.Pool,
+    run_id: str,
+) -> Dict[str, Any]:
+    """Return one dissolved feature per zoning class for any completed run.
+
+    This is the dynamic counterpart to the published dissolved artifact. It
+    keeps draft/analyst runs on PostGIS while giving the map surfaces the same
+    aggregate geometry contract as published runs.
+    """
+    query = """
+        SELECT r.final_zone::text AS zone,
+               count(*)::int AS cell_count,
+               round((sum(ST_Area(g.geom::geography)) / 1000000.0)::numeric, 3)::float8
+                   AS area_km2,
+               string_agg(DISTINCT NULLIF(r.dominant_reason, ''), '; '
+                          ORDER BY NULLIF(r.dominant_reason, '')) AS aggregate_reason,
+               ST_AsGeoJSON(ST_Multi(ST_CollectionExtract(
+                   ST_MakeValid(ST_Union(g.geom)), 3))) AS geometry
+        FROM mcda_cell_results r
+        JOIN mcda_grid g USING (h3_index)
+        WHERE r.run_id = $1::uuid
+        GROUP BY r.final_zone
+        ORDER BY r.final_zone
+    """
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(query, run_id)
+
+    return {
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "geometry": json.loads(row["geometry"]),
+            "properties": {
+                "zone": row["zone"],
+                "cell_count": row["cell_count"],
+                "area_km2": float(row["area_km2"]) if row["area_km2"] is not None else None,
+                "aggregate_reason": row["aggregate_reason"],
+            },
+        } for row in rows],
+    }
+
+
 async def region_boundary_geojson(pool: asyncpg.Pool, run_id: str) -> Optional[Dict[str, Any]]:
     """The study-area outline (Region 4) for a run's region, as a GeoJSON
     geometry — used as an optional overlay line on exports. Returns None if the

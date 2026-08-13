@@ -98,6 +98,20 @@ function geojson() {
   };
 }
 
+function dissolvedGeojson() {
+  return {
+    type: "FeatureCollection",
+    features: [{
+      type: "Feature",
+      geometry: { type: "MultiPolygon", coordinates: [[[
+        [-58.12, 6.60], [-58.1, 6.60], [-58.1, 6.62],
+        [-58.12, 6.62], [-58.12, 6.60],
+      ]]] },
+      properties: { zone: "SUITABLE", cell_count: 150, area_km2: 90, aggregate_reason: "mock" },
+    }],
+  };
+}
+
 async function installDashboardMock(
   page: Page,
   opts: { body?: unknown; status?: number } = {},
@@ -112,6 +126,23 @@ async function installDashboardMock(
         contentType: "application/json",
         body: JSON.stringify(opts.body ?? BASE_DASHBOARD),
       });
+    }
+    if (path === "/public/drone/config") {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          study_area: { center: { lat: 6.6, lng: -58.1 }, default_zoom: 10 },
+          published: {
+            published_at: "2026-07-20T00:00:00Z",
+            methodology_version: "region-4-mvp-v1",
+            artifacts: [{ type: "dissolved", url: `${API}/public/drone/dissolved`, sha256: "x", byte_size: 1 }],
+          },
+        }),
+      });
+    }
+    if (path === "/public/drone/dissolved") {
+      return route.fulfill({ status: 200, contentType: "application/geo+json", body: JSON.stringify(dissolvedGeojson()) });
     }
     if (path.match(/^\/runs\/[^/]+\/geojson$/)) {
       return route.fulfill({
@@ -168,7 +199,9 @@ test("renders published metrics and integrated map layer", async ({ page }) => {
 
   // Dashboard aggregate plus read-only map layer.
   await expect(page.getByText("Interactive zoning map")).toBeVisible();
-  expect(requested.some((p) => p.includes("/geojson"))).toBe(true);
+  expect(requested).toContain("/public/drone/config");
+  expect(requested).toContain("/public/drone/dissolved");
+  expect(requested.some((p) => p.match(/\/runs\/[^/]+\/geojson/))).toBe(false);
   expect(requested).toContain("/dashboard");
 });
 

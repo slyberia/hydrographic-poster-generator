@@ -159,8 +159,6 @@ export default function PublicExplorer() {
     void Promise.resolve().then(() => openCell(cell, focus));
   }, [phase, openCell]);
 
-  const onCellClick = useCallback((h3: string) => void openCell(h3), [openCell]);
-
   const onGeoPick = useCallback(
     (pick: { lat: number; lon: number; h3: string; label: string }) => {
       void openCell(pick.h3, { lat: pick.lat, lon: pick.lon }, pick.label);
@@ -260,10 +258,11 @@ export default function PublicExplorer() {
         <div className="mapwrap">
           <MapView
             geojson={geojson}
-            onCellClick={onCellClick}
+            geometryMode="dissolved"
             hiddenZones={hiddenZones}
             loading={phase === "loading"}
             focusPoint={focusPoint}
+            fitBoundsKey={published?.published_at ?? null}
           />
 
           {phase === "unavailable" && (

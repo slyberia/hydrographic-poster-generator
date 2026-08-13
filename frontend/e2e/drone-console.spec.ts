@@ -41,12 +41,27 @@ async function clickMapCell(page: Page, pt: { xFrac: number; yFrac: number }) {
 }
 
 test("QA-1: console loads — rail, zone strip, weights, runs", async ({ page }) => {
-  await openConsole(page);
+  const state = await openConsole(page);
   await expect(page.getByRole("heading", { name: /Drone Airspace Zoning/ })).toBeVisible();
   await expect(page.locator(".weightrow")).toHaveCount(6);
   await expect(page.locator(".runitem")).toHaveCount(2);
   await expect(page.locator(".runitem").first()).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("button", { name: "Run sensitivity analysis" })).toBeEnabled();
+  await expect(page.getByRole("radio", { name: "Zoning Areas" })).toHaveAttribute("aria-checked", "true");
+  expect(state.requested).toContain("/runs/run-1/geojson/dissolved");
+  expect(state.requested).not.toContain("/runs/run-1/geojson");
+});
+
+test("Milestone B: analytical cells are lazy-loaded once and reused", async ({ page }) => {
+  const state = await openConsole(page);
+  const cells = page.getByRole("radio", { name: "Analytical Cells" });
+  await cells.click();
+  await expect(cells).toHaveAttribute("aria-checked", "true");
+  await expect.poll(() => state.requested.filter((p) => p === "/runs/run-1/geojson").length).toBe(1);
+
+  await page.getByRole("radio", { name: "Zoning Areas" }).click();
+  await cells.click();
+  await expect.poll(() => state.requested.filter((p) => p === "/runs/run-1/geojson").length).toBe(1);
 });
 
 test("QA-2: trigger sweep — progress advances, sidebar unchanged", async ({ page }) => {

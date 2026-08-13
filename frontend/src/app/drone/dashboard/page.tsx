@@ -12,8 +12,8 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { droneApi as api, DashboardData, DashZone, LocationReport, Zone } from "@/lib/droneApi";
-import ReportDrawer from "@/components/drone/ReportDrawer";
+import { droneApi as api, DashboardData, DashZone, Zone } from "@/lib/droneApi";
+import { publicDroneApi } from "@/lib/publicDroneApi";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 import { ZONE_CSS, ZONE_LABELS } from "@/lib/zoneTheme";
 
@@ -190,7 +190,6 @@ function DashboardBody({ data }: { data: DashboardData }) {
   const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [mapPhase, setMapPhase] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [mapError, setMapError] = useState<string | null>(null);
-  const [report, setReport] = useState<LocationReport | null>(null);
   const [reportNote, setReportNote] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
 
@@ -219,22 +218,21 @@ function DashboardBody({ data }: { data: DashboardData }) {
   }, [preferredRunId]);
 
   useEffect(() => {
-    if (!selectedRunId) {
-      void Promise.resolve().then(() => {
-        setGeojson(null);
-        setMapPhase("idle");
-      });
-      return;
-    }
     let cancelled = false;
     void Promise.resolve().then(() => {
       if (cancelled) return;
       setMapPhase("loading");
       setMapError(null);
-      setReport(null);
       setReportNote(null);
     });
-    void api.getRunGeoJSON(selectedRunId)
+    void publicDroneApi.getConfig()
+      .then((cfg) => {
+        const dissolved = cfg.published?.artifacts?.find((a) => a.type === "dissolved");
+        return publicDroneApi.getZoning(
+          dissolved?.url,
+          cfg.published?.published_at,
+        );
+      })
       .then((fc) => {
         if (cancelled) return;
         setGeojson(fc);
@@ -249,21 +247,7 @@ function DashboardBody({ data }: { data: DashboardData }) {
     return () => {
       cancelled = true;
     };
-  }, [selectedRunId]);
-
-  const onCellClick = useCallback((h3: string) => {
-    if (!selectedRunId) return;
-    setReportNote("Loading cell details…");
-    void api.getLocationReport(selectedRunId, h3)
-      .then((rep) => {
-        setReport(rep);
-        setReportNote(null);
-      })
-      .catch(() => {
-        setReport(null);
-        setReportNote("Couldn't load cell details.");
-      });
-  }, [selectedRunId]);
+  }, []);
 
   const downloadLayer = useCallback(async () => {
     if (!selectedRunId) return;
@@ -303,7 +287,7 @@ function DashboardBody({ data }: { data: DashboardData }) {
           <div>
             <p className="sectionlabel" id="dash-map">Interactive zoning map</p>
             <p className="statusline">
-              Read-only inspection for the selected run. Click a cell to populate the report.
+              Read-only view of the published zoning areas. Analytical cells remain in the Planning Console.
             </p>
           </div>
           <div className="dash-map-actions">
@@ -338,8 +322,9 @@ function DashboardBody({ data }: { data: DashboardData }) {
           <div className="mapwrap">
             <MapView
               geojson={geojson}
-              onCellClick={onCellClick}
+              geometryMode="dissolved"
               loading={mapPhase === "loading"}
+              fitBoundsKey={data.freshness.published_at}
             />
             {mapPhase === "idle" && (
               <div className="map-overlay map-overlay--empty" role="status">
@@ -357,21 +342,10 @@ function DashboardBody({ data }: { data: DashboardData }) {
                 </div>
               </div>
             )}
-            {report && <ReportDrawer report={report} onClose={() => setReport(null)} />}
           </div>
           <aside className="dash-selection" aria-live="polite">
-            <p className="sectionlabel">Selected cell</p>
-            {report ? (
-              <dl className="dash-dl dash-dl--stacked">
-                <dt>Cell</dt><dd>{report.h3_index}</dd>
-                <dt>Zone</dt><dd>{ZONE_LABELS[report.zone]}</dd>
-                <dt>Risk score</dt>
-                <dd>{report.risk_score == null ? "Constraint only" : report.risk_score.toFixed(2)}</dd>
-                <dt>Main reason</dt><dd>{report.main_reason}</dd>
-              </dl>
-            ) : (
-              <p className="statusline">{reportNote ?? "Click a cell on the map."}</p>
-            )}
+            <p className="sectionlabel">Map detail</p>
+            <p className="statusline">{reportNote ?? "Published zoning areas are shown here. Use the Planning Console for analytical cells."}</p>
           </aside>
         </div>
       </section>

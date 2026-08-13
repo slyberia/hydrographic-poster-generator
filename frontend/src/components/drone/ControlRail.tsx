@@ -7,6 +7,7 @@
 import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { FactorWeight, RunStats, RunSummary, SensitivityStatus, Zone } from "@/lib/droneApi";
+import type { GeometryDisplayMode } from "@/lib/droneApi";
 import { ZONE_CSS, ZONE_LABELS } from "@/lib/zoneTheme";
 import SensitivityPanel, { MapDisplayMode } from "@/components/drone/SensitivityPanel";
 import { SweepPhase } from "@/lib/useSensitivity";
@@ -111,6 +112,8 @@ export default function ControlRail(props: {
   sensitivityStatus: SensitivityStatus | null;
   sensitivityError: string | null;
   displayMode: MapDisplayMode;
+  geometryMode: GeometryDisplayMode;
+  onGeometryMode: (mode: GeometryDisplayMode) => void;
   onRunModel: (label: string, overrides?: Record<string, number>) => void;
   onSelectRun: (runId: string) => void;
   onDeleteRun: (runId: string) => void;
@@ -399,6 +402,22 @@ export default function ControlRail(props: {
 
       <Group title="Layers">
         <section aria-label="Map layers">
+          <p className="sectionlabel">Map detail</p>
+          <div className="modetoggle" role="radiogroup" aria-label="Map detail">
+            {(["dissolved", "cell"] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                className="deltabtn"
+                role="radio"
+                aria-checked={props.geometryMode === mode}
+                onClick={() => props.onGeometryMode(mode)}
+                disabled={props.busy}
+              >
+                {mode === "dissolved" ? "Zoning Areas" : "Analytical Cells"}
+              </button>
+            ))}
+          </div>
           <p className="sectionlabel">Zone visibility</p>
           <ZoneStrip
             stats={stats}

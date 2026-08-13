@@ -30,7 +30,11 @@ const CONFIG = {
     h3_resolution: 9,
     methodology_version: "region-4-mvp-v1",
   },
-  published: { published_at: "2026-07-20T00:00:00Z", methodology_version: "region-4-mvp-v1" },
+  published: {
+    published_at: "2026-07-20T00:00:00Z",
+    methodology_version: "region-4-mvp-v1",
+    artifacts: [{ type: "dissolved", url: `${API}/public/drone/dissolved`, sha256: "x", byte_size: 1 }],
+  },
 };
 
 function zoning() {
@@ -47,6 +51,20 @@ function zoning() {
       },
       properties: { h3_index: c.h3, zone: c.zone, reason: "mock reason", confidence: "verified" },
     })),
+  };
+}
+
+function dissolved() {
+  return {
+    type: "FeatureCollection",
+    features: [{
+      type: "Feature",
+      geometry: { type: "MultiPolygon", coordinates: [[[
+        [-58.12, 6.6], [-58.1, 6.6], [-58.1, 6.62],
+        [-58.12, 6.62], [-58.12, 6.6],
+      ]]] },
+      properties: { zone: "CONDITIONAL", cell_count: 2, area_km2: 1.2, aggregate_reason: "mock reason" },
+    }],
   };
 }
 
@@ -87,6 +105,7 @@ async function installPublicMock(page: Page, opts: MockOpts = {}) {
       return json(route, opts.publishedNull ? { ...CONFIG, published: null } : CONFIG);
     }
     if (path === "/public/drone/zoning") return json(route, zoning());
+    if (path === "/public/drone/dissolved") return json(route, dissolved());
     const rep = path.match(/^\/public\/drone\/report\/([^/]+)$/);
     if (rep) return json(route, report(decodeURIComponent(rep[1])));
 
@@ -125,27 +144,18 @@ test("loads published zoning with no authentication", async ({ page }) => {
   // Never touched an authenticated / run-scoped endpoint — cannot select or
   // infer an unpublished run.
   expect(requested.some((p) => p.startsWith("/runs"))).toBe(false);
-  expect(requested).toContain("/public/drone/zoning");
+  expect(requested).toContain("/public/drone/dissolved");
 });
 
-test("selecting a cell shows public-safe guidance and a shareable URL", async ({ page }) => {
-  await installPublicMock(page);
+test("dissolved map features do not trigger cell reports", async ({ page }) => {
+  const requested = await installPublicMock(page);
   await page.goto("/drone/explore");
   await expect(page.locator(".leaflet-container")).toBeVisible();
 
   await clickMapCell(page, 0.4, 0.3); // top-left cell
 
-  const drawer = page.getByRole("dialog", { name: "Location guidance" });
-  await expect(drawer).toBeVisible();
-  await expect(drawer.getByText("Formal authorization is required before operating here.")).toBeVisible();
-  await expect(drawer.getByText(/not an official authorization/)).toBeVisible();
-
-  // No internal score or weight breakdown leaks into the public drawer.
-  await expect(drawer.getByText(/risk score/i)).toHaveCount(0);
-  await expect(drawer.getByText(/weight/i)).toHaveCount(0);
-
-  // The URL now carries a shareable ?cell= parameter.
-  await expect.poll(() => new URL(page.url()).searchParams.get("cell")).not.toBeNull();
+  await expect(page.getByRole("dialog", { name: "Location guidance" })).toHaveCount(0);
+  expect(requested.some((p) => p.startsWith("/public/drone/report/"))).toBe(false);
 });
 
 test("a shared ?cell= URL opens that location's guidance on load", async ({ page }) => {
