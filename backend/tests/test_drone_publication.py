@@ -218,6 +218,29 @@ def test_public_config_with_nothing_published():
     assert payload["published"] is None
 
 
+def test_public_config_exposes_materialized_artifact_metadata():
+    conn = make_conn(fetchrow=[
+        _CONFIG_ROW,
+        {"published_at": "2026-07-23T00:00:00Z", "artifacts": [{
+            "type": "dissolved", "path": "drone/run-1/dissolved.geojson",
+            "sha256": "a" * 64, "byte_size": 123,
+        }]},
+    ])
+    with patch.object(pub.settings, "supabase_url", "https://example.supabase.co"), \
+         patch.object(pub.settings, "published_artifacts_bucket", "drone-published"):
+        payload = asyncio.run(pub.get_public_config(make_pool(conn)))
+
+    artifact = payload["published"]["artifacts"][0]
+    assert artifact["type"] == "dissolved"
+    assert artifact["url"].endswith("/storage/v1/object/public/drone-published/drone/run-1/dissolved.geojson")
+
+
+def test_materialization_is_optional_without_storage_credentials():
+    with patch.object(pub.settings, "supabase_url", ""), \
+         patch.object(pub.settings, "supabase_service_role_key", ""):
+        asyncio.run(pub.materialize_published_run(make_pool(MagicMock()), "run-x"))
+
+
 def test_public_report_excludes_scores_and_weights():
     conn = make_conn(
         fetchrow=[

@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     database_url: str = ""
     cors_origins: str = "http://localhost:3000"
     supabase_url: str = ""
+    supabase_service_role_key: str = ""
+    published_artifacts_bucket: str = "drone-published"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

@@ -72,10 +72,22 @@ Payloads carry no editable weights, internal notes, numeric scores, or run ids.
   },
   "published": {                     // null when nothing is published yet
     "published_at": "2026-07-23T00:00:00Z",
-    "methodology_version": "region-4-mvp-v1"
+    "methodology_version": "region-4-mvp-v1",
+    "artifacts": [
+      {"type": "dissolved", "url": "https://PROJECT_REF.supabase.co/storage/v1/object/public/drone-published/drone/RUN_ID/dissolved.geojson", "sha256": "...", "byte_size": 12345},
+      {"type": "cell", "url": ".../cell.geojson", "sha256": "...", "byte_size": 12345},
+      {"type": "clipped_cell", "url": ".../clipped_cell.geojson", "sha256": "...", "byte_size": 12345}
+    ]
   }
 }
 ```
+
+When artifact storage is configured, the publish operation materializes these
+three immutable objects from PostGIS and the browser prefers the dissolved
+object for the public map. If storage is not configured, `/public/drone/zoning`
+continues to serve the same public-safe result dynamically. The frontend also
+keeps a session cache keyed by `published_at`, so a newly published run naturally
+invalidates the prior layer.
 
 `404` when no study area is configured.
 
