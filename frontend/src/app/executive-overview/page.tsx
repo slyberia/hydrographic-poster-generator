@@ -1,4 +1,6 @@
 import "./executive-overview.css";
+import Link from "next/link";
+import ExecutiveOverviewMap from "@/components/ExecutiveOverviewMap";
 
 const challenges = [
   ["01", "Fragmented data", "Spatial data is scattered across institutions, formats, and jurisdictions."],
@@ -31,7 +33,15 @@ const applications = [
   ["Data modernization", "Consolidate fragmented data into a modern platform for public access."],
 ];
 
-const audiences = ["Government ministries & agencies", "Regional Councils & NDCs", "Civil aviation & public safety", "Utilities & infrastructure operators", "Planning & engineering consultancies", "Developers & commercial drone operators", "Environmental & emergency organizations"];
+const audiences = [
+  ["Government ministries & agencies", "/posters/guyana-parchment.webp"],
+  ["Regional Councils & NDCs", "/posters/guyana-obsidian.webp"],
+  ["Civil aviation & public safety", "/drone/region-4-zoning.png"],
+  ["Utilities & infrastructure operators", "/posters/guyana-abyss.webp"],
+  ["Planning & engineering consultancies", "/posters/guyana-parchment.webp"],
+  ["Developers & commercial drone operators", "/drone/region-4-zoning.png"],
+  ["Environmental & emergency organizations", "/posters/guyana-obsidian.webp"],
+];
 
 function ProductMark() {
   return <span className="product-mark" aria-hidden="true"><i /><i /><i /></span>;
@@ -41,30 +51,34 @@ export default function ExecutiveOverview() {
   return (
     <main className="overview-page">
       <header className="overview-header">
-        <a href="/" className="brand-lockup" aria-label="HPS Geospatial home"><img src="/hps/hps-lockup-horizontal.svg" alt="HPS Geospatial — Spatial Systems · Decision Support" /></a>
+        <Link href="/" className="brand-lockup" aria-label="HPS Geospatial home"><img src="/hps/hps-lockup-horizontal.svg" alt="HPS Geospatial — Spatial Systems · Decision Support" /></Link>
         <div className="product-lockup"><ProductMark /><span><strong>DRONE ZONING</strong><small>REGION 4 PILOT</small></span></div>
+        <nav className="overview-nav" aria-label="Overview navigation">
+          <Link href="/">Platform</Link>
+          <a href="/drone">Drone Zoning</a>
+          <a href="/drone/console">Planning Console</a>
+        </nav>
       </header>
 
       <section className="overview-hero" aria-labelledby="overview-title">
         <div className="hero-copy">
-          <p className="overline">HPS Geospatial platform</p>
           <h1 id="overview-title">Drone Zoning<br />Decision Support</h1>
           <p className="hero-kicker">Geospatial intelligence for informed planning</p>
           <p className="hero-description">A configurable, policy-driven platform that consolidates spatial data, evaluates operating suitability, and presents clear, explainable results through an interactive map.</p>
           <div className="hero-actions">
-            <a className="button button-gold" href="/drone">Explore Drone Zoning <span>↗</span></a>
-          <a className="button button-outline" href="/documentation/drone-platform/executive-overview">▧&nbsp; Read executive overview online</a>
+            <a className="button button-gold" href="/drone">Explore the decision-support platform <span>↗</span></a>
+          <a className="button button-outline" href="/downloads/guyana-drone-executive-overview.md" download>▧&nbsp; Download executive overview</a>
           </div>
         </div>
         <figure className="hero-screenshot">
-          <img src="/drone/region-4-zoning.png" alt="Drone Zoning analysis console showing a classified suitability map and selected-cell details" />
+          <ExecutiveOverviewMap />
           <figcaption>Current pilot: Region 4, Demerara–Mahaica</figcaption>
         </figure>
       </section>
 
       <section className="section split-section challenge-section" aria-labelledby="challenge-title">
         <div className="section-intro"><h2 id="challenge-title">The planning challenge</h2><p>Guyana lacks a centralized, accessible way to combine relevant spatial datasets and evaluate drone operating suitability.</p><p>Fragmented data, inconsistent policies, and limited accessibility make it difficult to make informed, consistent decisions across jurisdictions.</p></div>
-        <div className="challenge-grid">{challenges.map(([number, title, text]) => <article className="info-card" key={title}><span className="card-icon">{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div>
+        <div className="challenge-grid">{challenges.map(([number, title, text]) => <article className="info-card" key={title}><span className="number-bubble">{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div>
       </section>
 
       <section className="section split-section solution-section" aria-labelledby="solution-title">
@@ -72,13 +86,13 @@ export default function ExecutiveOverview() {
         <ol className="workflow" id="workflow">{[["01", "Consolidate data", "Integrate authoritative datasets from multiple agencies and sources."], ["02", "Apply policies", "Configure rules, buffers, weights, and priorities for your objectives."], ["03", "Evaluate & classify", "Analyze each location and classify suitability across the map."], ["04", "Review & export", "Explore results, understand why, and export for reports and downstream use."]].map(([number, title, text]) => <li key={number}><span className="step-number">{number}</span><h3>{title}</h3><p>{text}</p></li>)}</ol>
       </section>
 
-      <section className="section capabilities-section" aria-labelledby="capabilities-title"><h2 id="capabilities-title">Core platform capabilities</h2><div className="capability-grid">{capabilities.map(([title, text, kind]) => <article className="capability-card" key={title}><div className={`capability-visual ${kind}`}><img src="/drone/region-4-zoning.png" alt="" /></div><h3>{title}</h3><p>{text}</p>{kind === "export" && <span className="status-note">PDF & GeoJSON exports are planned for the next release.</span>}</article>)}</div></section>
+      <section className="section capabilities-section" aria-labelledby="capabilities-title"><h2 id="capabilities-title">Core platform capabilities</h2><div className="capability-grid">{capabilities.map(([title, text, kind]) => <article className="capability-card" key={title}><div className={`capability-visual ${kind}`}><img src="/drone/region-4-zoning.png" alt="" /><span className="capability-label">{kind === "model" ? "Scenario controls" : kind === "admin" ? "Role-based workspace" : kind === "map" ? "Published map view" : "Planning outputs"}</span></div><h3>{title}</h3><p>{text}</p>{kind === "export" && <span className="status-note">PDF & GeoJSON exports are planned for the next release.</span>}</article>)}</div></section>
 
       <section className="section value-section" aria-labelledby="value-title"><div><h2 id="value-title">Operational value</h2>{valueItems.map(([title, text]) => <article className="value-item" key={title}><span>✧</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div><div><h2>Applications beyond Drone Zoning</h2><div className="application-grid">{applications.map(([title, text]) => <article key={title}><span>◌</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></div></section>
 
-      <section className="section audiences-section" aria-labelledby="audiences-title"><h2 id="audiences-title">Who it serves</h2><div className="audience-grid">{audiences.map((audience) => <div key={audience}><span>⌁</span><strong>{audience}</strong></div>)}</div></section>
+      <section className="section audiences-section" aria-labelledby="audiences-title"><h2 id="audiences-title">Who it serves</h2><div className="audience-grid">{audiences.map(([audience, image]) => <div className="audience-card" key={audience}><img src={image} alt="" /><span>⌁</span><strong>{audience}</strong></div>)}</div></section>
 
-      <section className="overview-cta"><div className="cta-intro"><ProductMark /><div><p className="overline">Region 4 pilot</p><p>We are working with partners to validate data, refine policies, and demonstrate the platform’s value to inform future regional and national deployment.</p></div></div><nav aria-label="Executive overview actions"><a href="/drone/console">Open planning console</a><a href="/drone/explore">Explore map</a><a href="/drone/methodology">Review methodology</a><a href="/documentation/drone-platform/executive-overview">Read brief online</a><a href="mailto:info@hpsgeospatial.com">Contact HPS Geospatial</a></nav></section>
+      <section className="overview-cta"><div className="cta-intro"><ProductMark /><div><p className="overline">Region 4 pilot</p><p>We are working with partners to validate data, refine policies, and demonstrate the platform’s value to inform future regional and national deployment.</p></div></div><nav aria-label="Executive overview actions"><a href="/drone/console">Open planning console</a><a href="/drone/explore">Explore published map</a><a href="/drone/console">Review methodology in console</a><a href="/downloads/guyana-drone-executive-overview.md" download>Download overview</a><a href="mailto:info@hpsgeospatial.com">Contact HPS Geospatial</a></nav></section>
     </main>
   );
 }

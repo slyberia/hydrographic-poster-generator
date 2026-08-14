@@ -44,9 +44,6 @@ export default function DroneLandingPage() {
               <Link href="/drone/console" className="drone-primary-link">
                 Open Planning Console
               </Link>
-              <Link href="/drone/methodology" className="drone-secondary-link">
-                Review Methodology
-              </Link>
             </div>
             <p className="drone-hero-caption">
               Current pilot: Region 4, Demerara-Mahaica, Guyana
@@ -138,7 +135,7 @@ export default function DroneLandingPage() {
                 condition, including temporary restrictions, weather, aircraft
                 condition, and operator qualifications.
               </p>
-              <Link href="/drone/methodology">Read how classifications are calculated</Link>
+              <Link href="/drone/console">Review classifications in the Planning Console</Link>
             </div>
           </div>
         </section>

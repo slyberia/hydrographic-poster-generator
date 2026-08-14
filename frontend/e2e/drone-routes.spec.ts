@@ -57,23 +57,18 @@ for (const viewport of VIEWPORTS) {
   });
 }
 
-test("Methodology is server-rendered and legacy guide URL redirects", async ({
+test("Methodology is available through the Planning Console", async ({
   page,
   request,
 }) => {
-  const response = await request.get("/drone/methodology");
-  const html = await response.text();
-
-  expect(html).toContain("How the zoning model works");
-  expect(html).toContain("Decision support, not flight authorization");
+  const response = await request.get("/drone/methodology", { maxRedirects: 0 });
+  expect(response.status()).toBeGreaterThanOrEqual(300);
+  expect(response.status()).toBeLessThan(400);
+  expect(response.headers().location).toBe("/drone/console");
 
   await page.goto("/drone/guide");
-  await expect(page).toHaveURL(/\/drone\/methodology$/);
-  await expect(page.getByRole("heading", { name: "How the zoning model works" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Open the Planning Console" })).toHaveAttribute(
-    "href",
-    "/drone/console",
-  );
+  await expect(page).toHaveURL(/\/drone\/console$/);
+  await expect(page.getByRole("button", { name: "How this console works" })).toBeVisible();
 });
 
 test("Public navigation has visible keyboard focus", async ({ page }) => {

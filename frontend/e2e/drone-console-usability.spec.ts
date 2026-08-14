@@ -47,7 +47,7 @@ test("collapsing the rail hands the workspace to the map, and it reopens", async
   await expect(page.getByRole("button", { name: "Run zoning model", exact: true })).toBeVisible();
 });
 
-test("the rail links to the dashboard and methodology", async ({ page }) => {
+test("the rail links to the dashboard and opens methodology in-console", async ({ page }) => {
   await openConsole(page);
 
   await expect(page.getByRole("link", { name: "Dashboard" })).toHaveAttribute(
@@ -58,10 +58,8 @@ test("the rail links to the dashboard and methodology", async ({ page }) => {
     "href",
     "/drone/explore",
   );
-  await expect(page.getByRole("link", { name: "Methodology" })).toHaveAttribute(
-    "href",
-    "/drone/methodology",
-  );
+  await page.getByRole("button", { name: "Methodology" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
 });
 
 test("admins can approve and publish completed runs", async ({ page }) => {

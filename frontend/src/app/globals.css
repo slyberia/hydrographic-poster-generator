@@ -1726,6 +1726,18 @@ body {
 }
 .drone-console .rail-nav a:hover { text-decoration: underline; }
 .drone-console .rail-nav a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.drone-console .rail-nav button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--action);
+  cursor: pointer;
+}
+.drone-console .rail-nav button:hover { text-decoration: underline; }
+.drone-console .rail-nav button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
 .drone-console .railgroup {
   border: 1px solid var(--hairline);
