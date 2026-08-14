@@ -215,7 +215,7 @@ export default function ControlRail(props: {
           <Link href="/drone">Overview</Link>
           <Link href="/drone/explore">Public Explorer</Link>
           <Link href="/drone/dashboard">Dashboard</Link>
-          <Link href="/drone/methodology">Methodology</Link>
+          <button type="button" onClick={props.onOpenGuide}>Methodology</button>
         </nav>
       </header>
 

@@ -153,7 +153,6 @@ function Dashboard({ onSignOut }: { onSignOut?: () => Promise<void> }) {
               <Link href="/drone">Overview</Link>
               <Link href="/drone/explore">Public Explorer</Link>
               <Link href="/drone/console">Console</Link>
-              <Link href="/drone/methodology">Methodology</Link>
             </nav>
           </div>
           {onSignOut && (

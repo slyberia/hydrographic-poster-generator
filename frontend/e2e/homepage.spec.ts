@@ -81,8 +81,8 @@ for (const viewport of VIEWPORTS) {
       page.getByRole("link", { name: "Open the Studio" }),
     ).toHaveAttribute("href", "/studio");
     await expect(
-      page.getByRole("link", { name: "Read the methodology" }),
-    ).toHaveAttribute("href", "/drone/methodology");
+      page.getByRole("link", { name: "Open methodology in Planning Console" }),
+    ).toHaveAttribute("href", "/drone/console");
 
     // Both products are first-viewport signals: on desktop the cards sit
     // side by side within the first screen; on mobile they stack, so at least

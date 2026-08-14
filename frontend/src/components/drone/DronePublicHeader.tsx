@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 type DronePublicHeaderProps = {
-  active: "home" | "explore" | "dashboard" | "methodology";
+  active: "home" | "explore" | "dashboard";
 };
 
 export default function DronePublicHeader({ active }: DronePublicHeaderProps) {
@@ -31,12 +31,6 @@ export default function DronePublicHeader({ active }: DronePublicHeaderProps) {
           aria-current={active === "dashboard" ? "page" : undefined}
         >
           Dashboard
-        </Link>
-        <Link
-          href="/drone/methodology"
-          aria-current={active === "methodology" ? "page" : undefined}
-        >
-          Methodology
         </Link>
         <Link href="/drone/console" className="drone-header-action">
           Planning Console
