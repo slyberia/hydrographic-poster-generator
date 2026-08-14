@@ -92,6 +92,29 @@ function dissolvedGeojson() {
   };
 }
 
+function referenceGeojson(key: string) {
+  const points: Record<string, [number, number]> = {
+    airports: [-58.1, 6.61], schools: [-58.11, 6.615], healthcare: [-58.115, 6.605],
+  };
+  const point = points[key];
+  return {
+    type: "FeatureCollection",
+    features: point ? [{ type: "Feature", geometry: { type: "Point", coordinates: point }, properties: { name: `Mock ${key}`, category: key } }] : [],
+  };
+}
+
+const REFERENCE_CONFIG = {
+  version: "milestone-c-v1",
+  layers: [
+    { key: "airports", display_name: "Airports", group: "aviation", min_zoom: 8, label_min_zoom: 11, default_enabled: true, loading: "eager" },
+    { key: "runways", display_name: "Runways", group: "aviation", min_zoom: 11, label_min_zoom: 13, default_enabled: true, loading: "lazy" },
+    { key: "runway_safeguarding", display_name: "Runway Safeguarding", group: "aviation", min_zoom: 10, label_min_zoom: 13, default_enabled: true, loading: "lazy" },
+    { key: "airport_notification", display_name: "Airport Notification Area", group: "aviation", min_zoom: 9, label_min_zoom: 12, default_enabled: false, loading: "lazy" },
+    { key: "schools", display_name: "Schools", group: "infrastructure", min_zoom: 13, label_min_zoom: 15, default_enabled: false, loading: "lazy" },
+    { key: "healthcare", display_name: "Healthcare", group: "infrastructure", min_zoom: 12, label_min_zoom: 14, default_enabled: false, loading: "lazy" },
+  ],
+};
+
 function report(h3: string) {
   const cell = CELLS.find((c) => c.h3 === h3) ?? CELLS[0];
   return {
@@ -146,6 +169,9 @@ export async function installMockBackend(page: Page): Promise<MockState> {
         published: null,
       });
     }
+    if (path === "/public/drone/reference-layers/config") return json(route, REFERENCE_CONFIG);
+    const reference = path.match(/^\/public\/drone\/reference-layers\/([^/]+)$/);
+    if (reference) return json(route, referenceGeojson(reference[1]));
 
     const lifecycle = path.match(/^\/runs\/([^/]+)\/(approve|publish|archive)$/);
     if (lifecycle && method === "POST") {

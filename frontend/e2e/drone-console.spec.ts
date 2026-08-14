@@ -64,6 +64,20 @@ test("Milestone B: analytical cells are lazy-loaded once and reused", async ({ p
   await expect.poll(() => state.requested.filter((p) => p === "/runs/run-1/geojson").length).toBe(1);
 });
 
+test("Milestone C: reference layers are controlled independently and cached", async ({ page }) => {
+  const state = await openConsole(page);
+  await expect(page.getByRole("checkbox", { name: "Airports" })).toBeChecked();
+  await expect(page.getByRole("checkbox", { name: "Schools" })).not.toBeChecked();
+  await expect.poll(() => state.requested.filter((p) => p === "/public/drone/reference-layers/airports").length).toBe(1);
+  expect(state.requested).not.toContain("/public/drone/reference-layers/schools");
+
+  for (let i = 0; i < 5; i += 1) await page.locator(".leaflet-control-zoom-in").click();
+  await page.getByRole("checkbox", { name: "Schools" }).click();
+  await page.getByRole("checkbox", { name: "Schools" }).click();
+  await page.getByRole("checkbox", { name: "Schools" }).click();
+  await expect.poll(() => state.requested.filter((p) => p === "/public/drone/reference-layers/schools").length).toBe(1);
+});
+
 test("QA-2: trigger sweep — progress advances, sidebar unchanged", async ({ page }) => {
   await openConsole(page);
   await triggerSweep(page);
