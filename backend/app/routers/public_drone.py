@@ -13,9 +13,25 @@ import asyncpg
 
 from app.database import get_db_pool
 from app.services import drone_publication_service as pub
+from app.services import drone_reference_service as reference
 from app.services.usage_limits import usage_limit
 
 router = APIRouter()
+
+
+@router.get("/reference-layers/config", tags=["Drone Public"], dependencies=[Depends(usage_limit("light"))])
+async def public_reference_config():
+    return await reference.get_reference_layer_config()
+
+
+@router.get("/reference-layers/{layer_key}", tags=["Drone Public"], dependencies=[Depends(usage_limit("layer"))])
+async def public_reference_layer(layer_key: str, response: Response, pool: asyncpg.Pool = Depends(get_db_pool)):
+    try:
+        payload = await reference.get_reference_layer(pool, layer_key)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Unknown reference layer: {layer_key}")
+    response.headers["Cache-Control"] = "public, max-age=3600, stale-while-revalidate=86400"
+    return payload
 
 
 @router.get("/config", tags=["Drone Public"], dependencies=[Depends(usage_limit("light"))])

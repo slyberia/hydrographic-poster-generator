@@ -34,6 +34,16 @@ export interface PublicConfig {
   published: PublishedMeta | null;
 }
 
+export interface ReferenceLayerDefinition {
+  key: string;
+  display_name: string;
+  group: "aviation" | "infrastructure";
+  min_zoom: number;
+  label_min_zoom: number;
+  default_enabled: boolean;
+  loading: "eager" | "lazy";
+}
+
 export interface PublicReport {
   h3_index: string;
   zone: Zone;
@@ -90,5 +100,18 @@ export const publicDroneApi = {
   },
   getLayer: (artifactUrl: string, cacheKey: string) =>
     publicDroneApi.getZoning(artifactUrl, cacheKey),
+  getReferenceConfig: () => get<{ layers: ReferenceLayerDefinition[]; version: string }>("/public/drone/reference-layers/config"),
+  getReferenceLayer: async (key: string) => {
+    const cacheKey = `drone-reference:${key}`;
+    if (typeof window !== "undefined") {
+      const cached = window.sessionStorage.getItem(cacheKey);
+      if (cached) return JSON.parse(cached) as GeoJSON.FeatureCollection;
+    }
+    const fc = await get<GeoJSON.FeatureCollection>(`/public/drone/reference-layers/${encodeURIComponent(key)}`, { cache: "force-cache" });
+    if (typeof window !== "undefined") {
+      try { window.sessionStorage.setItem(cacheKey, JSON.stringify(fc)); } catch { /* private mode/quota */ }
+    }
+    return fc;
+  },
   getReport: (h3: string) => get<PublicReport>(`/public/drone/report/${encodeURIComponent(h3)}`),
 };

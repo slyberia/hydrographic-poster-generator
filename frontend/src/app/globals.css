@@ -497,6 +497,8 @@ body {
 }
 
 .drone-console .mapwrap { position: relative; height: 100%; width: 100%; }
+.drone-console .shell > .mapwrap { min-height: 320px; }
+.drone-console .mapview-root { min-height: 320px; }
 
 /* ---------- type ---------- */
 .drone-console .brand {
@@ -711,6 +713,38 @@ body {
   margin-bottom: 8px;
 }
 .drone-console .modetoggle { margin-top: 10px; }
+
+.drone-console .reference-controls {
+  margin-top: 16px;
+  border-top: 1px solid var(--hairline);
+  padding-top: 12px;
+}
+.drone-console .reference-group + .reference-group { margin-top: 12px; }
+.drone-console .reference-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  font-size: 0.82rem;
+  color: var(--ink);
+}
+.drone-console .reference-row input { accent-color: var(--ink); }
+.drone-console .reference-row small {
+  margin-left: auto;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  text-align: right;
+}
+.drone-console .reference-marker {
+  background: transparent;
+  border: 0;
+}
+.drone-console .reference-marker svg {
+  display: block;
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 1px 1px rgba(20, 30, 25, 0.18));
+}
 .drone-console .deltabtn {
   flex: 1;
   font: inherit;

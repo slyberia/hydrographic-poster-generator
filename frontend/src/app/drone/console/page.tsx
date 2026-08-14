@@ -17,6 +17,8 @@ import ReportDrawer from "@/components/drone/ReportDrawer";
 import GuideDialog from "@/components/drone/GuideDialog";
 import { MapDisplayMode } from "@/components/drone/SensitivityPanel";
 import { useSensitivity } from "@/lib/useSensitivity";
+import { useReferenceLayers } from "@/lib/referenceLayers";
+import type { ReferenceLayerKey } from "@/lib/referenceLayers";
 
 const GUIDE_SEEN_KEY = "drone.guideSeen.v1";
 
@@ -24,6 +26,9 @@ const GUIDE_SEEN_KEY = "drone.guideSeen.v1";
 const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
 
 const CONSOLE_ROLES = new Set(["viewer", "analyst", "admin"]);
+const CONSOLE_REFERENCE_DEFAULTS: Partial<Record<ReferenceLayerKey, boolean>> = {
+  airports: true, runways: true, runway_safeguarding: true,
+};
 type AppRole = "viewer" | "analyst" | "admin";
 
 export default function Page() {
@@ -109,6 +114,7 @@ function Console({
   const viewportRef = useRef<(() => ViewportSnapshot) | null>(null);
 
   const sensitivity = useSensitivity(activeRun);
+  const reference = useReferenceLayers({ enabledDefaults: CONSOLE_REFERENCE_DEFAULTS });
   const canRun = appRole === "analyst" || appRole === "admin";
   const canManagePublication = appRole === "admin";
 
@@ -487,6 +493,11 @@ function Console({
           displayMode={displayMode}
           geometryMode={geometryMode}
           onGeometryMode={selectGeometryMode}
+          referenceLayerDefinitions={reference.definitions}
+          referenceLayerEnabled={reference.enabled}
+          referenceLayerLoading={reference.loading}
+          referenceLayerZoom={reference.zoom}
+          onReferenceLayerToggle={reference.toggle}
           onRunModel={runModel}
           onSelectRun={selectRun}
           onDeleteRun={deleteRun}
@@ -520,6 +531,8 @@ function Console({
             focusPoint={focusPoint}
             viewportRef={viewportRef}
             fitBoundsKey={activeRun}
+            referenceLayers={reference.visible}
+            onZoomChange={reference.setZoom}
           />
           {report && (
             <ReportDrawer

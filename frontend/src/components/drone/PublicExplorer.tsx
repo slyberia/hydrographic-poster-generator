@@ -23,11 +23,16 @@ import { ZONE_FILL, ZONE_LABELS } from "@/lib/zoneTheme";
 import GeoSearch from "@/components/drone/GeoSearch";
 import PublicReportDrawer from "@/components/drone/PublicReportDrawer";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
+import ReferenceLayerControls from "@/components/drone/ReferenceLayerControls";
+import { useReferenceLayers, type ReferenceLayerKey } from "@/lib/referenceLayers";
 
 // Leaflet touches `window`; render the map client-side only.
 const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
 
 const ZONE_ORDER: Zone[] = ["PROHIBITED", "RESTRICTED", "CONDITIONAL", "SUITABLE"];
+const PUBLIC_REFERENCE_DEFAULTS: Partial<Record<ReferenceLayerKey, boolean>> = {
+  airports: true, runways: true, runway_safeguarding: true,
+};
 
 type Phase = "loading" | "ready" | "unavailable" | "error";
 type AppRole = "viewer" | "analyst" | "admin";
@@ -55,6 +60,10 @@ export default function PublicExplorer() {
   const [focusPoint, setFocusPoint] = useState<{ lat: number; lon: number } | null>(null);
   const [hiddenZones, setHiddenZones] = useState<Set<Zone>>(new Set());
   const [appRole, setAppRole] = useState<AppRole | null>(null);
+  const reference = useReferenceLayers({
+    allowed: ["airports", "runways", "runway_safeguarding", "airport_notification", "schools", "healthcare"],
+    enabledDefaults: PUBLIC_REFERENCE_DEFAULTS,
+  });
 
   const urlCellHandled = useRef(false);
 
@@ -253,6 +262,13 @@ export default function PublicExplorer() {
               <p className="muted">Methodology {published.methodology_version}</p>
             </section>
           )}
+          <ReferenceLayerControls
+            definitions={reference.definitions}
+            enabled={reference.enabled}
+            loading={reference.loading}
+            zoom={reference.zoom}
+            onToggle={reference.toggle}
+          />
         </aside>
 
         <div className="mapwrap">
@@ -263,6 +279,8 @@ export default function PublicExplorer() {
             loading={phase === "loading"}
             focusPoint={focusPoint}
             fitBoundsKey={published?.published_at ?? null}
+            referenceLayers={reference.visible}
+            onZoomChange={reference.setZoom}
           />
 
           {phase === "unavailable" && (

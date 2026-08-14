@@ -16,6 +16,8 @@ import { droneApi as api, DashboardData, DashZone, Zone } from "@/lib/droneApi";
 import { publicDroneApi } from "@/lib/publicDroneApi";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 import { ZONE_CSS, ZONE_LABELS } from "@/lib/zoneTheme";
+import ReferenceLayerControls from "@/components/drone/ReferenceLayerControls";
+import { useReferenceLayers } from "@/lib/referenceLayers";
 
 const DASH_ROLES = new Set(["viewer", "analyst", "admin"]);
 const ZONE_ORDER: Zone[] = ["PROHIBITED", "RESTRICTED", "CONDITIONAL", "SUITABLE"];
@@ -192,6 +194,10 @@ function DashboardBody({ data }: { data: DashboardData }) {
   const [mapError, setMapError] = useState<string | null>(null);
   const [reportNote, setReportNote] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const reference = useReferenceLayers({
+    allowed: ["airports", "runways", "runway_safeguarding"],
+    enabledDefaults: { airports: true },
+  });
 
   const { published, latest_run, run_history, sensitivity, freshness } = data;
   const runOptions = [
@@ -325,6 +331,8 @@ function DashboardBody({ data }: { data: DashboardData }) {
               geometryMode="dissolved"
               loading={mapPhase === "loading"}
               fitBoundsKey={data.freshness.published_at}
+              referenceLayers={reference.visible}
+              onZoomChange={reference.setZoom}
             />
             {mapPhase === "idle" && (
               <div className="map-overlay map-overlay--empty" role="status">
@@ -346,6 +354,14 @@ function DashboardBody({ data }: { data: DashboardData }) {
           <aside className="dash-selection" aria-live="polite">
             <p className="sectionlabel">Map detail</p>
             <p className="statusline">{reportNote ?? "Published zoning areas are shown here. Use the Planning Console for analytical cells."}</p>
+            <ReferenceLayerControls
+              definitions={reference.definitions}
+              enabled={reference.enabled}
+              loading={reference.loading}
+              zoom={reference.zoom}
+              onToggle={reference.toggle}
+              compact
+            />
           </aside>
         </div>
       </section>

@@ -104,6 +104,19 @@ async function installPublicMock(page: Page, opts: MockOpts = {}) {
       }
       return json(route, opts.publishedNull ? { ...CONFIG, published: null } : CONFIG);
     }
+    if (path === "/public/drone/reference-layers/config") {
+      return json(route, {
+        version: "milestone-c-v1",
+        layers: [
+          { key: "airports", display_name: "Airports", group: "aviation", min_zoom: 8, label_min_zoom: 11, default_enabled: true, loading: "eager" },
+          { key: "runways", display_name: "Runways", group: "aviation", min_zoom: 11, label_min_zoom: 13, default_enabled: true, loading: "lazy" },
+          { key: "runway_safeguarding", display_name: "Runway Safeguarding", group: "aviation", min_zoom: 10, label_min_zoom: 13, default_enabled: true, loading: "lazy" },
+          { key: "schools", display_name: "Schools", group: "infrastructure", min_zoom: 13, label_min_zoom: 15, default_enabled: false, loading: "lazy" },
+        ],
+      });
+    }
+    const reference = path.match(/^\/public\/drone\/reference-layers\/([^/]+)$/);
+    if (reference) return json(route, { type: "FeatureCollection", features: [] });
     if (path === "/public/drone/zoning") return json(route, zoning());
     if (path === "/public/drone/dissolved") return json(route, dissolved());
     const rep = path.match(/^\/public\/drone\/report\/([^/]+)$/);

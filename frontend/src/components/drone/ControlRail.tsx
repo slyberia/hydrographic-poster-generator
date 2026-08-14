@@ -14,6 +14,9 @@ import { SweepPhase } from "@/lib/useSensitivity";
 import InfoTip from "@/components/drone/InfoTip";
 import GeoSearch from "@/components/drone/GeoSearch";
 import { FACTOR_INFO, OPERATION_INFO, WEIGHTING_INFO } from "@/lib/droneInfo";
+import ReferenceLayerControls from "@/components/drone/ReferenceLayerControls";
+import type { ReferenceLayerDefinition } from "@/lib/publicDroneApi";
+import type { ReferenceLayerKey } from "@/lib/referenceLayers";
 
 export type DroneDownloadFormat = "png" | "svg" | "pdf" | "geojson";
 export type GeoJSONDownloadScope = "viewport" | "full";
@@ -115,6 +118,11 @@ export default function ControlRail(props: {
   displayMode: MapDisplayMode;
   geometryMode: GeometryDisplayMode;
   onGeometryMode: (mode: GeometryDisplayMode) => void;
+  referenceLayerDefinitions: ReferenceLayerDefinition[];
+  referenceLayerEnabled: Set<ReferenceLayerKey>;
+  referenceLayerLoading: Set<string>;
+  referenceLayerZoom: number;
+  onReferenceLayerToggle: (key: ReferenceLayerKey) => void;
   onRunModel: (label: string, overrides?: Record<string, number>) => void;
   onSelectRun: (runId: string) => void;
   onDeleteRun: (runId: string) => void;
@@ -426,6 +434,13 @@ export default function ControlRail(props: {
             stats={stats}
             hiddenZones={props.hiddenZones}
             onToggleZone={props.onToggleZone}
+          />
+          <ReferenceLayerControls
+            definitions={props.referenceLayerDefinitions}
+            enabled={props.referenceLayerEnabled}
+            loading={props.referenceLayerLoading}
+            zoom={props.referenceLayerZoom}
+            onToggle={props.onReferenceLayerToggle}
           />
         </section>
       </Group>

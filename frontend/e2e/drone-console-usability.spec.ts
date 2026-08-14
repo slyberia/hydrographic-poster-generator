@@ -80,9 +80,20 @@ test("admins can approve and publish completed runs", async ({ page }) => {
 test("Escape closes the selected-cell report", async ({ page }) => {
   await openConsole(page);
 
+  // The report is backed by the rendered cell layer. Complete the same small
+  // mocked sweep used by the stability tests so this assertion is not racing
+  // the initial run-layer fetch.
+  await page.getByRole("button", { name: "Run sensitivity analysis" }).click();
+  await expect(page.getByText("66.67% of cells flipped zone at least once", { exact: false })).toBeVisible({ timeout: 15_000 });
+  await page.getByRole("radio", { name: "Analytical Cells" }).click();
+
   const map = page.locator(".mapwrap .leaflet-container");
+  await expect(page.locator(".leaflet-overlay-pane canvas")).toHaveCount(1);
   const box = (await map.boundingBox())!;
-  await page.mouse.click(box.x + box.width * 0.4, box.y + box.height * 0.3);
+  // Keep the click inside the scored cell but away from the Milestone C
+  // airport marker, which is intentionally interactive and can otherwise
+  // consume the map click.
+  await page.mouse.click(box.x + box.width * 0.3, box.y + box.height * 0.3);
 
   const drawer = page.getByRole("dialog", { name: "Location report" });
   await expect(drawer).toBeVisible();
