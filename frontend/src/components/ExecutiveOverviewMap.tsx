@@ -2,14 +2,29 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { publicDroneApi } from "@/lib/publicDroneApi";
 
 const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
 
-export default function ExecutiveOverviewMap() {
+type ExecutiveOverviewMapProps = {
+  variant?: "drone" | "platform";
+};
+
+function formatPublishedAt(value: string | null) {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+export default function ExecutiveOverviewMap({ variant = "drone" }: ExecutiveOverviewMapProps) {
   const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [publishedAt, setPublishedAt] = useState<string | null>(null);
-  const [error, setError] = useState(false);
+  const [errorVersion, setErrorVersion] = useState<number | null>(null);
+  const [requestVersion, setRequestVersion] = useState(0);
+  const [resetVersion, setResetVersion] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -24,23 +39,36 @@ export default function ExecutiveOverviewMap() {
         }
       })
       .catch(() => {
-        if (!cancelled) setError(true);
+        if (!cancelled) setErrorVersion(requestVersion);
       });
     return () => { cancelled = true; };
-  }, []);
+  }, [requestVersion]);
+
+  const publicationLabel = formatPublishedAt(publishedAt);
+  const error = errorVersion === requestVersion;
 
   return (
-    <div className="overview-map" aria-label="Interactive published Region 4 zoning map">
+    <div className={`overview-map overview-map--${variant}`} aria-label="Interactive published Region 4 zoning map">
       <MapView
         geojson={geojson}
         geometryMode="dissolved"
         loading={!geojson && !error}
-        fitBoundsKey={publishedAt}
+        fitBoundsKey={publishedAt ? `${publishedAt}:${resetVersion}` : null}
       />
+      <div className="overview-map-toolbar" aria-label="Map status and actions">
+        <span>{publicationLabel ? `Published ${publicationLabel}` : "Published planning map"}</span>
+        <button type="button" onClick={() => setResetVersion((value) => value + 1)} disabled={!geojson}>
+          Reset view
+        </button>
+      </div>
       {error && (
         <div className="overview-map-status" role="status">
           <strong>Published map preview unavailable</strong>
-          <span>Open the platform to inspect the current planning map.</span>
+          <span>The planning map could not be retrieved just now.</span>
+          <div>
+            <button type="button" onClick={() => setRequestVersion((value) => value + 1)}>Try again</button>
+            <Link href="/drone/explore">Open Public Explorer</Link>
+          </div>
         </div>
       )}
       <span className="overview-map-hint">Pan and zoom the published planning view</span>

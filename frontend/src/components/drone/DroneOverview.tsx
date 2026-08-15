@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { DroneMark } from "@/components/brand/DroneIdentity";
 import NumberBadge from "@/components/design/NumberBadge";
+import CapabilityPreview from "@/components/drone/CapabilityPreview";
 import DronePublicHeader from "@/components/drone/DronePublicHeader";
 import ExecutiveOverviewMap from "@/components/ExecutiveOverviewMap";
 
@@ -27,8 +27,8 @@ const MODEL_INPUTS = [
 ] as const;
 
 const CAPABILITIES = [
-  ["Configurable policy-driven analysis", "Evaluate locations using configurable weights, buffers, thresholds, and criteria tailored to your goals.", "model", "Scenario controls"],
-  ["Public, administrative, and analytical views", "Separate interfaces for the public, administrators, and analysts with role-based controls.", "admin", "Role-based workspace"],
+  ["Configurable policy-driven analysis", "Evaluate locations using configurable weights, buffers, thresholds, and criteria tailored to your goals.", "scenario", "Scenario controls"],
+  ["Public, administrative, and analytical views", "Separate interfaces for the public, administrators, and analysts with role-based controls.", "workspace", "Role-based workspace"],
   ["Interactive spatial classification", "Explore results on an interactive map with clear classification, layer control, and location insights.", "map", "Published map view"],
   ["Reporting and data export", "Generate reports and export data in common formats for planning, sharing, and GIS workflows.", "export", "Planning outputs"],
 ] as const;
@@ -52,13 +52,13 @@ const APPLICATIONS = [
 ] as const;
 
 const AUDIENCES = [
-  ["Government ministries and agencies", "/posters/guyana-parchment.webp"],
-  ["Regional Councils and NDCs", "/posters/guyana-obsidian.webp"],
-  ["Civil aviation and public safety", "/drone/region-4-zoning.png"],
-  ["Utilities and infrastructure operators", "/posters/guyana-abyss.webp"],
-  ["Planning and engineering consultancies", "/posters/guyana-parchment.webp"],
-  ["Developers and commercial drone operators", "/drone/region-4-zoning.png"],
-  ["Environmental and emergency organizations", "/posters/guyana-obsidian.webp"],
+  ["Government ministries and agencies", "Policy coordination", "government"],
+  ["Regional Councils and NDCs", "Local planning", "regional"],
+  ["Civil aviation and public safety", "Operational context", "aviation"],
+  ["Utilities and infrastructure operators", "Asset coordination", "utilities"],
+  ["Planning and engineering consultancies", "Site review", "planning"],
+  ["Developers and commercial drone operators", "Location guidance", "operators"],
+  ["Environmental and emergency organizations", "Priority response", "environment"],
 ] as const;
 
 export default function DroneOverview() {
@@ -154,10 +154,7 @@ export default function DroneOverview() {
         <div className="capability-grid">
           {CAPABILITIES.map(([title, text, kind, label]) => (
             <article className="capability-card" key={title}>
-              <div className={`capability-visual ${kind}`}>
-                <Image src="/drone/region-4-zoning.png" alt="" fill sizes="(max-width: 720px) 100vw, 25vw" />
-                <span className="capability-label">{label}</span>
-              </div>
+              <div className="capability-visual"><CapabilityPreview kind={kind} /><span className="capability-label">{label}</span></div>
               <h3>{title}</h3>
               <p>{text}</p>
               {kind === "export" ? <span className="status-note">PDF and GeoJSON exports are planned for a future release.</span> : null}
@@ -188,12 +185,12 @@ export default function DroneOverview() {
       <section className="section audiences-section" aria-labelledby="audiences-title">
         <h2 id="audiences-title">Who it serves</h2>
         <div className="audience-grid">
-          {AUDIENCES.map(([audience, image]) => (
-            <div className="audience-card" key={audience}>
-              <span className="audience-image"><Image src={image} alt="" fill sizes="(max-width: 720px) 100vw, 15vw" /></span>
-              <span aria-hidden="true">⌁</span>
+          {AUDIENCES.map(([audience, purpose, kind], index) => (
+            <article className={`audience-card audience-card--${kind}`} key={audience}>
+              <span className="audience-visual" aria-hidden="true"><b>{String(index + 1).padStart(2, "0")}</b><i /></span>
+              <span className="audience-purpose">{purpose}</span>
               <strong>{audience}</strong>
-            </div>
+            </article>
           ))}
         </div>
       </section>

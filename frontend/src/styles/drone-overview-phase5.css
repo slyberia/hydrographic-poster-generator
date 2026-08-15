@@ -1,0 +1,179 @@
+.overview-page .capability-visual {
+  display: block;
+  min-height: 9rem;
+  padding: 1rem;
+  border: 1px solid rgba(32, 56, 44, 0.15);
+  background: #f5f2e9;
+}
+
+.overview-page .capability-label {
+  display: block;
+  margin-top: 0.8rem;
+  color: #345743;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.capability-preview {
+  display: grid;
+  min-height: 5.8rem;
+  gap: 0.6rem;
+  align-content: center;
+}
+
+.preview-topline,
+.preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.preview-chip,
+.preview-line,
+.preview-slider,
+.preview-zone,
+.preview-button,
+.preview-avatar,
+.preview-mark {
+  display: block;
+  border-radius: 999px;
+  background: #d5dfd3;
+}
+
+.preview-chip { width: 3.5rem; height: 0.65rem; background: #385f46; }
+.preview-mark { width: 1.2rem; height: 1.2rem; background: #b58b39; }
+.preview-line { height: 0.45rem; flex: 1; }
+.preview-line--short { max-width: 46%; }
+.preview-slider { height: 0.32rem; flex: 1; background: #cad5ca; }
+.preview-slider::before { display: block; width: 62%; height: 100%; border-radius: inherit; background: #385f46; content: ""; }
+.preview-avatar { width: 2rem; height: 2rem; border-radius: 50%; background: #385f46; }
+.preview-button { width: 2.8rem; height: 1.15rem; border-radius: 0.2rem; background: #b58b39; }
+.preview-zone { height: 2rem; border-radius: 0.15rem; }
+.preview-zone--green { background: #5b8765; }
+.preview-zone--amber { background: #d4a951; }
+.preview-zone--red { background: #a94d3d; }
+.preview-map { display: grid; grid-template-columns: 1fr 1.1fr 0.8fr; gap: 0.25rem; }
+.preview-report { gap: 0.45rem; }
+.preview-report .preview-line:first-child { background: #385f46; }
+
+.overview-page .audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.overview-page .audience-card {
+  display: grid;
+  min-height: 13rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(32, 56, 44, 0.18);
+  background: #fffdf7;
+  color: #153529;
+  overflow: hidden;
+}
+
+.overview-page .audience-card--government .audience-visual { background: #e0e9dc; }
+.overview-page .audience-card--regional .audience-visual { background: #dce9e7; }
+.overview-page .audience-card--aviation .audience-visual { background: #f0e5c8; }
+.overview-page .audience-card--utilities .audience-visual { background: #e8dfd1; }
+.overview-page .audience-card--planning .audience-visual { background: #e2e5d8; }
+.overview-page .audience-card--operators .audience-visual { background: #d9e4ec; }
+.overview-page .audience-card--environment .audience-visual { background: #dfeeda; }
+
+.overview-page .audience-visual {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4.2rem;
+  padding: 0.75rem;
+  border-radius: 0.35rem;
+}
+
+.overview-page .audience-visual b {
+  color: #385f46;
+  font-size: 1.25rem;
+  letter-spacing: 0.06em;
+}
+
+.overview-page .audience-visual i {
+  display: block;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 2px solid #385f46;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.35rem transparent;
+}
+
+.overview-page .audience-purpose {
+  align-self: end;
+  margin-top: 1rem;
+  color: #53715e;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.overview-page .audience-card strong {
+  margin-top: 0.45rem;
+  font-size: 1.05rem;
+  line-height: 1.15;
+}
+
+.overview-map-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid rgba(32, 56, 44, 0.14);
+  background: rgba(255, 253, 247, 0.96);
+}
+
+.overview-map-status {
+  display: flex;
+  flex-direction: column;
+  color: #345743;
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.overview-map-status div { color: #6c746b; font-size: 0.66rem; }
+
+.overview-map-toolbar button,
+.overview-map__fallback button {
+  min-height: 2rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #385f46;
+  background: #fffdf7;
+  color: #173f30;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.overview-map-toolbar button:disabled { cursor: default; opacity: 0.45; }
+
+.overview-map__fallback {
+  display: grid;
+  min-height: 16rem;
+  align-content: center;
+  justify-items: start;
+  gap: 0.8rem;
+  padding: 1.5rem;
+  background: #edf0e8;
+  color: #173f30;
+}
+
+.overview-map__fallback a { color: #173f30; font-weight: 700; }
+
+@media (max-width: 760px) {
+  .overview-page .audience-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 520px) {
+  .overview-page .audience-grid { grid-template-columns: 1fr; }
+  .overview-map-toolbar { align-items: flex-start; }
+}

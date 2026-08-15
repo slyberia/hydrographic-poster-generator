@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import DroneOverview from "@/components/drone/DroneOverview";
 import "@/app/executive-overview/executive-overview.css";
+import "@/styles/drone-overview-phase5.css";
 
 export const metadata: Metadata = {
   title: "Drone Zoning Decision Support",
