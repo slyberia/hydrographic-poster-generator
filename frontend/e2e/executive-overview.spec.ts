@@ -32,8 +32,8 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test("executive overview presents an interactive map and consistent content blocks", async ({ page }) => {
-  await page.goto("/executive-overview");
+test("Drone homepage presents the merged overview with an interactive map", async ({ page }) => {
+  await page.goto("/drone");
 
   await expect(page.getByRole("heading", { name: "Drone Zoning Decision Support" })).toBeVisible();
   await expect(page.locator(".overview-map .leaflet-container")).toBeVisible();
@@ -42,9 +42,9 @@ test("executive overview presents an interactive map and consistent content bloc
   await expect(page.getByText("HPS Geospatial platform", { exact: false })).toHaveCount(0);
 });
 
-test("executive overview stays contained on mobile", async ({ page }) => {
+test("Drone homepage stays contained on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/executive-overview");
+  await page.goto("/drone");
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );

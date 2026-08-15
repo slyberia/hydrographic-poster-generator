@@ -1,26 +1,21 @@
-import Image from "next/image";
 import Link from "next/link";
+import HpsLockup from "@/components/brand/HpsLockup";
+import DroneIdentity from "@/components/brand/DroneIdentity";
 
-type PlatformRoute = "platform" | "poster" | "drone" | "executive" | "docs";
+type PlatformRoute = "platform" | "poster" | "drone" | "docs";
 const NAV_ITEMS: Array<{ href: string; label: string; route: PlatformRoute }> = [
   { href: "/poster", label: "Poster Generator", route: "poster" },
   { href: "/drone", label: "Drone Zoning", route: "drone" },
-  { href: "/executive-overview", label: "Executive Overview", route: "executive" },
   { href: "/docs", label: "Documentation", route: "docs" },
 ];
 type PlatformHeaderProps = { current?: PlatformRoute };
 
 export default function PlatformHeader({ current = "platform" }: PlatformHeaderProps) {
   return (
-    <header className="hps-brandbar">
+    <header className="hps-brandbar hps-theme hps-theme--platform">
       <div className="hps-brandbar__inner">
-        <Link className="hps-brandbar__lockup" href="/" aria-label="HPS Geospatial home">
-          <Image src="/hps/hps-lockup-horizontal.svg" alt="HPS Geospatial" width={420} height={78} priority />
-        </Link>
-        <div className="hps-brandbar__product" aria-label="Drone Zoning, Region 4 pilot">
-          <span className="hps-brandbar__product-mark" aria-hidden="true" />
-          <span>Drone Zoning<small>Region 4 pilot</small></span>
-        </div>
+        <HpsLockup className="hps-brandbar__lockup" priority />
+        <DroneIdentity className="hps-brandbar__product" />
       </div>
       <nav className="hps-portal__nav" aria-label="HPS Geospatial">
         <div className="hps-portal__nav-inner">

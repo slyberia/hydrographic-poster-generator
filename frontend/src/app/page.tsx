@@ -9,14 +9,14 @@ export const metadata: Metadata = {
 };
 
 const PRODUCTS = [
-  { key: "drone", eyebrow: "Decision support", title: "Drone Zoning", summary: "A configurable, policy-driven platform for evaluating operating suitability and explaining spatial decisions across Region 4.", image: "/drone/region-4-zoning.png", href: "/drone", linkLabel: "Open Drone Zoning" },
+  { key: "drone", eyebrow: "Decision support", title: "Drone Zoning", summary: "A configurable, policy-driven platform for evaluating operating suitability and explaining spatial decisions across Region 4.", image: "/drone/region-4-zoning.png", href: "/drone/start", linkLabel: "Explore Drone Zoning" },
   { key: "poster", eyebrow: "Spatial systems", title: "Hydrographic Poster Generator", summary: "Generate print-ready river cartography from supported HydroRIVERS geographies with a repeatable composition and export workflow.", image: "/posters/guyana-abyss.webp", href: "/poster", linkLabel: "Open Poster Generator" },
   { key: "docs", eyebrow: "System library", title: "Documentation", summary: "Understand the software stack, architecture, operating model, and implementation status behind the HPS portal and its products.", image: "/hps/hps-lockup-horizontal.svg", href: "/docs", linkLabel: "Browse Documentation" },
 ] as const;
 
 export default function PlatformLandingPage() {
   return (
-    <main className="hps-portal">
+    <main className="hps-portal hps-theme hps-theme--platform">
       <PlatformHeader current="platform" />
       <section className="hps-hero" aria-labelledby="portal-title">
         <div className="hps-hero__inner">
@@ -26,7 +26,7 @@ export default function PlatformLandingPage() {
             <p className="hps-hero__copy">A focused family of tools for planning, communicating, and acting on spatial information—from a finished hydrographic poster to an explainable drone-zoning decision.</p>
             <div className="hps-actions">
               <Link className="hps-button hps-button--gold" href="/drone">Explore the platform</Link>
-              <Link className="hps-button hps-button--outline" href="/executive-overview">View executive overview</Link>
+              <Link className="hps-button hps-button--outline" href="/drone">Drone Zoning overview</Link>
             </div>
           </div>
           <div className="hps-hero__visual" role="img" aria-label="Drone zoning map preview for the Region 4 pilot" />
