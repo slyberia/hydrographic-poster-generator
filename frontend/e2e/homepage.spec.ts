@@ -1,5 +1,37 @@
 import { expect, test } from "@playwright/test";
 
+const publishedMap = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      properties: { zone: "suitable" },
+      geometry: {
+        type: "Polygon",
+        coordinates: [[[-58.3, 6.65], [-58.1, 6.65], [-58.1, 6.85], [-58.3, 6.85], [-58.3, 6.65]]],
+      },
+    },
+  ],
+};
+
+test.beforeEach(async ({ page }) => {
+  await page.route("**/public/drone/config", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        study_area: { display_name: "Region 4", center: { lat: 6.75, lng: -58.2 }, default_zoom: 10 },
+        published: {
+          published_at: "2026-08-13T00:00:00Z",
+          artifacts: [{ type: "dissolved", url: "/public/drone/zoning", sha256: "test", byte_size: 1 }],
+        },
+      }),
+    });
+  });
+  await page.route("**/public/drone/zoning", async (route) => {
+    await route.fulfill({ contentType: "application/json", body: JSON.stringify(publishedMap) });
+  });
+});
+
 const VIEWPORTS = [
   { width: 390, height: 844 },
   { width: 768, height: 1024 },
@@ -29,9 +61,11 @@ for (const viewport of VIEWPORTS) {
     await expect(
       page.getByRole("heading", {
         level: 1,
-        name: "Turn spatial data into clear, defensible output.",
+        name: "Connecting Form and Function.",
       }),
     ).toBeVisible();
+    await expect(page.locator(".hps-hero__map .leaflet-container")).toBeVisible();
+    await expect(page.getByText("Designed for informed planning")).toHaveCount(0);
 
     // Both products and the shared library are represented as cards.
     await expect(
@@ -68,12 +102,12 @@ for (const viewport of VIEWPORTS) {
 
     // Clear entry points to both products.
     const posterEntry = page.getByRole("link", {
-      name: "Open Poster Generator",
+      name: /Open Poster Generator/,
     });
-    const droneEntry = page.getByRole("link", { name: "Explore Drone Zoning" });
+    const droneEntry = page.locator(".hps-card--drone");
     await expect(posterEntry).toHaveAttribute("href", "/poster");
     await expect(droneEntry).toHaveAttribute("href", "/drone/start");
-    await expect(page.getByRole("link", { name: "Browse Documentation" })).toHaveAttribute(
+    await expect(page.getByRole("link", { name: /Browse Documentation/ })).toHaveAttribute(
       "href",
       "/docs",
     );
