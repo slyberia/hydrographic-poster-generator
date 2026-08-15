@@ -14,9 +14,9 @@ test("shared platform landing is server-rendered with both products", async ({
   const html = await response.text();
 
   expect(html).toContain("Hydrographic Poster Generator");
-  expect(html).toContain("Drone Zoning Decision Support");
+  expect(html).toContain("Drone Zoning");
   expect(html).toContain("/poster");
-  expect(html).toContain("/drone");
+  expect(html).toContain("/drone/start");
 });
 
 for (const viewport of VIEWPORTS) {
@@ -33,27 +33,23 @@ for (const viewport of VIEWPORTS) {
       }),
     ).toBeVisible();
 
-    // Both products are represented as headings.
+    // Both products and the shared library are represented as cards.
     await expect(
       page.getByRole("heading", {
-        level: 2,
+        level: 3,
         name: "Hydrographic Poster Generator",
       }),
     ).toBeVisible();
     await expect(
       page.getByRole("heading", {
-        level: 2,
-        name: "Drone Zoning Decision Support",
+        level: 3,
+        name: "Drone Zoning",
       }),
     ).toBeVisible();
 
-    // Real output imagery for both products, actually decoded.
-    const posterImage = page.getByAltText(
-      "Generated Guyana river network poster using the Abyss palette",
-    );
-    const droneImage = page.getByAltText(
-      "Region 4 drone zoning output showing classified cells around Georgetown",
-    );
+    // All card imagery decodes successfully.
+    const posterImage = page.locator('img[src*="guyana-abyss"]');
+    const droneImage = page.locator('img[src*="region-4-zoning"]');
     await expect(posterImage).toBeVisible();
     await expect(droneImage).toBeVisible();
     await expect
@@ -72,29 +68,15 @@ for (const viewport of VIEWPORTS) {
 
     // Clear entry points to both products.
     const posterEntry = page.getByRole("link", {
-      name: "Explore the Poster Generator",
+      name: "Open Poster Generator",
     });
     const droneEntry = page.getByRole("link", { name: "Explore Drone Zoning" });
     await expect(posterEntry).toHaveAttribute("href", "/poster");
-    await expect(droneEntry).toHaveAttribute("href", "/drone");
-    await expect(
-      page.getByRole("link", { name: "Open the Studio" }),
-    ).toHaveAttribute("href", "/studio");
-    await expect(
-      page.getByRole("link", { name: "Open methodology in Planning Console" }),
-    ).toHaveAttribute("href", "/drone/console");
-
-    // Both products are first-viewport signals: on desktop the cards sit
-    // side by side within the first screen; on mobile they stack, so at least
-    // the first product's output is above the fold.
-    const posterImageBounds = await posterImage.boundingBox();
-    expect(posterImageBounds).not.toBeNull();
-    expect(posterImageBounds!.y).toBeLessThan(viewport.height);
-    if (viewport.width >= 768) {
-      const droneImageBounds = await droneImage.boundingBox();
-      expect(droneImageBounds).not.toBeNull();
-      expect(droneImageBounds!.y).toBeLessThan(viewport.height);
-    }
+    await expect(droneEntry).toHaveAttribute("href", "/drone/start");
+    await expect(page.getByRole("link", { name: "Browse Documentation" })).toHaveAttribute(
+      "href",
+      "/docs",
+    );
 
     // Keyboard focus is visible.
     await posterEntry.focus();

@@ -19,7 +19,7 @@ export default function PosterHeader({
   variant = "public",
 }: PosterHeaderProps) {
   return (
-    <header className={`poster-header poster-header--${variant}`}>
+    <header className={`poster-header poster-header--${variant} hps-theme hps-theme--poster`}>
       <div className="poster-header__inner">
         {variant === "workspace" ? (
           <h1>

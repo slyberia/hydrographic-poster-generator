@@ -18,7 +18,7 @@ export default function ExecutiveOverviewReader() {
             <img src="/hps/hps-lockup-horizontal.svg" alt="HPS Geospatial" />
           </Link>
           <nav className="brief-reader__nav" aria-label="Document navigation">
-            <Link href="/executive-overview">Overview page</Link>
+            <Link href="/drone">Overview page</Link>
             <Link href="/drone">Drone Zoning</Link>
             <Link href="/drone/methodology">Methodology</Link>
             <Link href="/docs">Documentation</Link>
@@ -153,7 +153,7 @@ export default function ExecutiveOverviewReader() {
       <footer className="brief-reader__footer">
         <div className="brief-reader__footer-inner">
           <span>HPS Geospatial · Region 4 pilot</span>
-          <Link href="/executive-overview">Return to Executive Overview</Link>
+          <Link href="/drone">Return to Drone Zoning overview</Link>
         </div>
       </footer>
     </main>

@@ -68,7 +68,7 @@ const PROCESS_STEPS = [
 
 export default function PosterLandingPage() {
   return (
-    <main className="min-h-screen bg-[var(--ui-page)] text-[var(--ui-text)]">
+    <main className="hps-theme hps-theme--poster min-h-screen bg-[var(--ui-page)] text-[var(--ui-text)]">
       <PosterHeader current="home" />
 
       <section className="relative w-full overflow-hidden border-b border-[var(--ui-border)] bg-[#e6edf2]">
