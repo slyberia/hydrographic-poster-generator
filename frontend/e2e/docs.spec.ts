@@ -41,6 +41,16 @@ test("curated documentation is present in the server response", async ({
   expect(html).not.toContain("more than 5%");
 });
 
+test("the HPS System Library keeps system and product documentation distinct", async ({ page }) => {
+  await page.goto("/documentation");
+  await expect(page.getByRole("heading", { name: "Documentation with a clear home." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open Hydro Poster documentation →" })).toHaveAttribute("href", "/docs");
+  await expect(page.getByRole("link", { name: "Open Drone Platform documentation →" })).toHaveAttribute("href", "/documentation/drone-platform");
+
+  await page.goto("/docs");
+  await expect(page.getByRole("link", { name: "HPS System Library →" })).toHaveAttribute("href", "/documentation");
+});
+
 for (const viewport of VIEWPORTS) {
   test(`Docs experience remains coherent at ${viewport.width}px`, async ({
     page,
