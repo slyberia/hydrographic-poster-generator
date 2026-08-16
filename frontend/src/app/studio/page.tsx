@@ -63,17 +63,21 @@ export default function Page() {
   const [bootError, setBootError] = useState<string | null>(null);
 
   const [settings, setSettings] = useState<PosterSettings>(() => {
+    let initial = DEFAULT_SETTINGS as unknown as PosterSettings;
     if (typeof window !== "undefined") {
       try {
         const saved = localStorage.getItem("hydrorivers_settings");
         if (saved) {
-          return migratePosterSettings(JSON.parse(saved)) as unknown as PosterSettings;
+          initial = migratePosterSettings(JSON.parse(saved)) as unknown as PosterSettings;
         }
       } catch (err) {
         console.warn("Failed to load settings", err);
       }
     }
-    return DEFAULT_SETTINGS as unknown as PosterSettings;
+    const palette = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("palette") : null;
+    return palette
+      ? { ...initial, style: { ...initial.style!, mode: "standard", preset_id: palette, overrides: {} } }
+      : initial;
   });
   const [exportSettings, setExportSettings] = useState<ExportSettings>(DEFAULT_EXPORT);
 
@@ -101,12 +105,18 @@ export default function Page() {
         // Align defaults with whatever the registry actually serves.
         setSettings((s) => ({
           ...s,
-          density_preset: pre.density[0]?.id ?? s.density_preset,
+          density_preset: pre.density.some((preset) => preset.id === s.density_preset)
+            ? s.density_preset
+            : pre.density[0]?.id ?? s.density_preset,
           style: {
             ...s.style!,
-            preset_id: pre.palette[0]?.id ?? s.style?.preset_id ?? "abyss",
+            preset_id: pre.palette.some((preset) => preset.id === s.style?.preset_id)
+              ? s.style?.preset_id ?? "abyss"
+              : pre.palette[0]?.id ?? s.style?.preset_id ?? "abyss",
           },
-          typography: pre.typography[0]?.id ?? s.typography,
+          typography: pre.typography.some((preset) => preset.id === s.typography)
+            ? s.typography
+            : pre.typography[0]?.id ?? s.typography,
         }));
       })
       .catch((err) => {

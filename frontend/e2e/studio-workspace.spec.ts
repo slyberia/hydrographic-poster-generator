@@ -29,11 +29,12 @@ test("workspace controls zoom the canvas without changing poster settings", asyn
 test("control hierarchy exposes one legend state and keeps advanced controls collapsed", async ({ page }) => {
   await openRenderedStudio(page);
 
-  await expect(page.getByRole("heading", { name: "Place" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Appearance" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Content" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Layout" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Export" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Poster workflow" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "01 · Geography" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "02–03 · Network and visual style" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "04 · Typography and metadata" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "04 · Layout refinements" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "06 · Export" })).toBeVisible();
 
   await expect(page.getByRole("checkbox", { name: "Legend", exact: true })).toHaveCount(1);
   await expect(page.getByRole("radio", { name: /Abyss/ })).toBeChecked();

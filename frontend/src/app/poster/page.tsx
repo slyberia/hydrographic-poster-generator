@@ -97,6 +97,9 @@ export default function PosterLandingPage() {
               >
                 Create a poster
               </Link>
+              <Link href="#examples" className="ml-4 inline-flex min-h-12 items-center justify-center rounded-lg border border-[var(--ui-border-strong)] px-5 py-3 text-sm font-semibold text-[var(--ui-text)] transition-colors hover:bg-white/70">
+                Explore examples
+              </Link>
             </div>
           </div>
 
@@ -129,7 +132,7 @@ export default function PosterLandingPage() {
         </div>
       </section>
 
-      <section className="bg-[var(--ui-panel)] px-5 py-20 sm:px-8 lg:py-24">
+      <section id="examples" className="bg-[var(--ui-panel)] px-5 py-20 sm:px-8 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 max-w-2xl">
             <p className="mb-3 text-xs font-bold uppercase text-[var(--ui-action)]">
@@ -175,8 +178,31 @@ export default function PosterLandingPage() {
                   <p className="mt-2 hidden text-sm leading-relaxed text-[var(--ui-text-muted)] sm:block">
                     {poster.description}
                   </p>
+                  <Link href={`/studio?palette=${poster.palette.toLowerCase()}`} className="mt-3 inline-flex text-xs font-semibold text-[var(--ui-action)] hover:underline">
+                    Use this style →
+                  </Link>
                 </figcaption>
               </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[var(--ui-panel)] px-5 py-20 sm:px-8 lg:py-24">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-3 text-xs font-bold uppercase text-[var(--ui-action)]">Built for communication</p>
+          <h2 className="max-w-2xl text-3xl font-semibold text-[var(--ui-text)] sm:text-4xl" style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif" }}>Start from the visual outcome you need.</h2>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              ["Designers", "A controlled cartographic composition with editable type and layout."],
+              ["GIS practitioners", "A reproducible render from a supported geography and hydrographic network."],
+              ["Institutions", "Print-ready visual communication with visible source and metadata controls."],
+              ["Developers", "A focused workflow built around structured settings, preview, and export."],
+            ].map(([audience, description]) => (
+              <article key={audience} className="rounded-lg border border-[var(--ui-border)] bg-[var(--ui-surface-muted)] p-5">
+                <h3 className="font-semibold text-[var(--ui-text)]">{audience}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--ui-text-muted)]">{description}</p>
+              </article>
             ))}
           </div>
         </div>

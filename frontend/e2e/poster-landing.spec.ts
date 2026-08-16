@@ -33,6 +33,7 @@ for (const viewport of VIEWPORTS) {
     });
     await expect(primaryAction).toBeVisible();
     await expect(primaryAction).toHaveAttribute("href", "/studio");
+    await expect(page.getByRole("link", { name: "Explore examples" })).toHaveAttribute("href", "#examples");
     await primaryAction.focus();
     const focusOutline = await primaryAction.evaluate(
       (element) => getComputedStyle(element).outlineStyle,
@@ -75,6 +76,9 @@ for (const viewport of VIEWPORTS) {
         page.getByRole("heading", { level: 3, name: heading }),
       ).toBeAttached();
     }
+
+    await expect(page.getByRole("link", { name: "Use this style →" })).toHaveCount(3);
+    await expect(page.getByRole("heading", { name: "Start from the visual outcome you need." })).toBeVisible();
 
     const hasPageOverflow = await page.evaluate(
       () =>
