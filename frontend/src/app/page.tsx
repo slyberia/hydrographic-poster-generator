@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const PRODUCTS = [
   { key: "drone", eyebrow: "Decision support", title: "Drone Zoning", summary: "A configurable, policy-driven platform for evaluating operating suitability and explaining spatial decisions across Region 4.", image: "/drone/region-4-zoning.png", imageAlt: "Published Region 4 drone zoning map", href: "/drone/start", linkLabel: "Explore Drone Zoning" },
   { key: "poster", eyebrow: "Spatial systems", title: "Hydrographic Poster Generator", summary: "Generate print-ready river cartography from supported HydroRIVERS geographies with a repeatable composition and export workflow.", image: "/posters/guyana-abyss.webp", imageAlt: "Guyana river-network poster in the Abyss palette", href: "/poster", linkLabel: "Open Poster Generator" },
-  { key: "docs", eyebrow: "System library", title: "Documentation", summary: "Understand the software stack, architecture, operating model, and implementation status behind the HPS portal and its products.", image: "/hps/hps-lockup-horizontal.svg", imageAlt: "HPS Geospatial lockup", href: "/docs", linkLabel: "Browse Documentation" },
+  { key: "docs", eyebrow: "System library", title: "Documentation", summary: "Understand the software stack, architecture, operating model, and implementation status behind the HPS portal and its products.", image: "/hps/hps-lockup-horizontal.svg", imageAlt: "HPS Geospatial lockup", href: "/documentation", linkLabel: "Browse Documentation" },
 ] as const;
 
 export default function PlatformLandingPage() {
@@ -56,7 +56,7 @@ export default function PlatformLandingPage() {
           ))}
         </div>
       </section>
-      <footer className="hps-footer"><div className="hps-footer__inner"><span>HPS Geospatial · Region 4 pilot</span><Link href="/docs">Documentation</Link></div></footer>
+      <footer className="hps-footer"><div className="hps-footer__inner"><span>HPS Geospatial · Region 4 pilot</span><Link href="/documentation">Documentation</Link></div></footer>
     </main>
   );
 }

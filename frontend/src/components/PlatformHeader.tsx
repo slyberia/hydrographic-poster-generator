@@ -6,7 +6,7 @@ type PlatformRoute = "platform" | "poster" | "drone" | "docs";
 const NAV_ITEMS: Array<{ href: string; label: string; route: PlatformRoute }> = [
   { href: "/poster", label: "Poster Generator", route: "poster" },
   { href: "/drone", label: "Drone Zoning", route: "drone" },
-  { href: "/docs", label: "Documentation", route: "docs" },
+  { href: "/documentation", label: "Documentation", route: "docs" },
 ];
 type PlatformHeaderProps = { current?: PlatformRoute };
 

@@ -109,7 +109,7 @@ for (const viewport of VIEWPORTS) {
     await expect(droneEntry).toHaveAttribute("href", "/drone/start");
     await expect(page.getByRole("link", { name: /Browse Documentation/ })).toHaveAttribute(
       "href",
-      "/docs",
+      "/documentation",
     );
 
     // Keyboard focus is visible.
