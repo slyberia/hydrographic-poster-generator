@@ -48,21 +48,26 @@ export default function ExecutiveOverviewMap({ variant = "drone" }: ExecutiveOve
   const error = errorVersion === requestVersion;
 
   return (
-    <div className={`overview-map overview-map--${variant}`} aria-label="Interactive published Region 4 zoning map">
+    <div
+      className={`overview-map overview-map--${variant}`}
+      role="region"
+      aria-label="Interactive published Region 4 zoning map"
+      aria-busy={!geojson && !error}
+    >
       <MapView
         geojson={geojson}
         geometryMode="dissolved"
         loading={!geojson && !error}
         fitBoundsKey={publishedAt ? `${publishedAt}:${resetVersion}` : null}
       />
-      <div className="overview-map-toolbar" aria-label="Map status and actions">
+      <div className="overview-map-toolbar" role="group" aria-label="Map status and actions">
         <span>{publicationLabel ? `Published ${publicationLabel}` : "Published planning map"}</span>
         <button type="button" onClick={() => setResetVersion((value) => value + 1)} disabled={!geojson}>
           Reset view
         </button>
       </div>
       {error && (
-        <div className="overview-map-status" role="status">
+        <div className="overview-map-status" role="alert">
           <strong>Published map preview unavailable</strong>
           <span>The planning map could not be retrieved just now.</span>
           <div>
