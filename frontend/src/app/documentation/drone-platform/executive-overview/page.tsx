@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HpsLockup from "@/components/brand/HpsLockup";
 import "./executive-overview-reader.css";
 
 const sections = [
@@ -14,14 +15,12 @@ export default function ExecutiveOverviewReader() {
     <main className="brief-reader">
       <header className="brief-reader__header">
         <div className="brief-reader__header-inner">
-          <Link className="brief-reader__logo" href="/" aria-label="HPS Geospatial home">
-            <img src="/hps/hps-lockup-horizontal.svg" alt="HPS Geospatial" />
-          </Link>
+          <HpsLockup className="brief-reader__logo" priority />
           <nav className="brief-reader__nav" aria-label="Document navigation">
             <Link href="/drone">Overview page</Link>
             <Link href="/drone">Drone Zoning</Link>
             <Link href="/drone/methodology">Methodology</Link>
-            <Link href="/docs">Documentation</Link>
+            <Link href="/documentation">Documentation</Link>
           </nav>
         </div>
       </header>
