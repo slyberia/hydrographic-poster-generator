@@ -16,6 +16,7 @@ import { Tooltip } from "@/components/Tooltip";
 import QAChecklist from "./QAChecklist";
 import ColorPickerPopover from "./ColorPickerPopover";
 import { setTypographyOverride } from "@/lib/settings";
+import StudioWorkflow from "./StudioWorkflow";
 
 export interface PosterSettings {
   geography_id: string;
@@ -151,9 +152,10 @@ export default function ControlPanel({
 
   return (
     <div className="flex h-full flex-col gap-5 overflow-y-auto px-5 py-4">
+      <StudioWorkflow settings={settings} exportSettings={exportSettings} />
       {/* ── Place ── */}
       <section className="animate-fade-in" style={{ animationDelay: "0.05s" }}>
-        <h2 className="section-header mb-2.5">Place</h2>
+        <h2 className="section-header mb-2.5">01 · Geography</h2>
         <div className="space-y-2.5">
           <div>
             <label htmlFor="region" className="glass-label">
@@ -241,7 +243,7 @@ export default function ControlPanel({
 
       {/* ── Appearance ── */}
       <section className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
-        <h2 className="section-header mb-2.5">Appearance</h2>
+        <h2 className="section-header mb-2.5">02–03 · Network and visual style</h2>
         <div className="space-y-2.5">
           <div>
             <label htmlFor="density" className="glass-label">
@@ -704,7 +706,7 @@ export default function ControlPanel({
 
       {/* ── Content ── */}
       <section className="animate-fade-in" style={{ animationDelay: "0.15s" }}>
-        <h2 className="section-header mb-2.5">Content</h2>
+        <h2 className="section-header mb-2.5">04 · Typography and metadata</h2>
         <div className="space-y-2.5">
           <div>
             <label htmlFor="title" className="glass-label">
@@ -792,7 +794,7 @@ export default function ControlPanel({
       {/* ── Layout ── */}
       <section className="animate-fade-in" style={{ animationDelay: "0.22s" }}>
         <div className="flex items-center justify-between mb-2.5">
-          <h2 className="section-header !mb-0">Layout</h2>
+          <h2 className="section-header !mb-0">04 · Layout refinements</h2>
           {Object.keys(settings.layout_overrides || {}).length > 0 && (
             <Tooltip content="Reset all manual position overrides">
               <button
@@ -893,7 +895,7 @@ export default function ControlPanel({
         className="mt-auto border-t border-[var(--ui-border)] pt-4 animate-fade-in"
         style={{ animationDelay: "0.25s" }}
       >
-        <h2 className="section-header mb-2.5">Export</h2>
+        <h2 className="section-header mb-2.5">06 · Export</h2>
         <div className="space-y-2.5">
           <div className="flex gap-2">
             <div className="flex-1">
