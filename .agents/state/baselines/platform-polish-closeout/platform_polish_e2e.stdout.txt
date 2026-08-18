@@ -1,0 +1,10 @@
+
+Running 5 tests using 5 workers
+
+  ok 3 e2e\drone-routes.spec.ts:60:5 › legacy Executive Overview route resolves to the Drone homepage (79ms)
+  ok 2 e2e\executive-overview.spec.ts:35:5 › Drone homepage presents the merged overview with an interactive map (3.3s)
+  ok 4 e2e\drone-routes.spec.ts:81:5 › Methodology is available through the Planning Console (3.4s)
+  ok 5 e2e\milestone-d-regression.spec.ts:73:5 › route ownership and the two-view entry flow remain explicit (4.1s)
+  ok 1 e2e\docs.spec.ts:44:5 › the HPS System Library keeps system and product documentation distinct (7.5s)
+
+  5 passed (10.0s)

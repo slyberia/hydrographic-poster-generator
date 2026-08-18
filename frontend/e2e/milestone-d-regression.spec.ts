@@ -80,6 +80,10 @@ test("route ownership and the two-view entry flow remain explicit", async ({ pag
   expect(legacy.status()).toBe(308);
   expect(legacy.headers().location).toBe("/drone");
 
+  const legacyDocumentation = await request.get("/documentation/drone-platform/executive-overview", { maxRedirects: 0 });
+  expect(legacyDocumentation.status()).toBe(308);
+  expect(legacyDocumentation.headers().location).toBe("/drone");
+
   await page.goto("/drone/start");
   await expect(page.locator('.drone-start-card[href="/drone/explore"]')).toContainText("Public Explorer");
   await expect(page.locator('.drone-start-card[href="/drone/console"]')).toContainText("Planning Console");
@@ -156,6 +160,7 @@ test("public and documentation surfaces remain labelled and contained at narrow 
 
   for (const route of ["/", "/poster", "/drone", "/drone/start", "/documentation", "/docs"]) {
     await page.goto(route);
+    await page.waitForLoadState("networkidle");
     await expect(page.getByRole("main")).toBeVisible();
     await expectNoHorizontalOverflow(page, route);
 
@@ -167,8 +172,26 @@ test("public and documentation surfaces remain labelled and contained at narrow 
         const alt = element.querySelector("img")?.getAttribute("alt")?.trim();
         const labels = "labels" in element ? (element as HTMLInputElement).labels : null;
         return !aria && !labelledBy && !text && !alt && !labels?.length;
-      }).length,
+      }).map((element) => element.outerHTML.slice(0, 300)),
     );
-    expect(unnamedControls, `${route} should not expose unnamed controls`).toBe(0);
+    expect(unnamedControls, `${route} should not expose unnamed controls`).toEqual([]);
   }
+});
+
+test("published map teardown remains stable across rapid route changes", async ({ page }) => {
+  await mockPublishedMap(page);
+  const teardownErrors: string[] = [];
+  page.on("pageerror", (error) => {
+    teardownErrors.push(error.stack ?? error.message);
+  });
+
+  for (let index = 0; index < 4; index += 1) {
+    await page.goto("/");
+    await expect(page.locator(".leaflet-container")).toBeVisible();
+    await page.goto("/documentation");
+    await expect(page.getByRole("main")).toBeVisible();
+    await page.waitForTimeout(100);
+  }
+
+  expect(teardownErrors).toEqual([]);
 });

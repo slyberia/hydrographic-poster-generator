@@ -51,6 +51,26 @@ test("the HPS System Library keeps system and product documentation distinct", a
   await expect(page.getByRole("link", { name: "HPS System Library →" })).toHaveAttribute("href", "/documentation");
 });
 
+test("Drone system documentation reflects the deployed architecture and publication paths", async ({ page, request }) => {
+  const response = await request.get("/documentation/drone-platform");
+  const html = await response.text();
+
+  expect(response.ok()).toBe(true);
+  for (const technology of ["Next.js 16", "FastAPI", "Supabase PostgreSQL", "PostGIS", "Supabase Storage", "Google Cloud Run"]) {
+    expect(html).toContain(technology);
+  }
+  expect(html).toContain("Two deliberate data paths");
+  expect(html).toContain("PostgreSQL/PostGIS remains authoritative");
+  expect(html).not.toContain("Vinext");
+  expect(html).not.toContain("Cloudflare Worker");
+  expect(html).not.toContain("D1 / Drizzle");
+
+  await page.goto("/documentation/drone-platform");
+  await expect(page.getByRole("heading", { name: "Current implementation status" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open the Public Explorer" })).toHaveAttribute("href", "/drone/explore");
+  await expect(page.getByRole("link", { name: "Open the Planning Console" })).toHaveAttribute("href", "/drone/console");
+});
+
 for (const viewport of VIEWPORTS) {
   test(`Docs experience remains coherent at ${viewport.width}px`, async ({
     page,

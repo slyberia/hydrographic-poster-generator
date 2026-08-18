@@ -38,10 +38,18 @@ test("Drone homepage presents the merged overview with an interactive map", asyn
   await expect(page.getByRole("heading", { name: "Drone Zoning Decision Support" })).toBeVisible();
   await expect(page.locator(".overview-map .leaflet-container")).toBeVisible();
   await expect(page.locator(".capability-label")).toHaveCount(4);
-  await expect(page.locator(".capability-preview")).toHaveCount(4);
+  await expect(page.locator(".cap-screen")).toHaveCount(4);
+  await expect(page.locator(".cap-screen--scenario")).toHaveCount(1);
+  await expect(page.locator(".cap-screen--workspace")).toHaveCount(1);
+  await expect(page.locator(".cap-screen--map")).toHaveCount(1);
+  await expect(page.locator(".cap-screen--export")).toHaveCount(1);
+  await expect(page.locator('.capability-card[href="/drone/console"]')).toHaveCount(2);
+  await expect(page.locator('.capability-card[href="/drone/explore"]')).toHaveCount(1);
+  await expect(page.locator('.capability-card[href="/drone/start"]')).toHaveCount(1);
   await expect(page.locator(".audience-card")).toHaveCount(7);
   await expect(page.locator(".audience-visual")).toHaveCount(7);
   await expect(page.getByText("HPS Geospatial platform", { exact: false })).toHaveCount(0);
+  await expect(page.getByText("PDF and GeoJSON exports are planned", { exact: false })).toHaveCount(0);
 });
 
 test("Drone homepage stays contained on mobile", async ({ page }) => {

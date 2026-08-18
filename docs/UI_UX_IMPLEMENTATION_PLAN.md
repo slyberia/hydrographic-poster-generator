@@ -518,3 +518,26 @@ the estimate unless the user approves a contract amendment.
 - **Deferred by contract:** Public Explorer, dashboard, internal console redesign,
   infrastructure layers, attribute tables, study-area configuration, publication
   lifecycle, and backend or deployment work.
+
+## 16. Platform Polish Closeout Contract
+
+- **Baseline:** `bbefc1cd` after PR #51 merged the Region 4 public-safety and
+  government reference-data phase.
+- **Information architecture:** `/drone` is the single canonical executive
+  overview and Drone homepage. Both former executive-overview routes redirect
+  permanently to it. Public methodology links are retired; compatibility routes
+  lead to the authenticated Planning Console.
+- **Navigation:** Public product navigation distinguishes Overview, Public map,
+  and Pilot status. The Planning Console is presented separately as the internal
+  authorized workspace; the two-view chooser remains the primary entry decision.
+- **Claims:** Public and downloadable copy describes implemented planning rules,
+  contextual data, role-aware workflows, and the currently available PNG, SVG,
+  PDF, and GeoJSON outputs without implying regulatory authorization.
+- **Documentation:** The HPS System Library records the implemented Next.js,
+  FastAPI, Supabase/PostGIS, Supabase Auth/Storage, and Google Cloud Run stack,
+  including separate dynamic-analysis and materialized-publication paths.
+- **Capability proof:** Core-capability cards use four distinct, keyboard-focusable
+  product miniatures and link to the relevant public or internal application
+  surface.
+- **Excluded:** Backend behavior, schema or migration work, dependencies,
+  production configuration, deployment, and unrelated Poster Generator changes.

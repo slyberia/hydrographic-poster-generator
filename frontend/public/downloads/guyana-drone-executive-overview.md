@@ -10,16 +10,16 @@ Guyana lacks a centralized, accessible way to combine relevant spatial datasets 
 
 <br />
 
-Powered by a configurable, policy-driven analysis engine, HPS has developed an interactive web-based mapping platform that consolidates fragmented spatial data to support more informed planning and decision-making. The platform evaluates locations against regulatory constraints, infrastructure, and user-defined policy priorities, presenting the results through an interactive map.
+Powered by a configurable planning engine, HPS has developed an interactive web-based mapping platform that consolidates fragmented spatial data to support more informed planning and decision-making. The current Region 4 pilot evaluates locations against implemented constraints, infrastructure context, and provisional user-defined priorities, presenting approved results through an interactive map.
 
 ## Core capabilities
 
 <br />
 
-- Configurable policy-driven analysis using weights, buffers, thresholds, and criteria.
-- Public, administrative, and analytical views with role-based controls.
-- Interactive spatial classification of areas by suitability, risk, and operating constraints.
-- Reporting and data export for planning reviews and downstream GIS workflows.
+- Configurable scenario analysis using provisional weights, buffers, thresholds, and criteria.
+- A dissolved-first Public Explorer and an authenticated Planning Console with role-aware controls.
+- Interactive spatial classification with contextual layers and location-level explanations.
+- Internal PNG, SVG, PDF, and GeoJSON outputs for planning reviews and downstream GIS workflows.
 
 ## Operational value
 
@@ -37,4 +37,4 @@ The same spatial decision-support framework can support municipal and regional p
 
 <br />
 
-The current pilot focuses on Region 4, Demerara–Mahaica. Pilot data, policies, and export capabilities remain subject to validation and implementation status in the application.
+The current pilot focuses on Region 4, Demerara–Mahaica. Pilot data and planning rules remain subject to validation and the implementation status shown in the application. The platform provides decision support; it does not grant flight authorization or account for live operational conditions.

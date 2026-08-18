@@ -1,34 +1,40 @@
-# Region 4 Public-Safety and Government Reference Data
+# Platform Polish Closeout
 
 ## Outcome
 
-- Adds a curated, provenance-bearing Region 4 seed set: four fire facilities,
-  five police facilities, and two government facilities.
-- Makes the corresponding public Explorer layers selectable at their existing
-  zoom thresholds.
-- Preserves the zoning model: every new subtype is inactive and each feature
-  declares `classification_effect=none`.
+- Replaces the duplicate documentation Executive Overview with a permanent redirect to the canonical Drone homepage.
+- Corrects Drone platform documentation to describe the deployed Next.js, FastAPI, Supabase/PostGIS, Supabase Storage, and Cloud Run architecture.
+- Simplifies public Drone navigation and keeps methodology access inside the Planning Console.
+- Grounds overview and downloadable-brief claims in implemented planning behavior and export formats.
+- Gives the four capability cards distinct product miniatures and makes each card one complete keyboard-focusable link.
+- Keeps published dissolved maps on the lightweight SVG renderer while preserving canvas rendering for the high-volume analyst cell view.
+- Removes component-owned Leaflet layers before map destruction to prevent redraws against a destroyed renderer.
 
-## Data boundary
+## Browser evidence
 
-- Sources are OpenStreetMap feature identifiers and coordinates.
-- Fire locations are cross-checked against the Guyana Fire Service public
-  location listing.
-- Region 4C police names are cross-checked against the Guyana Police Force
-  public station listing where applicable.
-- Government is restricted to OSM `office=government` and `amenity=townhall`.
+- Desktop and 320px mobile checks confirmed meaningful content, no horizontal overflow, canonical current-page navigation, and four distinct capability cards.
+- Captured evidence is stored in `.agents/state/verifications/platform-polish-closeout/`.
+- The rapid-route regression repeatedly mounts and unmounts the published map and fails on any browser page error.
 
 ## Verification
 
-- `17 passed` — feature ingestion, ingestion taxonomy, and public reference
-  layer tests.
-- `git diff --check` passed.
+- Frontend lint: passed with zero errors and the same two approved baseline hook warnings.
+- Next.js production build: passed, including TypeScript and all 24 static pages.
+- Full affected Playwright suite: `26 passed`.
+- Mandatory post-edit verification: passed with zero out-of-scope files, new failures, changed results, or ambiguous results.
+- `git diff --check`: passed.
 
 ## Deployment and rollback
 
-- The migration has not been applied to Supabase; it requires separate explicit
-  approval after code review and merge.
-- Rollback before deployment is a normal Git revert. If it is applied later,
-  rollback must delete only the eleven records identified by their `source_key`
-  values and deactivate/remove the two reference layers and three inactive
-  subtypes only after confirming no later curated records depend on them.
+- This phase does not change APIs, database schema/data, runtime dependencies, or production configuration.
+- No production deployment or merge was performed.
+- Deployment requires the normal reviewed PR and Cloud Run build workflow after explicit approval.
+- Before deployment, rollback is a normal Git revert. After deployment, revert the phase commit and redeploy the preceding known-good revision; no data rollback is required.
+
+## Exit criteria
+
+- Scope verification: passed.
+- Approved baseline comparison: passed.
+- Applicable static and browser tests: passed.
+- Documentation and regression coverage: complete.
+- Phase result: complete; stop before beginning another phase.

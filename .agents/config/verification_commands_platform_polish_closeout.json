@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "frontend_lint",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "platform_polish_e2e",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "e2e/docs.spec.ts",
+        "e2e/drone-routes.spec.ts",
+        "e2e/executive-overview.spec.ts",
+        "e2e/milestone-d-regression.spec.ts",
+        "--grep",
+        "System Library|architecture and publication|homepage presents|legacy Executive|legacy documentation|public navigation|Methodology is|route ownership|published map teardown"
+      ],
+      "cwd": "frontend",
+      "enabled": true
+    }
+  ],
+  "note": "Post-PR #51 platform polish closeout. Scope is limited to Drone/HPS documentation, duplicate overview routing, Drone public navigation and claims, capability visuals, published-map teardown stability, associated tests, and local verification."
+}

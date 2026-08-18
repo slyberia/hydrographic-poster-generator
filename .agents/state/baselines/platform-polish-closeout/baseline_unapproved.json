@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "status": "unapproved",
+  "approved_by_human": false,
+  "phase_id": "platform-polish-closeout",
+  "branch": "agent/platform-polish-closeout",
+  "commit": "bbefc1cd26c293c26bd322fe56ceeb14809b34de",
+  "generated_at": "2026-08-18T21:35:19.937337+00:00",
+  "commands_file": ".agents\\config\\verification_commands_platform_polish_closeout.json",
+  "commands": [
+    {
+      "name": "frontend_lint",
+      "cwd": "frontend",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 6.092,
+      "stdout_file": ".agents\\state\\baselines\\platform-polish-closeout\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\platform-polish-closeout\\frontend_lint.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "platform_polish_e2e",
+      "cwd": "frontend",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "e2e/docs.spec.ts",
+        "e2e/drone-routes.spec.ts",
+        "e2e/executive-overview.spec.ts",
+        "e2e/milestone-d-regression.spec.ts",
+        "--grep",
+        "System Library|homepage presents|legacy Executive|Methodology is|route ownership"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 10.381,
+      "stdout_file": ".agents\\state\\baselines\\platform-polish-closeout\\platform_polish_e2e.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\platform-polish-closeout\\platform_polish_e2e.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    }
+  ],
+  "test_cases": [],
+  "notes": "All baselines require manual human review and approval in baseline_review.md before starting implementation."
+}

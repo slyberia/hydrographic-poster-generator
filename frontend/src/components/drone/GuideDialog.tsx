@@ -3,8 +3,8 @@
 /** components/drone/GuideDialog.tsx — first-visit (and re-openable) explainer.
  *
  * Plain-language, layered: each topic shows a summary + points, with the
- * methodology behind a "More detail" disclosure. Links out to the fuller
- * /drone/methodology page. Content is shared via lib/droneGuide. */
+ * methodology kept inside the authenticated console. Content is shared via
+ * lib/droneGuide. */
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
