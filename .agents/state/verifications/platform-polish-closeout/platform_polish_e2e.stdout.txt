@@ -1,0 +1,15 @@
+
+Running 10 tests using 8 workers
+
+  ok  1 e2e\drone-routes.spec.ts:60:5 â€º legacy Executive Overview route resolves to the Drone homepage (340ms)
+  ok  5 e2e\drone-routes.spec.ts:66:5 â€º legacy documentation Executive Overview resolves to the canonical Drone homepage (1.7s)
+  ok  6 e2e\drone-routes.spec.ts:112:5 â€º Public navigation has visible keyboard focus (3.2s)
+  ok  7 e2e\drone-routes.spec.ts:72:5 â€º public navigation separates published information from the internal console (3.3s)
+  ok  4 e2e\drone-routes.spec.ts:98:5 â€º Methodology is available through the Planning Console (4.8s)
+  ok  8 e2e\executive-overview.spec.ts:35:5 â€º Drone homepage presents the merged overview with an interactive map (4.9s)
+  ok  3 e2e\docs.spec.ts:54:5 â€º Drone system documentation reflects the deployed architecture and publication paths (5.2s)
+  ok  2 e2e\docs.spec.ts:44:5 â€º the HPS System Library keeps system and product documentation distinct (6.3s)
+  ok  9 e2e\milestone-d-regression.spec.ts:73:5 â€º route ownership and the two-view entry flow remain explicit (6.1s)
+  ok 10 e2e\milestone-d-regression.spec.ts:181:5 â€º published map teardown remains stable across rapid route changes (7.1s)
+
+  10 passed (13.3s)

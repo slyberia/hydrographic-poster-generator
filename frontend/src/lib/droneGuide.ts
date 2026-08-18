@@ -2,8 +2,7 @@
  *
  * Layered by design: each topic has a `summary` a non-expert can read at a
  * glance, a few plain `points`, and a `detail` block with the methodology for
- * anyone who wants it. Shared by the first-visit GuideDialog and the fuller
- * /drone/methodology page so the two never drift.
+ * authorized users who want it. The content stays inside the Planning Console.
  */
 
 export interface GuideTopic {

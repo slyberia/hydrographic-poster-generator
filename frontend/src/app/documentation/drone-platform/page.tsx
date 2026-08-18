@@ -1,12 +1,129 @@
-import { ArchitectureDiagram, DocPage, DocSection, Note, StackTable, Status } from "../components";
+import {
+  ArchitectureDiagram,
+  DocPage,
+  DocSection,
+  Note,
+  StackTable,
+  Status,
+} from "../components";
+
+const STACK_ROWS: Array<[string, string, string]> = [
+  ["Public and internal UI", "Next.js 16 · React 19 · Leaflet", "Overview, published-map review, dashboard, and authenticated planning workflows"],
+  ["Application API", "FastAPI · Python", "Run lifecycle, analysis, reports, reference layers, publication, and exports"],
+  ["Analytical record", "Supabase PostgreSQL · PostGIS", "Authoritative model inputs, geometries, run results, and spatial processing"],
+  ["Authentication", "Supabase Auth", "Planning Console sessions and viewer, analyst, and administrator roles"],
+  ["Published artifacts", "Supabase Storage", "Immutable dissolved, cell, and clipped-cell GeoJSON with a run manifest"],
+  ["Hosting", "Google Cloud Run", "Separately containerized frontend and backend services"],
+];
 
 export default function DronePlatformDocumentation() {
-  return <DocPage system="Drone Platform" eyebrow="System documentation · current pilot" title="Drone Zoning Platform" summary="A map-integrated decision-support platform for evaluating drone operating suitability, explaining the factors behind each result, and publishing analysis-ready spatial outputs.">
-    <DocSection number="01" title="System purpose"><div className="doc-grid"><article className="doc-card"><h3>What it does</h3><p>Combines spatial datasets, regulatory constraints, infrastructure, settlements, and policy priorities into a configurable suitability analysis.</p></article><article className="doc-card"><h3>Who it serves</h3><p>Government agencies, regional councils, civil aviation and public-safety authorities, infrastructure operators, consultants, and commercial drone operators.</p></article><article className="doc-card"><h3>Current boundary</h3><p>The current application is a web-based prototype focused on the Region 4 pilot and the published-run review experience.</p></article></div><Note>PDF, GeoJSON, CSV, and Shapefile exports are represented in the product direction, but should be treated as planned until the corresponding generation and download paths are implemented.</Note></DocSection>
-    <DocSection number="02" title="Architecture at a glance"><ArchitectureDiagram nodes={[{label:"Browser",detail:"React UI · map review",tone:""},{label:"Vinext app",detail:"Next-style routes · TypeScript",tone:""},{label:"Cloudflare Worker",detail:"Edge request and asset handling",tone:""},{label:"D1 / Drizzle",detail:"Optional metadata persistence",tone:"data"},{label:"Object storage",detail:"Future layer artifacts",tone:"future"}]} caption="Current application shape with optional persistence and future spatial-artifact storage shown separately from the core request path." /><Note tone="important">The current repository includes the Cloudflare/Vinext worker and optional D1/Drizzle shape. The schema is intentionally empty today; database-backed run records, permissions, and layer artifacts remain implementation decisions.</Note></DocSection>
-    <DocSection number="03" title="Software stack"><StackTable rows={[["UI", "React 19 + TypeScript", "Composable page and dashboard interfaces"],["Application", "Next-style App Router via vinext", "Route rendering and application structure"],["Build", "Vite + Cloudflare vinext plugin", "Worker-compatible build output"],["Runtime", "Cloudflare Workers", "Request handling and edge deployment target"],["Persistence", "Cloudflare D1 + Drizzle ORM", "Optional relational metadata layer; schema currently empty"],["Assets", "Cloudflare Assets / image optimization", "Static assets and image handling"]]} /></DocSection>
-    <DocSection number="04" title="Primary data flow"><ol className="doc-grid"><li className="doc-card"><h3>1. Configure</h3><p>Authorized users define factors, weights, buffers, thresholds, and policy settings.</p></li><li className="doc-card"><h3>2. Analyze</h3><p>The analysis engine evaluates spatial cells against source datasets and configured rules.</p></li><li className="doc-card"><h3>3. Classify</h3><p>Each location receives a suitability class, score, and supporting factors for review.</p></li><li className="doc-card"><h3>4. Publish</h3><p>An approved run becomes the public or operational map view for downstream users.</p></li><li className="doc-card"><h3>5. Inspect</h3><p>Users select cells to understand constraints, score, confidence, and policy context.</p></li><li className="doc-card"><h3>6. Export</h3><p>Document and GIS export workflows can package the run for reports and sharing.</p></li></ol></DocSection>
-    <DocSection number="05" title="Implementation status"><div className="doc-grid"><article className="doc-card"><Status>Implemented</Status><h3>Overview route</h3><p>Responsive executive overview, HPS branding, product links, print styles, and supplied application preview.</p></article><article className="doc-card"><Status>Implemented</Status><h3>Prototype console</h3><p>Published-run dashboard surface with map preview, metrics, selected-cell detail, workflow, and run-history examples.</p></article><article className="doc-card"><Status tone="planned">Planned</Status><h3>Production data services</h3><p>Persistent model runs, authoritative spatial ingestion, user roles, analysis execution, and export services.</p></article></div></DocSection>
-    <DocSection number="06" title="Related surfaces"><div className="doc-links"><a href="/drone">Drone Zoning overview</a><a href="/documentation/ecosystem">View ecosystem architecture</a><a href="/drone/console">Open planning console</a></div></DocSection>
-  </DocPage>;
+  return (
+    <DocPage
+      system="Drone Platform"
+      eyebrow="System documentation · Region 4 pilot"
+      title="Drone Zoning Platform"
+      summary="A map-integrated planning system that combines authoritative analytical records with published, explainable zoning outputs and contextual reference layers."
+    >
+      <DocSection number="01" title="Purpose and operating boundary">
+        <div className="doc-grid">
+          <article className="doc-card">
+            <h3>Public orientation</h3>
+            <p>Present the approved dissolved zoning map, location-level explanations, pilot status, and contextual infrastructure or aviation reference layers.</p>
+          </article>
+          <article className="doc-card">
+            <h3>Internal planning</h3>
+            <p>Let authorized users inspect analytical cells, adjust provisional factor weights, compare sensitivity, govern model runs, and prepare outputs.</p>
+          </article>
+          <article className="doc-card">
+            <h3>Current boundary</h3>
+            <p>The implemented pilot covers Region 4, Demerara–Mahaica. It provides planning guidance, not aviation authorization or live operational clearance.</p>
+          </article>
+        </div>
+        <Note>
+          Contextual reference layers do not alter MCDA scoring unless a separately
+          configured active analytical subtype explicitly says otherwise.
+        </Note>
+      </DocSection>
+
+      <DocSection number="02" title="Architecture at a glance">
+        <ArchitectureDiagram
+          nodes={[
+            { label: "Browser", detail: "Next.js · React · Leaflet" },
+            { label: "FastAPI", detail: "Analysis · publication · exports" },
+            { label: "PostGIS", detail: "Authoritative analytical record", tone: "data" },
+            { label: "Storage", detail: "Published GeoJSON + manifest", tone: "future" },
+          ]}
+          caption="Draft and fresh analytical work remains database-backed; publishing creates immutable read-optimized artifacts for the public map."
+        />
+        <Note tone="important">
+          PostgreSQL/PostGIS remains authoritative. Storage artifacts are a durable
+          publication path, not a replacement analytical database.
+        </Note>
+      </DocSection>
+
+      <DocSection number="03" title="Software and service stack">
+        <StackTable rows={STACK_ROWS} />
+      </DocSection>
+
+      <DocSection number="04" title="Two deliberate data paths">
+        <div className="doc-grid">
+          <article className="doc-card">
+            <Status>Published</Status>
+            <h3>Fast public map path</h3>
+            <p>An approved run is materialized as dissolved, cell, and clipped-cell GeoJSON plus a manifest. Public pages prefer the dissolved artifact and cache retrieved layers in the browser session.</p>
+          </article>
+          <article className="doc-card">
+            <Status>Internal</Status>
+            <h3>Dynamic analytical path</h3>
+            <p>Draft and freshly generated runs continue through the authenticated API and PostGIS so analysts can inspect current cells, scores, constraints, and sensitivity results.</p>
+          </article>
+          <article className="doc-card">
+            <Status>Context</Status>
+            <h3>Reference-layer path</h3>
+            <p>Scale-dependent aviation and infrastructure layers load lazily from read-optimized endpoints and are cached per browser session to reduce map clutter and repeated requests.</p>
+          </article>
+        </div>
+      </DocSection>
+
+      <DocSection number="05" title="Run and publication lifecycle">
+        <ol className="doc-grid">
+          <li className="doc-card"><h3>1. Configure</h3><p>Authorized analysts select provisional factors, weights, and scenario settings.</p></li>
+          <li className="doc-card"><h3>2. Analyze</h3><p>FastAPI coordinates PostGIS scoring and stores the run as the analytical record.</p></li>
+          <li className="doc-card"><h3>3. Review</h3><p>Analysts inspect dissolved areas, cells, location reports, and sensitivity before approval.</p></li>
+          <li className="doc-card"><h3>4. Approve</h3><p>An administrator advances a complete reviewed run through the controlled lifecycle.</p></li>
+          <li className="doc-card"><h3>5. Publish</h3><p>The service materializes immutable GeoJSON artifacts, records their manifest, and updates the public pointer.</p></li>
+          <li className="doc-card"><h3>6. Communicate</h3><p>The public map reads the approved dissolved layer; authorized users can export PNG, SVG, PDF, or GeoJSON outputs.</p></li>
+        </ol>
+      </DocSection>
+
+      <DocSection number="06" title="Current implementation status">
+        <div className="doc-grid">
+          <article className="doc-card">
+            <Status>Implemented</Status>
+            <h3>Public experience</h3>
+            <p>Executive overview homepage, two-view entry screen, dissolved-first Public Explorer, location guidance, pilot dashboard, and session-cached map layers.</p>
+          </article>
+          <article className="doc-card">
+            <Status>Implemented</Status>
+            <h3>Planning Console</h3>
+            <p>Role-aware run controls, analytical cells, sensitivity review, publication lifecycle, reference layers, and PNG, SVG, PDF, or GeoJSON exports.</p>
+          </article>
+          <article className="doc-card">
+            <Status tone="planned">Data dependent</Status>
+            <h3>Deferred aviation geometry</h3>
+            <p>Verified runway and safeguarding geometry remain unavailable and are labelled “Coming soon” in the layer controls rather than represented by unverified proxies.</p>
+          </article>
+        </div>
+      </DocSection>
+
+      <DocSection number="07" title="Related surfaces">
+        <div className="doc-links">
+          <a href="/drone">Read the Drone Zoning overview</a>
+          <a href="/drone/start">Choose a public or internal view</a>
+          <a href="/drone/explore">Open the Public Explorer</a>
+          <a href="/drone/console">Open the Planning Console</a>
+        </div>
+      </DocSection>
+    </DocPage>
+  );
 }

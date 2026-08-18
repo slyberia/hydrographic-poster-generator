@@ -1,56 +1,71 @@
 {
   "schema_version": 1,
-  "phase_id": "drone-r4-public-safety-reference-data",
-  "phase_name": "Region 4 Public-Safety and Government Reference Data",
+  "phase_id": "platform-polish-closeout",
+  "phase_name": "Platform Polish Closeout",
   "status": "approved",
   "approved_by_human": true,
-  "baseline_commit": "113b0c9a86506cc1587999ceac780a480f4f131d",
-  "branch": "agent/curate-r4-public-safety-reference",
+  "baseline_commit": "bbefc1cd26c293c26bd322fe56ceeb14809b34de",
+  "branch": "agent/platform-polish-closeout",
   "protected_branches": [
     "main"
   ],
   "known_preexisting_changes": [
     ".agents/state/current_phase.json",
-    ".agents/config/verification_commands_drone_r4_public_safety_reference_data.json"
+    ".agents/config/verification_commands_platform_polish_closeout.json"
   ],
   "allowed_paths": [
-    "scripts/ingest_drone_data.py",
-    "backend/app/services/drone_reference_service.py",
-    "backend/tests/test_feature_ingestion.py",
-    "backend/tests/test_ingestion_dry_run.py",
-    "backend/tests/test_drone_reference_layers.py",
-    "frontend/e2e/mockBackend.ts",
-    "db/migrations/015_r4_public_safety_reference_data.sql",
-    "docs/DRONE_REFERENCE_DATA.md",
+    "frontend/src/app/documentation/drone-platform/page.tsx",
+    "frontend/src/app/documentation/drone-platform/executive-overview/page.tsx",
+    "frontend/src/app/documentation/drone-platform/executive-overview/executive-overview-reader.css",
+    "frontend/src/components/drone/DronePublicHeader.tsx",
+    "frontend/src/components/drone/DroneOverview.tsx",
+    "frontend/src/components/drone/CapabilityPreview.tsx",
+    "frontend/src/components/drone/GuideDialog.tsx",
+    "frontend/src/components/drone/MapView.tsx",
+    "frontend/src/lib/droneGuide.ts",
+    "frontend/src/app/drone/guide/page.tsx",
+    "frontend/src/styles/drone-overview-phase5.css",
+    "frontend/public/drone/capabilities/**",
+    "frontend/public/downloads/guyana-drone-executive-overview.md",
+    "frontend/e2e/docs.spec.ts",
+    "frontend/e2e/drone-routes.spec.ts",
+    "frontend/e2e/executive-overview.spec.ts",
+    "frontend/e2e/milestone-d-regression.spec.ts",
+    "docs/UI_UX_IMPLEMENTATION_PLAN.md",
     ".agents/state/current_phase.json",
-    ".agents/state/baselines/drone-r4-public-safety-reference-data/**",
-    ".agents/state/verifications/drone-r4-public-safety-reference-data/**",
-    ".agents/config/verification_commands_drone_r4_public_safety_reference_data.json",
+    ".agents/config/verification_commands_platform_polish_closeout.json",
+    ".agents/state/baselines/platform-polish-closeout/**",
+    ".agents/state/verifications/platform-polish-closeout/**",
     ".agents/phase_walkthrough.md"
   ],
   "excluded_paths": [
+    "backend/**",
+    "db/**",
     "deployment/**",
-    "backend/app/main.py",
+    "frontend/package.json",
+    "frontend/package-lock.json",
     "frontend/src/app/studio/**",
-    "frontend/src/components/ControlPanel.tsx",
-    "deployment/**"
+    "frontend/src/components/ControlPanel.tsx"
   ],
   "approved_operations": [
-    "additive_reference_only_taxonomy_and_data_migration",
-    "curate_region_4_police_fire_and_government_facilities",
-    "reference_layer_availability_changes",
-    "targeted_ingestion_and_reference_layer_tests",
-    "reference_data_documentation"
+    "correct_drone_platform_documentation",
+    "retire_duplicate_executive_overview_reader",
+    "refine_drone_public_navigation_and_copy",
+    "improve_capability_visuals",
+    "add_route_content_and_accessibility_regression_tests",
+    "run_local_frontend_verification",
+    "stabilize_leaflet_canvas_teardown"
   ],
   "prohibited_operations": [
-    "database_migration_execution",
+    "backend_behavior_changes",
+    "database_or_schema_changes",
+    "new_runtime_dependencies",
+    "production_configuration_changes",
     "production_deployment",
-    "database_migration_execution",
     "branch_merge",
     "force_push",
-    "new_runtime_dependencies",
-    "analytical_scoring_or_classification_changes"
+    "unrelated_poster_generator_changes"
   ],
-  "verification_commands_file": ".agents/config/verification_commands_drone_r4_public_safety_reference_data.json",
-  "approved_baseline_file": ".agents/state/baselines/drone-r4-public-safety-reference-data/baseline_unapproved.json"
+  "verification_commands_file": ".agents/config/verification_commands_platform_polish_closeout.json",
+  "approved_baseline_file": ".agents/state/baselines/platform-polish-closeout/baseline_approved.json"
 }

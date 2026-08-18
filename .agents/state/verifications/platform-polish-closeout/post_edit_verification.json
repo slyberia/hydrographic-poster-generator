@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-18T22:25:24.964406+00:00",
+  "phase_id": "platform-polish-closeout",
+  "baseline_commit": "bbefc1cd26c293c26bd322fe56ceeb14809b34de",
+  "approved_baseline_file": ".agents\\state\\baselines\\platform-polish-closeout\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_platform_polish_closeout.json",
+    ".agents/phase_walkthrough.md",
+    ".agents/state/baselines/platform-polish-closeout/baseline_approved.json",
+    ".agents/state/baselines/platform-polish-closeout/baseline_unapproved.json",
+    ".agents/state/baselines/platform-polish-closeout/baseline_unapproved.md",
+    ".agents/state/baselines/platform-polish-closeout/frontend_lint.stderr.txt",
+    ".agents/state/baselines/platform-polish-closeout/frontend_lint.stdout.txt",
+    ".agents/state/baselines/platform-polish-closeout/platform_polish_e2e.stderr.txt",
+    ".agents/state/baselines/platform-polish-closeout/platform_polish_e2e.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/platform-polish-closeout/browser_check.cjs",
+    ".agents/state/verifications/platform-polish-closeout/capabilities-desktop.png",
+    ".agents/state/verifications/platform-polish-closeout/capabilities-mobile.png",
+    ".agents/state/verifications/platform-polish-closeout/drone-overview-desktop.png",
+    ".agents/state/verifications/platform-polish-closeout/frontend_lint.stderr.txt",
+    ".agents/state/verifications/platform-polish-closeout/frontend_lint.stdout.txt",
+    ".agents/state/verifications/platform-polish-closeout/platform_polish_e2e.stderr.txt",
+    ".agents/state/verifications/platform-polish-closeout/platform_polish_e2e.stdout.txt",
+    ".agents/state/verifications/platform-polish-closeout/post_edit_verification.json",
+    ".agents/state/verifications/platform-polish-closeout/post_edit_verification.md",
+    "docs/UI_UX_IMPLEMENTATION_PLAN.md",
+    "frontend/e2e/docs.spec.ts",
+    "frontend/e2e/drone-routes.spec.ts",
+    "frontend/e2e/executive-overview.spec.ts",
+    "frontend/e2e/milestone-d-regression.spec.ts",
+    "frontend/public/downloads/guyana-drone-executive-overview.md",
+    "frontend/src/app/documentation/drone-platform/executive-overview/executive-overview-reader.css",
+    "frontend/src/app/documentation/drone-platform/executive-overview/page.tsx",
+    "frontend/src/app/documentation/drone-platform/page.tsx",
+    "frontend/src/app/drone/guide/page.tsx",
+    "frontend/src/components/drone/CapabilityPreview.tsx",
+    "frontend/src/components/drone/DroneOverview.tsx",
+    "frontend/src/components/drone/DronePublicHeader.tsx",
+    "frontend/src/components/drone/GuideDialog.tsx",
+    "frontend/src/components/drone/MapView.tsx",
+    "frontend/src/lib/droneGuide.ts",
+    "frontend/src/styles/drone-overview-phase5.css"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "frontend_lint",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 9.447,
+      "stdout_file": ".agents\\state\\verifications\\platform-polish-closeout\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\platform-polish-closeout\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "platform_polish_e2e",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "e2e/docs.spec.ts",
+        "e2e/drone-routes.spec.ts",
+        "e2e/executive-overview.spec.ts",
+        "e2e/milestone-d-regression.spec.ts",
+        "--grep",
+        "System Library|architecture and publication|homepage presents|legacy Executive|legacy documentation|public navigation|Methodology is|route ownership|published map teardown"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 13.768,
+      "stdout_file": ".agents\\state\\verifications\\platform-polish-closeout\\platform_polish_e2e.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\platform-polish-closeout\\platform_polish_e2e.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

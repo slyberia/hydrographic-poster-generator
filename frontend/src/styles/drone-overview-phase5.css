@@ -9,7 +9,8 @@
 .overview-page .capability-label {
   display: block;
   margin-top: 0.8rem;
-  color: #345743;
+  background: rgba(20, 75, 53, 0.94);
+  color: #fff;
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -177,3 +178,294 @@
   .overview-page .audience-grid { grid-template-columns: 1fr; }
   .overview-map-toolbar { align-items: flex-start; }
 }
+
+/* Distinct, product-faithful capability miniatures. */
+.overview-page .capability-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
+.overview-page .capability-card .capability-visual {
+  display: block;
+  min-height: 12rem;
+  height: auto;
+  padding: 0;
+  background: #eef1eb;
+  color: #173f30;
+  text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.overview-page .capability-card:hover .capability-visual {
+  border-color: #527863;
+  box-shadow: 0 12px 26px rgba(24, 61, 45, 0.14);
+  transform: translateY(-2px);
+}
+
+.overview-page .capability-card:focus-visible {
+  outline: 3px solid var(--hps-gold);
+  outline-offset: 3px;
+}
+
+.overview-page .capability-action {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  color: var(--hps-green);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.overview-page .capability-card:hover .capability-action,
+.overview-page .capability-card:focus-visible .capability-action {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.cap-screen {
+  position: relative;
+  display: grid;
+  min-height: 9.1rem;
+  align-content: start;
+  gap: 0.55rem;
+  padding: 0.7rem;
+  overflow: hidden;
+  background: #f7f7f1;
+  color: #173f30;
+  font-family: var(--hps-font-body);
+  text-align: left;
+}
+
+.cap-screen small {
+  color: #5d7067;
+  font-size: 0.58rem;
+  line-height: 1.25;
+}
+
+.cap-screen__bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(32, 56, 44, 0.14);
+  font-size: 0.63rem;
+  font-weight: 800;
+}
+
+.cap-screen__bar b {
+  padding: 0.18rem 0.38rem;
+  border-radius: 999px;
+  background: #dfe9dd;
+  color: #2c6747;
+  font-size: 0.48rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cap-scenario-layout,
+.cap-export-layout {
+  display: grid;
+  grid-template-columns: 1.7rem minmax(0, 1fr);
+  gap: 0.65rem;
+}
+
+.cap-mini-rail {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 0.45rem 0.35rem;
+  border-radius: 0.25rem;
+  background: #173f30;
+}
+
+.cap-mini-rail i {
+  display: block;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.cap-factor-list {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.cap-factor {
+  display: grid;
+  gap: 0.2rem;
+  color: #3f554a;
+  font-size: 0.54rem;
+  font-weight: 700;
+}
+
+.cap-factor em {
+  height: 0.28rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #d8dfd7;
+}
+
+.cap-factor em i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #3d7453;
+}
+
+.cap-screen--workspace { background: #f5f1e7; }
+
+.cap-run {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+  padding: 0.42rem 0.5rem;
+  border: 1px solid rgba(43, 72, 57, 0.13);
+  border-radius: 0.25rem;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.cap-run--selected {
+  border-color: #b58b39;
+  background: #fffdf7;
+}
+
+.cap-run > span {
+  display: grid;
+  min-width: 0;
+}
+
+.cap-run strong {
+  overflow: hidden;
+  color: #213d31;
+  font-size: 0.55rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cap-run em {
+  flex: none;
+  color: #48705a;
+  font-size: 0.46rem;
+  font-style: normal;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cap-screen--map {
+  min-height: 9.1rem;
+  padding: 0;
+  background: #dfe7df;
+}
+
+.cap-map-shapes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cap-zone {
+  stroke: rgba(255, 255, 255, 0.72);
+  stroke-width: 1.5;
+}
+
+.cap-zone--suitable { fill: #6c9b70; }
+.cap-zone--conditional { fill: #ddb65e; }
+.cap-zone--restricted { fill: #cd7f4e; }
+.cap-zone--prohibited { fill: #a94d3d; }
+
+.cap-map-legend {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  display: flex;
+  gap: 0.2rem;
+  padding: 0.3rem;
+  border-radius: 0.25rem;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.cap-map-legend i {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+}
+
+.cap-map-legend i:nth-child(1) { background: #6c9b70; }
+.cap-map-legend i:nth-child(2) { background: #ddb65e; }
+.cap-map-legend i:nth-child(3) { background: #cd7f4e; }
+.cap-map-legend i:nth-child(4) { background: #a94d3d; }
+
+.cap-map-report {
+  position: absolute;
+  right: 0.65rem;
+  bottom: 0.65rem;
+  display: grid;
+  min-width: 7.4rem;
+  gap: 0.12rem;
+  padding: 0.55rem;
+  border-left: 3px solid #ddb65e;
+  border-radius: 0.2rem;
+  background: rgba(255, 253, 247, 0.95);
+  box-shadow: 0 6px 16px rgba(20, 51, 39, 0.18);
+}
+
+.cap-map-report span,
+.cap-map-report small { font-size: 0.48rem; }
+.cap-map-report strong { font-size: 0.7rem; }
+
+.cap-screen--export { background: #e9eee8; }
+
+.cap-export-layout { grid-template-columns: 4.2rem minmax(0, 1fr); }
+
+.cap-document {
+  position: relative;
+  display: grid;
+  min-height: 5.3rem;
+  align-content: end;
+  gap: 0.26rem;
+  padding: 0.55rem;
+  border: 1px solid rgba(32, 56, 44, 0.15);
+  border-radius: 0.2rem;
+  background: #fffdf7;
+  box-shadow: 0 5px 12px rgba(24, 61, 45, 0.1);
+}
+
+.cap-document i {
+  display: block;
+  height: 0.23rem;
+  border-radius: 999px;
+  background: #cbd6cc;
+}
+
+.cap-document i:first-child { width: 64%; background: #356b4c; }
+.cap-document span { color: #7a6540; font-size: 0.46rem; font-weight: 800; }
+
+.cap-format-list {
+  display: grid;
+  gap: 0.28rem;
+}
+
+.cap-format-list > span {
+  display: grid;
+  grid-template-columns: 3.2rem 1fr;
+  align-items: center;
+  padding: 0.35rem 0.42rem;
+  border: 1px solid transparent;
+  border-radius: 0.2rem;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.cap-format-list b { font-size: 0.5rem; }
+.cap-format-list small { font-size: 0.46rem; }
+.cap-format-list .cap-format-active { border-color: #356b4c; background: #fffdf7; }

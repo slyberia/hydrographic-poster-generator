@@ -110,8 +110,12 @@ export default function MapView(props: {
   // init once
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
+    const needsHighVolumeRenderer = Boolean(props.onCellClick) || (props.geometryMode ?? "cell") === "cell";
     const map = L.map(containerRef.current, {
-      preferCanvas: true, // 19.5k polygons need canvas, not SVG DOM nodes
+      // Keep canvas for the analyst's 19.5k-cell view. Published dissolved
+      // surfaces are small enough for SVG, which also avoids carrying a canvas
+      // redraw lifecycle through public-page reloads and route transitions.
+      preferCanvas: needsHighVolumeRenderer,
       center: [DEFAULT_STUDY_AREA.center.lat, DEFAULT_STUDY_AREA.center.lng],
       zoom: DEFAULT_STUDY_AREA.defaultZoom,
     });
@@ -149,6 +153,17 @@ export default function MapView(props: {
       if (vpRef) vpRef.current = null;
       map.off("zoomend", handleZoom);
       window.removeEventListener("resize", handleResize);
+
+      // React cleans effects up in declaration order. Remove the component-owned
+      // layers before Leaflet destroys its shared canvas renderer; otherwise a
+      // later layer cleanup can queue a redraw against an already-destroyed
+      // canvas during rapid route changes.
+      referenceLayerRef.current?.remove();
+      referenceLayerRef.current = null;
+      layerRef.current?.remove();
+      layerRef.current = null;
+      markerRef.current?.remove();
+      markerRef.current = null;
       map.remove();
       mapRef.current = null;
     };

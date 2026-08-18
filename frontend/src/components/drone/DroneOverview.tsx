@@ -23,14 +23,14 @@ const MODEL_INPUTS = [
   ["01", "Population", "Built-up areas and the concentration of people."],
   ["02", "Sensitive sites", "Hospitals, schools, utilities, and other critical places."],
   ["03", "Environment", "Protected and environmentally sensitive areas."],
-  ["04", "Airspace", "Airports, flight activity, and aviation-related constraints."],
+  ["04", "Airspace", "Airports, flight activity, and provisional aviation planning rules."],
 ] as const;
 
 const CAPABILITIES = [
-  ["Configurable policy-driven analysis", "Evaluate locations using configurable weights, buffers, thresholds, and criteria tailored to your goals.", "scenario", "Scenario controls"],
-  ["Public, administrative, and analytical views", "Separate interfaces for the public, administrators, and analysts with role-based controls.", "workspace", "Role-based workspace"],
-  ["Interactive spatial classification", "Explore results on an interactive map with clear classification, layer control, and location insights.", "map", "Published map view"],
-  ["Reporting and data export", "Generate reports and export data in common formats for planning, sharing, and GIS workflows.", "export", "Planning outputs"],
+  ["Configurable scenario analysis", "Authorized analysts can adjust provisional weights, run scenarios, and compare how planning priorities affect the result.", "scenario", "Scenario controls", "/drone/console", "Open scenario controls"],
+  ["Controlled run governance", "Viewer, analyst, and administrator roles separate review, analysis, approval, and publication responsibilities.", "workspace", "Run workspace", "/drone/start", "Compare application views"],
+  ["Published map and location guidance", "The public view uses approved dissolved zoning, contextual layers, and plain-language location explanations.", "map", "Public Explorer", "/drone/explore", "Open the published map"],
+  ["Planning outputs", "Authorized users can export the current map as PNG, SVG, or PDF and download cell or dissolved geometry as GeoJSON.", "export", "Export workspace", "/drone/console", "Open export tools"],
 ] as const;
 
 const VALUE_ITEMS = [
@@ -71,9 +71,9 @@ export default function DroneOverview() {
           <h1 id="overview-title">Drone Zoning<br />Decision Support</h1>
           <p className="hero-kicker">Geospatial intelligence for informed planning</p>
           <p className="hero-description">
-            A configurable, policy-driven platform that consolidates spatial data,
-            evaluates operating suitability, and presents clear, explainable results
-            through an interactive map.
+            A configurable planning platform that consolidates spatial data,
+            evaluates operating suitability, and presents clear, explainable
+            results through an interactive map.
           </p>
           <div className="hero-actions">
             <Link className="button button-gold" href="/drone/start">
@@ -113,7 +113,7 @@ export default function DroneOverview() {
       <section className="section split-section solution-section" aria-labelledby="solution-title">
         <div className="section-intro">
           <h2 id="solution-title">The HPS solution</h2>
-          <p>Our platform brings fragmented spatial data together in a common, policy-driven engine. It evaluates locations against regulatory constraints, infrastructure, and user-defined priorities—delivering clear, explainable results through an intuitive interface.</p>
+          <p>Our platform brings fragmented spatial data together in a common planning engine. It evaluates locations against implemented constraints, infrastructure context, and user-defined priorities—delivering clear, explainable results through an intuitive interface.</p>
           <a className="text-link" href="#workflow">Learn how it works →</a>
         </div>
         <ol className="workflow" id="workflow">
@@ -152,13 +152,16 @@ export default function DroneOverview() {
       <section className="section capabilities-section" aria-labelledby="capabilities-title">
         <h2 id="capabilities-title">Core platform capabilities</h2>
         <div className="capability-grid">
-          {CAPABILITIES.map(([title, text, kind, label]) => (
-            <article className="capability-card" key={title}>
-              <div className="capability-visual"><CapabilityPreview kind={kind} /><span className="capability-label">{label}</span></div>
+          {CAPABILITIES.map(([title, text, kind, label, href, action]) => (
+            <Link className="capability-card" href={href} key={title}>
+              <div className="capability-visual">
+                <CapabilityPreview kind={kind} />
+                <span className="capability-label">{label}</span>
+              </div>
               <h3>{title}</h3>
               <p>{text}</p>
-              {kind === "export" ? <span className="status-note">PDF and GeoJSON exports are planned for a future release.</span> : null}
-            </article>
+              <span className="capability-action">{action} <span aria-hidden="true">→</span></span>
+            </Link>
           ))}
         </div>
       </section>

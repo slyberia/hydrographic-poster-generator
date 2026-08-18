@@ -63,6 +63,23 @@ test("legacy Executive Overview route resolves to the Drone homepage", async ({ 
   expect(response.headers().location).toBe("/drone");
 });
 
+test("legacy documentation Executive Overview resolves to the canonical Drone homepage", async ({ request }) => {
+  const response = await request.get("/documentation/drone-platform/executive-overview", { maxRedirects: 0 });
+  expect(response.status()).toBe(308);
+  expect(response.headers().location).toBe("/drone");
+});
+
+test("public navigation separates published information from the internal console", async ({ page }) => {
+  await page.goto("/drone");
+  const navigation = page.getByRole("navigation", { name: "Drone product navigation" });
+
+  await expect(navigation.getByRole("link", { name: "Overview" })).toHaveAttribute("href", "/drone");
+  await expect(navigation.getByRole("link", { name: "Public map" })).toHaveAttribute("href", "/drone/explore");
+  await expect(navigation.getByRole("link", { name: "Pilot status" })).toHaveAttribute("href", "/drone/dashboard");
+  await expect(navigation.getByRole("link", { name: "Open the internal Planning Console" })).toHaveAttribute("href", "/drone/console");
+  await expect(navigation.getByRole("link", { name: "Choose a view" })).toHaveCount(0);
+});
+
 for (const viewport of VIEWPORTS) {
   test(`Drone public routes remain contained at ${viewport.name}`, async ({ page }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
