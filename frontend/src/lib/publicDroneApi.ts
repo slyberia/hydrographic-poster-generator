@@ -42,6 +42,9 @@ export interface ReferenceLayerDefinition {
   label_min_zoom: number;
   default_enabled: boolean;
   loading: "eager" | "lazy";
+  /** Absent means available, preserving compatibility with earlier configs. */
+  available?: boolean;
+  availability_note?: string;
 }
 
 export interface PublicReport {

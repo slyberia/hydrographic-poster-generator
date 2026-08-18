@@ -107,11 +107,14 @@ const REFERENCE_CONFIG = {
   version: "milestone-c-v1",
   layers: [
     { key: "airports", display_name: "Airports", group: "aviation", min_zoom: 8, label_min_zoom: 11, default_enabled: true, loading: "eager" },
-    { key: "runways", display_name: "Runways", group: "aviation", min_zoom: 11, label_min_zoom: 13, default_enabled: true, loading: "lazy" },
-    { key: "runway_safeguarding", display_name: "Runway Safeguarding", group: "aviation", min_zoom: 10, label_min_zoom: 13, default_enabled: true, loading: "lazy" },
+    { key: "runways", display_name: "Runways", group: "aviation", min_zoom: 11, label_min_zoom: 13, default_enabled: false, loading: "lazy", available: false, availability_note: "Coming soon — verified runway geometry has not yet been added." },
+    { key: "runway_safeguarding", display_name: "Runway Safeguarding", group: "aviation", min_zoom: 10, label_min_zoom: 13, default_enabled: false, loading: "lazy", available: false, availability_note: "Coming soon — verified safeguarding geometry has not yet been added." },
     { key: "airport_notification", display_name: "Airport Notification Area", group: "aviation", min_zoom: 9, label_min_zoom: 12, default_enabled: false, loading: "lazy" },
     { key: "schools", display_name: "Schools", group: "infrastructure", min_zoom: 13, label_min_zoom: 15, default_enabled: false, loading: "lazy" },
     { key: "healthcare", display_name: "Healthcare", group: "infrastructure", min_zoom: 12, label_min_zoom: 14, default_enabled: false, loading: "lazy" },
+    { key: "government", display_name: "Government", group: "infrastructure", min_zoom: 13, label_min_zoom: 15, default_enabled: false, loading: "lazy", available: false, availability_note: "Coming soon — curated government-facility data has not yet been added." },
+    { key: "police", display_name: "Police", group: "infrastructure", min_zoom: 14, label_min_zoom: 16, default_enabled: false, loading: "lazy", available: false, availability_note: "Coming soon — curated police-facility data has not yet been added." },
+    { key: "fire", display_name: "Fire", group: "infrastructure", min_zoom: 14, label_min_zoom: 16, default_enabled: false, loading: "lazy", available: false, availability_note: "Coming soon — curated fire-service data has not yet been added." },
   ],
 };
 

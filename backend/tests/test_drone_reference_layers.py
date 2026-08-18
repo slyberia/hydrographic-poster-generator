@@ -10,6 +10,10 @@ def test_reference_layer_registry_has_stable_categories_and_scale_thresholds():
     }
     assert by_key["airports"]["min_zoom"] < by_key["schools"]["min_zoom"]
     assert by_key["runways"]["label_min_zoom"] > by_key["runways"]["min_zoom"]
+    assert by_key["runways"]["available"] is False
+    assert by_key["runway_safeguarding"]["available"] is False
+    assert all(by_key[key]["available"] is False for key in ("government", "police", "fire"))
+    assert "Coming soon" in by_key["runways"]["availability_note"]
     assert by_key["airport_notification"]["default_enabled"] is False
 
 

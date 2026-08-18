@@ -25,7 +25,10 @@ export function useReferenceLayers(options: {
     void publicDroneApi.getReferenceConfig().then((config) => {
       const defs = config.layers.filter((d) => !allowed || allowed.includes(d.key as ReferenceLayerKey));
       setDefinitions(defs);
-      setEnabled(new Set(defs.filter((d) => options.enabledDefaults?.[d.key as ReferenceLayerKey] ?? d.default_enabled).map((d) => d.key as ReferenceLayerKey)));
+      setEnabled(new Set(defs
+        .filter((d) => d.available !== false)
+        .filter((d) => options.enabledDefaults?.[d.key as ReferenceLayerKey] ?? d.default_enabled)
+        .map((d) => d.key as ReferenceLayerKey)));
     }).catch(() => setDefinitions([]));
   }, [allowedKey, defaultsKey]);
 
@@ -42,15 +45,19 @@ export function useReferenceLayers(options: {
     } finally {
       setLoading((prev) => { const next = new Set(prev); next.delete(key); return next; });
     }
-  }, [data, loading]);
+  }, [data, errors, loading]);
 
   useEffect(() => {
     for (const def of definitions) {
-      if (enabled.has(def.key as ReferenceLayerKey) && zoom >= def.min_zoom) void load(def.key as ReferenceLayerKey);
+      if (def.available !== false && enabled.has(def.key as ReferenceLayerKey) && zoom >= def.min_zoom) {
+        // Defer the stateful request until after the effect has completed.
+        void Promise.resolve().then(() => load(def.key as ReferenceLayerKey));
+      }
     }
   }, [definitions, enabled, load, zoom]);
 
   const toggle = useCallback((key: ReferenceLayerKey) => {
+    if (definitions.find((definition) => definition.key === key)?.available === false) return;
     setErrors((prev) => {
       if (!prev[key]) return prev;
       return Object.fromEntries(Object.entries(prev).filter(([errorKey]) => errorKey !== key));
@@ -60,12 +67,12 @@ export function useReferenceLayers(options: {
       if (next.has(key)) next.delete(key); else next.add(key);
       return next;
     });
-  }, []);
+  }, [definitions]);
 
   const visible = useMemo(() => {
     const output: ReferenceLayerData = {};
     for (const def of definitions) {
-      if (enabled.has(def.key as ReferenceLayerKey) && zoom >= def.min_zoom && data[def.key]) output[def.key] = data[def.key];
+      if (def.available !== false && enabled.has(def.key as ReferenceLayerKey) && zoom >= def.min_zoom && data[def.key]) output[def.key] = data[def.key];
     }
     return output;
   }, [data, definitions, enabled, zoom]);

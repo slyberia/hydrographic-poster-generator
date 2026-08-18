@@ -67,6 +67,11 @@ test("Milestone B: analytical cells are lazy-loaded once and reused", async ({ p
 test("Milestone C: reference layers are controlled independently and cached", async ({ page }) => {
   const state = await openConsole(page);
   await expect(page.getByRole("checkbox", { name: "Airports" })).toBeChecked();
+  await expect(page.getByRole("checkbox", { name: "Runways" })).toBeDisabled();
+  await expect(page.getByRole("checkbox", { name: "Government" })).toBeDisabled();
+  await expect(page.getByRole("checkbox", { name: "Police" })).toBeDisabled();
+  await expect(page.getByRole("checkbox", { name: "Fire" })).toBeDisabled();
+  await expect(page.getByText("Coming soon — verified runway geometry has not yet been added.")).toBeVisible();
   await expect(page.getByRole("checkbox", { name: "Schools" })).not.toBeChecked();
   await expect.poll(() => state.requested.filter((p) => p === "/public/drone/reference-layers/airports").length).toBe(1);
   expect(state.requested).not.toContain("/public/drone/reference-layers/schools");
