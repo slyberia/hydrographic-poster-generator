@@ -24,7 +24,7 @@ async def public_reference_config():
     return await reference.get_reference_layer_config()
 
 
-@router.get("/reference-layers/{layer_key}", tags=["Drone Public"], dependencies=[Depends(usage_limit("layer"))])
+@router.get("/reference-layers/{layer_key}", tags=["Drone Public"], dependencies=[Depends(usage_limit("reference"))])
 async def public_reference_layer(layer_key: str, response: Response, pool: asyncpg.Pool = Depends(get_db_pool)):
     try:
         payload = await reference.get_reference_layer(pool, layer_key)

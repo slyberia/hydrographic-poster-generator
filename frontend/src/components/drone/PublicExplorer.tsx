@@ -265,6 +265,7 @@ export default function PublicExplorer() {
             definitions={reference.definitions}
             enabled={reference.enabled}
             loading={reference.loading}
+            errors={reference.errors}
             zoom={reference.zoom}
             onToggle={reference.toggle}
           />

@@ -5,6 +5,8 @@ database remains authoritative and every aviation polygon is explicitly
 planning/reference-only so it cannot silently alter zoning classifications.
 """
 
+import json
+from collections.abc import Mapping
 from typing import Any
 
 import asyncpg
@@ -23,23 +25,28 @@ REFERENCE_LAYER_CONFIG: list[dict[str, Any]] = [
 ]
 
 
+def _json_value(value: Any) -> Any:
+    """Normalise asyncpg JSON/JSONB values across local and Cloud Run drivers."""
+    if isinstance(value, str):
+        return json.loads(value)
+    return value
+
+
 def _fc(rows: list[asyncpg.Record]) -> dict[str, Any]:
-    def geometry(value: Any) -> Any:
-        if isinstance(value, str):
-            import json
-            return json.loads(value)
-        return value
+    features: list[dict[str, Any]] = []
+    for row in rows:
+        properties = _json_value(row["properties"]) or {}
+        if not isinstance(properties, Mapping):
+            raise ValueError("Reference-layer properties must be a JSON object.")
+        features.append({
+            "type": "Feature",
+            "geometry": _json_value(row["geometry"]),
+            "properties": dict(properties),
+        })
 
     return {
         "type": "FeatureCollection",
-        "features": [
-            {
-                "type": "Feature",
-                "geometry": geometry(row["geometry"]),
-                "properties": dict(row["properties"] or {}),
-            }
-            for row in rows
-        ],
+        "features": features,
     }
 
 
@@ -69,6 +76,20 @@ async def get_reference_layer(pool: asyncpg.Pool, key: str) -> dict[str, Any]:
             """)
         elif key == "airport_notification":
             rows = await conn.fetch("""
+                SELECT ST_AsGeoJSON(n.geometry)::json AS geometry,
+                       jsonb_build_object(
+                         'id', n.notification_area_id, 'name', n.airport_id,
+                         'category', 'airport_notification', 'radius_m', n.radius_m,
+                         'representation_type', n.representation_type,
+                         'classification_effect', n.classification_effect, 'source', n.source,
+                         'confidence', n.confidence::text,
+                         'explanation', 'Airport notification/coordination context; not a zoning restriction.'
+                       ) AS properties
+                FROM aviation_notification_areas n
+                WHERE n.is_active
+
+                UNION ALL
+
                 SELECT ST_AsGeoJSON(ST_Transform(ST_Buffer(ST_Transform(f.geom, 32621), 5000), 4326))::json AS geometry,
                        jsonb_build_object(
                          'id', f.feature_id, 'name', f.name, 'category', 'airport_notification',
@@ -77,7 +98,8 @@ async def get_reference_layer(pool: asyncpg.Pool, key: str) -> dict[str, Any]:
                          'explanation', '5 km aerodrome notification/coordination context; not a zoning restriction.'
                        ) AS properties
                 FROM mcda_features f JOIN mcda_layers l ON l.layer_id = f.layer_id
-                WHERE l.layer_key = 'guynode_airports' AND f.subtype_key = 'aerodrome_proximity'
+                WHERE NOT EXISTS (SELECT 1 FROM aviation_notification_areas WHERE is_active)
+                  AND l.layer_key = 'guynode_airports' AND f.subtype_key = 'aerodrome_proximity'
                   AND GeometryType(f.geom) IN ('POINT', 'MULTIPOINT')
             """)
         elif key == "runways":

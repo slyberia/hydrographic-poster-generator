@@ -7,6 +7,7 @@ export default function ReferenceLayerControls(props: {
   definitions: ReferenceLayerDefinition[];
   enabled: Set<ReferenceLayerKey>;
   loading: Set<string>;
+  errors?: Record<string, string>;
   zoom: number;
   onToggle: (key: ReferenceLayerKey) => void;
   compact?: boolean;
@@ -30,6 +31,7 @@ export default function ReferenceLayerControls(props: {
                   <input type="checkbox" checked={checked} onChange={() => props.onToggle(key)} />
                   <span>{def.display_name}</span>
                   {props.loading.has(def.key) && <small>Loading…</small>}
+                  {props.errors?.[def.key] && <small role="status">{props.errors[def.key]}</small>}
                   {checked && below && <small title={`Visible from zoom ${def.min_zoom}`}>Zoom in to view</small>}
                 </label>
               );

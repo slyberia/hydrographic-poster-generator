@@ -496,6 +496,7 @@ function Console({
           referenceLayerDefinitions={reference.definitions}
           referenceLayerEnabled={reference.enabled}
           referenceLayerLoading={reference.loading}
+          referenceLayerErrors={reference.errors}
           referenceLayerZoom={reference.zoom}
           onReferenceLayerToggle={reference.toggle}
           onRunModel={runModel}

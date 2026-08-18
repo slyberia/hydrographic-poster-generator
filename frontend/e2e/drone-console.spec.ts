@@ -78,6 +78,21 @@ test("Milestone C: reference layers are controlled independently and cached", as
   await expect.poll(() => state.requested.filter((p) => p === "/public/drone/reference-layers/schools").length).toBe(1);
 });
 
+test("reference-layer failures are surfaced once instead of retrying indefinitely", async ({ page }) => {
+  const state = await openConsole(page);
+  let failedSchoolRequests = 0;
+  await page.route("http://localhost:8000/public/drone/reference-layers/schools", async (route) => {
+    failedSchoolRequests += 1;
+    await route.fulfill({ status: 500, contentType: "application/json", body: '{"detail":"boom"}' });
+  });
+
+  for (let i = 0; i < 5; i += 1) await page.locator(".leaflet-control-zoom-in").click();
+  await page.getByRole("checkbox", { name: "Schools" }).click();
+  await expect(page.getByText("Unavailable. Toggle to retry.")).toBeVisible();
+  expect(failedSchoolRequests).toBe(1);
+  expect(state.requested.filter((p) => p === "/public/drone/reference-layers/schools")).toHaveLength(0);
+});
+
 test("QA-2: trigger sweep — progress advances, sidebar unchanged", async ({ page }) => {
   await openConsole(page);
   await triggerSweep(page);

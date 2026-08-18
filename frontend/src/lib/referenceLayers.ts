@@ -15,6 +15,7 @@ export function useReferenceLayers(options: {
   const [enabled, setEnabled] = useState<Set<ReferenceLayerKey>>(new Set());
   const [data, setData] = useState<ReferenceLayerData>({});
   const [loading, setLoading] = useState<Set<string>>(new Set());
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [zoom, setZoom] = useState(0);
   const allowed = options.allowed;
   const allowedKey = allowed?.join(",") ?? "*";
@@ -29,11 +30,15 @@ export function useReferenceLayers(options: {
   }, [allowedKey, defaultsKey]);
 
   const load = useCallback(async (key: ReferenceLayerKey) => {
-    if (data[key] || loading.has(key)) return;
+    if (data[key] || loading.has(key) || errors[key]) return;
     setLoading((prev) => new Set(prev).add(key));
     try {
       const fc = await publicDroneApi.getReferenceLayer(key);
       setData((prev) => ({ ...prev, [key]: fc }));
+    } catch {
+      // Do not immediately retry a failed category: retries would exhaust the
+      // public request budget and conceal the useful failure state from users.
+      setErrors((prev) => ({ ...prev, [key]: "Unavailable. Toggle to retry." }));
     } finally {
       setLoading((prev) => { const next = new Set(prev); next.delete(key); return next; });
     }
@@ -46,6 +51,10 @@ export function useReferenceLayers(options: {
   }, [definitions, enabled, load, zoom]);
 
   const toggle = useCallback((key: ReferenceLayerKey) => {
+    setErrors((prev) => {
+      if (!prev[key]) return prev;
+      return Object.fromEntries(Object.entries(prev).filter(([errorKey]) => errorKey !== key));
+    });
     setEnabled((prev) => {
       const next = new Set(prev);
       if (next.has(key)) next.delete(key); else next.add(key);
@@ -61,5 +70,5 @@ export function useReferenceLayers(options: {
     return output;
   }, [data, definitions, enabled, zoom]);
 
-  return { definitions, enabled, data, visible, loading, zoom, setZoom, toggle };
+  return { definitions, enabled, data, visible, loading, errors, zoom, setZoom, toggle };
 }
