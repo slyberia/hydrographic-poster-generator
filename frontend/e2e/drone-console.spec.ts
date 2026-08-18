@@ -67,6 +67,11 @@ test("Milestone B: analytical cells are lazy-loaded once and reused", async ({ p
 test("Milestone C: reference layers are controlled independently and cached", async ({ page }) => {
   const state = await openConsole(page);
   await expect(page.getByRole("checkbox", { name: "Airports" })).toBeChecked();
+  await expect(page.getByRole("checkbox", { name: "Runways" })).toBeDisabled();
+  await expect(page.getByRole("checkbox", { name: "Government" })).toBeDisabled();
+  await expect(page.getByRole("checkbox", { name: "Police" })).toBeDisabled();
+  await expect(page.getByRole("checkbox", { name: "Fire" })).toBeDisabled();
+  await expect(page.getByText("Coming soon — verified runway geometry has not yet been added.")).toBeVisible();
   await expect(page.getByRole("checkbox", { name: "Schools" })).not.toBeChecked();
   await expect.poll(() => state.requested.filter((p) => p === "/public/drone/reference-layers/airports").length).toBe(1);
   expect(state.requested).not.toContain("/public/drone/reference-layers/schools");
@@ -76,6 +81,21 @@ test("Milestone C: reference layers are controlled independently and cached", as
   await page.getByRole("checkbox", { name: "Schools" }).click();
   await page.getByRole("checkbox", { name: "Schools" }).click();
   await expect.poll(() => state.requested.filter((p) => p === "/public/drone/reference-layers/schools").length).toBe(1);
+});
+
+test("reference-layer failures are surfaced once instead of retrying indefinitely", async ({ page }) => {
+  const state = await openConsole(page);
+  let failedSchoolRequests = 0;
+  await page.route("http://localhost:8000/public/drone/reference-layers/schools", async (route) => {
+    failedSchoolRequests += 1;
+    await route.fulfill({ status: 500, contentType: "application/json", body: '{"detail":"boom"}' });
+  });
+
+  for (let i = 0; i < 5; i += 1) await page.locator(".leaflet-control-zoom-in").click();
+  await page.getByRole("checkbox", { name: "Schools" }).click();
+  await expect(page.getByText("Unavailable. Toggle to retry.")).toBeVisible();
+  expect(failedSchoolRequests).toBe(1);
+  expect(state.requested.filter((p) => p === "/public/drone/reference-layers/schools")).toHaveLength(0);
 });
 
 test("QA-2: trigger sweep — progress advances, sidebar unchanged", async ({ page }) => {

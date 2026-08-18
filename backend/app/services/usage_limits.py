@@ -40,6 +40,13 @@ RULES: Dict[str, Dict[str, LimitRule]] = {
         "viewer": LimitRule(20, 3600, 60),
         "analyst": LimitRule(40, 3600, 100),
     },
+    # Reference layers are small, cacheable contextual GeoJSON responses. They
+    # must not share the much stricter published-zoning download budget.
+    "reference": {
+        "anonymous": LimitRule(60, 60, 240),
+        "viewer": LimitRule(120, 60, 360),
+        "analyst": LimitRule(180, 60, 420),
+    },
     "export": {
         "anonymous": LimitRule(2, 600, 10),
         "viewer": LimitRule(6, 600, 20),

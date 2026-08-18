@@ -121,6 +121,7 @@ export default function ControlRail(props: {
   referenceLayerDefinitions: ReferenceLayerDefinition[];
   referenceLayerEnabled: Set<ReferenceLayerKey>;
   referenceLayerLoading: Set<string>;
+  referenceLayerErrors?: Record<string, string>;
   referenceLayerZoom: number;
   onReferenceLayerToggle: (key: ReferenceLayerKey) => void;
   onRunModel: (label: string, overrides?: Record<string, number>) => void;
@@ -439,6 +440,7 @@ export default function ControlRail(props: {
             definitions={props.referenceLayerDefinitions}
             enabled={props.referenceLayerEnabled}
             loading={props.referenceLayerLoading}
+            errors={props.referenceLayerErrors}
             zoom={props.referenceLayerZoom}
             onToggle={props.onReferenceLayerToggle}
           />
