@@ -20,6 +20,8 @@ async def test_validate_taxonomy_registry_success():
         {"layer_id": 3, "layer_key": "guynode_infrastructure", "is_active": True},
         {"layer_id": 4, "layer_key": "guynode_airports", "is_active": True},
         {"layer_id": 5, "layer_key": "guynode_protected_areas", "is_active": True},
+        {"layer_id": 6, "layer_key": "osm_public_safety_facilities", "is_active": True},
+        {"layer_id": 7, "layer_key": "osm_government_facilities", "is_active": True},
     ]
     
     # Mock mcda_subtypes select return values: all mapped subtypes exist
@@ -33,6 +35,9 @@ async def test_validate_taxonomy_registry_success():
         {"subtype_id": 16, "subtype_key": "heliport_proximity"},
         {"subtype_id": 17, "subtype_key": "protected_area"},
         {"subtype_id": 19, "subtype_key": "pier"},
+        {"subtype_id": 20, "subtype_key": "police"},
+        {"subtype_id": 21, "subtype_key": "fire_station"},
+        {"subtype_id": 22, "subtype_key": "government_facility"},
     ]
 
     mock_conn.fetch.side_effect = lambda sql, *args: (
@@ -41,8 +46,8 @@ async def test_validate_taxonomy_registry_success():
 
     layer_id_map, subtype_id_map = await validate_taxonomy_registry(mock_conn)
 
-    assert len(layer_id_map) == 5
-    assert len(subtype_id_map) == 9
+    assert len(layer_id_map) == 7
+    assert len(subtype_id_map) == 12
     assert layer_id_map["guynode_schools_r4"] == 1
     assert subtype_id_map["school"] == 10
 
@@ -59,6 +64,8 @@ async def test_validate_taxonomy_registry_inactive_layer_fails():
         {"layer_id": 3, "layer_key": "guynode_infrastructure", "is_active": True},
         {"layer_id": 4, "layer_key": "guynode_airports", "is_active": True},
         {"layer_id": 5, "layer_key": "guynode_protected_areas", "is_active": True},
+        {"layer_id": 6, "layer_key": "osm_public_safety_facilities", "is_active": True},
+        {"layer_id": 7, "layer_key": "osm_government_facilities", "is_active": True},
     ]
     
     mock_subtypes = [
@@ -71,6 +78,9 @@ async def test_validate_taxonomy_registry_inactive_layer_fails():
         {"subtype_id": 16, "subtype_key": "heliport_proximity"},
         {"subtype_id": 17, "subtype_key": "protected_area"},
         {"subtype_id": 19, "subtype_key": "pier"},
+        {"subtype_id": 20, "subtype_key": "police"},
+        {"subtype_id": 21, "subtype_key": "fire_station"},
+        {"subtype_id": 22, "subtype_key": "government_facility"},
     ]
 
     mock_conn.fetch.side_effect = lambda sql, *args: (
@@ -92,6 +102,8 @@ async def test_validate_taxonomy_registry_missing_subtype_fails():
         {"layer_id": 3, "layer_key": "guynode_infrastructure", "is_active": True},
         {"layer_id": 4, "layer_key": "guynode_airports", "is_active": True},
         {"layer_id": 5, "layer_key": "guynode_protected_areas", "is_active": True},
+        {"layer_id": 6, "layer_key": "osm_public_safety_facilities", "is_active": True},
+        {"layer_id": 7, "layer_key": "osm_government_facilities", "is_active": True},
     ]
     
     # Missing 'school' subtype key
@@ -104,6 +116,9 @@ async def test_validate_taxonomy_registry_missing_subtype_fails():
         {"subtype_id": 16, "subtype_key": "heliport_proximity"},
         {"subtype_id": 17, "subtype_key": "protected_area"},
         {"subtype_id": 19, "subtype_key": "pier"},
+        {"subtype_id": 20, "subtype_key": "police"},
+        {"subtype_id": 21, "subtype_key": "fire_station"},
+        {"subtype_id": 22, "subtype_key": "government_facility"},
     ]
 
     mock_conn.fetch.side_effect = lambda sql, *args: (

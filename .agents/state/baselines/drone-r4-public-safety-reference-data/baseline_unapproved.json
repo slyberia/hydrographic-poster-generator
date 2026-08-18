@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "drone-r4-public-safety-reference-data",
+  "branch": "agent/curate-r4-public-safety-reference",
+  "commit": "113b0c9a86506cc1587999ceac780a480f4f131d",
+  "generated_at": "2026-08-18T16:38:42.209556+00:00",
+  "commands_file": ".agents\\config\\verification_commands_drone_r4_public_safety_reference_data.json",
+  "commands": [
+    {
+      "name": "drone_reference_data_tests",
+      "cwd": ".",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_feature_ingestion.py",
+        "backend/tests/test_drone_reference_layers.py",
+        "-q"
+      ],
+      "exit_code": 1,
+      "duration_seconds": 0.039,
+      "stdout_file": ".agents\\state\\baselines\\drone-r4-public-safety-reference-data\\drone_reference_data_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\drone-r4-public-safety-reference-data\\drone_reference_data_tests.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "unclassified"
+    }
+  ],
+  "test_cases": [],
+  "notes": "Human approved on 2026-08-18. The original failure was an environment/setup issue: pytest was not installed in the available Python interpreter."
+}

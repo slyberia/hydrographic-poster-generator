@@ -7,6 +7,7 @@ from scripts.ingest_drone_data import (
     MANUAL_FEATURES,
     parse_osm_pbf_file,
     normalize_tags,
+    enrich_reference_attrs,
 )
 
 
@@ -38,6 +39,23 @@ def test_match_osm_element_no_match():
     }
     matches = match_osm_element(elem)
     assert len(matches) == 0
+
+
+def test_public_safety_and_government_osm_mappings_are_reference_only():
+    police_matches = match_osm_element({"type": "node", "id": 1, "tags": {"amenity": "police"}})
+    fire_matches = match_osm_element({"type": "node", "id": 2, "tags": {"amenity": "fire_station"}})
+    government_matches = match_osm_element({"type": "node", "id": 3, "tags": {"office": "government"}})
+    townhall_matches = match_osm_element({"type": "node", "id": 4, "tags": {"amenity": "townhall"}})
+
+    assert police_matches[0][1]["subtype_key"] == "police"
+    assert fire_matches[0][1]["subtype_key"] == "fire_station"
+    assert {government_matches[0][1]["subtype_key"], townhall_matches[0][1]["subtype_key"]} == {"government_facility"}
+
+    original_tags = {"amenity": "police", "name": "Test Police"}
+    attrs = enrich_reference_attrs(original_tags, police_matches[0][1])
+    assert attrs["reference_category"] == "police"
+    assert attrs["classification_effect"] == "none"
+    assert original_tags == {"amenity": "police", "name": "Test Police"}
 
 
 def test_normalize_tags():
@@ -113,6 +131,8 @@ def test_build_overpass_query():
     assert "6.4,-58.3,6.9,-58.0" in query
     assert "amenity" in query
     assert "power" in query
+    assert "fire_station" in query
+    assert 'office' in query
 
 
 def test_manual_features_structure():
