@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-18T17:25:56.516122+00:00",
+  "phase_id": "drone-r4-public-safety-reference-data",
+  "baseline_commit": "113b0c9a86506cc1587999ceac780a480f4f131d",
+  "approved_baseline_file": ".agents\\state\\baselines\\drone-r4-public-safety-reference-data\\baseline_unapproved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_drone_r4_public_safety_reference_data.json",
+    ".agents/phase_walkthrough.md",
+    ".agents/state/baselines/drone-r4-public-safety-reference-data/baseline_unapproved.json",
+    ".agents/state/baselines/drone-r4-public-safety-reference-data/baseline_unapproved.md",
+    ".agents/state/baselines/drone-r4-public-safety-reference-data/drone_reference_data_tests.stderr.txt",
+    ".agents/state/baselines/drone-r4-public-safety-reference-data/drone_reference_data_tests.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/drone-r4-public-safety-reference-data/drone_reference_data_tests.stderr.txt",
+    ".agents/state/verifications/drone-r4-public-safety-reference-data/drone_reference_data_tests.stdout.txt",
+    ".agents/state/verifications/drone-r4-public-safety-reference-data/post_edit_verification.json",
+    ".agents/state/verifications/drone-r4-public-safety-reference-data/post_edit_verification.md",
+    "backend/app/services/drone_reference_service.py",
+    "backend/tests/test_drone_reference_layers.py",
+    "backend/tests/test_feature_ingestion.py",
+    "backend/tests/test_ingestion_dry_run.py",
+    "db/migrations/015_r4_public_safety_reference_data.sql",
+    "docs/DRONE_REFERENCE_DATA.md",
+    "frontend/e2e/mockBackend.ts",
+    "scripts/ingest_drone_data.py"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "drone_reference_data_tests",
+      "command": [
+        ".venv\\Scripts\\python",
+        "-m",
+        "pytest",
+        "backend/tests/test_feature_ingestion.py",
+        "backend/tests/test_drone_reference_layers.py",
+        "-q"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 1.127,
+      "stdout_file": ".agents\\state\\verifications\\drone-r4-public-safety-reference-data\\drone_reference_data_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\drone-r4-public-safety-reference-data\\drone_reference_data_tests.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

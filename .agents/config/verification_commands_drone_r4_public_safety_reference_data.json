@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "drone_reference_data_tests",
+      "command": [
+        ".venv\\Scripts\\python",
+        "-m",
+        "pytest",
+        "backend/tests/test_feature_ingestion.py",
+        "backend/tests/test_drone_reference_layers.py",
+        "-q"
+      ],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Region 4 police, fire and government reference-only data. The phase must not alter model scoring, classifications, deployment or production schema."
+}

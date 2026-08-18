@@ -110,6 +110,46 @@ FEATURE_MAPPINGS = {
         },
         "allowed_geometry_types": {"Polygon", "MultiPolygon"},
         "default_confidence": "proxy_osm",
+    },
+    "police": {
+        "layer_key": "osm_public_safety_facilities",
+        "subtype_key": "police",
+        "reference_category": "police",
+        "osm_match": {
+            "amenity": {"police"}
+        },
+        "allowed_geometry_types": {"Point", "Polygon", "MultiPolygon"},
+        "default_confidence": "proxy_osm",
+    },
+    "fire_station": {
+        "layer_key": "osm_public_safety_facilities",
+        "subtype_key": "fire_station",
+        "reference_category": "fire",
+        "osm_match": {
+            "amenity": {"fire_station"}
+        },
+        "allowed_geometry_types": {"Point", "Polygon", "MultiPolygon"},
+        "default_confidence": "proxy_osm",
+    },
+    "government_office": {
+        "layer_key": "osm_government_facilities",
+        "subtype_key": "government_facility",
+        "reference_category": "government",
+        "osm_match": {
+            "office": {"government"}
+        },
+        "allowed_geometry_types": {"Point", "Polygon", "MultiPolygon"},
+        "default_confidence": "proxy_osm",
+    },
+    "townhall": {
+        "layer_key": "osm_government_facilities",
+        "subtype_key": "government_facility",
+        "reference_category": "government",
+        "osm_match": {
+            "amenity": {"townhall"}
+        },
+        "allowed_geometry_types": {"Point", "Polygon", "MultiPolygon"},
+        "default_confidence": "proxy_osm",
     }
 }
 
@@ -293,6 +333,15 @@ def build_overpass_query(bbox: Tuple[float, float, float, float]) -> str:
   node["industrial"="port"]({bbox_str});
   way["harbour"="yes"]({bbox_str});
   way["industrial"="port"]({bbox_str});
+
+  node["amenity"="police"]({bbox_str});
+  way["amenity"="police"]({bbox_str});
+  node["amenity"="fire_station"]({bbox_str});
+  way["amenity"="fire_station"]({bbox_str});
+  node["office"="government"]({bbox_str});
+  way["office"="government"]({bbox_str});
+  node["amenity"="townhall"]({bbox_str});
+  way["amenity"="townhall"]({bbox_str});
 );
 out body geom;"""
     return query
@@ -343,6 +392,15 @@ def normalize_tags(item: Dict[str, Any]) -> Dict[str, str]:
     """Helper to resolve tag vs tags formatting inconsistencies in OSM datasets."""
     raw = item.get("tags") or item.get("tag") or {}
     return {str(k): str(v) for k, v in raw.items()} if isinstance(raw, dict) else {}
+
+
+def enrich_reference_attrs(tags: Dict[str, str], config: Dict[str, Any]) -> Dict[str, str]:
+    """Add the explicit public-map category to reference-only OSM features."""
+    attrs = dict(tags)
+    if reference_category := config.get("reference_category"):
+        attrs["reference_category"] = reference_category
+        attrs["classification_effect"] = "none"
+    return attrs
 
 
 def match_osm_element(elem: Dict[str, Any]) -> List[Tuple[str, Dict[str, Any]]]:
@@ -675,7 +733,7 @@ async def execute_stage(args: argparse.Namespace) -> int:
             for item in matched_pbf_elements:
                 source_key = f"osm:{item['type']}:{item['id']}"
                 name = item.get("tag", {}).get("name")
-                attrs = item.get("tag", {})
+                attrs = enrich_reference_attrs(item.get("tag", {}), item["config"])
                 confidence = item["config"].get("default_confidence", "proxy_osm")
                 
                 features_data.append((
@@ -703,7 +761,7 @@ async def execute_stage(args: argparse.Namespace) -> int:
                     
                     source_key = f"osm:{elem['type']}:{elem['id']}"
                     name = elem.get("tags", {}).get("name")
-                    attrs = elem.get("tags", {})
+                    attrs = enrich_reference_attrs(elem.get("tags", {}), config)
                     confidence = config.get("default_confidence", "proxy_osm")
                     
                     features_data.append((

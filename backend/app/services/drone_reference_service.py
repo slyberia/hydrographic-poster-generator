@@ -19,9 +19,9 @@ REFERENCE_LAYER_CONFIG: list[dict[str, Any]] = [
     {"key": "airport_notification", "display_name": "Airport Notification Area", "group": "aviation", "min_zoom": 9, "label_min_zoom": 12, "default_enabled": False, "loading": "lazy"},
     {"key": "schools", "display_name": "Schools", "group": "infrastructure", "min_zoom": 13, "label_min_zoom": 15, "default_enabled": False, "loading": "lazy"},
     {"key": "healthcare", "display_name": "Healthcare", "group": "infrastructure", "min_zoom": 12, "label_min_zoom": 14, "default_enabled": False, "loading": "lazy"},
-    {"key": "government", "display_name": "Government", "group": "infrastructure", "min_zoom": 13, "label_min_zoom": 15, "default_enabled": False, "loading": "lazy", "available": False, "availability_note": "Coming soon — curated government-facility data has not yet been added."},
-    {"key": "police", "display_name": "Police", "group": "infrastructure", "min_zoom": 14, "label_min_zoom": 16, "default_enabled": False, "loading": "lazy", "available": False, "availability_note": "Coming soon — curated police-facility data has not yet been added."},
-    {"key": "fire", "display_name": "Fire", "group": "infrastructure", "min_zoom": 14, "label_min_zoom": 16, "default_enabled": False, "loading": "lazy", "available": False, "availability_note": "Coming soon — curated fire-service data has not yet been added."},
+    {"key": "government", "display_name": "Government", "group": "infrastructure", "min_zoom": 13, "label_min_zoom": 15, "default_enabled": False, "loading": "lazy"},
+    {"key": "police", "display_name": "Police", "group": "infrastructure", "min_zoom": 14, "label_min_zoom": 16, "default_enabled": False, "loading": "lazy"},
+    {"key": "fire", "display_name": "Fire", "group": "infrastructure", "min_zoom": 14, "label_min_zoom": 16, "default_enabled": False, "loading": "lazy"},
 ]
 
 
