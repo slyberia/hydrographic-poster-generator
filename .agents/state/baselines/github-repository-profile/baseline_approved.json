@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "github-repository-profile",
+  "branch": "agent/github-repository-profile",
+  "commit": "c3650f8544e926ddc216e708b2bee53bc776f0c4",
+  "approved_at": "2026-08-20T20:29:28Z",
+  "approval_message": "I approve, proceed.",
+  "source_baseline": ".agents/state/baselines/github-repository-profile/baseline_unapproved.json",
+  "commands": [
+    {
+      "name": "readme_profile_contract",
+      "exit_code": 1,
+      "classification": "expected_preexisting_failure",
+      "notes": "The current README omits HPS Geospatial and Drone Zoning and references the nonexistent docs/assets/hero-placeholder.png asset. These are the approved targets of this phase."
+    },
+    {
+      "name": "readme_diff_check",
+      "exit_code": 0,
+      "classification": "not_applicable",
+      "notes": "The baseline worktree has no whitespace errors."
+    }
+  ],
+  "environment_notes": []
+}

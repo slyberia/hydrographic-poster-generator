@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-20T20:44:24.195770+00:00",
+  "phase_id": "github-repository-profile",
+  "baseline_commit": "c3650f8544e926ddc216e708b2bee53bc776f0c4",
+  "approved_baseline_file": ".agents\\state\\baselines\\github-repository-profile\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_github_repository_profile.json",
+    ".agents/phase_walkthrough.md",
+    ".agents/state/baselines/github-repository-profile/baseline_approved.json",
+    ".agents/state/baselines/github-repository-profile/baseline_unapproved.json",
+    ".agents/state/baselines/github-repository-profile/baseline_unapproved.md",
+    ".agents/state/baselines/github-repository-profile/readme_diff_check.stderr.txt",
+    ".agents/state/baselines/github-repository-profile/readme_diff_check.stdout.txt",
+    ".agents/state/baselines/github-repository-profile/readme_profile_contract.stderr.txt",
+    ".agents/state/baselines/github-repository-profile/readme_profile_contract.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/github-repository-profile/post_edit_verification.json",
+    ".agents/state/verifications/github-repository-profile/post_edit_verification.md",
+    ".agents/state/verifications/github-repository-profile/readme_diff_check.stderr.txt",
+    ".agents/state/verifications/github-repository-profile/readme_diff_check.stdout.txt",
+    ".agents/state/verifications/github-repository-profile/readme_profile_contract.stderr.txt",
+    ".agents/state/verifications/github-repository-profile/readme_profile_contract.stdout.txt",
+    "README.md"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "readme_profile_contract",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-c",
+        "from pathlib import Path; import re, sys; text=Path('README.md').read_text(encoding='utf-8'); required=['HPS Geospatial','Drone Zoning','Hydrographic Poster Generator']; missing=[item for item in required if item not in text]; assets=re.findall(r'(?:src=\\\"|!\\[[^]]*\\]\\()([^\\\"?)#]+\\.(?:png|webp|svg))', text, flags=re.I); missing_assets=[asset for asset in assets if not asset.startswith(('http://','https://')) and not Path(asset).exists()]; problems=[*(f'missing identity: {item}' for item in missing),*(f'missing asset: {asset}' for asset in missing_assets)]; print('README profile contract passed' if not problems else '\\n'.join(problems)); sys.exit(1 if problems else 0)"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 0.053,
+      "stdout_file": ".agents\\state\\verifications\\github-repository-profile\\readme_profile_contract.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\github-repository-profile\\readme_profile_contract.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "readme_diff_check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 0.058,
+      "stdout_file": ".agents\\state\\verifications\\github-repository-profile\\readme_diff_check.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\github-repository-profile\\readme_diff_check.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}
