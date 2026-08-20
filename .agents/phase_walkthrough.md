@@ -1,40 +1,40 @@
-# Platform Polish Closeout
+# GitHub Repository Profile
 
 ## Outcome
 
-- Replaces the duplicate documentation Executive Overview with a permanent redirect to the canonical Drone homepage.
-- Corrects Drone platform documentation to describe the deployed Next.js, FastAPI, Supabase/PostGIS, Supabase Storage, and Cloud Run architecture.
-- Simplifies public Drone navigation and keeps methodology access inside the Planning Console.
-- Grounds overview and downloadable-brief claims in implemented planning behavior and export formats.
-- Gives the four capability cards distinct product miniatures and makes each card one complete keyboard-focusable link.
-- Keeps published dissolved maps on the lightweight SVG renderer while preserving canvas rendering for the high-volume analyst cell view.
-- Removes component-owned Leaflet layers before map destruction to prevent redraws against a destroyed renderer.
+- Repositions the repository README around the HPS Geospatial platform rather than only the original poster generator.
+- Presents Guyana Drone Zoning and the Hydrographic Poster Generator as the platform's two working applications.
+- Adds direct links to the live platform, Drone overview, Drone Public Explorer, Poster Generator, and System Library.
+- Documents the public/internal Drone workflow, dissolved-first publishing architecture, Poster Studio capabilities, shared stack, application routes, local setup, data ingestion, and current project boundaries.
+- Reuses repository-owned HPS, Drone map, and poster imagery; no new binary assets were introduced.
 
-## Browser evidence
+## GitHub profile metadata
 
-- Desktop and 320px mobile checks confirmed meaningful content, no horizontal overflow, canonical current-page navigation, and four distinct capability cards.
-- Captured evidence is stored in `.agents/state/verifications/platform-polish-closeout/`.
-- The rapid-route regression repeatedly mounts and unmounts the published map and fails on any browser page error.
+- Description: `HPS Geospatial combines Guyana Drone Zoning decision support with a PostGIS-powered Hydrographic Poster Generator. Built with Next.js, FastAPI, Supabase/PostGIS, Leaflet, and Google Cloud Run.`
+- Homepage: `https://hydro-frontend-54n4ik523a-uc.a.run.app/`
+- Topics: `aviation`, `cartography`, `data-visualization`, `decision-support`, `drone`, `drone-zoning`, `fastapi`, `geojson`, `geospatial`, `gis`, `google-cloud-run`, `guyana`, `hydrology`, `leaflet`, `nextjs`, `postgis`, `postgresql`, `spatial-analysis`, `spatial-data`, and `supabase`.
+- Repository name, visibility, license, social-preview image, branch settings, and collaboration settings were not changed.
 
 ## Verification
 
-- Frontend lint: passed with zero errors and the same two approved baseline hook warnings.
-- Next.js production build: passed, including TypeScript and all 24 static pages.
-- Full affected Playwright suite: `26 passed`.
-- Mandatory post-edit verification: passed with zero out-of-scope files, new failures, changed results, or ambiguous results.
-- `git diff --check`: passed.
+- README profile contract: verifies both products are named and every repository-local image reference resolves.
+- Markdown diff check: verifies no whitespace errors.
+- Live route checks: `/`, `/drone`, `/drone/start`, `/drone/explore`, `/poster`, and `/documentation` return HTTP 200 from the deployed Cloud Run frontend.
+- GitHub metadata readback: description, homepage, and the exact 20-topic set match the approved profile.
+- Mandatory post-edit verification records are stored in `.agents/state/verifications/github-repository-profile/`.
 
 ## Deployment and rollback
 
-- This phase does not change APIs, database schema/data, runtime dependencies, or production configuration.
-- No production deployment or merge was performed.
-- Deployment requires the normal reviewed PR and Cloud Run build workflow after explicit approval.
-- Before deployment, rollback is a normal Git revert. After deployment, revert the phase commit and redeploy the preceding known-good revision; no data rollback is required.
+- GitHub About metadata is already live; it does not require an application build or Cloud Run deployment.
+- The README is published through the separately approved feature-branch commit, push, and draft-PR workflow.
+- This phase does not change application code, APIs, database schema/data, runtime dependencies, Supabase configuration, or deployment configuration.
+- README rollback is a normal Git revert after publication.
+- Metadata rollback values are the previous poster-only description, a blank homepage, and the former topics: `cartography`, `data-visualization-project`, `fast-api`, `gis`, `nextjs`, `postgis`, `postgresql`, `spatial-analysis`, and `supabase-db`.
 
 ## Exit criteria
 
-- Scope verification: passed.
-- Approved baseline comparison: passed.
-- Applicable static and browser tests: passed.
-- Documentation and regression coverage: complete.
-- Phase result: complete; stop before beginning another phase.
+- Documentation scope: complete.
+- GitHub metadata: applied and verified.
+- Link and asset validation: complete.
+- Commit, push, and draft PR: authorized for this phase.
+- Merge and deployment: intentionally not performed.
