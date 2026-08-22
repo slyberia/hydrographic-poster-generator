@@ -20,7 +20,8 @@ router = APIRouter()
 
 
 @router.get("/reference-layers/config", tags=["Drone Public"], dependencies=[Depends(usage_limit("light"))])
-async def public_reference_config():
+async def public_reference_config(response: Response):
+    response.headers["Cache-Control"] = "public, max-age=60, stale-while-revalidate=3600"
     return await reference.get_reference_layer_config()
 
 

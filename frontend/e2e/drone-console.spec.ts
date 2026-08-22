@@ -68,9 +68,9 @@ test("Milestone C: reference layers are controlled independently and cached", as
   const state = await openConsole(page);
   await expect(page.getByRole("checkbox", { name: "Airports" })).toBeChecked();
   await expect(page.getByRole("checkbox", { name: "Runways" })).toBeDisabled();
-  await expect(page.getByRole("checkbox", { name: "Government" })).toBeDisabled();
-  await expect(page.getByRole("checkbox", { name: "Police" })).toBeDisabled();
-  await expect(page.getByRole("checkbox", { name: "Fire" })).toBeDisabled();
+  await expect(page.getByRole("checkbox", { name: "Government" })).toBeEnabled();
+  await expect(page.getByRole("checkbox", { name: "Police" })).toBeEnabled();
+  await expect(page.getByRole("checkbox", { name: "Fire" })).toBeEnabled();
   await expect(page.getByText("Coming soon — verified runway geometry has not yet been added.")).toBeVisible();
   await expect(page.getByRole("checkbox", { name: "Schools" })).not.toBeChecked();
   await expect.poll(() => state.requested.filter((p) => p === "/public/drone/reference-layers/airports").length).toBe(1);
@@ -84,12 +84,17 @@ test("Milestone C: reference layers are controlled independently and cached", as
 });
 
 test("reference-layer failures are surfaced once instead of retrying indefinitely", async ({ page }) => {
-  const state = await openConsole(page);
+  const state = await installMockBackend(page);
+  await page.route("http://localhost:8000/public/drone/reference-manifest.json", (route) =>
+    route.fulfill({ status: 404, contentType: "application/json", body: '{"detail":"not materialized"}' }));
   let failedSchoolRequests = 0;
   await page.route("http://localhost:8000/public/drone/reference-layers/schools", async (route) => {
     failedSchoolRequests += 1;
     await route.fulfill({ status: 500, contentType: "application/json", body: '{"detail":"boom"}' });
   });
+  await page.addInitScript(() => localStorage.setItem("drone.guideSeen.v1", "1"));
+  await page.goto("/drone/console");
+  await expect(page.locator(".leaflet-container")).toBeVisible();
 
   for (let i = 0; i < 5; i += 1) await page.locator(".leaflet-control-zoom-in").click();
   await page.getByRole("checkbox", { name: "Schools" }).click();

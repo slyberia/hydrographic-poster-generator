@@ -1,5 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { publicDroneApi, type ReferenceLayerDefinition } from "@/lib/publicDroneApi";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  publicDroneApi,
+  type ReferenceLayerConfig,
+  type ReferenceLayerDefinition,
+} from "@/lib/publicDroneApi";
 
 export type ReferenceLayerKey =
   | "airports" | "runways" | "runway_safeguarding" | "airport_notification"
@@ -7,63 +11,128 @@ export type ReferenceLayerKey =
 
 export type ReferenceLayerData = Record<string, GeoJSON.FeatureCollection>;
 
+export function scaleLabelForZoom(zoom: number): string {
+  if (zoom <= 8) return "Regional";
+  if (zoom <= 11) return "City";
+  if (zoom <= 14) return "Neighbourhood";
+  return "Site";
+}
+
+export function partitionReferenceDataset(
+  dataset: GeoJSON.FeatureCollection,
+  definitions: ReferenceLayerDefinition[],
+): ReferenceLayerData {
+  const output = Object.fromEntries(definitions.map((definition) => [
+    definition.key,
+    { type: "FeatureCollection", features: [] } as GeoJSON.FeatureCollection,
+  ]));
+  for (const feature of dataset.features) {
+    const key = feature.properties?.reference_layer_key;
+    if (typeof key === "string" && output[key]) output[key].features.push(feature);
+  }
+  return output;
+}
+
 export function useReferenceLayers(options: {
   enabledDefaults?: Partial<Record<ReferenceLayerKey, boolean>>;
   allowed?: ReferenceLayerKey[];
+  preferArtifact?: boolean;
 }) {
+  const [config, setConfig] = useState<ReferenceLayerConfig | null>(null);
   const [definitions, setDefinitions] = useState<ReferenceLayerDefinition[]>([]);
   const [enabled, setEnabled] = useState<Set<ReferenceLayerKey>>(new Set());
   const [data, setData] = useState<ReferenceLayerData>({});
   const [loading, setLoading] = useState<Set<string>>(new Set());
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [zoom, setZoom] = useState(0);
-  const allowed = options.allowed;
-  const allowedKey = allowed?.join(",") ?? "*";
+  const [artifactState, setArtifactState] = useState<"idle" | "loading" | "ready" | "unavailable">("idle");
+  const artifactRequestStarted = useRef(false);
+
+  const allowedKey = options.allowed?.join(",") ?? "*";
   const defaultsKey = JSON.stringify(options.enabledDefaults ?? {});
+  const preferArtifact = options.preferArtifact ?? true;
+  const allowed = useMemo(
+    () => allowedKey === "*" ? null : new Set(allowedKey.split(",") as ReferenceLayerKey[]),
+    [allowedKey],
+  );
+  const enabledDefaults = useMemo(
+    () => JSON.parse(defaultsKey) as Partial<Record<ReferenceLayerKey, boolean>>,
+    [defaultsKey],
+  );
 
   useEffect(() => {
-    void publicDroneApi.getReferenceConfig().then((config) => {
-      const defs = config.layers.filter((d) => !allowed || allowed.includes(d.key as ReferenceLayerKey));
+    void publicDroneApi.getReferenceConfig().then((nextConfig) => {
+      const defs = nextConfig.layers.filter((definition) =>
+        !allowed || allowed.has(definition.key as ReferenceLayerKey));
+      setConfig(nextConfig);
       setDefinitions(defs);
       setEnabled(new Set(defs
-        .filter((d) => d.available !== false)
-        .filter((d) => options.enabledDefaults?.[d.key as ReferenceLayerKey] ?? d.default_enabled)
-        .map((d) => d.key as ReferenceLayerKey)));
+        .filter((definition) => definition.available !== false)
+        .filter((definition) => enabledDefaults[definition.key as ReferenceLayerKey] ?? definition.default_enabled)
+        .map((definition) => definition.key as ReferenceLayerKey)));
     }).catch(() => setDefinitions([]));
-  }, [allowedKey, defaultsKey]);
+  }, [allowed, enabledDefaults]);
 
-  const load = useCallback(async (key: ReferenceLayerKey) => {
+  const loadDynamic = useCallback(async (key: ReferenceLayerKey) => {
     if (data[key] || loading.has(key) || errors[key]) return;
-    setLoading((prev) => new Set(prev).add(key));
+    setLoading((previous) => new Set(previous).add(key));
     try {
-      const fc = await publicDroneApi.getReferenceLayer(key);
-      setData((prev) => ({ ...prev, [key]: fc }));
+      const collection = await publicDroneApi.getReferenceLayer(key, config?.version);
+      setData((previous) => ({ ...previous, [key]: collection }));
     } catch {
-      // Do not immediately retry a failed category: retries would exhaust the
-      // public request budget and conceal the useful failure state from users.
-      setErrors((prev) => ({ ...prev, [key]: "Unavailable. Toggle to retry." }));
+      setErrors((previous) => ({ ...previous, [key]: "Unavailable. Toggle to retry." }));
     } finally {
-      setLoading((prev) => { const next = new Set(prev); next.delete(key); return next; });
+      setLoading((previous) => {
+        const next = new Set(previous);
+        next.delete(key);
+        return next;
+      });
     }
-  }, [data, errors, loading]);
+  }, [config, data, errors, loading]);
 
   useEffect(() => {
-    for (const def of definitions) {
-      if (def.available !== false && enabled.has(def.key as ReferenceLayerKey) && zoom >= def.min_zoom) {
-        // Defer the stateful request until after the effect has completed.
-        void Promise.resolve().then(() => load(def.key as ReferenceLayerKey));
-      }
+    const needed = definitions.filter((definition) =>
+      definition.available !== false
+      && enabled.has(definition.key as ReferenceLayerKey)
+      && zoom >= definition.min_zoom
+      && !data[definition.key]);
+    if (!needed.length) return;
+
+    if (preferArtifact && config?.manifest_url && artifactState === "idle" && !artifactRequestStarted.current) {
+      artifactRequestStarted.current = true;
+      void Promise.resolve().then(() => {
+        setArtifactState("loading");
+        setLoading((previous) => {
+          const next = new Set(previous);
+          needed.forEach((definition) => next.add(definition.key));
+          return next;
+        });
+        return publicDroneApi.getReferenceManifest(config.manifest_url!);
+      }).then((manifest) => publicDroneApi.getReferenceDataset(manifest))
+        .then((dataset) => {
+          setData((previous) => ({ ...previous, ...partitionReferenceDataset(dataset, definitions) }));
+          setArtifactState("ready");
+        })
+        .catch(() => setArtifactState("unavailable"))
+        .finally(() => setLoading(new Set()));
+      return;
     }
-  }, [definitions, enabled, load, zoom]);
+
+    if (!preferArtifact || !config?.manifest_url || artifactState === "unavailable") {
+      needed.forEach((definition) => {
+        void Promise.resolve().then(() => loadDynamic(definition.key as ReferenceLayerKey));
+      });
+    }
+  }, [artifactState, config?.manifest_url, data, definitions, enabled, loadDynamic, preferArtifact, zoom]);
 
   const toggle = useCallback((key: ReferenceLayerKey) => {
     if (definitions.find((definition) => definition.key === key)?.available === false) return;
-    setErrors((prev) => {
-      if (!prev[key]) return prev;
-      return Object.fromEntries(Object.entries(prev).filter(([errorKey]) => errorKey !== key));
+    setErrors((previous) => {
+      if (!previous[key]) return previous;
+      return Object.fromEntries(Object.entries(previous).filter(([errorKey]) => errorKey !== key));
     });
-    setEnabled((prev) => {
-      const next = new Set(prev);
+    setEnabled((previous) => {
+      const next = new Set(previous);
       if (next.has(key)) next.delete(key); else next.add(key);
       return next;
     });
@@ -71,11 +140,19 @@ export function useReferenceLayers(options: {
 
   const visible = useMemo(() => {
     const output: ReferenceLayerData = {};
-    for (const def of definitions) {
-      if (def.available !== false && enabled.has(def.key as ReferenceLayerKey) && zoom >= def.min_zoom && data[def.key]) output[def.key] = data[def.key];
+    for (const definition of definitions) {
+      if (
+        definition.available !== false
+        && enabled.has(definition.key as ReferenceLayerKey)
+        && zoom >= definition.min_zoom
+        && data[definition.key]
+      ) output[definition.key] = data[definition.key];
     }
     return output;
   }, [data, definitions, enabled, zoom]);
 
-  return { definitions, enabled, data, visible, loading, errors, zoom, setZoom, toggle };
+  return {
+    definitions, enabled, data, visible, loading, errors, zoom, setZoom, toggle,
+    source: preferArtifact && artifactState === "ready" ? "artifact" as const : "dynamic" as const,
+  };
 }

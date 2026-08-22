@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "reference-map-artifacts-scale-ux",
+  "branch": "agent/reference-map-artifacts-scale-ux",
+  "commit": "7b3203b12f133f10e38313d7f48e7765bf430c16",
+  "approved_at": "2026-08-21T22:43:00Z",
+  "approval_message": "I approve this baseline",
+  "source_baseline": ".agents/state/baselines/reference-map-artifacts-scale-ux/baseline_unapproved.json",
+  "commands": [
+    {"name": "backend_reference_and_publication_tests", "exit_code": 0, "classification": "not_applicable", "notes": "24 tests passed; one upstream Starlette deprecation warning."},
+    {"name": "frontend_lint", "exit_code": 0, "classification": "not_applicable", "notes": "Zero errors; two pre-existing React hook dependency warnings."},
+    {"name": "frontend_build", "exit_code": 0, "classification": "not_applicable", "notes": "Next.js production build completed successfully."},
+    {"name": "diff_check", "exit_code": 0, "classification": "not_applicable", "notes": "No whitespace errors."}
+  ],
+  "environment_notes": [
+    "All 24 selected Playwright tests reached browserType.launch: spawn EPERM before page assertions because this managed Windows sandbox blocks Chromium process creation.",
+    "Post-edit UI verification must use the connected in-app browser and record equivalent interaction, console, network, and responsive evidence."
+  ]
+}

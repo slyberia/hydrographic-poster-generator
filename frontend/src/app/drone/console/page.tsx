@@ -114,7 +114,10 @@ function Console({
   const viewportRef = useRef<(() => ViewportSnapshot) | null>(null);
 
   const sensitivity = useSensitivity(activeRun);
-  const reference = useReferenceLayers({ enabledDefaults: CONSOLE_REFERENCE_DEFAULTS });
+  const reference = useReferenceLayers({
+    enabledDefaults: CONSOLE_REFERENCE_DEFAULTS,
+    preferArtifact: false,
+  });
   const canRun = appRole === "analyst" || appRole === "admin";
   const canManagePublication = appRole === "admin";
 

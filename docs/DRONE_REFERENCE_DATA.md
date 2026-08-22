@@ -45,3 +45,7 @@ canonical Region 4 feature set.
 
 OpenStreetMap attribution: © OpenStreetMap contributors, available under the
 [Open Database License](https://www.openstreetmap.org/copyright).
+
+## Publication availability
+
+The curated records are introduced by migration 015. Until that migration is applied to an environment, the dynamic and materialized Government, Police, and Fire categories are valid but empty. After applying the migration, refresh the public artifact through `POST /admin/materialize-reference-layers`; the stable manifest records feature counts so deployment verification can distinguish an empty source from a rendering problem.

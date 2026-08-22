@@ -10,6 +10,8 @@
 import { test, expect, Page, Route } from "@playwright/test";
 
 const API = "http://localhost:8000";
+const REFERENCE_MANIFEST = `${API}/public/drone/reference-manifest.json`;
+const REFERENCE_ARTIFACT = `${API}/public/drone/reference-artifact-v2.geojson`;
 
 const CELLS = [
   { h3: "cell_a", zone: "SUITABLE", lng: [-58.12, -58.11], lat: [6.61, 6.62] },
@@ -106,15 +108,33 @@ async function installPublicMock(page: Page, opts: MockOpts = {}) {
     }
     if (path === "/public/drone/reference-layers/config") {
       return json(route, {
-        version: "milestone-c-v1",
+        version: "reference-layers-v2",
+        manifest_url: REFERENCE_MANIFEST,
         layers: [
           { key: "airports", display_name: "Airports", group: "aviation", min_zoom: 8, label_min_zoom: 11, default_enabled: true, loading: "eager" },
-          { key: "runways", display_name: "Runways", group: "aviation", min_zoom: 11, label_min_zoom: 13, default_enabled: true, loading: "lazy" },
-          { key: "runway_safeguarding", display_name: "Runway Safeguarding", group: "aviation", min_zoom: 10, label_min_zoom: 13, default_enabled: true, loading: "lazy" },
+          { key: "runways", display_name: "Runways", group: "aviation", min_zoom: 11, label_min_zoom: 13, default_enabled: false, loading: "lazy", available: false, availability_note: "Coming soon" },
+          { key: "runway_safeguarding", display_name: "Runway Safeguarding", group: "aviation", min_zoom: 10, label_min_zoom: 13, default_enabled: false, loading: "lazy", available: false, availability_note: "Coming soon" },
+          { key: "airport_notification", display_name: "Airport Notification Area", group: "aviation", min_zoom: 9, label_min_zoom: 12, default_enabled: false, loading: "lazy" },
           { key: "schools", display_name: "Schools", group: "infrastructure", min_zoom: 13, label_min_zoom: 15, default_enabled: false, loading: "lazy" },
+          { key: "healthcare", display_name: "Healthcare", group: "infrastructure", min_zoom: 12, label_min_zoom: 14, default_enabled: false, loading: "lazy" },
+          { key: "government", display_name: "Government", group: "infrastructure", min_zoom: 13, label_min_zoom: 15, default_enabled: false, loading: "lazy" },
+          { key: "police", display_name: "Police", group: "infrastructure", min_zoom: 14, label_min_zoom: 16, default_enabled: false, loading: "lazy" },
+          { key: "fire", display_name: "Fire", group: "infrastructure", min_zoom: 14, label_min_zoom: 16, default_enabled: false, loading: "lazy" },
         ],
       });
     }
+    if (path === "/public/drone/reference-manifest.json") return json(route, {
+      schema_version: 1, dataset_version: "mock-reference-v2", generated_at: "2026-08-21T00:00:00Z", reference_only: true,
+      artifact: { url: REFERENCE_ARTIFACT, storage_path: "mock/reference.geojson", sha256: "mock-reference-v2", byte_size: 1, feature_count: 2 },
+      layers: [],
+    });
+    if (path === "/public/drone/reference-artifact-v2.geojson") return json(route, {
+      type: "FeatureCollection",
+      features: [
+        { type: "Feature", geometry: { type: "Point", coordinates: [-58.1, 6.61] }, properties: { name: "Mock airport", reference_layer_key: "airports", reference_group: "aviation" } },
+        { type: "Feature", geometry: { type: "Point", coordinates: [-58.11, 6.615] }, properties: { name: "Mock school", reference_layer_key: "schools", reference_group: "infrastructure" } },
+      ],
+    });
     const reference = path.match(/^\/public\/drone\/reference-layers\/([^/]+)$/);
     if (reference) return json(route, { type: "FeatureCollection", features: [] });
     if (path === "/public/drone/zoning") return json(route, zoning());
@@ -158,6 +178,17 @@ test("loads published zoning with no authentication", async ({ page }) => {
   // infer an unpublished run.
   expect(requested.some((p) => p.startsWith("/runs"))).toBe(false);
   expect(requested).toContain("/public/drone/dissolved");
+  expect(requested).toContain("/public/drone/reference-artifact-v2.geojson");
+  await expect(page.getByRole("group", { name: "Map scale and zoom" })).toBeVisible();
+});
+
+test("layer scale targets move the reactive zoom control", async ({ page }) => {
+  await installPublicMock(page);
+  await page.goto("/drone/explore");
+
+  await page.getByRole("button", { name: "Zoom map to Z13 to show Schools" }).click();
+  await expect(page.getByRole("slider", { name: "Map zoom" })).toHaveValue("13");
+  await expect(page.getByText("Z13 · Neighbourhood")).toBeVisible();
 });
 
 test("dissolved map features do not trigger cell reports", async ({ page }) => {

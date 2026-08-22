@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-22T15:24:53.974264+00:00",
+  "phase_id": "reference-map-artifacts-scale-ux",
+  "baseline_commit": "7b3203b12f133f10e38313d7f48e7765bf430c16",
+  "approved_baseline_file": ".agents\\state\\baselines\\reference-map-artifacts-scale-ux\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_reference_map_artifacts_scale_ux.json",
+    ".agents/phase_walkthrough.md",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/backend_reference_and_publication_tests.stderr.txt",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/backend_reference_and_publication_tests.stdout.txt",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/baseline_approved.json",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/baseline_approved.md",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/baseline_review.md",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/baseline_unapproved.json",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/baseline_unapproved.md",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/diff_check.stderr.txt",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/diff_check.stdout.txt",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/frontend_build.stderr.txt",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/frontend_build.stdout.txt",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/frontend_lint.stderr.txt",
+    ".agents/state/baselines/reference-map-artifacts-scale-ux/frontend_lint.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/backend_reference_and_publication_tests.stderr.txt",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/backend_reference_and_publication_tests.stdout.txt",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/diff_check.stderr.txt",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/diff_check.stdout.txt",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/frontend_build.stderr.txt",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/frontend_build.stdout.txt",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/frontend_lint.stderr.txt",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/frontend_lint.stdout.txt",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/post_edit_verification.json",
+    ".agents/state/verifications/reference-map-artifacts-scale-ux/post_edit_verification.md",
+    "backend/app/routers/admin.py",
+    "backend/app/routers/public_drone.py",
+    "backend/app/services/drone_reference_service.py",
+    "backend/tests/test_drone_reference_layers.py",
+    "docs/DRONE_REFERENCE_DATA.md",
+    "docs/DRONE_REFERENCE_LAYERS.md",
+    "frontend/e2e/drone-console.spec.ts",
+    "frontend/e2e/drone-explore.spec.ts",
+    "frontend/e2e/mockBackend.ts",
+    "frontend/src/app/drone/console/page.tsx",
+    "frontend/src/app/drone/dashboard/page.tsx",
+    "frontend/src/app/globals.css",
+    "frontend/src/components/drone/MapView.tsx",
+    "frontend/src/components/drone/PublicExplorer.tsx",
+    "frontend/src/components/drone/ReferenceLayerControls.tsx",
+    "frontend/src/lib/publicDroneApi.ts",
+    "frontend/src/lib/referenceLayers.ts"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend_reference_and_publication_tests",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_drone_reference_layers.py",
+        "tests/test_drone_publication.py",
+        "-q"
+      ],
+      "cwd": "backend",
+      "exit_code": 0,
+      "duration_seconds": 5.36,
+      "stdout_file": ".agents\\state\\verifications\\reference-map-artifacts-scale-ux\\backend_reference_and_publication_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\reference-map-artifacts-scale-ux\\backend_reference_and_publication_tests.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "C:\\Program Files\\nodejs\\npm.cmd",
+        "run",
+        "lint"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 24.376,
+      "stdout_file": ".agents\\state\\verifications\\reference-map-artifacts-scale-ux\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\reference-map-artifacts-scale-ux\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_build",
+      "command": [
+        "C:\\Program Files\\nodejs\\npm.cmd",
+        "run",
+        "build"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 34.836,
+      "stdout_file": ".agents\\state\\verifications\\reference-map-artifacts-scale-ux\\frontend_build.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\reference-map-artifacts-scale-ux\\frontend_build.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "diff_check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 0.182,
+      "stdout_file": ".agents\\state\\verifications\\reference-map-artifacts-scale-ux\\diff_check.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\reference-map-artifacts-scale-ux\\diff_check.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

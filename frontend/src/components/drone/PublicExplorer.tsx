@@ -25,6 +25,7 @@ import PublicReportDrawer from "@/components/drone/PublicReportDrawer";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 import ReferenceLayerControls from "@/components/drone/ReferenceLayerControls";
 import { useReferenceLayers, type ReferenceLayerKey } from "@/lib/referenceLayers";
+import type { MapZoomRequest } from "@/components/drone/MapView";
 
 // Leaflet touches `window`; render the map client-side only.
 const MapView = dynamic(() => import("@/components/drone/MapView"), { ssr: false });
@@ -60,8 +61,9 @@ export default function PublicExplorer() {
   const [focusPoint, setFocusPoint] = useState<{ lat: number; lon: number } | null>(null);
   const [hiddenZones, setHiddenZones] = useState<Set<Zone>>(new Set());
   const [appRole, setAppRole] = useState<AppRole | null>(null);
+  const [zoomRequest, setZoomRequest] = useState<MapZoomRequest | null>(null);
   const reference = useReferenceLayers({
-    allowed: ["airports", "runways", "runway_safeguarding", "airport_notification", "schools", "healthcare"],
+    allowed: ["airports", "runways", "runway_safeguarding", "airport_notification", "schools", "healthcare", "government", "police", "fire"],
     enabledDefaults: PUBLIC_REFERENCE_DEFAULTS,
   });
 
@@ -268,6 +270,11 @@ export default function PublicExplorer() {
             errors={reference.errors}
             zoom={reference.zoom}
             onToggle={reference.toggle}
+            onZoomRequest={(key, zoom) => setZoomRequest((previous) => ({
+              id: (previous?.id ?? 0) + 1,
+              key,
+              zoom,
+            }))}
           />
         </aside>
 
@@ -281,6 +288,7 @@ export default function PublicExplorer() {
             fitBoundsKey={published?.published_at ?? null}
             referenceLayers={reference.visible}
             onZoomChange={reference.setZoom}
+            zoomRequest={zoomRequest}
           />
 
           {phase === "unavailable" && (

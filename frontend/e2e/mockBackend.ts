@@ -95,6 +95,7 @@ function dissolvedGeojson() {
 function referenceGeojson(key: string) {
   const points: Record<string, [number, number]> = {
     airports: [-58.1, 6.61], schools: [-58.11, 6.615], healthcare: [-58.115, 6.605],
+    government: [-58.125, 6.61], police: [-58.105, 6.6], fire: [-58.12, 6.605],
   };
   const point = points[key];
   return {
@@ -103,8 +104,27 @@ function referenceGeojson(key: string) {
   };
 }
 
+function unifiedReferenceGeojson() {
+  const keys = ["airports", "airport_notification", "schools", "healthcare", "government", "police", "fire"];
+  return {
+    type: "FeatureCollection",
+    features: keys.flatMap((key) => referenceGeojson(key).features.map((feature) => ({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        reference_layer_key: key,
+        reference_group: key === "airports" || key === "airport_notification" ? "aviation" : "infrastructure",
+      },
+    }))),
+  };
+}
+
+const REFERENCE_ARTIFACT = `${API}/public/drone/reference-artifact-v2.geojson`;
+const REFERENCE_MANIFEST = `${API}/public/drone/reference-manifest.json`;
+
 const REFERENCE_CONFIG = {
-  version: "milestone-c-v1",
+  version: "reference-layers-v2",
+  manifest_url: REFERENCE_MANIFEST,
   layers: [
     { key: "airports", display_name: "Airports", group: "aviation", min_zoom: 8, label_min_zoom: 11, default_enabled: true, loading: "eager" },
     { key: "runways", display_name: "Runways", group: "aviation", min_zoom: 11, label_min_zoom: 13, default_enabled: false, loading: "lazy", available: false, availability_note: "Coming soon — verified runway geometry has not yet been added." },
@@ -173,6 +193,15 @@ export async function installMockBackend(page: Page): Promise<MockState> {
       });
     }
     if (path === "/public/drone/reference-layers/config") return json(route, REFERENCE_CONFIG);
+    if (path === "/public/drone/reference-manifest.json") return json(route, {
+      schema_version: 1,
+      dataset_version: "mock-reference-v2",
+      generated_at: "2026-08-21T00:00:00Z",
+      reference_only: true,
+      artifact: { url: REFERENCE_ARTIFACT, storage_path: "mock/reference.geojson", sha256: "mock-reference-v2", byte_size: 1, feature_count: 6 },
+      layers: REFERENCE_CONFIG.layers.map((layer) => ({ key: layer.key, group: layer.group, available: layer.available !== false, feature_count: layer.available === false ? 0 : 1 })),
+    });
+    if (path === "/public/drone/reference-artifact-v2.geojson") return json(route, unifiedReferenceGeojson());
     const reference = path.match(/^\/public\/drone\/reference-layers\/([^/]+)$/);
     if (reference) return json(route, referenceGeojson(reference[1]));
 
