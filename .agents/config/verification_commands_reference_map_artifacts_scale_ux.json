@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "backend_reference_and_publication_tests",
+      "command": ["C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe", "-m", "pytest", "tests/test_drone_reference_layers.py", "tests/test_drone_publication.py", "-q"],
+      "cwd": "backend",
+      "enabled": true
+    },
+    {
+      "name": "frontend_lint",
+      "command": ["C:\\Program Files\\nodejs\\npm.cmd", "run", "lint"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "frontend_build",
+      "command": ["C:\\Program Files\\nodejs\\npm.cmd", "run", "build"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "frontend_reference_e2e",
+      "command": ["C:\\Program Files\\nodejs\\npm.cmd", "run", "test:e2e", "--", "e2e/drone-explore.spec.ts", "e2e/drone-console.spec.ts", "e2e/drone-dashboard.spec.ts"],
+      "cwd": "frontend",
+      "enabled": false,
+      "skip_reason": "This managed Windows sandbox rejects Playwright Chromium process creation with browserType.launch: spawn EPERM. The same 24/24 tests reached that environment failure during baseline collection; UI verification is performed with the connected in-app browser instead."
+    },
+    {
+      "name": "diff_check",
+      "command": ["git", "diff", "--check"],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Verification for the unified reference artifact contract, dynamic fallback, session caching, scale-dependent controls, zoom slider, and metric scale display. Playwright CLI is disabled only because Chromium process creation is blocked by this managed Windows sandbox; equivalent UI flows require connected in-app browser evidence. Production migration and deployment are intentionally excluded."
+}

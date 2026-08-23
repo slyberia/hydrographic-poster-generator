@@ -47,6 +47,33 @@ export interface ReferenceLayerDefinition {
   availability_note?: string;
 }
 
+export interface ReferenceArtifactManifest {
+  schema_version: number;
+  dataset_version: string;
+  generated_at: string;
+  reference_only: boolean;
+  artifact: {
+    url: string;
+    storage_path: string;
+    sha256: string;
+    byte_size: number;
+    feature_count: number;
+  };
+  layers: Array<{
+    key: string;
+    group: "aviation" | "infrastructure";
+    available: boolean;
+    feature_count: number;
+  }>;
+}
+
+export interface ReferenceLayerConfig {
+  layers: ReferenceLayerDefinition[];
+  version: string;
+  /** Stable Storage pointer. Older deployments omit it and use category APIs. */
+  manifest_url?: string;
+}
+
 export interface PublicReport {
   h3_index: string;
   zone: Zone;
@@ -103,9 +130,23 @@ export const publicDroneApi = {
   },
   getLayer: (artifactUrl: string, cacheKey: string) =>
     publicDroneApi.getZoning(artifactUrl, cacheKey),
-  getReferenceConfig: () => get<{ layers: ReferenceLayerDefinition[]; version: string }>("/public/drone/reference-layers/config"),
-  getReferenceLayer: async (key: string) => {
-    const cacheKey = `drone-reference:${key}`;
+  getReferenceConfig: () => get<ReferenceLayerConfig>("/public/drone/reference-layers/config"),
+  getReferenceManifest: (manifestUrl: string) =>
+    get<ReferenceArtifactManifest>(manifestUrl, { cache: "no-cache" }),
+  getReferenceDataset: async (manifest: ReferenceArtifactManifest) => {
+    const cacheKey = `drone-reference-dataset:${manifest.dataset_version}`;
+    if (typeof window !== "undefined") {
+      const cached = window.sessionStorage.getItem(cacheKey);
+      if (cached) return JSON.parse(cached) as GeoJSON.FeatureCollection;
+    }
+    const fc = await get<GeoJSON.FeatureCollection>(manifest.artifact.url, { cache: "force-cache" });
+    if (typeof window !== "undefined") {
+      try { window.sessionStorage.setItem(cacheKey, JSON.stringify(fc)); } catch { /* private mode/quota */ }
+    }
+    return fc;
+  },
+  getReferenceLayer: async (key: string, version = "legacy") => {
+    const cacheKey = `drone-reference:${version}:${key}`;
     if (typeof window !== "undefined") {
       const cached = window.sessionStorage.getItem(cacheKey);
       if (cached) return JSON.parse(cached) as GeoJSON.FeatureCollection;

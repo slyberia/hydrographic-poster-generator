@@ -8,6 +8,7 @@ from app.database import get_db_pool
 from app.services.rules_service import rules_service
 from app.services.spatial_cache import clip_cache, boundary_cache
 from app.services import drone_publication_service as drone_pub
+from app.services import drone_reference_service as drone_reference
 
 
 async def require_admin_key(x_admin_key: str = Header(default="", alias="X-Admin-Key")):
@@ -73,3 +74,13 @@ async def materialize_published(run_id: str, pool: asyncpg.Pool = Depends(get_db
     except drone_pub.LifecycleError as exc:
         raise HTTPException(status_code=409, detail=str(exc))
     return {"status": "materialized", "run_id": run_id}
+
+
+@router.post("/materialize-reference-layers")
+async def materialize_reference_layers(pool: asyncpg.Pool = Depends(get_db_pool)):
+    """Refresh the run-independent public reference artifact and manifest."""
+    manifest = await drone_reference.materialize_reference_layers(pool)
+    return {
+        "status": "materialized" if manifest else "dynamic-fallback",
+        "manifest": manifest,
+    }

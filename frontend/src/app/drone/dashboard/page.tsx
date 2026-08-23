@@ -18,6 +18,7 @@ import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 import { ZONE_CSS, ZONE_LABELS } from "@/lib/zoneTheme";
 import ReferenceLayerControls from "@/components/drone/ReferenceLayerControls";
 import { useReferenceLayers } from "@/lib/referenceLayers";
+import type { MapZoomRequest } from "@/components/drone/MapView";
 
 const DASH_ROLES = new Set(["viewer", "analyst", "admin"]);
 const ZONE_ORDER: Zone[] = ["PROHIBITED", "RESTRICTED", "CONDITIONAL", "SUITABLE"];
@@ -193,6 +194,7 @@ function DashboardBody({ data }: { data: DashboardData }) {
   const [mapError, setMapError] = useState<string | null>(null);
   const [reportNote, setReportNote] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [zoomRequest, setZoomRequest] = useState<MapZoomRequest | null>(null);
   const reference = useReferenceLayers({
     allowed: ["airports", "runways", "runway_safeguarding"],
     enabledDefaults: { airports: true },
@@ -332,6 +334,7 @@ function DashboardBody({ data }: { data: DashboardData }) {
               fitBoundsKey={data.freshness.published_at}
               referenceLayers={reference.visible}
               onZoomChange={reference.setZoom}
+              zoomRequest={zoomRequest}
             />
             {mapPhase === "idle" && (
               <div className="map-overlay map-overlay--empty" role="status">
@@ -359,6 +362,11 @@ function DashboardBody({ data }: { data: DashboardData }) {
               loading={reference.loading}
               zoom={reference.zoom}
               onToggle={reference.toggle}
+              onZoomRequest={(key, zoom) => setZoomRequest((previous) => ({
+                id: (previous?.id ?? 0) + 1,
+                key,
+                zoom,
+              }))}
               compact
             />
           </aside>

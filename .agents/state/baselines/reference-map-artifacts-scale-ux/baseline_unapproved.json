@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "status": "unapproved",
+  "approved_by_human": false,
+  "phase_id": "reference-map-artifacts-scale-ux",
+  "branch": "agent/reference-map-artifacts-scale-ux",
+  "commit": "7b3203b12f133f10e38313d7f48e7765bf430c16",
+  "generated_at": "2026-08-21T22:42:37.927019+00:00",
+  "commands_file": ".agents\\config\\verification_commands_reference_map_artifacts_scale_ux.json",
+  "commands": [
+    {
+      "name": "backend_reference_and_publication_tests",
+      "cwd": "backend",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_drone_reference_layers.py",
+        "tests/test_drone_publication.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 2.548,
+      "stdout_file": ".agents\\state\\baselines\\reference-map-artifacts-scale-ux\\backend_reference_and_publication_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\reference-map-artifacts-scale-ux\\backend_reference_and_publication_tests.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "frontend_lint",
+      "cwd": "frontend",
+      "command": [
+        "C:\\Program Files\\nodejs\\npm.cmd",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 8.381,
+      "stdout_file": ".agents\\state\\baselines\\reference-map-artifacts-scale-ux\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\reference-map-artifacts-scale-ux\\frontend_lint.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "frontend_build",
+      "cwd": "frontend",
+      "command": [
+        "C:\\Program Files\\nodejs\\npm.cmd",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 12.956,
+      "stdout_file": ".agents\\state\\baselines\\reference-map-artifacts-scale-ux\\frontend_build.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\reference-map-artifacts-scale-ux\\frontend_build.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "diff_check",
+      "cwd": ".",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.104,
+      "stdout_file": ".agents\\state\\baselines\\reference-map-artifacts-scale-ux\\diff_check.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\reference-map-artifacts-scale-ux\\diff_check.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    }
+  ],
+  "test_cases": [],
+  "notes": "All baselines require manual human review and approval in baseline_review.md before starting implementation."
+}

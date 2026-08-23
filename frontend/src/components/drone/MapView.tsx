@@ -2,16 +2,48 @@
 
 /** components/MapView.tsx — shared Leaflet renderer for zoning areas and cells. */
 
-import { useEffect, useRef, type MutableRefObject } from "react";
+import { useEffect, useRef, useState, type MutableRefObject } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { VolatilityRecord, Zone, type ViewportSnapshot } from "@/lib/droneApi";
 import { CONSTRAINT_LOCKED_FILL, VOLATILITY_FILL, ZONE_FILL } from "@/lib/zoneTheme";
 import { DEFAULT_STUDY_AREA } from "@/lib/studyArea";
 import LoadingBar from "@/components/drone/LoadingBar";
+import { scaleLabelForZoom } from "@/lib/referenceLayers";
 
 export type MapDisplayMode = "zones" | "volatility";
 export type GeometryDisplayMode = "dissolved" | "cell";
+export interface MapZoomRequest {
+  id: number;
+  key?: string;
+  zoom: number;
+}
+
+const DEFAULT_MAP_MIN_ZOOM = 7;
+const DEFAULT_MAP_MAX_ZOOM = 18;
+
+function niceMetricDistance(maxMeters: number): number {
+  if (!Number.isFinite(maxMeters) || maxMeters <= 0) return 1000;
+  const power = 10 ** Math.floor(Math.log10(maxMeters));
+  for (const factor of [5, 2, 1]) {
+    const candidate = factor * power;
+    if (candidate <= maxMeters) return candidate;
+  }
+  return power / 2;
+}
+
+function formatMetricDistance(meters: number): string {
+  return meters >= 1000 ? `${Number((meters / 1000).toPrecision(2))} km` : `${Math.round(meters)} m`;
+}
+
+function formatScaleDenominator(value: number): string {
+  const rounded = value >= 1_000_000
+    ? Math.round(value / 100_000) * 100_000
+    : value >= 100_000
+      ? Math.round(value / 10_000) * 10_000
+      : Math.round(value / 1_000) * 1_000;
+  return Math.max(1, rounded).toLocaleString();
+}
 
 const REFERENCE_COLORS: Record<string, { stroke: string; fill?: string; dash?: string }> = {
   airports: { stroke: "#153b5b", fill: "#f7f4ec" },
@@ -52,6 +84,9 @@ export default function MapView(props: {
   referenceLayers?: Record<string, GeoJSON.FeatureCollection>;
   onReferenceFeatureClick?: (feature: GeoJSON.Feature) => void;
   onZoomChange?: (zoom: number) => void;
+  zoomRequest?: MapZoomRequest | null;
+  mapMinZoom?: number;
+  mapMaxZoom?: number;
 }) {
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.GeoJSON | null>(null);
@@ -62,6 +97,21 @@ export default function MapView(props: {
   const hasFittedRef = useRef(false);
   const lastFitKeyRef = useRef<string | null>(null);
   const referenceLayerRef = useRef<L.LayerGroup | null>(null);
+  const referenceClickRef = useRef(props.onReferenceFeatureClick);
+  const zoomChangeRef = useRef(props.onZoomChange);
+  const handledZoomRequestRef = useRef<number | null>(null);
+  const pendingReferenceFocusRef = useRef<{ key?: string; zoom: number } | null>(null);
+  const zoomBoundsRef = useRef({
+    min: props.mapMinZoom ?? DEFAULT_MAP_MIN_ZOOM,
+    max: props.mapMaxZoom ?? DEFAULT_MAP_MAX_ZOOM,
+  });
+  const [scale, setScale] = useState({
+    zoom: DEFAULT_STUDY_AREA.defaultZoom,
+    label: scaleLabelForZoom(DEFAULT_STUDY_AREA.defaultZoom),
+    denominator: "250,000",
+    distance: "10 km",
+    width: 120,
+  });
 
   const isEmpty = props.geojson !== null && (props.geojson.features?.length ?? 0) === 0;
 
@@ -80,6 +130,14 @@ export default function MapView(props: {
   useEffect(() => {
     featureClickRef.current = props.onFeatureClick;
   }, [props.onFeatureClick]);
+
+  useEffect(() => {
+    referenceClickRef.current = props.onReferenceFeatureClick;
+  }, [props.onReferenceFeatureClick]);
+
+  useEffect(() => {
+    zoomChangeRef.current = props.onZoomChange;
+  }, [props.onZoomChange]);
 
   function styleFor(feature?: GeoJSON.Feature): L.PathOptions {
     const { displayMode, volatilityByH3, hiddenZones } = styleInputsRef.current;
@@ -118,6 +176,8 @@ export default function MapView(props: {
       preferCanvas: needsHighVolumeRenderer,
       center: [DEFAULT_STUDY_AREA.center.lat, DEFAULT_STUDY_AREA.center.lng],
       zoom: DEFAULT_STUDY_AREA.defaultZoom,
+      minZoom: zoomBoundsRef.current.min,
+      maxZoom: zoomBoundsRef.current.max,
     });
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
       attribution:
@@ -125,10 +185,37 @@ export default function MapView(props: {
       maxZoom: 18,
     }).addTo(map);
     mapRef.current = map;
-    props.onZoomChange?.(map.getZoom());
-    const handleZoom = () => props.onZoomChange?.(map.getZoom());
+    const updateScale = () => {
+      const zoom = Math.round(map.getZoom());
+      const center = map.getCenter();
+      const sampleWidth = 140;
+      const sampleY = Math.max(0, map.getSize().y - 24);
+      const left = map.containerPointToLatLng([12, sampleY]);
+      const right = map.containerPointToLatLng([12 + sampleWidth, sampleY]);
+      const maxMeters = map.distance(left, right);
+      const distanceMeters = niceMetricDistance(maxMeters);
+      const metersPerPixel = Math.cos(center.lat * Math.PI / 180)
+        * 2 * Math.PI * 6378137 / (256 * (2 ** zoom));
+      const denominator = metersPerPixel * 96 / 0.0254;
+      setScale({
+        zoom,
+        label: scaleLabelForZoom(zoom),
+        denominator: formatScaleDenominator(denominator),
+        distance: formatMetricDistance(distanceMeters),
+        width: maxMeters > 0
+          ? Math.max(48, Math.round(sampleWidth * distanceMeters / maxMeters))
+          : 100,
+      });
+    };
+    const handleZoom = () => {
+      zoomChangeRef.current?.(Math.round(map.getZoom()));
+      updateScale();
+    };
+    const handleMove = () => updateScale();
+    handleZoom();
     const handleResize = () => map.invalidateSize({ pan: false });
     map.on("zoomend", handleZoom);
+    map.on("moveend", handleMove);
     window.addEventListener("resize", handleResize);
 
     // Expose a reader for the current extent so the export control can send the
@@ -152,6 +239,7 @@ export default function MapView(props: {
     return () => {
       if (vpRef) vpRef.current = null;
       map.off("zoomend", handleZoom);
+      map.off("moveend", handleMove);
       window.removeEventListener("resize", handleResize);
 
       // React cleans effects up in declaration order. Remove the component-owned
@@ -183,7 +271,9 @@ export default function MapView(props: {
         style: (feature) => {
           const surface = feature?.properties?.surface_type;
           const color = key === "runway_safeguarding" && surface === "departure" ? "#557b75" : palette.stroke;
-          return { color, fillColor: palette.fill ?? color, fillOpacity: key.includes("safeguarding") || key === "airport_notification" ? 0.12 : 0.32, weight: key === "runways" ? 4 : 1.5, dashArray: palette.dash };
+          const fillOpacity = key === "airport_notification" ? 0.2 : key.includes("safeguarding") ? 0.12 : 0.32;
+          const weight = key === "runways" ? 4 : key === "airport_notification" ? 2.25 : 1.5;
+          return { color, fillColor: palette.fill ?? color, fillOpacity, weight, opacity: 0.92, dashArray: palette.dash };
         },
         pointToLayer: (feature, latlng) => {
           const icon = REFERENCE_ICONS[key];
@@ -197,13 +287,26 @@ export default function MapView(props: {
           const details = [p.category, p.airport_code, p.surface_type, p.confidence].filter(Boolean).join(" · ");
           lyr.bindTooltip(String(name), { direction: "top", opacity: 0.95 });
           lyr.bindPopup(`<strong>${String(name)}</strong><br/><span>${details}</span>${p.explanation ? `<br/><small>${String(p.explanation)}</small>` : ""}`);
-          lyr.on("click", () => props.onReferenceFeatureClick?.(feature));
+          lyr.on("click", () => referenceClickRef.current?.(feature));
         },
       });
       layer.addTo(group);
     }
+    const pending = pendingReferenceFocusRef.current;
+    if (pending?.key && props.referenceLayers?.[pending.key]) {
+      const focusLayer = L.geoJSON(props.referenceLayers[pending.key]);
+      const bounds = focusLayer.getBounds();
+      if (bounds.isValid()) {
+        if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+          map.flyTo(bounds.getCenter(), pending.zoom, { duration: 0.55 });
+        } else {
+          map.flyToBounds(bounds, { padding: [36, 36], maxZoom: pending.zoom, duration: 0.55 });
+        }
+      }
+      pendingReferenceFocusRef.current = null;
+    }
     return () => { group.remove(); if (referenceLayerRef.current === group) referenceLayerRef.current = null; };
-  }, [props.referenceLayers, props.onReferenceFeatureClick]);
+  }, [props.referenceLayers]);
 
   // swap data layer when a run's geojson arrives
   useEffect(() => {
@@ -274,10 +377,59 @@ export default function MapView(props: {
     }
   }, [props.focusPoint]);
 
+  useEffect(() => {
+    const map = mapRef.current;
+    const request = props.zoomRequest;
+    if (!map || !request || handledZoomRequestRef.current === request.id) return;
+    handledZoomRequestRef.current = request.id;
+    pendingReferenceFocusRef.current = { key: request.key, zoom: request.zoom };
+    const available = request.key ? props.referenceLayers?.[request.key] : undefined;
+    if (available) {
+      const bounds = L.geoJSON(available).getBounds();
+      if (bounds.isValid()) {
+        pendingReferenceFocusRef.current = null;
+        if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+          map.flyTo(bounds.getCenter(), request.zoom, { duration: 0.55 });
+        } else {
+          map.flyToBounds(bounds, { padding: [36, 36], maxZoom: request.zoom, duration: 0.55 });
+        }
+        return;
+      }
+    }
+    map.flyTo(map.getCenter(), request.zoom, { duration: 0.45 });
+  }, [props.referenceLayers, props.zoomRequest]);
+
+  const sliderMin = props.mapMinZoom ?? DEFAULT_MAP_MIN_ZOOM;
+  const sliderMax = props.mapMaxZoom ?? DEFAULT_MAP_MAX_ZOOM;
+
   return (
     <div className="mapview-root" style={{ position: "relative", height: "100%", width: "100%" }}>
       <LoadingBar active={!!props.loading} label="Loading map" />
       <div ref={containerRef} style={{ height: "100%", width: "100%" }} />
+      <div className="map-scale-control" role="group" aria-label="Map scale and zoom">
+        <div className="map-scale-summary">
+          <strong>Z{scale.zoom} · {scale.label}</strong>
+          <span>≈ 1 : {scale.denominator}</span>
+        </div>
+        <div className="map-scale-bar" style={{ width: scale.width }} aria-label={`${scale.distance} ground distance`}>
+          <span /><span /><span /><span />
+          <b>0</b><b>{scale.distance}</b>
+        </div>
+        <label className="map-zoom-slider">
+          <span className="sr-only">Map zoom</span>
+          <input
+            type="range"
+            min={sliderMin}
+            max={sliderMax}
+            step={1}
+            value={scale.zoom}
+            aria-valuetext={`Zoom ${scale.zoom}, ${scale.label} scale`}
+            onChange={(event) => mapRef.current?.setZoom(Number(event.target.value))}
+          />
+          <span aria-hidden="true">Z{sliderMin}</span>
+          <span aria-hidden="true">Z{sliderMax}</span>
+        </label>
+      </div>
       {isEmpty && !props.loading && (
         <div className="map-overlay map-overlay--empty" role="status">
           <div className="map-overlay-card">

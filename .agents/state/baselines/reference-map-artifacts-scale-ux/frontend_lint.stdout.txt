@@ -1,0 +1,13 @@
+
+> frontend@0.1.0 lint
+> eslint
+
+
+C:\Users\kyleg\Documents\Codex\2026-08-12\referenced-chatgpt-conversation-this-is-an\hydrographic-poster-generator-reference-map-ux\frontend\src\components\drone\MapView.tsx
+  206:6  warning  React Hook useEffect has a missing dependency: 'props'. Either include it or remove the dependency array. However, 'props' will change when *any* prop changes, so the preferred fix is to destructure the 'props' object outside of the useEffect call and refer to those specific props inside useEffect  react-hooks/exhaustive-deps
+
+C:\Users\kyleg\Documents\Codex\2026-08-12\referenced-chatgpt-conversation-this-is-an\hydrographic-poster-generator-reference-map-ux\frontend\src\lib\referenceLayers.ts
+  33:6  warning  React Hook useEffect has missing dependencies: 'allowed' and 'options.enabledDefaults'. Either include them or remove the dependency array. If 'setEnabled' needs the current value of 'options.enabledDefaults', you can also switch to useReducer instead of useState and read 'options.enabledDefaults' in the reducer  react-hooks/exhaustive-deps
+
+âœ– 2 problems (0 errors, 2 warnings)
+
