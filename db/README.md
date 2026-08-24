@@ -20,5 +20,7 @@ Supabase PostgreSQL with PostGIS enabled.
   configuration and must be verified separately after provisioning or restore.
 - Any future public or authenticated Data API object must be added to `api`
   explicitly with least-privilege grants and matching RLS policies.
+- The intentional RLS, function-search-path, PostGIS, and Auth advisor
+  treatments are documented in `docs/SUPABASE_SECURITY.md`.
 
 *Note: Database connection config must be environment-driven (e.g., DATABASE_URL).*

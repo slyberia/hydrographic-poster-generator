@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "supabase-security-hardening",
+  "branch": "agent/supabase-security-hardening",
+  "commit": "1b44e709923662b1c31896210f51b00606b517e4",
+  "approved_at": "2026-08-24T11:36:43.3993165Z",
+  "approval_message": "I approve",
+  "source_baseline": ".agents/state/baselines/supabase-security-hardening/baseline_unapproved.json",
+  "commands": [
+    {
+      "name": "backend_security_regression_tests",
+      "exit_code": 0,
+      "classification": "not_applicable",
+      "notes": "36 authentication, publication-guard, and feature-ingestion tests passed; one upstream Starlette deprecation warning."
+    },
+    {
+      "name": "diff_check",
+      "exit_code": 0,
+      "classification": "not_applicable",
+      "notes": "No whitespace errors."
+    }
+  ],
+  "environment_notes": [
+    "Use the existing milestone-d-clean virtual environment for backend tests because the system Python does not provide the project test dependencies.",
+    "Run pytest from the repository root so feature-ingestion tests can import the repository-level scripts package.",
+    "Pytest cache writing is disabled because the managed Windows workspace contains a malformed pre-existing cache path."
+  ]
+}
