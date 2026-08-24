@@ -283,6 +283,10 @@ at whichever backend URL it was built against.
 
 - [ ] `DATABASE_URL` comes from Secret Manager, not env-var plaintext
 - [ ] `CORS_ORIGINS` restricted to the deployed frontend origin
+- [ ] Database migration 017 is applied and all six application trigger functions report `search_path=""`
+- [ ] Supabase Data API exposes `api`; `public` is absent from exposed schemas and the extra search path
+- [ ] Supabase leaked-password protection is enabled when the project is on Pro or higher
+- [ ] Remaining RLS-without-policy and PostGIS-in-public advisor notices match the accepted posture in `docs/SUPABASE_SECURITY.md`
 - [ ] `/health` returns 200 on a fresh revision
 - [ ] `fc-list | grep -iE 'inter|roboto mono|outfit'` shows all three families in the backend image
 - [ ] A `print_18x24` PDF export and a `square_design_asset` PNG export succeed against production data

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "backend_security_regression_tests",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "backend/tests/test_auth.py",
+        "backend/tests/test_drone_publication.py",
+        "backend/tests/test_feature_ingestion.py",
+        "-q"
+      ],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "security_migration_contract",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "backend/tests/test_supabase_security_hardening.py",
+        "-q"
+      ],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "diff_check",
+      "command": ["git", "diff", "--check"],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Security-hardening baseline for Supabase Auth, trigger-function search paths, the intentional deny-by-default RLS access model, and the accepted non-relocatable PostGIS provider constraint. Production changes are excluded."
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "unapproved",
+  "approved_by_human": false,
+  "phase_id": "supabase-security-hardening",
+  "branch": "agent/supabase-security-hardening",
+  "commit": "1b44e709923662b1c31896210f51b00606b517e4",
+  "generated_at": "2026-08-24T11:32:40.726906+00:00",
+  "commands_file": ".agents\\config\\verification_commands_supabase_security_hardening.json",
+  "commands": [
+    {
+      "name": "backend_security_regression_tests",
+      "cwd": ".",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "backend/tests/test_auth.py",
+        "backend/tests/test_drone_publication.py",
+        "backend/tests/test_feature_ingestion.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 4.226,
+      "stdout_file": ".agents\\state\\baselines\\supabase-security-hardening\\backend_security_regression_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\supabase-security-hardening\\backend_security_regression_tests.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "diff_check",
+      "cwd": ".",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.149,
+      "stdout_file": ".agents\\state\\baselines\\supabase-security-hardening\\diff_check.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\supabase-security-hardening\\diff_check.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    }
+  ],
+  "test_cases": [],
+  "notes": "All baselines require manual human review and approval in baseline_review.md before starting implementation."
+}

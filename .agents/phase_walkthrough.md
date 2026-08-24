@@ -2,72 +2,58 @@
 
 ## Identity
 
-- Phase: `poster-flag-preset-catalog`
-- Branch: `agent/poster-flag-preset-catalog`
-- Baseline commit: `e8c5dee3b7d552b4ada95e2abc72fe2b72ebcf79`
+- Phase: `supabase-security-hardening`
+- Branch: `agent/supabase-security-hardening`
+- Baseline commit: `1b44e709923662b1c31896210f51b00606b517e4`
 - Final commit: not committed in this phase execution
 - Approved baseline artifact:
-  `.agents/state/baselines/poster-flag-preset-catalog/baseline_approved.json`
-- Deployment revision: none; deployment was outside the approved phase
+  `.agents/state/baselines/supabase-security-hardening/baseline_approved.json`
+- Deployment revision: none; production operations remain outside this phase
 
 ## Findings
 
 ### Confirmed findings
 
-- Production exposes 26 Admin-0 poster geographies and has zero active
-  `platform_rules` rows with `rule_type = 'flag'`.
-- The repository and all reachable Git history contained only Guyana and USA
-  flag definitions.
-- `RulesService` previously treated any successful database load as complete,
-  so density/palette/typography rows suppressed the entire hardcoded flag
-  category.
-- Studio bootstrap validated every saved style ID against `pre.palette`,
-  including saved `mode: "flag"` selections.
-- Reading localStorage during the initial Client Component render caused a
-  hydration mismatch whenever saved state differed from server defaults.
+- Six application-owned trigger functions had no fixed `search_path`.
+- All 27 RLS-without-policy notices are intentional: production grants no
+  application-table DML privileges to `anon` or `authenticated`.
+- The application serves database content through FastAPI's direct PostgreSQL
+  connection. The Supabase Data API exposes the dedicated empty `api` schema.
+- Production PostGIS 3.3.7 is installed in `public`, is non-relocatable, and
+  owns 876 dependent objects.
+- Planning Console login and invitation acceptance use Supabase password Auth,
+  so leaked-password protection is applicable.
 
 ### Assumptions verified or disproven
 
-- The required union is 45 presets: 26 poster-generatable geographies plus 19
-  G20 countries, with no overlap between those current sets.
-- The EU and AU are regional G20 members and are excluded from the country
-  palette catalog.
-- French Guiana must remain independently selectable because it is a production
-  poster geography; it uses the French tricolour.
-- Puerto Rico remains excluded because it is only present in an ingestion plan,
-  not the production poster geography registry.
+- Adding RLS policies would not remediate a vulnerability; it would grant a
+  browser data path that the architecture intentionally denies.
+- Moving PostGIS is not a safe ordinary migration. Current Supabase guidance
+  requires backup/drop/recreate/restore or provider assistance.
+- The boundary trigger can remain portable by discovering the installed
+  PostGIS namespace and safely quoting it in the generated function body.
+- Password-protection enablement requires no frontend change because the
+  invitation form already displays Supabase Auth errors.
 
 ### Remaining risks
 
-- Representative flag colors are curated design inputs, not a regulatory flag
-  reproduction standard.
-- Migration 016 has not been applied or executed against production Postgres.
-- Production will continue using hardcoded category fallback until migration
-  016 is applied and the rule registry is reloaded.
-- The managed Windows sandbox blocks Playwright Chromium startup with
-  `spawn EPERM`; the equivalent interaction was verified in the connected
-  in-app browser.
+- Migration 017 has not yet been executed by PostgreSQL; local verification is
+  static plus application regression coverage because this phase prohibits a
+  production migration and no disposable PostGIS database is attached.
+- Leaked-password protection remains disabled until the later production
+  configuration step, and requires Supabase Pro or higher.
+- Intentional RLS informational notices and the accepted PostGIS warning will
+  remain visible after rollout.
 
 ## Changes
 
 ### Files changed
 
-- Catalog and resolver:
-  `backend/app/config/flag_presets.py`,
-  `backend/app/services/rules_service.py`
-- Backend tests:
-  `backend/tests/test_flag_presets.py`,
-  `backend/tests/test_rules_service.py`
-- Migration:
-  `db/migrations/016_seed_flag_presets.sql`,
-  `scripts/generate_flag_preset_migration.py`
-- Frontend:
-  `frontend/src/app/studio/page.tsx`,
-  `frontend/e2e/mockStudioBackend.ts`,
-  `frontend/e2e/studio-parity.spec.ts`
-- Documentation/state:
-  `docs/FLAG_PRESETS.md`, approved phase/baseline/verification artifacts, and
-  this walkthrough
+- Migration: `db/migrations/017_supabase_security_hardening.sql`
+- Migration contract: `backend/tests/test_supabase_security_hardening.py`
+- Security posture: `docs/SUPABASE_SECURITY.md`
+- Deployment/database documentation: `docs/DEPLOYMENT.md`, `db/README.md`
+- Approved phase, baseline, verification artifacts, and this walkthrough
 
 ### Out-of-scope files detected
 
@@ -75,116 +61,99 @@
 
 ### Contracts changed
 
-- The `GET /presets` response shape is unchanged; its `flags` collection now
-  contains the canonical 45 presets when hardcoded rules are active.
-- A reachable database remains authoritative for any represented rule category.
-  Only an entirely absent category is filled from hardcoded configuration.
-- Rules loaded from a mixed source report `database+hardcoded`.
-- Migration 016 adds or updates `flag:<preset-id>` rows using guarded,
-  idempotent upserts.
-- Saved `mode: "flag"` state is validated against `pre.flags`, while standard
-  mode continues to use `pre.palette`.
+- No application API, frontend, persisted-state, or storage contract changed.
+- Six existing trigger functions now have `search_path = ''` and
+  schema-qualified runtime references.
+- Function schemas, names, argument lists, return types, owners, privileges,
+  and attached triggers are preserved.
 
 ### Behavior preserved
 
-- Existing `guyana` and `usa` IDs and exact token values are unchanged.
-- Existing standard palette IDs and persisted standard-mode behavior remain
-  unchanged.
-- Database rows remain authoritative whenever their category is present.
-- Custom database flag rows are not deactivated or removed.
-- No new runtime dependency was added.
+- Timestamp triggers still assign `now()`.
+- Boundary ingestion still validates, repairs, and subdivides geometry.
+- Published runs and cell results retain their existing immutability rules.
+- Browser roles remain denied direct application-table access.
+- PostGIS remains in its existing schema; no extension or data object moves.
 
 ### Documentation changed
 
-- Added catalog coverage, canonical-source rules, compatibility behavior,
-  migration generation/check commands, extension workflow, deployment order,
-  and rollback considerations in `docs/FLAG_PRESETS.md`.
+- Added the authoritative treatment of each Supabase Security Advisor notice,
+  rollout order, expected residual notices, verification queries, and rollback
+  guidance.
+- Extended the production checklist with migration 017, Data API, Auth, and
+  accepted-warning checks.
 
 ## Verification
 
 ### Tests added
 
-- Exact 26 + 19 = 45 coverage contract and alphabetical display order.
-- Complete light/dark eight-token schema and valid hexadecimal colors.
-- Exact Guyana/USA compatibility anchors.
-- Migration snapshot equality with the canonical Python catalog.
-- Typed `PresetsResponse` serialization of all 45 flags.
-- Empty-category fallback, database category authority, and reload stale-state
-  removal.
-- Frontend persisted USA/Dark flag-mode reload scenario.
+- Exact coverage for all six warned function definitions and empty search paths.
+- Schema qualification for built-in, application-table, and dynamically
+  discovered PostGIS references.
+- Negative contracts preventing RLS weakening, browser DML grants, or PostGIS
+  relocation in migration 017.
 
 ### Commands run
 
-- Targeted backend contracts: 12 passed.
-- Migration generator `--check`: 45 presets matched.
-- Frontend ESLint: passed.
-- TypeScript `tsc --noEmit`: passed.
-- Next.js production build: passed.
-- `git diff --check`: passed.
-- `.agents/scripts/post_edit_verification.py`: passed.
+- Approved targeted baseline: 36 passed.
+- Targeted implementation pass: 39 passed.
+- Post-edit verification: all configured commands passed.
+- Complete backend suite with repository Python 3.11 + GTK/Cairo runtime:
+  180 passed, 3 skipped.
+- `git diff --check`: passed; only expected Windows autocrlf notices were emitted.
+- Read-only production catalog/advisor queries confirmed the access model,
+  function metadata, extension metadata, and built-in type/function references.
 
 ### Baseline results
 
-- Four backend router tests passed with one upstream Starlette deprecation
-  warning.
-- Frontend lint, production build, and diff check passed.
+- 36 relevant authentication, publication, and ingestion tests passed.
+- Git whitespace validation passed.
+- One upstream Starlette deprecation warning was present.
 
 ### Post-edit results
 
-- Every enabled verification command exited zero.
-- No new, changed, or ambiguous failures were detected.
-- No out-of-scope path was detected.
-- A clean Python 3.11 environment matching the production Dockerfile was
-  created from `backend/requirements-dev.txt`. CairoSVG 2.7.1 was exercised
-  against an isolated GTK/Cairo runtime, and direct PNG/PDF conversion passed.
-- The complete `backend/tests` suite then passed with 177 tests passed, three
-  skipped, and zero failures. The two warnings are an upstream Starlette
-  pending deprecation and an optional pytest-cache write warning.
+- 39 targeted tests passed, including three new migration contracts.
+- The full backend suite passed in the repository's validated render runtime.
+- Post-edit scope and baseline comparison passed with no new or changed failures.
 
 ### Human-reviewed differences
 
-- Human approved the phase definition and the baseline in the current session.
-- No production, migration-application, deployment, commit, push, PR, merge,
-  secret, or dependency operation was performed.
+- Human approved the phase definition and baseline in the current session.
+- No production migration, Auth setting, deployment, commit, push, PR, merge,
+  secret, dependency, RLS policy, or extension relocation was performed.
 
 ### Browser evidence
 
-- A local Studio instance was connected to a temporary in-memory poster API.
-- Country flags was selected, then United States and Dark.
-- A fresh load restored Country flags, United States, and Dark.
-- The final cold-load tab reported zero console errors.
-- The original synchronous localStorage initializer reproduced a React hydration
-  mismatch; the post-mount hydration gate removed it.
-- Standalone Playwright reached `browserType.launch: spawn EPERM` before any
-  page assertion. The connected in-app browser completed the equivalent flow.
+- Not applicable to local implementation; no UI behavior changed.
+- The Supabase dashboard browser session was signed out, so Auth configuration
+  remains a later authenticated production step.
 
 ## Deployment
 
 - Deployment status: not performed
 - Human approval reference: implementation and baseline approval only
-- Production verification: pending migration 016, deployment, registry reload,
-  `GET /presets` count/readback, and live Studio interaction
+- Production verification: pending migration 017, leaked-password protection,
+  advisor rerun, catalog queries, trigger smoke tests, and application smoke
 
 ## Rollback
 
-- Before production migration, revert the application revision normally.
-- After migration 016, reverting the application remains safe because the
-  existing FlagPreset model already accepts these rows.
-- If the 45 database rows must be disabled, use a separately reviewed migration
-  targeting only the exact canonical `flag:<preset-id>` IDs. Do not delete or
-  deactivate unrelated custom flag rows.
-- Browser state needs no schema rollback; existing IDs remain compatible.
+- Reverting the application revision does not require reverting migration 017;
+  function signatures and behavior remain compatible.
+- If database rollback is required, apply a reviewed follow-up migration using
+  the previous definitions from migrations 001, 005, 007, and 010.
+- Do not drop or relocate PostGIS as rollback.
+- No data or persisted browser state is changed by this phase.
 
 ## Exit Criteria
 
-- Pass: local implementation, migration snapshot, targeted tests, lint,
-  type-check, production build, browser verification, documentation, and scope
-  verification
-- Failed criteria: none inside the approved implementation phase
-- Human decision required: separate authorization for commit/push/PR,
-  production migration, deployment, registry reload, and production verification
+- Pass: scoped implementation, approved baseline comparison, migration
+  contracts, targeted tests, full backend suite, documentation, rollback, and
+  changed-file scope review
+- Failed criteria: none inside the approved local implementation phase
+- Human decision required: separate authorization for commit/push/PR and later
+  production migration/Auth configuration/verification
 
 ## Recommended Next Action
 
-Review the local diff, then authorize the local commit and PR workflow. Do not
-apply migration 016 or deploy automatically.
+Review the local diff, then authorize the local commit and PR workflow. Apply
+migration 017 and change Auth configuration only after the PR is merged.

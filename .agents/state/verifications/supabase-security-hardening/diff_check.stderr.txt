@@ -1,0 +1,4 @@
+warning: in the working copy of '.agents/phase_walkthrough.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.agents/state/current_phase.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'db/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/DEPLOYMENT.md', LF will be replaced by CRLF the next time Git touches it

@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-24T11:48:19.726582+00:00",
+  "phase_id": "supabase-security-hardening",
+  "baseline_commit": "1b44e709923662b1c31896210f51b00606b517e4",
+  "approved_baseline_file": ".agents\\state\\baselines\\supabase-security-hardening\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_supabase_security_hardening.json",
+    ".agents/phase_walkthrough.md",
+    ".agents/state/baselines/supabase-security-hardening/backend_security_regression_tests.stderr.txt",
+    ".agents/state/baselines/supabase-security-hardening/backend_security_regression_tests.stdout.txt",
+    ".agents/state/baselines/supabase-security-hardening/baseline_approved.json",
+    ".agents/state/baselines/supabase-security-hardening/baseline_approved.md",
+    ".agents/state/baselines/supabase-security-hardening/baseline_review.md",
+    ".agents/state/baselines/supabase-security-hardening/baseline_unapproved.json",
+    ".agents/state/baselines/supabase-security-hardening/baseline_unapproved.md",
+    ".agents/state/baselines/supabase-security-hardening/dependency_inventory.md",
+    ".agents/state/baselines/supabase-security-hardening/diff_check.stderr.txt",
+    ".agents/state/baselines/supabase-security-hardening/diff_check.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/supabase-security-hardening/backend_security_regression_tests.stderr.txt",
+    ".agents/state/verifications/supabase-security-hardening/backend_security_regression_tests.stdout.txt",
+    ".agents/state/verifications/supabase-security-hardening/diff_check.stderr.txt",
+    ".agents/state/verifications/supabase-security-hardening/diff_check.stdout.txt",
+    ".agents/state/verifications/supabase-security-hardening/post_edit_verification.json",
+    ".agents/state/verifications/supabase-security-hardening/post_edit_verification.md",
+    ".agents/state/verifications/supabase-security-hardening/security_migration_contract.stderr.txt",
+    ".agents/state/verifications/supabase-security-hardening/security_migration_contract.stdout.txt",
+    "backend/tests/test_supabase_security_hardening.py",
+    "db/README.md",
+    "db/migrations/017_supabase_security_hardening.sql",
+    "docs/DEPLOYMENT.md",
+    "docs/SUPABASE_SECURITY.md"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend_security_regression_tests",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "backend/tests/test_auth.py",
+        "backend/tests/test_drone_publication.py",
+        "backend/tests/test_feature_ingestion.py",
+        "-q"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 7.208,
+      "stdout_file": ".agents\\state\\verifications\\supabase-security-hardening\\backend_security_regression_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\supabase-security-hardening\\backend_security_regression_tests.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "security_migration_contract",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "backend/tests/test_supabase_security_hardening.py",
+        "-q"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 4.008,
+      "stdout_file": ".agents\\state\\verifications\\supabase-security-hardening\\security_migration_contract.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\supabase-security-hardening\\security_migration_contract.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "diff_check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 0.294,
+      "stdout_file": ".agents\\state\\verifications\\supabase-security-hardening\\diff_check.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\supabase-security-hardening\\diff_check.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}
