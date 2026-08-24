@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "approved_by_human": true,
+  "phase_id": "poster-flag-preset-catalog",
+  "branch": "agent/poster-flag-preset-catalog",
+  "commit": "e8c5dee3b7d552b4ada95e2abc72fe2b72ebcf79",
+  "approved_at": "2026-08-23T20:55:00Z",
+  "approval_message": "i approve this baseline",
+  "source_baseline": ".agents/state/baselines/poster-flag-preset-catalog/baseline_unapproved.json",
+  "commands": [
+    {
+      "name": "backend_preset_contract_tests",
+      "exit_code": 0,
+      "classification": "not_applicable",
+      "notes": "4 tests passed; one upstream Starlette deprecation warning."
+    },
+    {
+      "name": "frontend_lint",
+      "exit_code": 0,
+      "classification": "not_applicable",
+      "notes": "ESLint completed successfully."
+    },
+    {
+      "name": "frontend_build",
+      "exit_code": 0,
+      "classification": "not_applicable",
+      "notes": "Next.js production build and static generation completed successfully."
+    },
+    {
+      "name": "diff_check",
+      "exit_code": 0,
+      "classification": "not_applicable",
+      "notes": "No whitespace errors."
+    }
+  ],
+  "environment_notes": [
+    "Use the existing milestone-d-clean virtual environment for backend tests because the system Python 3.14 installation does not include pytest.",
+    "The Next.js build requires network access to fetch the configured Google Fonts."
+  ]
+}

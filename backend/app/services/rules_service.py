@@ -1,7 +1,10 @@
-"""Rules service: DB-backed preset loader with hardcoded fallback.
+"""Rules service: DB-backed preset loader with category-level fallback.
 
 Presets are loaded from platform_rules at startup and cached in memory.
-If the DB is unreachable, falls back to the Python dicts in app.config.*.
+If the DB is unreachable, all categories fall back to app.config.*.  If the
+database is reachable but an entire category is absent (for example, no flag
+rows before migration 016), only that category falls back.  Existing database
+rows remain authoritative for every category they represent.
 """
 import logging
 from typing import Dict, Optional
@@ -30,16 +33,25 @@ class RulesService:
         """Load rules from DB. Fall back to hardcoded if DB unavailable."""
         if pool:
             try:
-                await self._load_from_db(pool)
-                self._source = "database"
-                logger.info("Rules loaded from database (%d total)", len(self._rule_versions))
+                fallback_categories = await self._load_from_db(pool)
+                self._source = "database+hardcoded" if fallback_categories else "database"
+                logger.info(
+                    "Rules loaded from database (%d total); fallback categories=%s",
+                    len(self._rule_versions),
+                    fallback_categories or "none",
+                )
                 return
             except Exception as exc:
                 logger.warning("Failed to load rules from DB, falling back to hardcoded: %s", exc)
         self._load_from_hardcoded()
         self._source = "hardcoded"
 
-    async def _load_from_db(self, pool: asyncpg.Pool):
+    async def _load_from_db(self, pool: asyncpg.Pool) -> list[str]:
+        self._density = {}
+        self._palette = {}
+        self._typography = {}
+        self._flags = {}
+        self._rule_versions = {}
         async with pool.acquire() as conn:
             rows = await conn.fetch(
                 "SELECT id, rule_type, version, payload FROM platform_rules WHERE is_active = TRUE"
@@ -62,8 +74,28 @@ class RulesService:
                 self._typography[payload["id"]] = TypographyPreset(**payload)
             elif rule_type == "flag":
                 self._flags[payload["id"]] = FlagPreset(**payload)
+        return self._load_empty_categories_from_hardcoded()
+
+    def _load_empty_categories_from_hardcoded(self) -> list[str]:
+        fallback_categories: list[str] = []
+        if not self._density:
+            self._density = {k: DensityPreset(**v) for k, v in DENSITY_PRESETS.items()}
+            fallback_categories.append("density")
+        if not self._palette:
+            self._palette = {k: PalettePreset(**v) for k, v in PALETTE_PRESETS.items()}
+            fallback_categories.append("palette")
+        if not self._typography:
+            self._typography = {
+                k: TypographyPreset(**v) for k, v in TYPOGRAPHY_PRESETS.items()
+            }
+            fallback_categories.append("typography")
+        if not self._flags:
+            self._flags = {k: FlagPreset(**v) for k, v in FLAG_PRESETS.items()}
+            fallback_categories.append("flag")
+        return fallback_categories
 
     def _load_from_hardcoded(self):
+        self._rule_versions = {}
         self._density = {k: DensityPreset(**v) for k, v in DENSITY_PRESETS.items()}
         self._palette = {k: PalettePreset(**v) for k, v in PALETTE_PRESETS.items()}
         self._typography = {k: TypographyPreset(**v) for k, v in TYPOGRAPHY_PRESETS.items()}
@@ -71,9 +103,12 @@ class RulesService:
 
     async def reload(self, pool: asyncpg.Pool):
         """Hot-reload rules from DB without restart."""
-        await self._load_from_db(pool)
-        self._source = "database"
-        logger.info("Rules hot-reloaded from database")
+        fallback_categories = await self._load_from_db(pool)
+        self._source = "database+hardcoded" if fallback_categories else "database"
+        logger.info(
+            "Rules hot-reloaded from database; fallback categories=%s",
+            fallback_categories or "none",
+        )
 
     def get_density_preset(self, preset_id: str) -> DensityPreset:
         preset = self._density.get(preset_id)

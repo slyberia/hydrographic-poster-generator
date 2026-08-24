@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "commands": [
+    {
+      "name": "backend_preset_contract_tests",
+      "command": ["C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe", "-m", "pytest", "tests/test_routers.py", "tests/test_flag_presets.py", "tests/test_rules_service.py", "-q"],
+      "cwd": "backend",
+      "enabled": true
+    },
+    {
+      "name": "flag_migration_sync_check",
+      "command": ["C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe", "scripts/generate_flag_preset_migration.py", "--check"],
+      "cwd": ".",
+      "enabled": true
+    },
+    {
+      "name": "frontend_lint",
+      "command": ["C:\\Program Files\\nodejs\\npm.cmd", "run", "lint"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "frontend_typecheck",
+      "command": ["C:\\Users\\kyleg\\Documents\\Codex\\2026-08-12\\referenced-chatgpt-conversation-this-is-an\\hydrographic-poster-generator-reference-map-ux\\frontend\\node_modules\\.bin\\tsc.cmd", "--noEmit"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "frontend_build",
+      "command": ["C:\\Program Files\\nodejs\\npm.cmd", "run", "build"],
+      "cwd": "frontend",
+      "enabled": true
+    },
+    {
+      "name": "frontend_studio_e2e",
+      "command": ["C:\\Program Files\\nodejs\\npm.cmd", "run", "test:e2e", "--", "e2e/studio-parity.spec.ts"],
+      "cwd": "frontend",
+      "enabled": false,
+      "skip_reason": "Playwright Chromium process creation has previously failed with spawn EPERM in this managed Windows sandbox. Run after implementation when browser execution is available."
+    },
+    {
+      "name": "diff_check",
+      "command": ["git", "diff", "--check"],
+      "cwd": ".",
+      "enabled": true
+    }
+  ],
+  "note": "Baseline and verification for the 45-country poster flag catalog, per-category preset fallback, idempotent migration generation, and persisted frontend flag-mode restoration. Production migration and deployment are excluded."
+}

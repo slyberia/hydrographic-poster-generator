@@ -1,0 +1,7 @@
+warning: in the working copy of '.agents/phase_walkthrough.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.agents/state/current_phase.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/config/flag_presets.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/services/rules_service.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/e2e/mockStudioBackend.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/e2e/studio-parity.spec.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/app/studio/page.tsx', LF will be replaced by CRLF the next time Git touches it

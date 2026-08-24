@@ -169,3 +169,50 @@ test("parity-4: typography overrides — payload fidelity and preset-change rese
   );
   expect(payload.typography_overrides).toEqual({});
 });
+
+test("flag mode: persisted country and variant survive registry bootstrap and reload", async ({ page }) => {
+  await installStudioMockBackend(page);
+  await page.addInitScript(() => {
+    window.localStorage.setItem("hydrorivers_settings", JSON.stringify({
+      schema_version: 2,
+      geography_id: "",
+      density_preset: "balanced",
+      classification_preset: "standard",
+      style: {
+        schema_version: 2,
+        mode: "flag",
+        preset_id: "usa",
+        variant: "dark",
+        overrides: {},
+      },
+      typography: "gallery_poster",
+      title: "",
+      subtitle: "",
+      design_asset_mode: false,
+      show_legend: true,
+      show_metadata: true,
+      metadata_options: {
+        show_title: true,
+        show_subtitle: true,
+        show_legend: true,
+        show_north_arrow: true,
+        show_scale_bar: true,
+        show_data_credits: true,
+      },
+      typography_overrides: {},
+      layout_overrides: {},
+    }));
+  });
+
+  await page.goto("/studio");
+  await expect(page.getByRole("radio", { name: "Country flags" }))
+    .toHaveAttribute("aria-checked", "true");
+  await expect(page.getByLabel("Country")).toHaveValue("usa");
+  await expect(page.getByLabel("Variant")).toHaveValue("dark");
+
+  await page.reload();
+  await expect(page.getByRole("radio", { name: "Country flags" }))
+    .toHaveAttribute("aria-checked", "true");
+  await expect(page.getByLabel("Country")).toHaveValue("usa");
+  await expect(page.getByLabel("Variant")).toHaveValue("dark");
+});

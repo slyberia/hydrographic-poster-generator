@@ -1,0 +1,44 @@
+
+> frontend@0.1.0 build
+> next build
+
+▲ Next.js 16.2.9 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.9s
+  Running TypeScript ...
+  Finished TypeScript in 14.7s ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/24) ...
+  Generating static pages using 15 workers (6/24)
+  Generating static pages using 15 workers (12/24)
+  Generating static pages using 15 workers (18/24)
+✓ Generating static pages using 15 workers (24/24) in 1351ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /auth/accept-invite
+├ ○ /docs
+├ ○ /documentation
+├ ○ /documentation/drone-platform
+├ ○ /documentation/drone-platform/executive-overview
+├ ○ /documentation/ecosystem
+├ ○ /documentation/hps-portal
+├ ○ /documentation/poster-generator
+├ ○ /drone
+├ ○ /drone/console
+├ ○ /drone/dashboard
+├ ○ /drone/explore
+├ ○ /drone/guide
+├ ○ /drone/methodology
+├ ○ /drone/start
+├ ○ /executive-overview
+├ ○ /login
+├ ○ /poster
+└ ○ /studio
+
+
+○  (Static)  prerendered as static content

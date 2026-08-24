@@ -2,43 +2,72 @@
 
 ## Identity
 
-- Phase: `reference-map-artifacts-scale-ux`
-- Branch: `agent/reference-map-artifacts-scale-ux`
-- Baseline commit: `7b3203b12f133f10e38313d7f48e7765bf430c16`
+- Phase: `poster-flag-preset-catalog`
+- Branch: `agent/poster-flag-preset-catalog`
+- Baseline commit: `e8c5dee3b7d552b4ada95e2abc72fe2b72ebcf79`
 - Final commit: not committed in this phase execution
-- Approved baseline artifact: `.agents/state/baselines/reference-map-artifacts-scale-ux/baseline_approved.json`
+- Approved baseline artifact:
+  `.agents/state/baselines/poster-flag-preset-catalog/baseline_approved.json`
 - Deployment revision: none; deployment was outside the approved phase
 
 ## Findings
 
 ### Confirmed findings
 
-- The infrastructure SQL supplied untyped text parameters inside `jsonb_build_object`, reproducing PostgreSQL 42P18/42P08 failures in the deployed path.
-- PostGIS contains the school and healthcare source data and remains authoritative.
-- Migration 015 contains the curated Government, Police, and Fire data but has not been applied to production.
-- Runway and safeguarding geometry remain unavailable and retain the Coming Soon state.
-- The previous client fetched and cached one GeoJSON payload per category.
+- Production exposes 26 Admin-0 poster geographies and has zero active
+  `platform_rules` rows with `rule_type = 'flag'`.
+- The repository and all reachable Git history contained only Guyana and USA
+  flag definitions.
+- `RulesService` previously treated any successful database load as complete,
+  so density/palette/typography rows suppressed the entire hardcoded flag
+  category.
+- Studio bootstrap validated every saved style ID against `pre.palette`,
+  including saved `mode: "flag"` selections.
+- Reading localStorage during the initial Client Component render caused a
+  hydration mismatch whenever saved state differed from server defaults.
 
 ### Assumptions verified or disproven
 
-- A unified artifact can preserve independent toggles by adding `reference_layer_key` and `reference_group` to every feature; browser verification confirmed category filtering.
-- A stable manifest plus content-addressed artifact supports immutable caching without coupling reference data to a model run.
-- Analyst/fresh-data behavior requires an explicit dynamic-path preference; the Planning Console now opts out of the artifact while public/published surfaces prefer it.
+- The required union is 45 presets: 26 poster-generatable geographies plus 19
+  G20 countries, with no overlap between those current sets.
+- The EU and AU are regional G20 members and are excluded from the country
+  palette catalog.
+- French Guiana must remain independently selectable because it is a production
+  poster geography; it uses the French tricolour.
+- Puerto Rico remains excluded because it is only present in an ingestion plan,
+  not the production poster geography registry.
 
 ### Remaining risks
 
-- Government, Police, and Fire remain empty in production until migration 015 is separately approved and applied.
-- The Storage manifest/artifact does not exist until the new admin materialization endpoint is invoked after deployment.
-- The managed Windows sandbox blocks Playwright Chromium startup with `spawn EPERM`; CLI E2E assertions were type-checked but browser execution used the connected in-app browser.
+- Representative flag colors are curated design inputs, not a regulatory flag
+  reproduction standard.
+- Migration 016 has not been applied or executed against production Postgres.
+- Production will continue using hardcoded category fallback until migration
+  016 is applied and the rule registry is reloaded.
+- The managed Windows sandbox blocks Playwright Chromium startup with
+  `spawn EPERM`; the equivalent interaction was verified in the connected
+  in-app browser.
 
 ## Changes
 
 ### Files changed
 
-- Backend: `backend/app/services/drone_reference_service.py`, `backend/app/routers/public_drone.py`, `backend/app/routers/admin.py`, `backend/tests/test_drone_reference_layers.py`
-- Frontend runtime: `frontend/src/lib/publicDroneApi.ts`, `frontend/src/lib/referenceLayers.ts`, `frontend/src/components/drone/MapView.tsx`, `frontend/src/components/drone/ReferenceLayerControls.tsx`, `frontend/src/components/drone/PublicExplorer.tsx`, `frontend/src/app/drone/dashboard/page.tsx`, `frontend/src/app/drone/console/page.tsx`, `frontend/src/app/globals.css`
-- Frontend tests: `frontend/e2e/mockBackend.ts`, `frontend/e2e/drone-explore.spec.ts`, `frontend/e2e/drone-console.spec.ts`
-- Documentation/state: `docs/DRONE_REFERENCE_LAYERS.md`, `docs/DRONE_REFERENCE_DATA.md`, `.agents/state/current_phase.json`, `.agents/config/verification_commands_reference_map_artifacts_scale_ux.json`, phase baseline/verification evidence, and this walkthrough
+- Catalog and resolver:
+  `backend/app/config/flag_presets.py`,
+  `backend/app/services/rules_service.py`
+- Backend tests:
+  `backend/tests/test_flag_presets.py`,
+  `backend/tests/test_rules_service.py`
+- Migration:
+  `db/migrations/016_seed_flag_presets.sql`,
+  `scripts/generate_flag_preset_migration.py`
+- Frontend:
+  `frontend/src/app/studio/page.tsx`,
+  `frontend/e2e/mockStudioBackend.ts`,
+  `frontend/e2e/studio-parity.spec.ts`
+- Documentation/state:
+  `docs/FLAG_PRESETS.md`, approved phase/baseline/verification artifacts, and
+  this walkthrough
 
 ### Out-of-scope files detected
 
@@ -46,40 +75,49 @@
 
 ### Contracts changed
 
-- `GET /public/drone/reference-layers/config` additively returns optional `manifest_url` and version `reference-layers-v2`.
-- `POST /admin/materialize-reference-layers` writes a stable manifest and immutable unified GeoJSON artifact.
-- Unified features include `reference_layer_key` and `reference_group`.
-- Dynamic `GET /public/drone/reference-layers/{key}` remains supported and now uses explicitly typed parameters plus indexed subtype predicates.
-- Session cache key is `drone-reference-dataset:{dataset_version}`; legacy category cache keys include config version.
+- The `GET /presets` response shape is unchanged; its `flags` collection now
+  contains the canonical 45 presets when hardcoded rules are active.
+- A reachable database remains authoritative for any represented rule category.
+  Only an entirely absent category is filled from hardcoded configuration.
+- Rules loaded from a mixed source report `database+hardcoded`.
+- Migration 016 adds or updates `flag:<preset-id>` rows using guarded,
+  idempotent upserts.
+- Saved `mode: "flag"` state is validated against `pre.flags`, while standard
+  mode continues to use `pre.palette`.
 
 ### Behavior preserved
 
-- PostGIS is authoritative; materialization does not update analytical records.
-- Reference layers remain contextual and do not affect zoning, scores, or model runs.
-- Public/published maps use the fast artifact when available and fall back to category APIs when it is absent.
-- Planning Console reference data stays on the dynamic API path.
-- Existing +/- zoom controls remain available.
+- Existing `guyana` and `usa` IDs and exact token values are unchanged.
+- Existing standard palette IDs and persisted standard-mode behavior remain
+  unchanged.
+- Database rows remain authoritative whenever their category is present.
+- Custom database flag rows are not deactivated or removed.
+- No new runtime dependency was added.
 
 ### Documentation changed
 
-- Documented Storage paths, manifest schema, fallback behavior, caching, scale UX, deployment sequence, and rollback.
-- Documented migration 015 as the production availability prerequisite for Government, Police, and Fire.
+- Added catalog coverage, canonical-source rules, compatibility behavior,
+  migration generation/check commands, extension workflow, deployment order,
+  and rollback considerations in `docs/FLAG_PRESETS.md`.
 
 ## Verification
 
 ### Tests added
 
-- Explicit SQL parameter-cast and indexed-subtype assertions.
-- Unified feature filter-property contract.
-- Manifest URL contract.
-- Optional-storage fallback.
-- Content-addressed artifact and stable-manifest upload contract.
-- E2E fixtures for unified artifact loading, cache reuse, category fallback, public-safety availability, zoom targets, and scale display.
+- Exact 26 + 19 = 45 coverage contract and alphabetical display order.
+- Complete light/dark eight-token schema and valid hexadecimal colors.
+- Exact Guyana/USA compatibility anchors.
+- Migration snapshot equality with the canonical Python catalog.
+- Typed `PresetsResponse` serialization of all 45 flags.
+- Empty-category fallback, database category authority, and reload stale-state
+  removal.
+- Frontend persisted USA/Dark flag-mode reload scenario.
 
 ### Commands run
 
-- Backend targeted pytest: 29 passed, one upstream Starlette deprecation warning.
-- Frontend ESLint: passed with zero warnings/errors.
+- Targeted backend contracts: 12 passed.
+- Migration generator `--check`: 45 presets matched.
+- Frontend ESLint: passed.
 - TypeScript `tsc --noEmit`: passed.
 - Next.js production build: passed.
 - `git diff --check`: passed.
@@ -87,51 +125,66 @@
 
 ### Baseline results
 
-- 24 backend tests passed.
-- Lint passed with two pre-existing hook warnings.
-- Production build and diff check passed.
+- Four backend router tests passed with one upstream Starlette deprecation
+  warning.
+- Frontend lint, production build, and diff check passed.
 
 ### Post-edit results
 
-- 29 backend tests passed.
-- Lint passed with zero warnings, resolving both baseline hook warnings.
-- TypeScript and production build passed.
-- Verification matched the approved baseline and allowed-file scope.
+- Every enabled verification command exited zero.
+- No new, changed, or ambiguous failures were detected.
+- No out-of-scope path was detected.
+- A clean Python 3.11 environment matching the production Dockerfile was
+  created from `backend/requirements-dev.txt`. CairoSVG 2.7.1 was exercised
+  against an isolated GTK/Cairo runtime, and direct PNG/PDF conversion passed.
+- The complete `backend/tests` suite then passed with 177 tests passed, three
+  skipped, and zero failures. The two warnings are an upstream Starlette
+  pending deprecation and an optional pytest-cache write warning.
 
 ### Human-reviewed differences
 
-- Human approved the phase-state update and baseline in the current session.
-- No production, database, migration, deployment, merge, secret, or dependency operation was performed.
+- Human approved the phase definition and the baseline in the current session.
+- No production, migration-application, deployment, commit, push, PR, merge,
+  secret, or dependency operation was performed.
 
 ### Browser evidence
 
-- Connected browser loaded `/drone/explore` against a temporary in-memory API implementing config → manifest → artifact.
-- Unified artifact rendered Airport and School markers independently.
-- Z13 Schools target moved the map and updated the readout to `Z13 · Neighbourhood`, approximately `1 : 72,000`, with a `2 km` scale bar.
-- Airport Notification Area target moved to Z9; the polygon rendered with dashed stroke and `fill-opacity=0.2` above the zoning surface. Readout updated to approximately `1 : 1,100,000` with a `20 km` bar.
-- Government, Police, and Fire controls were present and enabled; Runways and Runway Safeguarding remained disabled with Coming Soon notes.
-- A fresh cold-load tab contained development/HMR informational messages only and no errors or warnings. One dependency-array-size warning appeared only when Fast Refresh hot-swapped the edited hook into the already-mounted pre-edit page and did not reproduce on cold load.
-- Desktop screenshot showed no horizontal overflow. Responsive CSS and the existing viewport matrix remain covered in the E2E source, but CLI Chromium execution is blocked by the sandbox.
+- A local Studio instance was connected to a temporary in-memory poster API.
+- Country flags was selected, then United States and Dark.
+- A fresh load restored Country flags, United States, and Dark.
+- The final cold-load tab reported zero console errors.
+- The original synchronous localStorage initializer reproduced a React hydration
+  mismatch; the post-mount hydration gate removed it.
+- Standalone Playwright reached `browserType.launch: spawn EPERM` before any
+  page assertion. The connected in-app browser completed the equivalent flow.
 
 ## Deployment
 
 - Deployment status: not performed
-- Human approval reference: implementation approval only; no production-operation approval
-- Production verification: pending deployment, migration 015, materialization, and live readback
+- Human approval reference: implementation and baseline approval only
+- Production verification: pending migration 016, deployment, registry reload,
+  `GET /presets` count/readback, and live Studio interaction
 
 ## Rollback
 
-- Roll back the application revision through the normal Git/Cloud Run rollback workflow.
-- Older clients ignore `manifest_url`; current clients automatically use category APIs if manifest retrieval fails.
-- Storage objects are additive and do not need deletion for rollback.
-- Migration 015, when later applied, is additive reference-only data and requires its own approved rollback decision.
+- Before production migration, revert the application revision normally.
+- After migration 016, reverting the application remains safe because the
+  existing FlagPreset model already accepts these rows.
+- If the 45 database rows must be disabled, use a separately reviewed migration
+  targeting only the exact canonical `flag:<preset-id>` IDs. Do not delete or
+  deactivate unrelated custom flag rows.
+- Browser state needs no schema rollback; existing IDs remain compatible.
 
 ## Exit Criteria
 
-- Pass: local implementation, tests, build, browser evidence, documentation, and scope verification
+- Pass: local implementation, migration snapshot, targeted tests, lint,
+  type-check, production build, browser verification, documentation, and scope
+  verification
 - Failed criteria: none inside the approved implementation phase
-- Human decision required: separate authorization for commit/push/PR, production migration, deployment, materialization, and production verification
+- Human decision required: separate authorization for commit/push/PR,
+  production migration, deployment, registry reload, and production verification
 
 ## Recommended Next Action
 
-Review the diff, then authorize the local commit and PR workflow. Do not begin production migration or deployment automatically.
+Review the local diff, then authorize the local commit and PR workflow. Do not
+apply migration 016 or deploy automatically.
