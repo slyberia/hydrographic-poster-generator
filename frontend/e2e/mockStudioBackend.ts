@@ -54,6 +54,7 @@ const PRESETS = {
   ],
   flags: [
     { id: "guyana", name: "Guyana", variants: { light: TOKENS, dark: TOKENS } },
+    { id: "usa", name: "United States", variants: { light: TOKENS, dark: TOKENS } },
   ],
 };
 

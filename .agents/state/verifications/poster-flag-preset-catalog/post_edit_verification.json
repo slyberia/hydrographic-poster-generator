@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-24T01:52:00.604263+00:00",
+  "phase_id": "poster-flag-preset-catalog",
+  "baseline_commit": "e8c5dee3b7d552b4ada95e2abc72fe2b72ebcf79",
+  "approved_baseline_file": ".agents\\state\\baselines\\poster-flag-preset-catalog\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_poster_flag_preset_catalog.json",
+    ".agents/phase_walkthrough.md",
+    ".agents/state/baselines/poster-flag-preset-catalog/backend_preset_contract_tests.stderr.txt",
+    ".agents/state/baselines/poster-flag-preset-catalog/backend_preset_contract_tests.stdout.txt",
+    ".agents/state/baselines/poster-flag-preset-catalog/baseline_approved.json",
+    ".agents/state/baselines/poster-flag-preset-catalog/baseline_approved.md",
+    ".agents/state/baselines/poster-flag-preset-catalog/baseline_review.md",
+    ".agents/state/baselines/poster-flag-preset-catalog/baseline_unapproved.json",
+    ".agents/state/baselines/poster-flag-preset-catalog/baseline_unapproved.md",
+    ".agents/state/baselines/poster-flag-preset-catalog/dependency_inventory.json",
+    ".agents/state/baselines/poster-flag-preset-catalog/dependency_inventory.txt",
+    ".agents/state/baselines/poster-flag-preset-catalog/diff_check.stderr.txt",
+    ".agents/state/baselines/poster-flag-preset-catalog/diff_check.stdout.txt",
+    ".agents/state/baselines/poster-flag-preset-catalog/frontend_build.stderr.txt",
+    ".agents/state/baselines/poster-flag-preset-catalog/frontend_build.stdout.txt",
+    ".agents/state/baselines/poster-flag-preset-catalog/frontend_lint.stderr.txt",
+    ".agents/state/baselines/poster-flag-preset-catalog/frontend_lint.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/poster-flag-preset-catalog/backend_preset_contract_tests.stderr.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/backend_preset_contract_tests.stdout.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/browser_verification.md",
+    ".agents/state/verifications/poster-flag-preset-catalog/diff_check.stderr.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/diff_check.stdout.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/flag_migration_sync_check.stderr.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/flag_migration_sync_check.stdout.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/frontend_build.stderr.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/frontend_build.stdout.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/frontend_lint.stderr.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/frontend_lint.stdout.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/frontend_typecheck.stderr.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/frontend_typecheck.stdout.txt",
+    ".agents/state/verifications/poster-flag-preset-catalog/full_backend_suite.md",
+    ".agents/state/verifications/poster-flag-preset-catalog/post_edit_verification.json",
+    ".agents/state/verifications/poster-flag-preset-catalog/post_edit_verification.md",
+    "backend/app/config/flag_presets.py",
+    "backend/app/services/rules_service.py",
+    "backend/tests/test_flag_presets.py",
+    "backend/tests/test_rules_service.py",
+    "db/migrations/016_seed_flag_presets.sql",
+    "docs/FLAG_PRESETS.md",
+    "frontend/e2e/mockStudioBackend.ts",
+    "frontend/e2e/studio-parity.spec.ts",
+    "frontend/src/app/studio/page.tsx",
+    "scripts/generate_flag_preset_migration.py"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend_preset_contract_tests",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_routers.py",
+        "tests/test_flag_presets.py",
+        "tests/test_rules_service.py",
+        "-q"
+      ],
+      "cwd": "backend",
+      "exit_code": 0,
+      "duration_seconds": 2.731,
+      "stdout_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\backend_preset_contract_tests.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\backend_preset_contract_tests.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "flag_migration_sync_check",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\hydrographic-poster-generator-milestone-d-clean\\.venv\\Scripts\\python.exe",
+        "scripts/generate_flag_preset_migration.py",
+        "--check"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 0.132,
+      "stdout_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\flag_migration_sync_check.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\flag_migration_sync_check.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "C:\\Program Files\\nodejs\\npm.cmd",
+        "run",
+        "lint"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 79.174,
+      "stdout_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_typecheck",
+      "command": [
+        "C:\\Users\\kyleg\\Documents\\Codex\\2026-08-12\\referenced-chatgpt-conversation-this-is-an\\hydrographic-poster-generator-reference-map-ux\\frontend\\node_modules\\.bin\\tsc.cmd",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 3.281,
+      "stdout_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\frontend_typecheck.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\frontend_typecheck.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_build",
+      "command": [
+        "C:\\Program Files\\nodejs\\npm.cmd",
+        "run",
+        "build"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 27.746,
+      "stdout_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\frontend_build.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\frontend_build.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "diff_check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 0.104,
+      "stdout_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\diff_check.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\poster-flag-preset-catalog\\diff_check.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

@@ -1,0 +1,836 @@
+Repository: C:\Users\kyleg\Documents\Codex\2026-08-12\referenced-chatgpt-conversation-this-is-an\hydrographic-poster-generator-reference-map-ux
+Symbols: FLAG_PRESETS, RulesService, platform_rules, style.mode, preset_id
+Matches: 84
+WARNING: Results are unclassified and require review.
+
+Symbol: preset_id
+File: backend\test_export.py
+Line: 18
+Classification: unclassified
+16:         "schema_version": 2,
+17:         "mode": "standard",
+18:         "preset_id": "abyss"
+19:     }
+20: }
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: docs\CLOSEOUT_PLAN.md
+Line: 101
+Classification: unclassified
+99:
+100: ```text
+101: db/migrations/003_create_platform_rules.sql   (creates + seeds platform_rules)
+102: db/migrations/004_create_export_log.sql       (creates export_log)
+103: ```
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: docs\CLOSEOUT_PLAN.md
+Line: 134
+Classification: unclassified
+132: | ID | What to verify now | Expected outcome |
+133: |---|---|---|
+134: | C1 | `platform_rules` / `export_log` exist on the **active** project; rules source is `database`; exports write audit rows | `pass` |
+135: | D1 | Anonymous `POST /admin/reload-rules` → 401; keyed request → 200 | `pass` |
+136: | D2 | `POST /debug/sensitivity` → 404 | `pass` |
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: scripts\run_migrations.py
+Line: 38
+Classification: unclassified
+36:         "../db/migrations/001_create_tables.sql",
+37:         "../db/migrations/002_add_data_quality_columns.sql",
+38:         "../db/migrations/003_create_platform_rules.sql",
+39:         "../db/migrations/004_create_export_log.sql"
+40:     ]
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\components\ControlPanel.tsx
+Line: 277
+Classification: unclassified
+275:                 const selected =
+276:                   settings.style?.mode === "standard" &&
+277:                   settings.style.preset_id === palette.id;
+278:                 const swatches = [
+279:                   palette.tokens.background,
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\components\ControlPanel.tsx
+Line: 295
+Classification: unclassified
+293:                           schema_version: 2,
+294:                           mode: "standard",
+295:                           preset_id: palette.id,
+296:                           variant: settings.style?.variant,
+297:                           overrides: {},
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\components\ControlPanel.tsx
+Line: 334
+Classification: unclassified
+332:                       schema_version: 2,
+333:                       mode: "flag",
+334:                       preset_id: presets?.flags?.[0]?.id || "",
+335:                       variant: settings.style?.variant || "light",
+336:                       overrides: {},
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\components\ControlPanel.tsx
+Line: 359
+Classification: unclassified
+357:                 id="country_flag"
+358:                 className="glass-select"
+359:                 value={settings.style.preset_id}
+360:                 onChange={(e) => {
+361:                   onSettingsChange({
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\components\ControlPanel.tsx
+Line: 364
+Classification: unclassified
+362:                     style: {
+363:                       ...settings.style!,
+364:                       preset_id: e.target.value,
+365:                       overrides: {}, // Clear custom colors when switching flags
+366:                     },
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\components\ControlPanel.tsx
+Line: 645
+Classification: unclassified
+643:             let tokens: Record<string, string> = {};
+644:             if (settings.style?.mode === "flag") {
+645:                 const currentFlag = presets?.flags.find(p => p.id === settings.style?.preset_id);
+646:                 tokens = (currentFlag?.variants[settings.style?.variant || "light"] as unknown as Record<string, string>) || {};
+647:             } else {
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\components\ControlPanel.tsx
+Line: 648
+Classification: unclassified
+646:                 tokens = (currentFlag?.variants[settings.style?.variant || "light"] as unknown as Record<string, string>) || {};
+647:             } else {
+648:                 const currentPalette = presets?.palette.find(p => p.id === settings.style?.preset_id);
+649:                 tokens = (currentPalette?.tokens as unknown as Record<string, string>) || {};
+650:             }
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\lib\api.ts
+Line: 97
+Classification: unclassified
+95:   schema_version: number;
+96:   mode: "standard" | "flag";
+97:   preset_id: string;
+98:   variant?: "light" | "dark";
+99:   overrides?: Record<string, string>;
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\app\docs\page.tsx
+Line: 35
+Classification: unclassified
+33:       "schema_version": 2,
+34:       "mode": "standard",
+35:       "preset_id": "abyss",
+36:       "overrides": {}
+37:     },
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\app\docs\page.tsx
+Line: 61
+Classification: unclassified
+59:       "schema_version": 2,
+60:       "mode": "standard",
+61:       "preset_id": "abyss",
+62:       "overrides": {}
+63:     },
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\app\studio\page.tsx
+Line: 31
+Classification: unclassified
+29:     schema_version: 2,
+30:     mode: "standard",
+31:     preset_id: "abyss",
+32:   },
+33:   typography: "gallery_poster",
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\app\studio\page.tsx
+Line: 79
+Classification: unclassified
+77:     const palette = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("palette") : null;
+78:     return palette
+79:       ? { ...initial, style: { ...initial.style!, mode: "standard", preset_id: palette, overrides: {} } }
+80:       : initial;
+81:   });
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\app\studio\page.tsx
+Line: 113
+Classification: unclassified
+111:           style: {
+112:             ...s.style!,
+113:             preset_id: pre.palette.some((preset) => preset.id === s.style?.preset_id)
+114:               ? s.style?.preset_id ?? "abyss"
+115:               : pre.palette[0]?.id ?? s.style?.preset_id ?? "abyss",
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\app\studio\page.tsx
+Line: 114
+Classification: unclassified
+112:             ...s.style!,
+113:             preset_id: pre.palette.some((preset) => preset.id === s.style?.preset_id)
+114:               ? s.style?.preset_id ?? "abyss"
+115:               : pre.palette[0]?.id ?? s.style?.preset_id ?? "abyss",
+116:           },
+------------------------------------------------------------------------
+Symbol: preset_id
+File: frontend\src\app\studio\page.tsx
+Line: 115
+Classification: unclassified
+113:             preset_id: pre.palette.some((preset) => preset.id === s.style?.preset_id)
+114:               ? s.style?.preset_id ?? "abyss"
+115:               : pre.palette[0]?.id ?? s.style?.preset_id ?? "abyss",
+116:           },
+117:           typography: pre.typography.some((preset) => preset.id === s.typography)
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: db\migrations\003_create_platform_rules.sql
+Line: 1
+Classification: unclassified
+1: -- 003_create_platform_rules.sql
+2: -- Externalizes preset/rule definitions into the database.
+3:
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: db\migrations\003_create_platform_rules.sql
+Line: 4
+Classification: unclassified
+2: -- Externalizes preset/rule definitions into the database.
+3:
+4: CREATE TABLE IF NOT EXISTS platform_rules (
+5:     id VARCHAR(100) PRIMARY KEY,              -- e.g., 'density:balanced', 'palette:abyss'
+6:     rule_type VARCHAR(50) NOT NULL,           -- 'density', 'palette', 'typography'
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: db\migrations\003_create_platform_rules.sql
+Line: 14
+Classification: unclassified
+12: );
+13:
+14: CREATE INDEX IF NOT EXISTS idx_platform_rules_type ON platform_rules (rule_type);
+15:
+16: -- Seed with current hardcoded presets
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: db\migrations\003_create_platform_rules.sql
+Line: 19
+Classification: unclassified
+17:
+18: -- Density presets
+19: INSERT INTO platform_rules (id, rule_type, payload) VALUES
+20: ('density:balanced', 'density', '{
+21:     "id": "balanced", "name": "Balanced", "min_stream_order": 3,
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: db\migrations\003_create_platform_rules.sql
+Line: 38
+Classification: unclassified
+36:
+37: -- Palette presets
+38: INSERT INTO platform_rules (id, rule_type, payload) VALUES
+39: ('palette:abyss', 'palette', '{
+40:     "id": "abyss", "name": "Abyss", "type": "dark",
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: db\migrations\003_create_platform_rules.sql
+Line: 54
+Classification: unclassified
+52:
+53: -- Typography presets
+54: INSERT INTO platform_rules (id, rule_type, payload) VALUES
+55: ('typography:gallery_poster', 'typography', '{
+56:     "id": "gallery_poster", "name": "Gallery Poster",
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: db\migrations\009_lock_down_data_api.sql
+Line: 46
+Classification: unclassified
+44:         'mcda_sweep_volatility',
+45:         'mcda_zone_thresholds',
+46:         'platform_rules',
+47:         'staging_features',
+48:         'staging_grid',
+------------------------------------------------------------------------
+Symbol: RulesService
+File: backend\tests\test_drone_dashboard.py
+Line: 161
+Classification: unclassified
+159:     with patch("app.main.db.connect", new_callable=AsyncMock), \
+160:          patch("app.main.db.disconnect", new_callable=AsyncMock), \
+161:          patch("app.services.rules_service.RulesService.load", new_callable=AsyncMock), \
+162:          patch("app.main.RiverRepository.check_readiness", new_callable=AsyncMock) as ready:
+163:         ready.return_value = True
+------------------------------------------------------------------------
+Symbol: RulesService
+File: backend\tests\test_drone_publication.py
+Line: 314
+Classification: unclassified
+312:     with patch("app.main.db.connect", new_callable=AsyncMock), \
+313:          patch("app.main.db.disconnect", new_callable=AsyncMock), \
+314:          patch("app.services.rules_service.RulesService.load", new_callable=AsyncMock), \
+315:          patch("app.main.RiverRepository.check_readiness", new_callable=AsyncMock) as ready:
+316:         ready.return_value = True
+------------------------------------------------------------------------
+Symbol: RulesService
+File: backend\tests\test_routers.py
+Line: 21
+Classification: unclassified
+19:     with patch("app.main.db.connect", new_callable=AsyncMock), \
+20:          patch("app.main.db.disconnect", new_callable=AsyncMock), \
+21:          patch("app.services.rules_service.RulesService.load", new_callable=AsyncMock), \
+22:          patch("app.main.RiverRepository.check_readiness", new_callable=AsyncMock) as mock_check:
+23:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\tests\test_routers.py
+Line: 86
+Classification: unclassified
+84:         kwargs = mock_clip.call_args.kwargs
+85:         assert kwargs["geography_id"] == "test_geo"
+86:         assert kwargs["density_preset_id"] == "dense"
+87:         assert kwargs["classification_preset_id"] == "strahler"
+88:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\tests\test_routers.py
+Line: 87
+Classification: unclassified
+85:         assert kwargs["geography_id"] == "test_geo"
+86:         assert kwargs["density_preset_id"] == "dense"
+87:         assert kwargs["classification_preset_id"] == "strahler"
+88:
+89:         # Verify SVGRenderer was initialized with correct canvas
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\tests\test_routers.py
+Line: 133
+Classification: unclassified
+131:         assert mock_clip.call_count == 3
+132:
+133:         # Verify clip_rivers was called with the correct 4 arguments (especially classification_preset_id)
+134:         for call_args in mock_clip.call_args_list:
+135:             kwargs = call_args.kwargs
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\tests\test_routers.py
+Line: 137
+Classification: unclassified
+135:             kwargs = call_args.kwargs
+136:             assert kwargs["geography_id"] == "test_geo"
+137:             assert kwargs["classification_preset_id"] == "strahler"
+138:             assert "temp_debug" in kwargs["density_preset_id"]
+139:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\tests\test_routers.py
+Line: 138
+Classification: unclassified
+136:             assert kwargs["geography_id"] == "test_geo"
+137:             assert kwargs["classification_preset_id"] == "strahler"
+138:             assert "temp_debug" in kwargs["density_preset_id"]
+139:
+140:         # Verify SVGRenderer was initialized with canvas=(1000, 1000)
+------------------------------------------------------------------------
+Symbol: FLAG_PRESETS
+File: backend\app\config\flag_presets.py
+Line: 1
+Classification: unclassified
+1: FLAG_PRESETS = {
+2:     "guyana": {
+3:         "id": "guyana",
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\models\render_models.py
+Line: 37
+Classification: unclassified
+35:                     "schema_version": 2,
+36:                     "mode": "standard",
+37:                     "preset_id": legacy_palette,
+38:                     "overrides": legacy_custom
+39:                 }
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\models\style_models.py
+Line: 7
+Classification: unclassified
+5:     schema_version: int = 2
+6:     mode: Literal["standard", "flag"] = "standard"
+7:     preset_id: str = "abyss"
+8:     variant: Optional[Literal["light", "dark"]] = None
+9:     overrides: Optional[Dict[str, str]] = None
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\routers\clip.py
+Line: 19
+Classification: unclassified
+17:             repo=repo,
+18:             geography_id=request.geography_id,
+19:             density_preset_id=request.density_preset,
+20:             classification_preset_id=request.classification_preset
+21:         )
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\routers\clip.py
+Line: 20
+Classification: unclassified
+18:             geography_id=request.geography_id,
+19:             density_preset_id=request.density_preset,
+20:             classification_preset_id=request.classification_preset
+21:         )
+22:         return result
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\routers\debug.py
+Line: 24
+Classification: unclassified
+22:     """
+23:     geography_id = request.geography_id
+24:     density_preset_id = request.density_preset
+25:
+26:     # Base density
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\routers\debug.py
+Line: 27
+Classification: unclassified
+25:
+26:     # Base density
+27:     base_density = rules_service.get_density_preset(density_preset_id)
+28:     base_order = base_density.min_stream_order
+29:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\routers\debug.py
+Line: 59
+Classification: unclassified
+57:             repo=repo,
+58:             geography_id=geography_id,
+59:             density_preset_id=temp_id,
+60:             classification_preset_id=request.classification_preset
+61:         )
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\routers\debug.py
+Line: 60
+Classification: unclassified
+58:             geography_id=geography_id,
+59:             density_preset_id=temp_id,
+60:             classification_preset_id=request.classification_preset
+61:         )
+62:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\routers\export.py
+Line: 52
+Classification: unclassified
+50:         region_code=clip_result.metadata.region_code,
+51:         density_preset=request.density_preset,
+52:         palette=request.palette or (request.style.preset_id if request.style else "unknown"),
+53:         typography=request.typography,
+54:         title=request.title,
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\routers\preview.py
+Line: 25
+Classification: unclassified
+23:             repo=repo,
+24:             geography_id=request.geography_id,
+25:             density_preset_id=request.density_preset,
+26:             classification_preset_id=request.classification_preset,
+27:         )
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\routers\preview.py
+Line: 26
+Classification: unclassified
+24:             geography_id=request.geography_id,
+25:             density_preset_id=request.density_preset,
+26:             classification_preset_id=request.classification_preset,
+27:         )
+28:     except ValueError as exc:  # unknown geography or density preset
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\clipping_service.py
+Line: 12
+Classification: unclassified
+10:         repo: RiverRepository,
+11:         geography_id: str,
+12:         density_preset_id: str,
+13:         classification_preset_id: str
+14:     ) -> ClipResult:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\clipping_service.py
+Line: 13
+Classification: unclassified
+11:         geography_id: str,
+12:         density_preset_id: str,
+13:         classification_preset_id: str
+14:     ) -> ClipResult:
+15:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\clipping_service.py
+Line: 17
+Classification: unclassified
+15:
+16:         # 1. Resolve presets
+17:         density = rules_service.get_density_preset(density_preset_id)
+18:         min_order = density.min_stream_order
+19:         class_map = density.classification_map
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\presets_service.py
+Line: 12
+Classification: unclassified
+10:     )
+11:
+12: def get_density_preset(preset_id: str):
+13:     return rules_service.get_density_preset(preset_id)
+14:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\presets_service.py
+Line: 13
+Classification: unclassified
+11:
+12: def get_density_preset(preset_id: str):
+13:     return rules_service.get_density_preset(preset_id)
+14:
+15: def get_palette_preset(preset_id: str):
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\presets_service.py
+Line: 15
+Classification: unclassified
+13:     return rules_service.get_density_preset(preset_id)
+14:
+15: def get_palette_preset(preset_id: str):
+16:     return rules_service.get_palette_preset(preset_id)
+17:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\presets_service.py
+Line: 16
+Classification: unclassified
+14:
+15: def get_palette_preset(preset_id: str):
+16:     return rules_service.get_palette_preset(preset_id)
+17:
+18: def get_typography_preset(preset_id: str):
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\presets_service.py
+Line: 18
+Classification: unclassified
+16:     return rules_service.get_palette_preset(preset_id)
+17:
+18: def get_typography_preset(preset_id: str):
+19:     return rules_service.get_typography_preset(preset_id)
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\presets_service.py
+Line: 19
+Classification: unclassified
+17:
+18: def get_typography_preset(preset_id: str):
+19:     return rules_service.get_typography_preset(preset_id)
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: backend\app\services\rules_service.py
+Line: 3
+Classification: unclassified
+1: """Rules service: DB-backed preset loader with hardcoded fallback.
+2:
+3: Presets are loaded from platform_rules at startup and cached in memory.
+4: If the DB is unreachable, falls back to the Python dicts in app.config.*.
+5: """
+------------------------------------------------------------------------
+Symbol: FLAG_PRESETS
+File: backend\app\services\rules_service.py
+Line: 14
+Classification: unclassified
+12: from app.config.palette_presets import PALETTE_PRESETS
+13: from app.config.typography_presets import TYPOGRAPHY_PRESETS
+14: from app.config.flag_presets import FLAG_PRESETS
+15: from app.models.preset_models import DensityPreset, PalettePreset, TypographyPreset, FlagPreset
+16: from app.models.style_models import StyleSelection, ResolvedStyle
+------------------------------------------------------------------------
+Symbol: RulesService
+File: backend\app\services\rules_service.py
+Line: 20
+Classification: unclassified
+18: logger = logging.getLogger(__name__)
+19:
+20: class RulesService:
+21:     def __init__(self):
+22:         self._density: Dict[str, DensityPreset] = {}
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: backend\app\services\rules_service.py
+Line: 45
+Classification: unclassified
+43:         async with pool.acquire() as conn:
+44:             rows = await conn.fetch(
+45:                 "SELECT id, rule_type, version, payload FROM platform_rules WHERE is_active = TRUE"
+46:             )
+47:         for row in rows:
+------------------------------------------------------------------------
+Symbol: FLAG_PRESETS
+File: backend\app\services\rules_service.py
+Line: 70
+Classification: unclassified
+68:         self._palette = {k: PalettePreset(**v) for k, v in PALETTE_PRESETS.items()}
+69:         self._typography = {k: TypographyPreset(**v) for k, v in TYPOGRAPHY_PRESETS.items()}
+70:         self._flags = {k: FlagPreset(**v) for k, v in FLAG_PRESETS.items()}
+71:
+72:     async def reload(self, pool: asyncpg.Pool):
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 78
+Classification: unclassified
+76:         logger.info("Rules hot-reloaded from database")
+77:
+78:     def get_density_preset(self, preset_id: str) -> DensityPreset:
+79:         preset = self._density.get(preset_id)
+80:         if not preset:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 79
+Classification: unclassified
+77:
+78:     def get_density_preset(self, preset_id: str) -> DensityPreset:
+79:         preset = self._density.get(preset_id)
+80:         if not preset:
+81:             raise ValueError(f"Density preset '{preset_id}' not found (source: {self._source})")
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 81
+Classification: unclassified
+79:         preset = self._density.get(preset_id)
+80:         if not preset:
+81:             raise ValueError(f"Density preset '{preset_id}' not found (source: {self._source})")
+82:         return preset
+83:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 84
+Classification: unclassified
+82:         return preset
+83:
+84:     def get_palette_preset(self, preset_id: str) -> PalettePreset:
+85:         preset = self._palette.get(preset_id)
+86:         if not preset:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 85
+Classification: unclassified
+83:
+84:     def get_palette_preset(self, preset_id: str) -> PalettePreset:
+85:         preset = self._palette.get(preset_id)
+86:         if not preset:
+87:             raise ValueError(f"Palette preset '{preset_id}' not found (source: {self._source})")
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 87
+Classification: unclassified
+85:         preset = self._palette.get(preset_id)
+86:         if not preset:
+87:             raise ValueError(f"Palette preset '{preset_id}' not found (source: {self._source})")
+88:         return preset
+89:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 90
+Classification: unclassified
+88:         return preset
+89:
+90:     def get_typography_preset(self, preset_id: str) -> TypographyPreset:
+91:         preset = self._typography.get(preset_id)
+92:         if not preset:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 91
+Classification: unclassified
+89:
+90:     def get_typography_preset(self, preset_id: str) -> TypographyPreset:
+91:         preset = self._typography.get(preset_id)
+92:         if not preset:
+93:             raise ValueError(f"Typography preset '{preset_id}' not found (source: {self._source})")
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 93
+Classification: unclassified
+91:         preset = self._typography.get(preset_id)
+92:         if not preset:
+93:             raise ValueError(f"Typography preset '{preset_id}' not found (source: {self._source})")
+94:         return preset
+95:
+------------------------------------------------------------------------
+Symbol: style.mode
+File: backend\app\services\rules_service.py
+Line: 97
+Classification: unclassified
+95:
+96:     def resolve_style(self, style: StyleSelection) -> ResolvedStyle:
+97:         if style.mode == "standard":
+98:             preset = self.get_palette_preset(style.preset_id)
+99:             tokens = preset.tokens.model_dump()
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 98
+Classification: unclassified
+96:     def resolve_style(self, style: StyleSelection) -> ResolvedStyle:
+97:         if style.mode == "standard":
+98:             preset = self.get_palette_preset(style.preset_id)
+99:             tokens = preset.tokens.model_dump()
+100:         elif style.mode == "flag":
+------------------------------------------------------------------------
+Symbol: style.mode
+File: backend\app\services\rules_service.py
+Line: 100
+Classification: unclassified
+98:             preset = self.get_palette_preset(style.preset_id)
+99:             tokens = preset.tokens.model_dump()
+100:         elif style.mode == "flag":
+101:             flag = self._flags.get(style.preset_id)
+102:             if not flag:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 101
+Classification: unclassified
+99:             tokens = preset.tokens.model_dump()
+100:         elif style.mode == "flag":
+101:             flag = self._flags.get(style.preset_id)
+102:             if not flag:
+103:                 raise ValueError(f"Flag preset '{style.preset_id}' not found (source: {self._source})")
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 103
+Classification: unclassified
+101:             flag = self._flags.get(style.preset_id)
+102:             if not flag:
+103:                 raise ValueError(f"Flag preset '{style.preset_id}' not found (source: {self._source})")
+104:             variant = style.variant or "light"
+105:             if variant not in flag.variants:
+------------------------------------------------------------------------
+Symbol: preset_id
+File: backend\app\services\rules_service.py
+Line: 106
+Classification: unclassified
+104:             variant = style.variant or "light"
+105:             if variant not in flag.variants:
+106:                 raise ValueError(f"Variant '{variant}' not found in flag '{style.preset_id}'")
+107:             tokens = flag.variants[variant].model_dump()
+108:         else:
+------------------------------------------------------------------------
+Symbol: style.mode
+File: backend\app\services\rules_service.py
+Line: 109
+Classification: unclassified
+107:             tokens = flag.variants[variant].model_dump()
+108:         else:
+109:             raise ValueError(f"Unknown style mode: {style.mode}")
+110:
+111:         if style.overrides:
+------------------------------------------------------------------------
+Symbol: RulesService
+File: backend\app\services\rules_service.py
+Line: 127
+Classification: unclassified
+125:
+126: # Singleton instance
+127: rules_service = RulesService()
+------------------------------------------------------------------------
+Symbol: FLAG_PRESETS
+File: .agents\state\current_phase.json
+Line: 17
+Classification: unclassified
+15:   ],
+16:   "allowed_paths": [
+17:     "backend/app/config/flag_presets.py",
+18:     "backend/app/services/rules_service.py",
+19:     "backend/tests/test_flag_presets.py",
+------------------------------------------------------------------------
+Symbol: FLAG_PRESETS
+File: .agents\state\current_phase.json
+Line: 19
+Classification: unclassified
+17:     "backend/app/config/flag_presets.py",
+18:     "backend/app/services/rules_service.py",
+19:     "backend/tests/test_flag_presets.py",
+20:     "backend/tests/test_rules_service.py",
+21:     "db/migrations/016_seed_flag_presets.sql",
+------------------------------------------------------------------------
+Symbol: FLAG_PRESETS
+File: .agents\state\current_phase.json
+Line: 21
+Classification: unclassified
+19:     "backend/tests/test_flag_presets.py",
+20:     "backend/tests/test_rules_service.py",
+21:     "db/migrations/016_seed_flag_presets.sql",
+22:     "scripts/generate_flag_preset_migration.py",
+23:     "frontend/src/app/studio/page.tsx",
+------------------------------------------------------------------------
+Symbol: FLAG_PRESETS
+File: .agents\state\current_phase.json
+Line: 26
+Classification: unclassified
+24:     "frontend/e2e/mockStudioBackend.ts",
+25:     "frontend/e2e/studio-parity.spec.ts",
+26:     "docs/FLAG_PRESETS.md",
+27:     ".agents/state/current_phase.json",
+28:     ".agents/config/verification_commands_poster_flag_preset_catalog.json",
+------------------------------------------------------------------------
+Symbol: platform_rules
+File: .agents\state\current_phase.json
+Line: 38
+Classification: unclassified
+36:     "db/migrations/001_create_tables.sql",
+37:     "db/migrations/002_add_data_quality_columns.sql",
+38:     "db/migrations/003_create_platform_rules.sql",
+39:     "deployment/**",
+40:     "cloudbuild.yaml",
+------------------------------------------------------------------------
+Symbol: FLAG_PRESETS
+File: .agents\state\current_phase.json
+Line: 49
+Classification: unclassified
+47:   "approved_operations": [
+48:     "create_flag_catalog_branch",
+49:     "define_45_country_flag_presets",
+50:     "preserve_existing_flag_preset_ids",
+51:     "generate_idempotent_flag_seed_migration_016",
+------------------------------------------------------------------------
+Symbol: preset_id
+File: .agents\state\current_phase.json
+Line: 50
+Classification: unclassified
+48:     "create_flag_catalog_branch",
+49:     "define_45_country_flag_presets",
+50:     "preserve_existing_flag_preset_ids",
+51:     "generate_idempotent_flag_seed_migration_016",
+52:     "add_per_rule_category_hardcoded_fallback",
+------------------------------------------------------------------------

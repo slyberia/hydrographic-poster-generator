@@ -61,24 +61,8 @@ export default function Page() {
   const [regions, setRegions] = useState<GeographyRegion[]>([]);
   const [presets, setPresets] = useState<PresetsResponse | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
-
-  const [settings, setSettings] = useState<PosterSettings>(() => {
-    let initial = DEFAULT_SETTINGS as unknown as PosterSettings;
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("hydrorivers_settings");
-        if (saved) {
-          initial = migratePosterSettings(JSON.parse(saved)) as unknown as PosterSettings;
-        }
-      } catch (err) {
-        console.warn("Failed to load settings", err);
-      }
-    }
-    const palette = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("palette") : null;
-    return palette
-      ? { ...initial, style: { ...initial.style!, mode: "standard", preset_id: palette, overrides: {} } }
-      : initial;
-  });
+  const [settingsHydrated, setSettingsHydrated] = useState(false);
+  const [settings, setSettings] = useState<PosterSettings>(DEFAULT_SETTINGS);
   const [exportSettings, setExportSettings] = useState<ExportSettings>(DEFAULT_EXPORT);
 
   const [svg, setSvg] = useState<string | null>(null);
@@ -92,8 +76,45 @@ export default function Page() {
 
   const previewAbort = useRef<AbortController | null>(null);
 
+  // Read browser-only state after mount so the server and first client render
+  // remain identical. The hydration gate also prevents the persistence effect
+  // from overwriting a saved flag selection with defaults during bootstrap.
+  useEffect(() => {
+    let cancelled = false;
+    let initial = DEFAULT_SETTINGS;
+    try {
+      const saved = localStorage.getItem("hydrorivers_settings");
+      if (saved) {
+        initial = migratePosterSettings(JSON.parse(saved)) as unknown as PosterSettings;
+      }
+    } catch (err) {
+      console.warn("Failed to load settings", err);
+    }
+    const palette = new URLSearchParams(window.location.search).get("palette");
+    const hydratedSettings = palette
+      ? {
+          ...initial,
+          style: {
+            ...initial.style!,
+            mode: "standard" as const,
+            preset_id: palette,
+            overrides: {},
+          },
+        }
+      : initial;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      setSettings(hydratedSettings);
+      setSettingsHydrated(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // Bootstrap: geography hierarchy + live preset registry.
   useEffect(() => {
+    if (!settingsHydrated) return;
     const controller = new AbortController();
     Promise.all([
       getGeographies(controller.signal),
@@ -103,21 +124,31 @@ export default function Page() {
         setRegions(geo.regions);
         setPresets(pre);
         // Align defaults with whatever the registry actually serves.
-        setSettings((s) => ({
-          ...s,
-          density_preset: pre.density.some((preset) => preset.id === s.density_preset)
-            ? s.density_preset
-            : pre.density[0]?.id ?? s.density_preset,
-          style: {
-            ...s.style!,
-            preset_id: pre.palette.some((preset) => preset.id === s.style?.preset_id)
-              ? s.style?.preset_id ?? "abyss"
-              : pre.palette[0]?.id ?? s.style?.preset_id ?? "abyss",
-          },
-          typography: pre.typography.some((preset) => preset.id === s.typography)
-            ? s.typography
-            : pre.typography[0]?.id ?? s.typography,
-        }));
+        setSettings((s) => {
+          const styleMode = s.style?.mode ?? "standard";
+          const styleRegistry = styleMode === "flag" ? pre.flags : pre.palette;
+          const currentPresetId = s.style?.preset_id;
+          const fallbackPresetId =
+            styleRegistry[0]?.id ??
+            currentPresetId ??
+            (styleMode === "standard" ? "abyss" : "");
+          return {
+            ...s,
+            density_preset: pre.density.some((preset) => preset.id === s.density_preset)
+              ? s.density_preset
+              : pre.density[0]?.id ?? s.density_preset,
+            style: {
+              ...s.style!,
+              mode: styleMode,
+              preset_id: styleRegistry.some((preset) => preset.id === currentPresetId)
+                ? currentPresetId ?? fallbackPresetId
+                : fallbackPresetId,
+            },
+            typography: pre.typography.some((preset) => preset.id === s.typography)
+              ? s.typography
+              : pre.typography[0]?.id ?? s.typography,
+          };
+        });
       })
       .catch((err) => {
         if (!controller.signal.aborted) {
@@ -125,7 +156,7 @@ export default function Page() {
         }
       });
     return () => controller.abort();
-  }, []);
+  }, [settingsHydrated]);
 
   // Debounced preview refetch on any setting change.
   useEffect(() => {
@@ -157,10 +188,10 @@ export default function Page() {
 
   // Persist settings
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (settingsHydrated) {
       localStorage.setItem("hydrorivers_settings", JSON.stringify(settings));
     }
-  }, [settings]);
+  }, [settings, settingsHydrated]);
 
   const handleSettingsChange = (patch: Partial<PosterSettings>) => {
     setSettings((s) => ({ ...s, ...patch }));
