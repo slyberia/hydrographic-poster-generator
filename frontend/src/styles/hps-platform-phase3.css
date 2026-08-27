@@ -52,6 +52,23 @@
   font-weight: 700;
 }
 
+.hps-hero__visual--poster {
+  background: #082f2a;
+}
+
+.hps-hero__visual--poster img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.hps-hero__visual--poster::before {
+  content: "HYDROGRAPHIC POSTER GENERATOR";
+}
+
+.hps-card-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .hps-card--docs .hps-card__image {
   object-fit: contain;
   object-position: center;

@@ -27,15 +27,15 @@ const MODEL_INPUTS = [
 ] as const;
 
 const CAPABILITIES = [
-  ["Configurable scenario analysis", "Authorized analysts can adjust provisional weights, run scenarios, and compare how planning priorities affect the result.", "scenario", "Scenario controls", "/drone/console", "Open scenario controls"],
-  ["Controlled run governance", "Viewer, analyst, and administrator roles separate review, analysis, approval, and publication responsibilities.", "workspace", "Run workspace", "/drone/start", "Compare application views"],
-  ["Published map and location guidance", "The public view uses approved dissolved zoning, contextual layers, and plain-language location explanations.", "map", "Public Explorer", "/drone/explore", "Open the published map"],
-  ["Planning outputs", "Authorized users can export the current map as PNG, SVG, or PDF and download cell or dissolved geometry as GeoJSON.", "export", "Export workspace", "/drone/console", "Open export tools"],
+  ["Configurable scenario analysis", "Authorized analysts can adjust provisional weights, run scenarios, and compare how planning priorities affect the result.", "scenario", "Scenario controls", "/workspace/drone/console", "Open scenario controls"],
+  ["Controlled run governance", "Viewer, analyst, and administrator roles separate review, analysis, approval, and publication responsibilities.", "workspace", "Run workspace", "/workspace/drone/start", "Compare application views"],
+  ["Published map and location guidance", "The read-only view uses approved dissolved zoning, contextual layers, and plain-language location explanations.", "map", "Published Map", "/workspace/drone/map", "Open the published map"],
+  ["Planning outputs", "Authorized users can export the current map as PNG, SVG, or PDF and download cell or dissolved geometry as GeoJSON.", "export", "Export workspace", "/workspace/drone/console", "Open export tools"],
 ] as const;
 
 const VALUE_ITEMS = [
   ["Shared data foundation", "A common analytical framework improves consistency across agencies, municipalities, NDCs, and programs."],
-  ["Public transparency with administrative control", "Provide public access to understandable information while preserving control of data and policies."],
+  ["Shared visibility with administrative control", "Provide authorized users with understandable information while preserving control of data and policies."],
   ["Flexible deployment", "Deploy as a national platform, shared regional service, or separate jurisdictional instances."],
   ["Faster, consistent reviews", "Replace manual comparisons with a structured process that documents and explains results."],
 ] as const;
@@ -48,7 +48,7 @@ const APPLICATIONS = [
   ["Utility corridor planning", "Evaluate routes, service areas, assets, and constraint data."],
   ["Emergency and disaster planning", "Identify access, vulnerable areas, and priority intervention zones."],
   ["Environmental monitoring", "Assess land use, sensitive areas, and environmental changes."],
-  ["Data modernization", "Consolidate fragmented data into a modern platform for public access."],
+  ["Data modernization", "Consolidate fragmented data into a modern platform for coordinated access."],
 ] as const;
 
 const AUDIENCES = [
@@ -76,16 +76,10 @@ export default function DroneOverview() {
             results through an interactive map.
           </p>
           <div className="hero-actions">
-            <Link className="button button-gold" href="/drone/start">
+            <Link className="button button-gold" href="/workspace/drone/start">
               Explore Drone Zoning <span aria-hidden="true">↗</span>
             </Link>
-            <a
-              className="button button-outline"
-              href="/downloads/guyana-drone-executive-overview.md"
-              download
-            >
-              Download executive overview
-            </a>
+            <Link className="button button-outline" href="/workspace/drone/docs">Read workspace documentation</Link>
           </div>
         </div>
         <figure className="hero-screenshot">
@@ -205,7 +199,7 @@ export default function DroneOverview() {
         </div>
         <div>
           <p>This tool supports planning decisions. It does not replace permission from the aviation authority or account for every live operational condition, including temporary restrictions, weather, aircraft condition, and operator qualifications.</p>
-          <Link className="text-link" href="/drone/start">Choose the appropriate application view →</Link>
+          <Link className="text-link" href="/workspace/drone/start">Choose the appropriate application view →</Link>
         </div>
       </section>
 
@@ -215,10 +209,10 @@ export default function DroneOverview() {
           <div><p className="overline">Region 4 pilot</p><p>We are working with partners to validate data, refine policies, and demonstrate the platform’s value to inform future regional and national deployment.</p></div>
         </div>
         <nav aria-label="Drone Zoning actions">
-          <Link href="/drone/start">Choose a view</Link>
-          <Link href="/drone/explore">Explore published map</Link>
-          <Link href="/drone/console">Open planning console</Link>
-          <a href="/downloads/guyana-drone-executive-overview.md" download>Download overview</a>
+          <Link href="/workspace/drone/start">Choose a view</Link>
+          <Link href="/workspace/drone/map">Explore published map</Link>
+          <Link href="/workspace/drone/console">Open planning console</Link>
+          <Link href="/workspace/drone/docs">Read documentation</Link>
           <a href="mailto:info@hpsgeospatial.com">Contact HPS Geospatial</a>
         </nav>
       </section>

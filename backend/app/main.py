@@ -82,8 +82,13 @@ app.include_router(presets.router, prefix="/presets", tags=["Presets"])
 app.include_router(clip.router, tags=["Spatial Processing"])
 app.include_router(preview.router, tags=["Render Pipeline"])
 app.include_router(export.router, tags=["Export Pipeline"])
-app.include_router(drone.router, tags=["Drone Zoning"])
-app.include_router(public_drone.router, prefix="/public/drone", tags=["Drone Public"])
+app.include_router(drone.router, tags=["Drone Zoning"], include_in_schema=False)
+app.include_router(
+    public_drone.router,
+    prefix="/workspace/drone",
+    tags=["Drone Workspace"],
+    include_in_schema=False,
+)
 
 from app.routers import admin
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])

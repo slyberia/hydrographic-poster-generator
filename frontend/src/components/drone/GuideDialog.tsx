@@ -70,7 +70,7 @@ export default function GuideDialog(props: { open: boolean; onClose: () => void 
         ))}
 
         <div className="guide-actions">
-          <Link href="/drone/console" className="guide-link">
+          <Link href="/workspace/drone/console" className="guide-link">
             Continue in the Planning Console →
           </Link>
           <button className="btn" onClick={props.onClose}>

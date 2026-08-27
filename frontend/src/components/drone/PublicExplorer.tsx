@@ -1,8 +1,8 @@
 "use client";
 
-/** components/drone/PublicExplorer.tsx — the public location-guidance map.
+/** components/drone/PublicExplorer.tsx — the viewer-only location-guidance map.
  *
- * Consumes ONLY the /public/drone/* contracts (config, zoning, report). It never
+ * Consumes only published workspace contracts (config, zoning, report). It never
  * references a run id, so it cannot select or infer an unpublished run. Reuses
  * the console's map, geo-search, zone theme, and drawer primitives, minus every
  * internal control (weights, sensitivity, export, run selection). */
@@ -201,13 +201,13 @@ export default function PublicExplorer() {
         <aside className="rail" aria-label="Explorer controls">
           <div>
             <h1 className="brand">
-              Public Explorer
+              Published Map
               <small>{config?.study_area.display_name ?? "Drone zoning guidance"}</small>
             </h1>
             <nav className="explore-nav" aria-label="Drone product navigation">
-              <Link href="/drone">Overview</Link>
-              <Link href="/drone/dashboard">Dashboard</Link>
-              <Link href="/drone/console">Planning Console</Link>
+              <Link href="/workspace/drone">Overview</Link>
+              <Link href="/workspace/drone/dashboard">Dashboard</Link>
+              <Link href="/workspace/drone/console">Planning Console</Link>
             </nav>
           </div>
 
@@ -306,7 +306,7 @@ export default function PublicExplorer() {
                         ? ", then approve and publish it here."
                         : ". An administrator must approve and publish the result."}
                     </span>
-                    <Link className="btn map-overlay-action" href="/drone/console">
+                    <Link className="btn map-overlay-action" href="/workspace/drone/console">
                       Create zoning run
                     </Link>
                   </>
@@ -317,7 +317,7 @@ export default function PublicExplorer() {
                     </span>
                     <Link
                       className="btn map-overlay-action"
-                      href="/login?next=/drone/console"
+                      href="/login?next=/workspace/drone/console"
                     >
                       Staff sign in
                     </Link>

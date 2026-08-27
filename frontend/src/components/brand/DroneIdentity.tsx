@@ -6,7 +6,7 @@ export function DroneMark({ className = "" }: { className?: string }) {
 
 export default function DroneIdentity({ className = "" }: { className?: string }) {
   return (
-    <Link className={`hps-product-identity ${className}`.trim()} href="/drone">
+    <Link className={`hps-product-identity ${className}`.trim()} href="/workspace/drone">
       <DroneMark />
       <span>
         Drone Zoning

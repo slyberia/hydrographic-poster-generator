@@ -1,11 +1,9 @@
 import Link from "next/link";
 import HpsLockup from "@/components/brand/HpsLockup";
-import DroneIdentity from "@/components/brand/DroneIdentity";
 
-type PlatformRoute = "platform" | "poster" | "drone" | "docs";
+type PlatformRoute = "platform" | "poster" | "docs";
 const NAV_ITEMS: Array<{ href: string; label: string; route: PlatformRoute }> = [
   { href: "/poster", label: "Poster Generator", route: "poster" },
-  { href: "/drone", label: "Drone Zoning", route: "drone" },
   { href: "/documentation", label: "Documentation", route: "docs" },
 ];
 type PlatformHeaderProps = { current?: PlatformRoute };
@@ -15,7 +13,6 @@ export default function PlatformHeader({ current = "platform" }: PlatformHeaderP
     <header className="hps-brandbar hps-theme hps-theme--platform">
       <div className="hps-brandbar__inner">
         <HpsLockup className="hps-brandbar__lockup" priority />
-        <DroneIdentity className="hps-brandbar__product" />
       </div>
       <nav className="hps-portal__nav" aria-label="HPS Geospatial">
         <div className="hps-portal__nav-inner">

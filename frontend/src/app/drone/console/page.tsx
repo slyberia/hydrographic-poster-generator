@@ -19,6 +19,7 @@ import { MapDisplayMode } from "@/components/drone/SensitivityPanel";
 import { useSensitivity } from "@/lib/useSensitivity";
 import { useReferenceLayers } from "@/lib/referenceLayers";
 import type { ReferenceLayerKey } from "@/lib/referenceLayers";
+import { clearDroneWorkspaceCache } from "@/lib/droneWorkspaceSession";
 
 const GUIDE_SEEN_KEY = "drone.guideSeen.v1";
 
@@ -45,7 +46,7 @@ export default function Page() {
     const supabase = createClient();
     void supabase.auth.getUser().then(({ data, error }) => {
       if (error || !data.user) {
-        router.replace("/login?next=/drone/console");
+        router.replace("/login?next=/workspace/drone/console");
         return;
       }
       const role = data.user.app_metadata.app_role;
@@ -67,7 +68,8 @@ export default function Page() {
   }
 
   const signOut = isSupabaseConfigured
-    ? async () => {
+      ? async () => {
+        clearDroneWorkspaceCache();
         await createClient().auth.signOut();
         router.replace("/login");
       }
@@ -314,7 +316,7 @@ function Console({
         setStatus({
           text:
             action === "publish"
-              ? "Run published. The Public Explorer is now updated."
+              ? "Run published. The Published Map is now updated."
               : `Run ${action === "approve" ? "approved" : "archived"}.`,
         });
       } catch (e) {

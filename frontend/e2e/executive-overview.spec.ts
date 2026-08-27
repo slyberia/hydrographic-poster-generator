@@ -15,25 +15,25 @@ const publishedMap = {
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.route("**/public/drone/config", async (route) => {
+  await page.route("**/workspace/drone/config", async (route) => {
     await route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({
         study_area: { display_name: "Region 4", center: { lat: 6.75, lng: -58.2 }, default_zoom: 10 },
         published: {
           published_at: "2026-08-13T00:00:00Z",
-          artifacts: [{ type: "dissolved", url: "/public/drone/zoning", sha256: "test", byte_size: 1 }],
+          artifacts: [{ type: "dissolved", url: "/workspace/drone/zoning", sha256: "test", byte_size: 1 }],
         },
       }),
     });
   });
-  await page.route("**/public/drone/zoning", async (route) => {
+  await page.route("**/workspace/drone/zoning", async (route) => {
     await route.fulfill({ contentType: "application/json", body: JSON.stringify(publishedMap) });
   });
 });
 
 test("Drone homepage presents the merged overview with an interactive map", async ({ page }) => {
-  await page.goto("/drone");
+  await page.goto("/workspace/drone");
 
   await expect(page.getByRole("heading", { name: "Drone Zoning Decision Support" })).toBeVisible();
   await expect(page.locator(".overview-map .leaflet-container")).toBeVisible();
@@ -43,9 +43,9 @@ test("Drone homepage presents the merged overview with an interactive map", asyn
   await expect(page.locator(".cap-screen--workspace")).toHaveCount(1);
   await expect(page.locator(".cap-screen--map")).toHaveCount(1);
   await expect(page.locator(".cap-screen--export")).toHaveCount(1);
-  await expect(page.locator('.capability-card[href="/drone/console"]')).toHaveCount(2);
-  await expect(page.locator('.capability-card[href="/drone/explore"]')).toHaveCount(1);
-  await expect(page.locator('.capability-card[href="/drone/start"]')).toHaveCount(1);
+  await expect(page.locator('.capability-card[href="/workspace/drone/console"]')).toHaveCount(2);
+  await expect(page.locator('.capability-card[href="/workspace/drone/map"]')).toHaveCount(1);
+  await expect(page.locator('.capability-card[href="/workspace/drone/start"]')).toHaveCount(1);
   await expect(page.locator(".audience-card")).toHaveCount(7);
   await expect(page.locator(".audience-visual")).toHaveCount(7);
   await expect(page.getByText("HPS Geospatial platform", { exact: false })).toHaveCount(0);
@@ -54,7 +54,7 @@ test("Drone homepage presents the merged overview with an interactive map", asyn
 
 test("Drone homepage stays contained on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/drone");
+  await page.goto("/workspace/drone");
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );

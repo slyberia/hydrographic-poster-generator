@@ -12,7 +12,7 @@ import { installMockBackend } from "./mockBackend";
 async function openConsole(page: Page) {
   await installMockBackend(page);
   await page.addInitScript(() => localStorage.setItem("drone.guideSeen.v1", "1"));
-  await page.goto("/drone/console");
+  await page.goto("/workspace/drone/console");
   await expect(page.locator(".zonestrip-row")).toHaveCount(4);
 }
 
@@ -52,11 +52,11 @@ test("the rail links to the dashboard and opens methodology in-console", async (
 
   await expect(page.getByRole("link", { name: "Dashboard" })).toHaveAttribute(
     "href",
-    "/drone/dashboard",
+    "/workspace/drone/dashboard",
   );
   await expect(page.getByRole("link", { name: "Public Explorer" })).toHaveAttribute(
     "href",
-    "/drone/explore",
+    "/workspace/drone/map",
   );
   await page.getByRole("button", { name: "Methodology" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
@@ -65,7 +65,7 @@ test("the rail links to the dashboard and opens methodology in-console", async (
 test("admins can approve and publish completed runs", async ({ page }) => {
   const state = await installMockBackend(page);
   await page.addInitScript(() => localStorage.setItem("drone.guideSeen.v1", "1"));
-  await page.goto("/drone/console");
+  await page.goto("/workspace/drone/console");
 
   await page.getByRole("button", { name: "Approve", exact: true }).click();
   await expect.poll(() => state.lifecyclePosts).toContain("run-1:approve");

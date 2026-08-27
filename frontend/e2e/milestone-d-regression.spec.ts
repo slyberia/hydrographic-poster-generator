@@ -17,19 +17,19 @@ const publishedMap = {
 async function mockPublishedMap(page: Page, options: { fail?: boolean; delayMs?: number } = {}) {
   const requests: string[] = [];
   page.on("request", (request) => requests.push(request.url()));
-  await page.route("**/public/drone/config", async (route) => {
+  await page.route("**/workspace/drone/config", async (route) => {
     await route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({
         study_area: { display_name: "Region 4", center: { lat: 6.75, lng: -58.2 }, default_zoom: 10 },
         published: {
           published_at: "2026-08-16T00:00:00Z",
-          artifacts: [{ type: "dissolved", url: "/public/drone/zoning", sha256: "phase-9", byte_size: 1 }],
+          artifacts: [{ type: "dissolved", url: "/workspace/drone/zoning", sha256: "phase-9", byte_size: 1 }],
         },
       }),
     });
   });
-  await page.route("**/public/drone/zoning", async (route) => {
+  await page.route("**/workspace/drone/zoning", async (route) => {
     if (options.delayMs) {
       await new Promise((resolve) => setTimeout(resolve, options.delayMs));
     }
@@ -71,7 +71,7 @@ async function expectNoHorizontalOverflow(page: Page, route: string) {
 }
 
 test("route ownership and the two-view entry flow remain explicit", async ({ page, request }) => {
-  for (const route of ["/", "/poster", "/drone", "/drone/start", "/drone/explore", "/documentation", "/docs"]) {
+  for (const route of ["/", "/poster", "/workspace/drone", "/workspace/drone/start", "/workspace/drone/map", "/documentation", "/docs"]) {
     const response = await request.get(route);
     expect(response.ok(), `${route} should resolve`).toBe(true);
   }
@@ -84,9 +84,9 @@ test("route ownership and the two-view entry flow remain explicit", async ({ pag
   expect(legacyDocumentation.status()).toBe(308);
   expect(legacyDocumentation.headers().location).toBe("/drone");
 
-  await page.goto("/drone/start");
-  await expect(page.locator('.drone-start-card[href="/drone/explore"]')).toContainText("Public Explorer");
-  await expect(page.locator('.drone-start-card[href="/drone/console"]')).toContainText("Planning Console");
+  await page.goto("/workspace/drone/start");
+  await expect(page.locator('.drone-start-card[href="/workspace/drone/map"]')).toContainText("Published Map");
+  await expect(page.locator('.drone-start-card[href="/workspace/drone/console"]')).toContainText("Planning Console");
 });
 
 test("platform product cards are complete keyboard-focusable links", async ({ page }) => {
@@ -97,7 +97,7 @@ test("platform product cards are complete keyboard-focusable links", async ({ pa
   await expect(cards).toHaveCount(3);
   const hrefs = await cards.evaluateAll((elements) => elements.map((element) => element.getAttribute("href")));
   expect(hrefs).toEqual([
-    "/drone/start",
+    "/workspace/drone/start",
     "/poster",
     "/documentation",
   ]);
@@ -118,7 +118,7 @@ test("hero map announces loading, uses only the dissolved artifact, and exposes 
   await expect(map).toHaveAttribute("aria-busy", "true");
   await expect(map).toHaveAttribute("aria-busy", "false");
   await expect(map.locator(".leaflet-container")).toBeVisible();
-  expect(requests.some((url) => url.includes("/public/drone/zoning"))).toBe(true);
+  expect(requests.some((url) => url.includes("/workspace/drone/zoning"))).toBe(true);
   expect(requests.some((url) => /cells|clipped_cell/.test(url))).toBe(false);
 
   await page.unrouteAll({ behavior: "wait" });
@@ -127,7 +127,7 @@ test("hero map announces loading, uses only the dissolved artifact, and exposes 
   await page.reload();
   await expect(page.locator('.overview-map-status[role="alert"]')).toContainText("Published map preview unavailable");
   await expect(page.getByRole("button", { name: "Try again" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Open Public Explorer" })).toHaveAttribute("href", "/drone/explore");
+  await expect(page.getByRole("link", { name: "Open Published Map" })).toHaveAttribute("href", "/workspace/drone/map");
 });
 
 test("shared identity, numbered badges, and documentation current-page state stay canonical", async ({ page }) => {
@@ -139,7 +139,7 @@ test("shared identity, numbered badges, and documentation current-page state sta
     await expect(logos.locator("img")).toHaveAttribute("src", /hps-lockup-horizontal\.svg/i);
   }
 
-  await page.goto("/drone");
+  await page.goto("/workspace/drone");
   const badges = page.locator(".hps-number-badge");
   await expect(badges).toHaveCount(11);
   const sizes = await badges.evaluateAll((elements) => elements.map((element) => {
@@ -158,7 +158,7 @@ test("public and documentation surfaces remain labelled and contained at narrow 
   await mockPublishedMap(page);
   await page.setViewportSize({ width: 320, height: 740 });
 
-  for (const route of ["/", "/poster", "/drone", "/drone/start", "/documentation", "/docs"]) {
+  for (const route of ["/", "/poster", "/workspace/drone", "/workspace/drone/start", "/documentation", "/docs"]) {
     await page.goto(route);
     await page.waitForLoadState("networkidle");
     await expect(page.getByRole("main")).toBeVisible();

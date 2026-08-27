@@ -79,7 +79,7 @@ def test_reference_geojson_normalizes_jsonb_strings_from_asyncpg():
     }]
 
 
-def test_reference_layers_have_a_separate_public_request_budget():
+def test_reference_layers_have_a_separate_request_budget():
     assert RULES["reference"]["anonymous"].limit == 60
     assert RULES["reference"]["anonymous"].window_seconds == 60
 
@@ -102,13 +102,12 @@ def test_dynamic_infrastructure_queries_cast_parameter_types():
 
 def test_reference_config_advertises_stable_manifest_when_storage_is_configured():
     with patch.object(reference.settings, "supabase_url", "https://example.supabase.co"), \
+         patch.object(reference.settings, "supabase_service_role_key", "service-key"), \
          patch.object(reference.settings, "published_artifacts_bucket", "drone-published"):
         payload = asyncio.run(reference.get_reference_layer_config())
 
     assert payload["version"] == reference.REFERENCE_SCHEMA_VERSION
-    assert payload["manifest_url"].endswith(
-        "/storage/v1/object/public/drone-published/drone/reference/region-4/manifest.json"
-    )
+    assert payload["manifest_url"] == "/workspace/drone/reference-layers/manifest"
 
 
 def test_unified_reference_features_include_client_filter_keys():
@@ -148,4 +147,4 @@ def test_reference_materialization_writes_content_addressed_artifact_and_manifes
     assert f"/{manifest['dataset_version']}/references.geojson" in client.puts[0][0]
     assert client.puts[1][0].endswith("/drone/reference/region-4/manifest.json")
     stored_manifest = reference.json.loads(client.puts[1][1])
-    assert stored_manifest["artifact"]["url"].endswith("/references.geojson")
+    assert stored_manifest["artifact"]["url"] == "/workspace/drone/reference-layers/dataset"

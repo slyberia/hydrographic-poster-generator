@@ -232,7 +232,7 @@ def test_public_config_exposes_materialized_artifact_metadata():
 
     artifact = payload["published"]["artifacts"][0]
     assert artifact["type"] == "dissolved"
-    assert artifact["url"].endswith("/storage/v1/object/public/drone-published/drone/run-1/dissolved.geojson")
+    assert artifact["url"] == "/workspace/drone/artifacts/dissolved"
 
 
 def test_materialization_is_optional_without_storage_credentials():
@@ -350,12 +350,25 @@ def test_publish_allowed_for_admin(app_client):
     assert response.json()["lifecycle_state"] == "published"
 
 
-def test_public_config_is_open(app_client):
+def test_published_config_requires_viewer_authentication(app_client):
+    from app.main import app
+
+    assert app_client.get("/workspace/drone/config").status_code == 401
+    assert app_client.get("/public/drone/config").status_code == 404
+
+    app.dependency_overrides[auth.get_current_principal] = _as_role(AppRole.VIEWER)
     with patch(
         "app.routers.public_drone.pub.get_public_config",
         new_callable=AsyncMock,
     ) as cfg:
         cfg.return_value = {"study_area": {"slug": "s"}, "published": None}
-        response = app_client.get("/public/drone/config")
+        response = app_client.get("/workspace/drone/config")
     assert response.status_code == 200
     assert response.json()["study_area"]["slug"] == "s"
+
+
+def test_public_openapi_omits_drone_workspace_contracts(app_client):
+    paths = app_client.get("/openapi.json").json()["paths"]
+    assert "/workspace/drone/config" not in paths
+    assert "/runs" not in paths
+    assert "/config/factors" not in paths

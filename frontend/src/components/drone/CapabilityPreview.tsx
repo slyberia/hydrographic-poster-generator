@@ -41,7 +41,7 @@ export default function CapabilityPreview({ kind }: CapabilityPreviewProps) {
 
   if (kind === "map") {
     return (
-      <div className="cap-screen cap-screen--map" role="img" aria-label="Public Explorer dissolved zoning map with a location explanation">
+      <div className="cap-screen cap-screen--map" role="img" aria-label="Published dissolved zoning map with a location explanation">
         <svg className="cap-map-shapes" viewBox="0 0 320 150" aria-hidden="true" preserveAspectRatio="none">
           <path className="cap-zone cap-zone--suitable" d="M0 0H170L145 48L84 70L0 52Z" />
           <path className="cap-zone cap-zone--conditional" d="M170 0H320V64L238 82L145 48Z" />

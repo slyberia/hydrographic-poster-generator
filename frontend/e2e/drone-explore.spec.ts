@@ -1,7 +1,6 @@
 /** e2e/drone-explore.spec.ts — Public Explorer (UX-8).
  *
- * Exercises the /drone/explore surface against a network-mocked public backend
- * (/public/drone/*). Covers: no-auth load, published-zoning render, the
+ * Exercises the viewer-only published map against a network-mocked backend.
  * public-safe location drawer (no score/weights), shareable ?cell= URLs, and
  * the unavailable / error states. Backend correctness is covered in
  * backend/tests/test_drone_publication.py.
@@ -10,8 +9,8 @@
 import { test, expect, Page, Route } from "@playwright/test";
 
 const API = "http://localhost:8000";
-const REFERENCE_MANIFEST = `${API}/public/drone/reference-manifest.json`;
-const REFERENCE_ARTIFACT = `${API}/public/drone/reference-artifact-v2.geojson`;
+const REFERENCE_MANIFEST = `${API}/workspace/drone/reference-manifest.json`;
+const REFERENCE_ARTIFACT = `${API}/workspace/drone/reference-artifact-v2.geojson`;
 
 const CELLS = [
   { h3: "cell_a", zone: "SUITABLE", lng: [-58.12, -58.11], lat: [6.61, 6.62] },
@@ -35,7 +34,7 @@ const CONFIG = {
   published: {
     published_at: "2026-07-20T00:00:00Z",
     methodology_version: "region-4-mvp-v1",
-    artifacts: [{ type: "dissolved", url: `${API}/public/drone/dissolved`, sha256: "x", byte_size: 1 }],
+    artifacts: [{ type: "dissolved", url: `${API}/workspace/drone/dissolved`, sha256: "x", byte_size: 1 }],
   },
 };
 
@@ -100,13 +99,13 @@ async function installPublicMock(page: Page, opts: MockOpts = {}) {
     const path = new URL(route.request().url()).pathname;
     requested.push(path);
 
-    if (path === "/public/drone/config") {
+    if (path === "/workspace/drone/config") {
       if (opts.configStatus && opts.configStatus >= 400) {
         return json(route, { detail: "boom" }, opts.configStatus);
       }
       return json(route, opts.publishedNull ? { ...CONFIG, published: null } : CONFIG);
     }
-    if (path === "/public/drone/reference-layers/config") {
+    if (path === "/workspace/drone/reference-layers/config") {
       return json(route, {
         version: "reference-layers-v2",
         manifest_url: REFERENCE_MANIFEST,
@@ -123,23 +122,23 @@ async function installPublicMock(page: Page, opts: MockOpts = {}) {
         ],
       });
     }
-    if (path === "/public/drone/reference-manifest.json") return json(route, {
+    if (path === "/workspace/drone/reference-manifest.json") return json(route, {
       schema_version: 1, dataset_version: "mock-reference-v2", generated_at: "2026-08-21T00:00:00Z", reference_only: true,
       artifact: { url: REFERENCE_ARTIFACT, storage_path: "mock/reference.geojson", sha256: "mock-reference-v2", byte_size: 1, feature_count: 2 },
       layers: [],
     });
-    if (path === "/public/drone/reference-artifact-v2.geojson") return json(route, {
+    if (path === "/workspace/drone/reference-artifact-v2.geojson") return json(route, {
       type: "FeatureCollection",
       features: [
         { type: "Feature", geometry: { type: "Point", coordinates: [-58.1, 6.61] }, properties: { name: "Mock airport", reference_layer_key: "airports", reference_group: "aviation" } },
         { type: "Feature", geometry: { type: "Point", coordinates: [-58.11, 6.615] }, properties: { name: "Mock school", reference_layer_key: "schools", reference_group: "infrastructure" } },
       ],
     });
-    const reference = path.match(/^\/public\/drone\/reference-layers\/([^/]+)$/);
+    const reference = path.match(/^\/workspace\/drone\/reference-layers\/([^/]+)$/);
     if (reference) return json(route, { type: "FeatureCollection", features: [] });
-    if (path === "/public/drone/zoning") return json(route, zoning());
-    if (path === "/public/drone/dissolved") return json(route, dissolved());
-    const rep = path.match(/^\/public\/drone\/report\/([^/]+)$/);
+    if (path === "/workspace/drone/zoning") return json(route, zoning());
+    if (path === "/workspace/drone/dissolved") return json(route, dissolved());
+    const rep = path.match(/^\/workspace\/drone\/report\/([^/]+)$/);
     if (rep) return json(route, report(decodeURIComponent(rep[1])));
 
     return json(route, { detail: `Unmocked ${path}` }, 500);
@@ -164,9 +163,9 @@ async function clickMapCell(page: Page, xFrac: number, yFrac: number) {
   await page.mouse.click(box.x + box.width * xFrac, box.y + box.height * yFrac);
 }
 
-test("loads published zoning with no authentication", async ({ page }) => {
+test("loads published zoning inside the local authenticated-workspace harness", async ({ page }) => {
   const requested = await installPublicMock(page);
-  await page.goto("/drone/explore");
+  await page.goto("/workspace/drone/map");
 
   await expect(page.getByRole("heading", { name: /Public Explorer/ })).toBeVisible();
   await expect(page.getByText("Planning guidance, not flight authorization.")).toBeVisible();
@@ -177,14 +176,14 @@ test("loads published zoning with no authentication", async ({ page }) => {
   // Never touched an authenticated / run-scoped endpoint — cannot select or
   // infer an unpublished run.
   expect(requested.some((p) => p.startsWith("/runs"))).toBe(false);
-  expect(requested).toContain("/public/drone/dissolved");
-  expect(requested).toContain("/public/drone/reference-artifact-v2.geojson");
+  expect(requested).toContain("/workspace/drone/dissolved");
+  expect(requested).toContain("/workspace/drone/reference-artifact-v2.geojson");
   await expect(page.getByRole("group", { name: "Map scale and zoom" })).toBeVisible();
 });
 
 test("layer scale targets move the reactive zoom control", async ({ page }) => {
   await installPublicMock(page);
-  await page.goto("/drone/explore");
+  await page.goto("/workspace/drone/map");
 
   await page.getByRole("button", { name: "Zoom map to Z13 to show Schools" }).click();
   await expect(page.getByRole("slider", { name: "Map zoom" })).toHaveValue("13");
@@ -193,18 +192,18 @@ test("layer scale targets move the reactive zoom control", async ({ page }) => {
 
 test("dissolved map features do not trigger cell reports", async ({ page }) => {
   const requested = await installPublicMock(page);
-  await page.goto("/drone/explore");
+  await page.goto("/workspace/drone/map");
   await expect(page.locator(".leaflet-container")).toBeVisible();
 
   await clickMapCell(page, 0.4, 0.3); // top-left cell
 
   await expect(page.getByRole("dialog", { name: "Location guidance" })).toHaveCount(0);
-  expect(requested.some((p) => p.startsWith("/public/drone/report/"))).toBe(false);
+  expect(requested.some((p) => p.startsWith("/workspace/drone/report/"))).toBe(false);
 });
 
 test("a shared ?cell= URL opens that location's guidance on load", async ({ page }) => {
   await installPublicMock(page);
-  await page.goto("/drone/explore?cell=cell_a");
+  await page.goto("/workspace/drone/map?cell=cell_a");
 
   await expect(page.getByRole("dialog", { name: "Location guidance" })).toBeVisible();
   await expect(page.getByText("Within 300 m of hospital")).toBeVisible();
@@ -212,12 +211,12 @@ test("a shared ?cell= URL opens that location's guidance on load", async ({ page
 
 test("shows an explicit unavailable state when nothing is published", async ({ page }) => {
   await installPublicMock(page, { publishedNull: true });
-  await page.goto("/drone/explore");
+  await page.goto("/workspace/drone/map");
 
   await expect(page.getByText("No published zoning yet")).toBeVisible();
   await expect(page.getByRole("link", { name: "Staff sign in" })).toHaveAttribute(
     "href",
-    "/login?next=/drone/console",
+    "/login?next=/workspace/drone/console",
   );
   // Search is disabled with nothing published.
   await expect(page.getByRole("combobox")).toBeDisabled();
@@ -225,7 +224,7 @@ test("shows an explicit unavailable state when nothing is published", async ({ p
 
 test("shows an error state with retry when the service fails", async ({ page }) => {
   await installPublicMock(page, { configStatus: 500 });
-  await page.goto("/drone/explore");
+  await page.goto("/workspace/drone/map");
 
   await expect(page.getByText("Couldn’t load the map")).toBeVisible();
   await expect(page.getByRole("button", { name: "Try again" })).toBeVisible();
@@ -236,7 +235,7 @@ test("navigation focus is visible and the page never overflows", async ({ page }
 
   for (const viewport of VIEWPORTS) {
     await page.setViewportSize(viewport);
-    await page.goto("/drone/explore");
+    await page.goto("/workspace/drone/map");
     await expect(page.locator(".leaflet-container")).toBeVisible();
 
     const overflow = await page.evaluate(

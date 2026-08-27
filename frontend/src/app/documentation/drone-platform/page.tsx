@@ -8,7 +8,7 @@ import {
 } from "../components";
 
 const STACK_ROWS: Array<[string, string, string]> = [
-  ["Public and internal UI", "Next.js 16 · React 19 · Leaflet", "Overview, published-map review, dashboard, and authenticated planning workflows"],
+  ["Authenticated workspace UI", "Next.js 16 · React 19 · Leaflet", "Overview, published-map review, dashboard, and role-aware planning workflows"],
   ["Application API", "FastAPI · Python", "Run lifecycle, analysis, reports, reference layers, publication, and exports"],
   ["Analytical record", "Supabase PostgreSQL · PostGIS", "Authoritative model inputs, geometries, run results, and spatial processing"],
   ["Authentication", "Supabase Auth", "Planning Console sessions and viewer, analyst, and administrator roles"],
@@ -27,8 +27,8 @@ export default function DronePlatformDocumentation() {
       <DocSection number="01" title="Purpose and operating boundary">
         <div className="doc-grid">
           <article className="doc-card">
-            <h3>Public orientation</h3>
-            <p>Present the approved dissolved zoning map, location-level explanations, pilot status, and contextual infrastructure or aviation reference layers.</p>
+            <h3>Viewer workspace</h3>
+            <p>Present the approved dissolved zoning map, location-level explanations, pilot status, and contextual infrastructure or aviation reference layers to signed-in viewers.</p>
           </article>
           <article className="doc-card">
             <h3>Internal planning</h3>
@@ -53,7 +53,7 @@ export default function DronePlatformDocumentation() {
             { label: "PostGIS", detail: "Authoritative analytical record", tone: "data" },
             { label: "Storage", detail: "Published GeoJSON + manifest", tone: "future" },
           ]}
-          caption="Draft and fresh analytical work remains database-backed; publishing creates immutable read-optimized artifacts for the public map."
+          caption="Draft and fresh analytical work remains database-backed; publishing creates immutable read-optimized artifacts for the viewer-authorized map."
         />
         <Note tone="important">
           PostgreSQL/PostGIS remains authoritative. Storage artifacts are a durable
@@ -69,7 +69,7 @@ export default function DronePlatformDocumentation() {
         <div className="doc-grid">
           <article className="doc-card">
             <Status>Published</Status>
-            <h3>Fast public map path</h3>
+            <h3>Fast published-map path</h3>
             <p>An approved run is materialized as dissolved, cell, and clipped-cell GeoJSON plus a manifest. Public pages prefer the dissolved artifact and cache retrieved layers in the browser session.</p>
           </article>
           <article className="doc-card">
@@ -92,7 +92,7 @@ export default function DronePlatformDocumentation() {
           <li className="doc-card"><h3>3. Review</h3><p>Analysts inspect dissolved areas, cells, location reports, and sensitivity before approval.</p></li>
           <li className="doc-card"><h3>4. Approve</h3><p>An administrator advances a complete reviewed run through the controlled lifecycle.</p></li>
           <li className="doc-card"><h3>5. Publish</h3><p>The service materializes immutable GeoJSON artifacts, records their manifest, and updates the public pointer.</p></li>
-          <li className="doc-card"><h3>6. Communicate</h3><p>The public map reads the approved dissolved layer; authorized users can export PNG, SVG, PDF, or GeoJSON outputs.</p></li>
+          <li className="doc-card"><h3>6. Communicate</h3><p>The Published Map reads the approved dissolved layer; authorized users can export PNG, SVG, PDF, or GeoJSON outputs.</p></li>
         </ol>
       </DocSection>
 
@@ -101,7 +101,7 @@ export default function DronePlatformDocumentation() {
           <article className="doc-card">
             <Status>Implemented</Status>
             <h3>Public experience</h3>
-            <p>Executive overview homepage, two-view entry screen, dissolved-first Public Explorer, location guidance, pilot dashboard, and session-cached map layers.</p>
+            <p>Workspace overview, two-view entry screen, dissolved-first Published Map, location guidance, pilot dashboard, and session-cached map layers.</p>
           </article>
           <article className="doc-card">
             <Status>Implemented</Status>
@@ -118,10 +118,10 @@ export default function DronePlatformDocumentation() {
 
       <DocSection number="07" title="Related surfaces">
         <div className="doc-links">
-          <a href="/drone">Read the Drone Zoning overview</a>
-          <a href="/drone/start">Choose a public or internal view</a>
-          <a href="/drone/explore">Open the Public Explorer</a>
-          <a href="/drone/console">Open the Planning Console</a>
+          <a href="/workspace/drone">Read the Drone Zoning overview</a>
+          <a href="/workspace/drone/start">Choose a workspace view</a>
+          <a href="/workspace/drone/map">Open the Published Map</a>
+          <a href="/workspace/drone/console">Open the Planning Console</a>
         </div>
       </DocSection>
     </DocPage>

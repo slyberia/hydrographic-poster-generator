@@ -2,8 +2,8 @@
 
 This document describes the authoritative-data contract added in ARC-1: the
 publication lifecycle for drone zoning runs, the deployment-neutral study-area
-configuration, the administrator-only lifecycle transitions, and the public,
-unauthenticated endpoints the Public Explorer (UX-8) consumes.
+configuration, the administrator-only lifecycle transitions, and the
+viewer-authorized endpoints the Published Map consumes.
 
 Migration: `db/migrations/010_drone_publication_and_study_area.sql`
 (reverse: `..._down.sql`).
@@ -17,11 +17,11 @@ A run has **two** orthogonal state columns on `mcda_model_runs`:
 | Column | Values | Meaning |
 | --- | --- | --- |
 | `status` (pre-existing, unchanged) | `pending` → `running` → `complete` / `failed` | Has the model finished computing this run? |
-| `lifecycle_state` (new) | `draft` → `approved` → `published`, and `published`/`approved`/`draft` → `archived` | Is this run a draft, cleared for publication, the single public run, or retired? |
+| `lifecycle_state` (new) | `draft` → `approved` → `published`, and `published`/`approved`/`draft` → `archived` | Is this run a draft, cleared for publication, the single workspace-published run, or retired? |
 
 A run is `status='complete'` long before an administrator decides to publish it.
-New runs default to `lifecycle_state='draft'`, so **nothing is public until an
-administrator publishes it.**
+New runs default to `lifecycle_state='draft'`, so **nothing enters the
+viewer-facing Published Map until an administrator publishes it.**
 
 ### Guarantees enforced in the database
 
@@ -47,17 +47,18 @@ that used to be hardcoded in the frontend (map center/zoom, coverage bbox):
 Nothing here is an editable model weight or an internal note. The Region 4 pilot
 row is seeded from the previous frontend constants. The frontend now sources
 these values from `frontend/src/lib/studyArea.ts`, which mirrors this contract;
-the Public Explorer hydrates the same shape from `GET /public/drone/config`.
+the authenticated Published Map hydrates the same shape from `GET /workspace/drone/config`.
 
 ---
 
-## Public endpoints (no authentication)
+## Published-map endpoints (viewer authentication)
 
-These expose **only** the single published run. They never accept a run
+These require a valid `viewer`, `analyst`, or `admin` access token and expose
+**only** the single published run. They never accept a run
 identifier, so a caller cannot select or infer a draft/approved/archived run.
 Payloads carry no editable weights, internal notes, numeric scores, or run ids.
 
-### `GET /public/drone/config`
+### `GET /workspace/drone/config`
 
 ```jsonc
 {
@@ -74,9 +75,9 @@ Payloads carry no editable weights, internal notes, numeric scores, or run ids.
     "published_at": "2026-07-23T00:00:00Z",
     "methodology_version": "region-4-mvp-v1",
     "artifacts": [
-      {"type": "dissolved", "url": "https://PROJECT_REF.supabase.co/storage/v1/object/public/drone-published/drone/RUN_ID/dissolved.geojson", "sha256": "...", "byte_size": 12345},
-      {"type": "cell", "url": ".../cell.geojson", "sha256": "...", "byte_size": 12345},
-      {"type": "clipped_cell", "url": ".../clipped_cell.geojson", "sha256": "...", "byte_size": 12345}
+      {"type": "dissolved", "url": "/workspace/drone/artifacts/dissolved", "sha256": "...", "byte_size": 12345},
+      {"type": "cell", "url": "/workspace/drone/artifacts/cell", "sha256": "...", "byte_size": 12345},
+      {"type": "clipped_cell", "url": "/workspace/drone/artifacts/clipped_cell", "sha256": "...", "byte_size": 12345}
     ]
   }
 }
@@ -84,20 +85,20 @@ Payloads carry no editable weights, internal notes, numeric scores, or run ids.
 
 When artifact storage is configured, the publish operation materializes these
 three immutable objects from PostGIS and the browser prefers the dissolved
-object for the public map. If storage is not configured, `/public/drone/zoning`
-continues to serve the same public-safe result dynamically. The frontend also
+object for the published map. If storage is not configured, `/workspace/drone/zoning`
+continues to serve the same viewer-safe result dynamically. The frontend also
 keeps a session cache keyed by `published_at`, so a newly published run naturally
 invalidates the prior layer.
 
 `404` when no study area is configured.
 
-### `GET /public/drone/zoning`
+### `GET /workspace/drone/zoning`
 
 The published run as a GeoJSON `FeatureCollection`. Per-feature properties:
 `h3_index`, `zone`, `reason` (plain-language), `confidence`. The internal numeric
 score and any run id are omitted. `404` when nothing is published.
 
-### `GET /public/drone/report/{h3_index}`
+### `GET /workspace/drone/report/{h3_index}`
 
 Plain-language guidance for one published cell:
 `h3_index`, `zone`, `classification`, `main_reason`, `guidance`,
@@ -190,9 +191,10 @@ Errors: `404` unknown run; `409` invalid transition from the current state.
 
 ---
 
-## Deferred findings (not addressed in ARC-1; see plan §2)
+## Current private-workspace boundary
 
-- `GET /config/factors` (exposes raw model weights) and the sensitivity read
-  endpoints (`GET /runs/{run_id}/sensitivity...`, `.../volatility`) remain
-  unauthenticated. ARC-1 scoped viewer protection to the four run endpoints the
-  plan enumerated; protecting these is recommended as a follow-up.
+All Drone routes, including factor configuration, sensitivity reads, the
+published-map projection, and reference layers, require at least the `viewer`
+role. Drone contracts are omitted from the public OpenAPI schema, and published
+artifacts are read from a private Storage bucket through the authenticated
+backend.

@@ -2,10 +2,11 @@
  *
  * These values used to be hardcoded inside components (map center/zoom in
  * MapView, coverage bbox in geocode). ARC-1 moves them out: the authoritative,
- * deployment-neutral source is the backend `GET /public/drone/config` endpoint
+ * deployment-neutral source is the viewer-authorized backend
+ * `GET /workspace/drone/config` endpoint
  * (see docs/DRONE_PUBLICATION_API.md). This module mirrors that contract and
  * carries the default (Region 4 pilot) so the internal console keeps working
- * synchronously; the Public Explorer (UX-8) hydrates the same shape from the
+ * synchronously; the Published Map hydrates the same shape from the
  * live endpoint.
  */
 

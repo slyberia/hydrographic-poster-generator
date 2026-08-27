@@ -15,6 +15,10 @@ PostgreSQL reachable via `DATABASE_URL` works, e.g. Cloud SQL later).
 | `CORS_ORIGINS` | backend | runtime | Comma-separated allowed origins (set to the frontend URL) |
 | `PORT` | both | runtime | Injected by Cloud Run (backend 8080, frontend 3000 by default) |
 | `NEXT_PUBLIC_API_URL` | frontend | **build time** | Backend base URL, inlined into the client bundle |
+| `NEXT_PUBLIC_SUPABASE_URL` | frontend | **build time** | Supabase project URL used by the browser and SSR Auth clients |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | frontend | **build time** | Browser-safe Supabase publishable key; never substitute a service-role or secret key |
+| `SUPABASE_URL` | backend | runtime | Expected Supabase JWT issuer |
+| `SUPABASE_SERVICE_ROLE_KEY` | backend | runtime secret | Server-only credential used for private published-artifact reads |
 
 `NEXT_PUBLIC_API_URL` cannot be changed at container runtime — Next.js
 inlines `NEXT_PUBLIC_*` values into the compiled JavaScript during
@@ -22,6 +26,46 @@ inlines `NEXT_PUBLIC_*` values into the compiled JavaScript during
 
 Secrets are never committed; the backend reads `DATABASE_URL` from the
 environment (locally also from `backend/.env` via pydantic-settings).
+
+### Google OAuth for the private workspace
+
+The workspace uses Google OAuth for authentication and `app_metadata.app_role`
+for authorization. A valid Google identity alone does not grant access.
+
+1. In Google Auth Platform, create a **Web application** OAuth client.
+2. Set the production frontend origin and `http://localhost:3000` as authorized
+   JavaScript origins while local testing is needed.
+3. Register this Google redirect URI exactly:
+
+   ```text
+   https://iyijaywownhftzjwqhzj.supabase.co/auth/v1/callback
+   ```
+
+4. In Supabase **Authentication → Providers → Google**, enable Google and enter
+   the Google client ID and client secret. Enter the secret directly in the
+   provider dashboard; never place it in this repository, Cloud Build
+   substitutions, or a `NEXT_PUBLIC_*` variable.
+5. In Supabase **Authentication → URL Configuration**, set the production
+   frontend as the Site URL and allow these application callbacks:
+
+   ```text
+   https://YOUR-FRONTEND/auth/callback**
+   http://localhost:3000/auth/callback**
+   ```
+
+6. Have the intended Google account attempt sign-in once. The account will be
+   authenticated but denied until an administrator assigns one of these values
+   to `app_metadata.app_role`: `viewer`, `analyst`, or `admin`.
+7. Assign the role with server-side Supabase Admin tooling (for example,
+   `auth.admin.updateUserById`) or an administrator-controlled SQL operation.
+   Never use `user_metadata` for roles. Sign out and sign in again afterward so
+   the refreshed JWT contains the new claim.
+8. After the Google flow is verified, disable password/email sign-in in the
+   Supabase provider settings if Google is intended to be the only login method.
+
+The application callback is `/auth/callback`. It exchanges the PKCE code for a
+cookie-backed session, rejects unassigned roles, and only accepts post-login
+destinations under `/workspace/drone`.
 
 ---
 

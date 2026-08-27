@@ -1,12 +1,11 @@
-/** lib/publicDroneApi.ts — typed client for the PUBLIC drone endpoints.
+/** Typed client for viewer-authorized published Drone Workspace data.
  *
- * These endpoints (`/public/drone/*`, added in ARC-1) are unauthenticated and
- * serve ONLY the single published run. This client sends no Authorization
- * header and never references a run id, so the Public Explorer cannot select or
- * infer an unpublished run. Internal, role-protected calls live in droneApi.ts.
+ * The published run remains a read-only projection, but it now shares the same
+ * authenticated workspace boundary as the analytical console.
  */
 
 import type { Zone } from "@/lib/droneApi";
+import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -101,7 +100,11 @@ async function get<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try {
     const url = /^https?:\/\//i.test(path) ? path : `${BASE}${path}`;
-    res = await fetch(url, init); // no auth header — public by contract
+    const authHeaders = await authorizationHeaders();
+    res = await fetch(url, {
+      ...init,
+      headers: { ...authHeaders, ...init?.headers },
+    });
   } catch (e) {
     throw new PublicApiError(0, `Network error — ${String(e)}`);
   }
@@ -112,15 +115,23 @@ async function get<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+async function authorizationHeaders(): Promise<Record<string, string>> {
+  if (!isSupabaseConfigured) return {};
+  const { data } = await createClient().auth.getSession();
+  return data.session?.access_token
+    ? { Authorization: `Bearer ${data.session.access_token}` }
+    : {};
+}
+
 export const publicDroneApi = {
-  getConfig: () => get<PublicConfig>("/public/drone/config"),
+  getConfig: () => get<PublicConfig>("/workspace/drone/config"),
   getZoning: async (artifactUrl?: string, cacheKey?: string) => {
     const key = cacheKey ? `drone-published-zoning:${cacheKey}` : null;
     if (key && typeof window !== "undefined") {
       const cached = window.sessionStorage.getItem(key);
       if (cached) return JSON.parse(cached) as GeoJSON.FeatureCollection;
     }
-    const geo = await get<GeoJSON.FeatureCollection>(artifactUrl ?? "/public/drone/zoning", {
+    const geo = await get<GeoJSON.FeatureCollection>(artifactUrl ?? "/workspace/drone/zoning", {
       cache: "force-cache",
     });
     if (key && typeof window !== "undefined") {
@@ -130,7 +141,7 @@ export const publicDroneApi = {
   },
   getLayer: (artifactUrl: string, cacheKey: string) =>
     publicDroneApi.getZoning(artifactUrl, cacheKey),
-  getReferenceConfig: () => get<ReferenceLayerConfig>("/public/drone/reference-layers/config"),
+  getReferenceConfig: () => get<ReferenceLayerConfig>("/workspace/drone/reference-layers/config"),
   getReferenceManifest: (manifestUrl: string) =>
     get<ReferenceArtifactManifest>(manifestUrl, { cache: "no-cache" }),
   getReferenceDataset: async (manifest: ReferenceArtifactManifest) => {
@@ -151,11 +162,11 @@ export const publicDroneApi = {
       const cached = window.sessionStorage.getItem(cacheKey);
       if (cached) return JSON.parse(cached) as GeoJSON.FeatureCollection;
     }
-    const fc = await get<GeoJSON.FeatureCollection>(`/public/drone/reference-layers/${encodeURIComponent(key)}`, { cache: "force-cache" });
+    const fc = await get<GeoJSON.FeatureCollection>(`/workspace/drone/reference-layers/${encodeURIComponent(key)}`, { cache: "force-cache" });
     if (typeof window !== "undefined") {
       try { window.sessionStorage.setItem(cacheKey, JSON.stringify(fc)); } catch { /* private mode/quota */ }
     }
     return fc;
   },
-  getReport: (h3: string) => get<PublicReport>(`/public/drone/report/${encodeURIComponent(h3)}`),
+  getReport: (h3: string) => get<PublicReport>(`/workspace/drone/report/${encodeURIComponent(h3)}`),
 };
