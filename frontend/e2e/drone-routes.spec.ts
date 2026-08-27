@@ -7,112 +7,55 @@ const VIEWPORTS = [
   { name: "wide", width: 1440, height: 960 },
 ];
 
-test("Drone homepage is server-rendered and preserves the planning overview", async ({
-  page,
-  request,
-}) => {
-  const response = await request.get("/drone");
-  const html = await response.text();
+test("workspace overview is available through the canonical private route in local development", async ({ page, request }) => {
+  const response = await request.get("/workspace/drone");
+  expect(await response.text()).toContain("Drone Zoning Decision Support");
 
-  expect(html).toContain("Drone Zoning Decision Support");
-  expect(html).toContain("Pilot decision framework");
-  expect(html).toContain("Planning Console");
-  expect(html).toContain("/drone/start");
-
-  await page.goto("/drone");
-  await expect(
-    page.getByRole("heading", { name: "Drone Zoning Decision Support" }),
-  ).toBeVisible();
-  await expect(page.getByText("Pilot decision framework")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Explore Drone Zoning" })).toHaveAttribute(
-    "href",
-    "/drone/start",
-  );
-  await expect(page.getByRole("link", { name: "Explore published map" })).toHaveAttribute(
-    "href",
-    "/drone/explore",
-  );
-  await expect(page.getByRole("link", { name: "Open Planning Console" })).toHaveAttribute(
-    "href",
-    "/drone/console",
-  );
-  await expect(page.getByText("Guidance is not authorization")).toBeVisible();
+  await page.goto("/workspace/drone");
+  await expect(page.getByRole("heading", { name: "Drone Zoning Decision Support" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Explore Drone Zoning" })).toHaveAttribute("href", "/workspace/drone/start");
+  await expect(page.getByRole("link", { name: "Explore published map" })).toHaveAttribute("href", "/workspace/drone/map");
+  await expect(page.getByRole("link", { name: "Open planning console" })).toHaveAttribute("href", "/workspace/drone/console");
 });
 
-test("Drone view chooser presents two fully clickable application paths", async ({ page }) => {
-  await page.goto("/drone/start");
-
-  await expect(
-    page.getByRole("heading", { name: "Choose the view that matches your task." }),
-  ).toBeVisible();
-  await expect(page.getByRole("link", { name: /Public Explorer/ })).toHaveAttribute(
-    "href",
-    "/drone/explore",
-  );
-  await expect(page.locator('.drone-start-card[href="/drone/console"]')).toHaveAttribute(
-    "href",
-    "/drone/console",
-  );
-  await expect(page.getByText("No sign-in required")).toBeVisible();
-  await expect(page.getByText("Authorized users")).toBeVisible();
+test("workspace view chooser presents two authenticated application paths", async ({ page }) => {
+  await page.goto("/workspace/drone/start");
+  await expect(page.getByRole("heading", { name: "Choose the view that matches your task." })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Published Map/ })).toHaveAttribute("href", "/workspace/drone/map");
+  await expect(page.locator('.drone-start-card[href="/workspace/drone/console"]')).toHaveAttribute("href", "/workspace/drone/console");
+  await expect(page.getByText("Viewer access required")).toBeVisible();
+  await expect(page.getByText("Authorized users only")).toBeVisible();
 });
 
-test("legacy Executive Overview route resolves to the Drone homepage", async ({ request }) => {
-  const response = await request.get("/executive-overview", { maxRedirects: 0 });
-  expect(response.status()).toBe(308);
-  expect(response.headers().location).toBe("/drone");
+test("legacy Drone routes canonicalize into the workspace", async ({ request }) => {
+  const response = await request.get("/drone/explore", { maxRedirects: 0 });
+  expect(response.status()).toBe(307);
+  expect(response.headers().location).toContain("/workspace/drone/map");
+  expect(response.headers()["x-robots-tag"]).toBe("noindex, nofollow, noarchive");
 });
 
-test("legacy documentation Executive Overview resolves to the canonical Drone homepage", async ({ request }) => {
-  const response = await request.get("/documentation/drone-platform/executive-overview", { maxRedirects: 0 });
-  expect(response.status()).toBe(308);
-  expect(response.headers().location).toBe("/drone");
-});
-
-test("public navigation separates published information from the internal console", async ({ page }) => {
-  await page.goto("/drone");
+test("workspace navigation stays inside the authenticated route family", async ({ page }) => {
+  await page.goto("/workspace/drone");
   const navigation = page.getByRole("navigation", { name: "Drone product navigation" });
-
-  await expect(navigation.getByRole("link", { name: "Overview" })).toHaveAttribute("href", "/drone");
-  await expect(navigation.getByRole("link", { name: "Public map" })).toHaveAttribute("href", "/drone/explore");
-  await expect(navigation.getByRole("link", { name: "Pilot status" })).toHaveAttribute("href", "/drone/dashboard");
-  await expect(navigation.getByRole("link", { name: "Open the internal Planning Console" })).toHaveAttribute("href", "/drone/console");
-  await expect(navigation.getByRole("link", { name: "Choose a view" })).toHaveCount(0);
+  await expect(navigation.getByRole("link", { name: "Overview" })).toHaveAttribute("href", "/workspace/drone");
+  await expect(navigation.getByRole("link", { name: "Published map" })).toHaveAttribute("href", "/workspace/drone/map");
+  await expect(navigation.getByRole("link", { name: "Pilot status" })).toHaveAttribute("href", "/workspace/drone/dashboard");
+  await expect(navigation.getByRole("link", { name: "Open the Planning Console" })).toHaveAttribute("href", "/workspace/drone/console");
 });
 
 for (const viewport of VIEWPORTS) {
-  test(`Drone public routes remain contained at ${viewport.name}`, async ({ page }) => {
+  test(`workspace routes remain contained at ${viewport.name}`, async ({ page }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
-
-    for (const route of ["/drone", "/drone/start"]) {
+    for (const route of ["/workspace/drone", "/workspace/drone/start"]) {
       await page.goto(route);
-      await expect(page.locator("body")).toBeVisible();
-      const overflow = await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      );
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBeLessThanOrEqual(1);
     }
   });
 }
 
-test("Methodology is available through the Planning Console", async ({
-  page,
-  request,
-}) => {
-  const response = await request.get("/drone/methodology", { maxRedirects: 0 });
-  expect(response.status()).toBeGreaterThanOrEqual(300);
-  expect(response.status()).toBeLessThan(400);
-  expect(response.headers().location).toBe("/drone/console");
-
-  await page.goto("/drone/guide");
-  await expect(page).toHaveURL(/\/drone\/console$/);
+test("methodology remains inside the Planning Console", async ({ page }) => {
+  await page.goto("/workspace/drone/guide");
+  await expect(page).toHaveURL(/\/workspace\/drone\/console$/);
   await expect(page.getByRole("button", { name: "How this console works" })).toBeVisible();
-});
-
-test("Public navigation has visible keyboard focus", async ({ page }) => {
-  await page.goto("/drone");
-  await page.keyboard.press("Tab");
-  const focused = page.locator(":focus");
-  await expect(focused).toBeVisible();
-  await expect(focused).toHaveCSS("outline-style", "solid");
 });

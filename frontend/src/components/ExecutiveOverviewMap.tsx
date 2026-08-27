@@ -72,7 +72,7 @@ export default function ExecutiveOverviewMap({ variant = "drone" }: ExecutiveOve
           <span>The planning map could not be retrieved just now.</span>
           <div>
             <button type="button" onClick={() => setRequestVersion((value) => value + 1)}>Try again</button>
-            <Link href="/drone/explore">Open Public Explorer</Link>
+            <Link href="/workspace/drone/map">Open Published Map</Link>
           </div>
         </div>
       )}

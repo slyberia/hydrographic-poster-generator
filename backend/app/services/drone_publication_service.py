@@ -1,12 +1,12 @@
 """Publication lifecycle and study-area configuration for drone zoning runs.
 
-This service owns the authoritative-data contract that the Public Explorer
-depends on (ARC-1):
+This service owns the authoritative-data contract that the authenticated
+published-map workspace depends on:
 
   * lifecycle transitions (approve / publish / archive) — administrator-only,
     enforced at the router; the transactional supersede logic lives here;
   * the deployment-neutral study-area configuration read model;
-  * public-SAFE projections of the single published run — never a draft or
+  * viewer-safe projections of the single published run — never a draft or
     approved run, never editable weights, internal notes, or draft identifiers.
 
 Execution `status` (pending|running|complete|failed) is a separate axis and is
@@ -35,7 +35,7 @@ class NotFoundError(ValueError):
 
 
 # =============================================================================
-#  Study-area configuration (deployment-neutral, public-safe)
+#  Study-area configuration (deployment-neutral, viewer-safe)
 # =============================================================================
 
 _STUDY_AREA_COLUMNS = """
@@ -88,7 +88,7 @@ async def _default_config_row(conn: asyncpg.Connection) -> Optional[asyncpg.Reco
 
 
 async def get_public_config(pool: asyncpg.Pool) -> Dict[str, Any]:
-    """Study-area presentation config plus published-run metadata (public-safe).
+    """Study-area presentation config plus published-run metadata (viewer-safe).
 
     Raises NotFoundError if no study area is configured at all. A configured
     area with nothing published returns ``published: null`` — a valid,
@@ -125,7 +125,7 @@ async def get_public_config(pool: asyncpg.Pool) -> Dict[str, Any]:
             "artifacts": [
                 {
                     "type": artifact["type"],
-                    "url": _storage_public_url(artifact["path"]),
+                    "url": f"/workspace/drone/artifacts/{artifact['type']}",
                     "sha256": artifact["sha256"],
                     "byte_size": artifact["byte_size"],
                 }
@@ -134,13 +134,6 @@ async def get_public_config(pool: asyncpg.Pool) -> Dict[str, Any]:
             ],
         }
     return payload
-
-
-def _storage_public_url(path: str) -> str:
-    return (
-        f"{settings.supabase_url.rstrip('/')}/storage/v1/object/public/"
-        f"{settings.published_artifacts_bucket}/{path}"
-    )
 
 
 def _feature_collection(rows: List[asyncpg.Record], include_h3: bool = True) -> Dict[str, Any]:
@@ -164,7 +157,7 @@ def _feature_collection(rows: List[asyncpg.Record], include_h3: bool = True) -> 
 
 
 async def materialize_published_run(pool: asyncpg.Pool, run_id: str) -> None:
-    """Write immutable public artifacts; PostGIS remains the source of truth."""
+    """Write immutable private artifacts; PostGIS remains the source of truth."""
     if not settings.supabase_url or not settings.supabase_service_role_key:
         logger.info("Published artifact storage is not configured; using dynamic API fallback.")
         return
@@ -235,6 +228,43 @@ async def materialize_published_run(pool: asyncpg.Pool, run_id: str) -> None:
                     path, len(body), hashlib.sha256(body).hexdigest())
 
 
+async def get_published_artifact(
+    pool: asyncpg.Pool,
+    artifact_type: str,
+) -> Dict[str, Any]:
+    """Read a published artifact through the authenticated backend boundary."""
+    if artifact_type not in {"dissolved", "cell", "clipped_cell"}:
+        raise NotFoundError(f"Unknown published artifact: {artifact_type}")
+    if not settings.supabase_url or not settings.supabase_service_role_key:
+        raise NotFoundError("Published artifact storage is not configured.")
+
+    async with pool.acquire() as conn:
+        artifact = await conn.fetchrow("""
+            SELECT a.storage_bucket, a.storage_path
+            FROM mcda_published_artifacts a
+            JOIN mcda_model_runs r ON r.run_id = a.run_id
+            WHERE r.lifecycle_state = 'published'
+              AND a.artifact_type = $1
+            ORDER BY r.published_at DESC
+            LIMIT 1
+        """, artifact_type)
+    if artifact is None:
+        raise NotFoundError(f"No published {artifact_type} artifact is available.")
+
+    url = (
+        f"{settings.supabase_url.rstrip('/')}/storage/v1/object/authenticated/"
+        f"{artifact['storage_bucket']}/{artifact['storage_path']}"
+    )
+    headers = {
+        "Authorization": f"Bearer {settings.supabase_service_role_key}",
+        "apikey": settings.supabase_service_role_key,
+    }
+    async with httpx.AsyncClient(timeout=60) as client:
+        response = await client.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+
+
 # =============================================================================
 #  Public-safe published-run projections
 # =============================================================================
@@ -253,7 +283,7 @@ async def _published_run_id(conn: asyncpg.Connection) -> Optional[str]:
 
 
 async def public_zoning_geojson(pool: asyncpg.Pool) -> Dict[str, Any]:
-    """The published run as a GeoJSON FeatureCollection, public-safe.
+    """The published run as a GeoJSON FeatureCollection, viewer-safe.
 
     Properties are results only — classification zone, the plain-language
     dominant reason, and data confidence. The internal numeric score and any
@@ -308,7 +338,7 @@ _DISCLAIMER = (
 
 
 async def public_location_report(pool: asyncpg.Pool, h3_index: str) -> Dict[str, Any]:
-    """Plain-language cell report for the published run, public-safe.
+    """Plain-language cell report for the published run, viewer-safe.
 
     Excludes the raw score and the per-factor breakdown (which carries model
     weights). Raises NotFoundError when nothing is published or the cell is

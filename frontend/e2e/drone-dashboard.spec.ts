@@ -1,6 +1,6 @@
 /** e2e/drone-dashboard.spec.ts — internal dashboard (UX-9).
  *
- * Exercises /drone/dashboard against a mocked GET /dashboard aggregate: loaded
+ * Exercises /workspace/drone/dashboard against a mocked GET /dashboard aggregate: loaded
  * metrics, stale-data banner, empty and error states, and the guarantee that no
  * cell geometry is ever fetched. Auth is bypassed in the test env (no Supabase
  * config), matching the console specs.
@@ -127,7 +127,7 @@ async function installDashboardMock(
         body: JSON.stringify(opts.body ?? BASE_DASHBOARD),
       });
     }
-    if (path === "/public/drone/config") {
+    if (path === "/workspace/drone/config") {
       return route.fulfill({
         status: 200,
         contentType: "application/json",
@@ -136,12 +136,12 @@ async function installDashboardMock(
           published: {
             published_at: "2026-07-20T00:00:00Z",
             methodology_version: "region-4-mvp-v1",
-            artifacts: [{ type: "dissolved", url: `${API}/public/drone/dissolved`, sha256: "x", byte_size: 1 }],
+            artifacts: [{ type: "dissolved", url: `${API}/workspace/drone/dissolved`, sha256: "x", byte_size: 1 }],
           },
         }),
       });
     }
-    if (path === "/public/drone/dissolved") {
+    if (path === "/workspace/drone/dissolved") {
       return route.fulfill({ status: 200, contentType: "application/geo+json", body: JSON.stringify(dissolvedGeojson()) });
     }
     if (path.match(/^\/runs\/[^/]+\/geojson$/)) {
@@ -183,7 +183,7 @@ async function installDashboardMock(
 
 test("renders published metrics and integrated map layer", async ({ page }) => {
   const requested = await installDashboardMock(page);
-  await page.goto("/drone/dashboard");
+  await page.goto("/workspace/drone/dashboard");
 
   await expect(page.getByRole("heading", { name: "Zoning Dashboard" })).toBeVisible();
 
@@ -199,8 +199,8 @@ test("renders published metrics and integrated map layer", async ({ page }) => {
 
   // Dashboard aggregate plus read-only map layer.
   await expect(page.getByText("Interactive zoning map")).toBeVisible();
-  expect(requested).toContain("/public/drone/config");
-  expect(requested).toContain("/public/drone/dissolved");
+  expect(requested).toContain("/workspace/drone/config");
+  expect(requested).toContain("/workspace/drone/dissolved");
   expect(requested.some((p) => p.match(/\/runs\/[^/]+\/geojson/))).toBe(false);
   expect(requested).toContain("/dashboard");
 });
@@ -211,7 +211,7 @@ test("shows a stale-data banner when the publication is old", async ({ page }) =
     freshness: { ...BASE_DASHBOARD.freshness, is_stale: true, days_since_published: 120 },
   };
   await installDashboardMock(page, { body: stale });
-  await page.goto("/drone/dashboard");
+  await page.goto("/workspace/drone/dashboard");
 
   await expect(page.getByText("Published data is 120 days old")).toBeVisible();
 });
@@ -229,7 +229,7 @@ test("shows empty states when nothing is published", async ({ page }) => {
     },
   };
   await installDashboardMock(page, { body: empty });
-  await page.goto("/drone/dashboard");
+  await page.goto("/workspace/drone/dashboard");
 
   await expect(page.getByText("No run is published yet.")).toBeVisible();
   await expect(page.getByText("No completed runs yet.")).toBeVisible();
@@ -237,7 +237,7 @@ test("shows empty states when nothing is published", async ({ page }) => {
 
 test("shows an error state with retry", async ({ page }) => {
   await installDashboardMock(page, { status: 500, body: { detail: "boom" } });
-  await page.goto("/drone/dashboard");
+  await page.goto("/workspace/drone/dashboard");
 
   await expect(page.getByText("Couldn’t load the dashboard")).toBeVisible();
   await expect(page.getByRole("button", { name: "Try again" })).toBeVisible();
@@ -247,7 +247,7 @@ test("stays within the viewport across widths", async ({ page }) => {
   await installDashboardMock(page);
   for (const width of [390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/drone/dashboard");
+    await page.goto("/workspace/drone/dashboard");
     await expect(page.getByRole("heading", { name: "Zoning Dashboard" })).toBeVisible();
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

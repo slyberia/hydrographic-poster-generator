@@ -19,6 +19,7 @@ import { ZONE_CSS, ZONE_LABELS } from "@/lib/zoneTheme";
 import ReferenceLayerControls from "@/components/drone/ReferenceLayerControls";
 import { useReferenceLayers } from "@/lib/referenceLayers";
 import type { MapZoomRequest } from "@/components/drone/MapView";
+import { clearDroneWorkspaceCache } from "@/lib/droneWorkspaceSession";
 
 const DASH_ROLES = new Set(["viewer", "analyst", "admin"]);
 const ZONE_ORDER: Zone[] = ["PROHIBITED", "RESTRICTED", "CONDITIONAL", "SUITABLE"];
@@ -57,7 +58,7 @@ export default function Page() {
     const supabase = createClient();
     void supabase.auth.getUser().then(({ data, error }) => {
       if (error || !data.user) {
-        router.replace("/login?next=/drone/dashboard");
+        router.replace("/login?next=/workspace/drone/dashboard");
         return;
       }
       if (!DASH_ROLES.has(data.user.app_metadata.app_role)) {
@@ -79,7 +80,8 @@ export default function Page() {
   }
 
   const signOut = isSupabaseConfigured
-    ? async () => {
+      ? async () => {
+        clearDroneWorkspaceCache();
         await createClient().auth.signOut();
         router.replace("/login");
       }
@@ -151,9 +153,9 @@ function Dashboard({ onSignOut }: { onSignOut?: () => Promise<void> }) {
               <small>{data?.study_area?.display_name ?? "Region 4 · decision-support prototype"}</small>
             </h1>
             <nav className="rail-nav" aria-label="Drone sections">
-              <Link href="/drone">Overview</Link>
-              <Link href="/drone/explore">Public Explorer</Link>
-              <Link href="/drone/console">Console</Link>
+              <Link href="/workspace/drone">Overview</Link>
+              <Link href="/workspace/drone/map">Published Map</Link>
+              <Link href="/workspace/drone/console">Console</Link>
             </nav>
           </div>
           {onSignOut && (

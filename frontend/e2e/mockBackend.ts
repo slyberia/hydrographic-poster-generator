@@ -119,8 +119,8 @@ function unifiedReferenceGeojson() {
   };
 }
 
-const REFERENCE_ARTIFACT = `${API}/public/drone/reference-artifact-v2.geojson`;
-const REFERENCE_MANIFEST = `${API}/public/drone/reference-manifest.json`;
+const REFERENCE_ARTIFACT = `${API}/workspace/drone/reference-artifact-v2.geojson`;
+const REFERENCE_MANIFEST = `${API}/workspace/drone/reference-manifest.json`;
 
 const REFERENCE_CONFIG = {
   version: "reference-layers-v2",
@@ -186,14 +186,14 @@ export async function installMockBackend(page: Page): Promise<MockState> {
       })));
     }
     if (path === "/runs" && method === "GET") return json(route, RUNS);
-    if (path === "/public/drone/config") {
+    if (path === "/workspace/drone/config") {
       return json(route, {
         study_area: { center: { lat: 6.6, lng: -58.1 }, default_zoom: 10 },
         published: null,
       });
     }
-    if (path === "/public/drone/reference-layers/config") return json(route, REFERENCE_CONFIG);
-    if (path === "/public/drone/reference-manifest.json") return json(route, {
+    if (path === "/workspace/drone/reference-layers/config") return json(route, REFERENCE_CONFIG);
+    if (path === "/workspace/drone/reference-manifest.json") return json(route, {
       schema_version: 1,
       dataset_version: "mock-reference-v2",
       generated_at: "2026-08-21T00:00:00Z",
@@ -201,7 +201,7 @@ export async function installMockBackend(page: Page): Promise<MockState> {
       artifact: { url: REFERENCE_ARTIFACT, storage_path: "mock/reference.geojson", sha256: "mock-reference-v2", byte_size: 1, feature_count: 6 },
       layers: REFERENCE_CONFIG.layers.map((layer) => ({ key: layer.key, group: layer.group, available: layer.available !== false, feature_count: layer.available === false ? 0 : 1 })),
     });
-    if (path === "/public/drone/reference-artifact-v2.geojson") return json(route, unifiedReferenceGeojson());
+    if (path === "/workspace/drone/reference-artifact-v2.geojson") return json(route, unifiedReferenceGeojson());
     const reference = path.match(/^\/public\/drone\/reference-layers\/([^/]+)$/);
     if (reference) return json(route, referenceGeojson(reference[1]));
 

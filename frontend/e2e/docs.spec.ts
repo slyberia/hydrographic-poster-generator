@@ -45,14 +45,14 @@ test("the HPS System Library keeps system and product documentation distinct", a
   await page.goto("/documentation");
   await expect(page.getByRole("heading", { name: "Documentation with a clear home." })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open Hydro Poster documentation →" })).toHaveAttribute("href", "/docs");
-  await expect(page.getByRole("link", { name: "Open Drone Platform documentation →" })).toHaveAttribute("href", "/documentation/drone-platform");
+  await expect(page.getByText("Drone Platform")).toHaveCount(0);
 
   await page.goto("/docs");
   await expect(page.getByRole("link", { name: "HPS System Library →" })).toHaveAttribute("href", "/documentation");
 });
 
-test("Drone system documentation reflects the deployed architecture and publication paths", async ({ page, request }) => {
-  const response = await request.get("/documentation/drone-platform");
+test("Drone system documentation is available only under the workspace route family", async ({ page, request }) => {
+  const response = await request.get("/workspace/drone/docs");
   const html = await response.text();
 
   expect(response.ok()).toBe(true);
@@ -65,10 +65,10 @@ test("Drone system documentation reflects the deployed architecture and publicat
   expect(html).not.toContain("Cloudflare Worker");
   expect(html).not.toContain("D1 / Drizzle");
 
-  await page.goto("/documentation/drone-platform");
+  await page.goto("/workspace/drone/docs");
   await expect(page.getByRole("heading", { name: "Current implementation status" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Open the Public Explorer" })).toHaveAttribute("href", "/drone/explore");
-  await expect(page.getByRole("link", { name: "Open the Planning Console" })).toHaveAttribute("href", "/drone/console");
+  await expect(page.getByRole("link", { name: "Open the Published Map" })).toHaveAttribute("href", "/workspace/drone/map");
+  await expect(page.getByRole("link", { name: "Open the Planning Console" })).toHaveAttribute("href", "/workspace/drone/console");
 });
 
 for (const viewport of VIEWPORTS) {

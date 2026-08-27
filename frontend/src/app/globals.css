@@ -1149,9 +1149,13 @@ body {
   border: 1px solid #126c4a;
   border-radius: 6px;
   color: #126c4a;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
 }
 
 .drone-public-header a:focus-visible,
+.drone-public-header button:focus-visible,
 .drone-public a:focus-visible {
   outline: 3px solid #e3ad35;
   outline-offset: 3px;

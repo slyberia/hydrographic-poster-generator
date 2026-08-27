@@ -35,3 +35,10 @@ export const createClient = (request: NextRequest) => {
 
   return { supabase, supabaseResponse }
 };
+
+export function copySupabaseCookies(source: NextResponse, target: NextResponse) {
+  source.cookies.getAll().forEach(({ name, value, ...options }) => {
+    target.cookies.set(name, value, options);
+  });
+  return target;
+}

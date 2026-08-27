@@ -489,7 +489,7 @@ export default function DocsPage() {
             <SectionHeading
               eyebrow="Reference"
               title="Interactive API schema"
-              description="The backend-hosted Swagger UI reflects the complete FastAPI application, including the poster and Drone modules currently hosted by the shared backend."
+              description="The backend-hosted Swagger UI reflects the poster-generation API used by this public product surface."
             />
             <div className="mt-9 overflow-hidden rounded-lg border border-[var(--ui-border)] bg-white">
               <iframe

@@ -19,7 +19,9 @@ export function StackTable({ rows }: { rows: Array<[string, string, string]> }) 
 }
 
 export function DocPage({ system, eyebrow, title, summary, children }: { system: DocSystem; eyebrow: string; title: string; summary: string; children: ReactNode }) {
-  const sections: Array<[DocSystem, string, string]> = [["Drone Platform", "Drone Platform", "/documentation/drone-platform"], ["Poster Generator", "Poster Generator", "/documentation/poster-generator"], ["HPS Portal", "HPS Portal", "/documentation/hps-portal"], ["HPS Portal ecosystem", "Ecosystem", "/documentation/ecosystem"]];
+  const sections: Array<[DocSystem, string, string]> = system === "Drone Platform"
+    ? [["Drone Platform", "Drone Platform", "/workspace/drone/docs"]]
+    : [["Poster Generator", "Poster Generator", "/documentation/poster-generator"], ["HPS Portal", "HPS Portal", "/documentation/hps-portal"], ["HPS Portal ecosystem", "Ecosystem", "/documentation/ecosystem"]];
   return <main className="docs-page"><header className="docs-header"><HpsLockup className="docs-brand" priority /><div className="docs-product"><span className="docs-product-mark" aria-hidden="true" /> <span>HPS SYSTEM LIBRARY</span></div></header><div className="docs-layout"><aside className="docs-sidebar"><p className="docs-sidebar-label">System documentation</p><nav aria-label="Documentation sections"><Link className={system === "Library" ? "active" : ""} aria-current={system === "Library" ? "page" : undefined} href="/documentation">Library overview</Link>{sections.map(([key, label, href]) => <Link className={system === key ? "active" : ""} aria-current={system === key ? "page" : undefined} href={href} key={key}>{label}</Link>)}</nav><Link className="docs-back" href="/">← Return to platform</Link></aside><article className="docs-article"><div className="docs-hero"><p className="docs-eyebrow">{eyebrow}</p><h1>{title}</h1><p className="docs-summary">{summary}</p><div className="docs-meta"><Status>Current documentation</Status><span>Version 0.1 · 16 Aug 2026</span></div></div>{children}</article></div></main>;
 }
 

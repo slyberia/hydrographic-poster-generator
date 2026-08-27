@@ -1,7 +1,7 @@
-"""Public aviation and infrastructure reference layers.
+"""Viewer-authorized aviation and infrastructure reference layers.
 
 PostGIS remains authoritative. A versioned, unified GeoJSON artifact is an
-optional fast read path for published/public maps; the category endpoints stay
+optional fast read path for published maps; the category endpoints stay
 available as a dynamic compatibility fallback for fresh or mixed deployments.
 Reference geometry never changes a model result.
 """
@@ -36,13 +36,6 @@ REFERENCE_LAYER_CONFIG: list[dict[str, Any]] = [
     {"key": "police", "display_name": "Police", "group": "infrastructure", "min_zoom": 14, "label_min_zoom": 16, "default_enabled": False, "loading": "lazy"},
     {"key": "fire", "display_name": "Fire", "group": "infrastructure", "min_zoom": 14, "label_min_zoom": 16, "default_enabled": False, "loading": "lazy"},
 ]
-
-
-def _storage_public_url(path: str) -> str:
-    return (
-        f"{settings.supabase_url.rstrip('/')}/storage/v1/object/public/"
-        f"{settings.published_artifacts_bucket}/{path}"
-    )
 
 
 def _json_value(value: Any) -> Any:
@@ -89,9 +82,40 @@ async def get_reference_layer_config() -> dict[str, Any]:
         "layers": REFERENCE_LAYER_CONFIG,
         "version": REFERENCE_SCHEMA_VERSION,
     }
-    if settings.supabase_url:
-        payload["manifest_url"] = _storage_public_url(REFERENCE_MANIFEST_PATH)
+    if settings.supabase_url and settings.supabase_service_role_key:
+        payload["manifest_url"] = "/workspace/drone/reference-layers/manifest"
     return payload
+
+
+async def _read_storage_json(path: str) -> dict[str, Any]:
+    if not settings.supabase_url or not settings.supabase_service_role_key:
+        raise FileNotFoundError("Reference artifact storage is not configured.")
+    url = (
+        f"{settings.supabase_url.rstrip('/')}/storage/v1/object/authenticated/"
+        f"{settings.published_artifacts_bucket}/{path}"
+    )
+    headers = {
+        "Authorization": f"Bearer {settings.supabase_service_role_key}",
+        "apikey": settings.supabase_service_role_key,
+    }
+    async with httpx.AsyncClient(timeout=60) as client:
+        response = await client.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+
+
+async def get_reference_manifest() -> dict[str, Any]:
+    manifest = await _read_storage_json(REFERENCE_MANIFEST_PATH)
+    manifest["artifact"]["url"] = "/workspace/drone/reference-layers/dataset"
+    return manifest
+
+
+async def get_reference_dataset() -> dict[str, Any]:
+    manifest = await _read_storage_json(REFERENCE_MANIFEST_PATH)
+    storage_path = manifest.get("artifact", {}).get("storage_path")
+    if not storage_path:
+        raise FileNotFoundError("Reference artifact manifest is incomplete.")
+    return await _read_storage_json(storage_path)
 
 
 async def _rows_for_reference_layer(conn: asyncpg.Connection, key: str) -> list[asyncpg.Record]:
@@ -229,7 +253,7 @@ async def materialize_reference_layers(pool: asyncpg.Pool) -> dict[str, Any] | N
     artifact_body = json.dumps(collection, separators=(",", ":"), sort_keys=True).encode("utf-8")
     sha256 = hashlib.sha256(artifact_body).hexdigest()
     artifact_path = f"{REFERENCE_STORAGE_ROOT}/{sha256}/references.geojson"
-    artifact_url = _storage_public_url(artifact_path)
+    artifact_url = "/workspace/drone/reference-layers/dataset"
     manifest = {
         "schema_version": 1,
         "dataset_version": sha256,

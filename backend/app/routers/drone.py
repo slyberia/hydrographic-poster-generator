@@ -11,7 +11,7 @@ from app.services import drone_dashboard_service as drone_dash
 from app.services.usage_limits import usage_limit
 from pydantic import BaseModel, Field
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_viewer)])
 
 class RunCreateRequest(BaseModel):
     label: str

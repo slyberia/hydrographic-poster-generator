@@ -5,24 +5,24 @@ import DronePublicHeader from "@/components/drone/DronePublicHeader";
 
 export const metadata: Metadata = {
   title: "Choose a view — Drone Zoning",
-  description: "Choose the public published-map experience or the internal Drone Zoning Planning Console.",
+  description: "Choose the read-only published-map experience or the analytical Drone Zoning Planning Console.",
 };
 
 const VIEWS = [
   {
-    eyebrow: "Public view",
-    title: "Public Explorer",
-    description: "Inspect the current published zoning map, check a location, understand its classification, and read approved public guidance without analytical controls.",
-    details: ["Published dissolved zoning", "Location-level explanations", "No sign-in required"],
-    href: "/drone/explore",
-    action: "Open Public Explorer",
+    eyebrow: "Read-only view",
+    title: "Published Map",
+    description: "Inspect the current published zoning map, check a location, understand its classification, and read approved guidance without analytical controls.",
+    details: ["Published dissolved zoning", "Location-level explanations", "Viewer access required"],
+    href: "/workspace/drone/map",
+    action: "Open Published Map",
   },
   {
-    eyebrow: "Internal view",
+    eyebrow: "Analytical view",
     title: "Planning Console",
     description: "Run and compare scenarios, adjust factor weights, inspect cells, review sensitivity, manage model runs, and prepare approved outputs.",
     details: ["Analytical cell detail", "Scenario and sensitivity controls", "Authorized users only"],
-    href: "/drone/console",
+    href: "/workspace/drone/console",
     action: "Open Planning Console",
   },
 ] as const;
@@ -35,7 +35,7 @@ export default function DroneStartPage() {
         <div className="drone-public-inner">
           <p className="drone-eyebrow">Enter Drone Zoning</p>
           <h1 id="choose-view-title">Choose the view that matches your task.</h1>
-          <p>Both views use the same Region 4 decision-support framework. The difference is whether you need the approved public result or the internal analytical workspace.</p>
+          <p>Both views use the same Region 4 decision-support framework. Choose the approved read-only result or the analytical workspace.</p>
         </div>
       </section>
       <section className="drone-start-options" aria-label="Available Drone Zoning views">
@@ -57,7 +57,7 @@ export default function DroneStartPage() {
         <div className="drone-public-inner">
           <strong>Planning guidance is not flight authorization.</strong>
           <span>Operational approval and live aviation conditions remain outside this planning tool.</span>
-          <Link href="/drone">Return to the Drone Zoning overview</Link>
+          <Link href="/workspace/drone">Return to the Drone Zoning overview</Link>
         </div>
       </aside>
     </main>

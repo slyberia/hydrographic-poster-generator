@@ -20,8 +20,8 @@ These are initial Region 4 thresholds selected from the supplied Milestone C V2 
 
 ## API
 
-- `GET /public/drone/reference-layers/config`
-- `GET /public/drone/reference-layers/{key}`
+- `GET /workspace/drone/reference-layers/config`
+- `GET /workspace/drone/reference-layers/{key}`
 - `POST /admin/materialize-reference-layers` (admin key required)
 
 The config may advertise `manifest_url`. The stable manifest points to an immutable artifact at:
@@ -34,7 +34,7 @@ The stable pointer is stored at:
 
 The artifact contains aviation and infrastructure features together. Every feature carries `reference_layer_key` and `reference_group`; independent toggles filter those properties without another request. The browser cache key includes the manifest's `dataset_version`, so a newly materialized dataset cannot reuse stale session data.
 
-If the manifest or artifact is absent, clients fall back to `GET /public/drone/reference-layers/{key}`. Category data is still loaded only after an enabled layer reaches its minimum zoom. PostGIS therefore remains available immediately for analyst/fresh-data workflows while the artifact is the fast public read path.
+If the manifest or artifact is absent, clients fall back to `GET /workspace/drone/reference-layers/{key}`. Category data is still loaded only after an enabled layer reaches its minimum zoom. PostGIS therefore remains available immediately for analyst/fresh-data workflows while the private artifact is the fast viewer-authorized read path.
 
 The map displays current `Z`, a human scale band, an approximate representative fraction, and a metric segmented scale bar. A layer's `Zx+` control moves the map to its visibility threshold; once data is available it also frames that layer's geometry. The scale readout updates after zooming and panning because representative scale varies with latitude.
 

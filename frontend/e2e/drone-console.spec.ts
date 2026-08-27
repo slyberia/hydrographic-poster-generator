@@ -17,7 +17,7 @@ async function openConsole(page: Page): Promise<MockState> {
   // Mark the first-visit guide as already seen so its modal doesn't overlay the
   // console during the functional tests (first-visit behaviour has its own test).
   await page.addInitScript(() => localStorage.setItem("drone.guideSeen.v1", "1"));
-  await page.goto("/drone/console");
+  await page.goto("/workspace/drone/console");
   // Loaded = zone strip rendered from run stats.
   await expect(page.locator(".zonestrip-row")).toHaveCount(4);
   return state;
@@ -73,34 +73,34 @@ test("Milestone C: reference layers are controlled independently and cached", as
   await expect(page.getByRole("checkbox", { name: "Fire" })).toBeEnabled();
   await expect(page.getByText("Coming soon — verified runway geometry has not yet been added.")).toBeVisible();
   await expect(page.getByRole("checkbox", { name: "Schools" })).not.toBeChecked();
-  await expect.poll(() => state.requested.filter((p) => p === "/public/drone/reference-layers/airports").length).toBe(1);
-  expect(state.requested).not.toContain("/public/drone/reference-layers/schools");
+  await expect.poll(() => state.requested.filter((p) => p === "/workspace/drone/reference-layers/airports").length).toBe(1);
+  expect(state.requested).not.toContain("/workspace/drone/reference-layers/schools");
 
   for (let i = 0; i < 5; i += 1) await page.locator(".leaflet-control-zoom-in").click();
   await page.getByRole("checkbox", { name: "Schools" }).click();
   await page.getByRole("checkbox", { name: "Schools" }).click();
   await page.getByRole("checkbox", { name: "Schools" }).click();
-  await expect.poll(() => state.requested.filter((p) => p === "/public/drone/reference-layers/schools").length).toBe(1);
+  await expect.poll(() => state.requested.filter((p) => p === "/workspace/drone/reference-layers/schools").length).toBe(1);
 });
 
 test("reference-layer failures are surfaced once instead of retrying indefinitely", async ({ page }) => {
   const state = await installMockBackend(page);
-  await page.route("http://localhost:8000/public/drone/reference-manifest.json", (route) =>
+  await page.route("http://localhost:8000/workspace/drone/reference-manifest.json", (route) =>
     route.fulfill({ status: 404, contentType: "application/json", body: '{"detail":"not materialized"}' }));
   let failedSchoolRequests = 0;
-  await page.route("http://localhost:8000/public/drone/reference-layers/schools", async (route) => {
+  await page.route("http://localhost:8000/workspace/drone/reference-layers/schools", async (route) => {
     failedSchoolRequests += 1;
     await route.fulfill({ status: 500, contentType: "application/json", body: '{"detail":"boom"}' });
   });
   await page.addInitScript(() => localStorage.setItem("drone.guideSeen.v1", "1"));
-  await page.goto("/drone/console");
+  await page.goto("/workspace/drone/console");
   await expect(page.locator(".leaflet-container")).toBeVisible();
 
   for (let i = 0; i < 5; i += 1) await page.locator(".leaflet-control-zoom-in").click();
   await page.getByRole("checkbox", { name: "Schools" }).click();
   await expect(page.getByText("Unavailable. Toggle to retry.")).toBeVisible();
   expect(failedSchoolRequests).toBe(1);
-  expect(state.requested.filter((p) => p === "/public/drone/reference-layers/schools")).toHaveLength(0);
+  expect(state.requested.filter((p) => p === "/workspace/drone/reference-layers/schools")).toHaveLength(0);
 });
 
 test("QA-2: trigger sweep — progress advances, sidebar unchanged", async ({ page }) => {
@@ -122,7 +122,7 @@ test("QA-2: trigger sweep — progress advances, sidebar unchanged", async ({ pa
 test("QA-1b: first-visit guide dialog auto-opens once, dismiss persists", async ({ page }) => {
   await installMockBackend(page);
   // No guideSeen flag set → the dialog should auto-open on first load.
-  await page.goto("/drone/console");
+  await page.goto("/workspace/drone/console");
   const dialog = page.getByRole("dialog", { name: /How this console works/i });
   await expect(dialog).toBeVisible();
   // Layered content: both core topics and a "more detail" disclosure present.

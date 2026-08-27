@@ -1,15 +1,16 @@
 import Link from "next/link";
 import HpsLockup from "@/components/brand/HpsLockup";
 import DroneIdentity from "@/components/brand/DroneIdentity";
+import WorkspaceSignOutButton from "@/components/drone/WorkspaceSignOutButton";
 
 type DronePublicHeaderProps = {
   active: "home" | "start" | "explore" | "dashboard";
 };
 
 const PUBLIC_NAV = [
-  { href: "/drone", label: "Overview", active: "home" },
-  { href: "/drone/explore", label: "Public map", active: "explore" },
-  { href: "/drone/dashboard", label: "Pilot status", active: "dashboard" },
+  { href: "/workspace/drone", label: "Overview", active: "home" },
+  { href: "/workspace/drone/map", label: "Published map", active: "explore" },
+  { href: "/workspace/drone/dashboard", label: "Pilot status", active: "dashboard" },
 ] as const;
 
 export default function DronePublicHeader({ active }: DronePublicHeaderProps) {
@@ -32,13 +33,14 @@ export default function DronePublicHeader({ active }: DronePublicHeaderProps) {
           </Link>
         ))}
         <Link
-          href="/drone/console"
+          href="/workspace/drone/console"
           className="drone-header-action"
-          aria-label="Open the internal Planning Console"
+          aria-label="Open the Planning Console"
           title="Authorized internal workspace"
         >
           Planning Console
         </Link>
+        <WorkspaceSignOutButton />
       </nav>
     </header>
   );

@@ -213,9 +213,9 @@ export default function ControlRail(props: {
           )}
         </div>
         <nav className="rail-nav" aria-label="Drone sections">
-          <Link href="/drone">Overview</Link>
-          <Link href="/drone/explore">Public Explorer</Link>
-          <Link href="/drone/dashboard">Dashboard</Link>
+          <Link href="/workspace/drone">Overview</Link>
+          <Link href="/workspace/drone/map">Published Map</Link>
+          <Link href="/workspace/drone/dashboard">Dashboard</Link>
           <button type="button" onClick={props.onOpenGuide}>Methodology</button>
         </nav>
       </header>
@@ -347,7 +347,7 @@ export default function ControlRail(props: {
                       </button>
                     )}
                     {r.lifecycle_state === "published" && (
-                      <Link href="/drone/explore">View public map</Link>
+                      <Link href="/workspace/drone/map">View published map</Link>
                     )}
                   </div>
                 )}

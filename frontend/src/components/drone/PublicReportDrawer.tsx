@@ -1,8 +1,8 @@
 "use client";
 
-/** components/drone/PublicReportDrawer.tsx — public-safe location guidance.
+/** components/drone/PublicReportDrawer.tsx — published location guidance.
  *
- * Renders the /public/drone/report payload: plain-language classification,
+ * Renders the viewer-authorized published report payload: plain-language classification,
  * primary reason, guidance, constraints, confidence, methodology version, and
  * the disclaimer. Deliberately shows NO numeric score and NO factor/weight
  * breakdown — those are internal-only (see the console's ReportDrawer). */
