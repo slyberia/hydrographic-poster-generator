@@ -22,6 +22,7 @@ export default function DronePublicHeader({ active }: DronePublicHeaderProps) {
         <DroneIdentity className="drone-public-brand" />
       </div>
       <nav aria-label="Drone product navigation">
+        <Link href="/workspace">Workspace</Link>
         <Link href="/">Platform</Link>
         {PUBLIC_NAV.map((item) => (
           <Link

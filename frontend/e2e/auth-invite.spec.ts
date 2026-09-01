@@ -1,6 +1,16 @@
 import { expect, test } from "@playwright/test";
 
 import { applicationUrl } from "../src/utils/applicationUrl";
+import { requestedWorkspaceDestination } from "../src/lib/workspaceAccess";
+
+test("workspace login defaults to the portal and preserves private destinations", () => {
+  expect(requestedWorkspaceDestination(null)).toBe("/workspace");
+  expect(requestedWorkspaceDestination("/workspace/drone/console")).toBe(
+    "/workspace/drone/console",
+  );
+  expect(requestedWorkspaceDestination("/workspace-escape")).toBe("/workspace");
+  expect(requestedWorkspaceDestination("https://example.com")).toBe("/workspace");
+});
 
 test("server redirects prefer the configured public application origin", () => {
   expect(

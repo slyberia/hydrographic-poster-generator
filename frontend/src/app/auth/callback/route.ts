@@ -2,13 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/utils/supabase/server";
 import { applicationUrl } from "@/utils/applicationUrl";
-
-const WORKSPACE_ROOT = "/workspace/drone";
-const APP_ROLES = new Set(["viewer", "analyst", "admin"]);
-
-function requestedDestination(requested: string | null): string {
-  return requested?.startsWith(WORKSPACE_ROOT) ? requested : WORKSPACE_ROOT;
-}
+import {
+  isAppRole,
+  requestedWorkspaceDestination,
+} from "@/lib/workspaceAccess";
 
 function loginRedirect(request: NextRequest, error: "oauth" | "role") {
   const destination = applicationUrl("/login", request.url);
@@ -25,12 +22,12 @@ export async function GET(request: NextRequest) {
   if (error || !data.user) return loginRedirect(request, "oauth");
 
   const role = data.user.app_metadata.app_role;
-  if (!APP_ROLES.has(role)) {
+  if (!isAppRole(role)) {
     await supabase.auth.signOut();
     return loginRedirect(request, "role");
   }
 
-  const destination = requestedDestination(
+  const destination = requestedWorkspaceDestination(
     request.nextUrl.searchParams.get("next"),
   );
   return NextResponse.redirect(applicationUrl(destination, request.url));

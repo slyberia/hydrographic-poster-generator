@@ -13,6 +13,8 @@ test("public platform landing omits the restricted workspace", async ({ request 
 
   expect(html).toContain("Hydrographic Poster Generator");
   expect(html).toContain("/poster");
+  expect(html).toContain("Workspace sign in");
+  expect(html).toContain("/login?next=%2Fworkspace");
   expect(html).not.toContain("Drone Zoning");
   expect(html).not.toContain("/drone");
   expect(html).not.toContain("/workspace/drone");
@@ -25,6 +27,7 @@ for (const viewport of VIEWPORTS) {
 
     await expect(page.getByRole("heading", { level: 1, name: "Connecting Form and Function." })).toBeVisible();
     await expect(page.getByRole("heading", { level: 3, name: "Hydrographic Poster Generator" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Workspace sign in" })).toHaveAttribute("href", "/login?next=%2Fworkspace");
     await expect(page.getByText("Drone Zoning")).toHaveCount(0);
     await expect(page.getByRole("link", { name: /Open Poster Generator/ })).toHaveAttribute("href", "/poster");
     await expect(page.getByRole("link", { name: /Browse Documentation/ }).first()).toHaveAttribute("href", "/documentation");

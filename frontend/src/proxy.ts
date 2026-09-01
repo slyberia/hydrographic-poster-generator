@@ -4,26 +4,27 @@ import {
   copySupabaseCookies,
   createClient,
 } from "@/utils/supabase/middleware";
-
-const WORKSPACE_ROOT = "/workspace/drone";
-const APP_ROLES = new Set(["viewer", "analyst", "admin"]);
+import {
+  DRONE_WORKSPACE_ROOT,
+  isAppRole,
+} from "@/lib/workspaceAccess";
 
 function canonicalWorkspacePath(pathname: string): string {
-  if (pathname === "/executive-overview") return WORKSPACE_ROOT;
+  if (pathname === "/executive-overview") return DRONE_WORKSPACE_ROOT;
   if (pathname.startsWith("/documentation/drone-platform")) {
-    return `${WORKSPACE_ROOT}/docs${pathname.slice("/documentation/drone-platform".length)}`;
+    return `${DRONE_WORKSPACE_ROOT}/docs${pathname.slice("/documentation/drone-platform".length)}`;
   }
   if (!pathname.startsWith("/drone")) return pathname;
 
   const suffix = pathname.slice("/drone".length);
-  if (!suffix) return WORKSPACE_ROOT;
-  if (suffix === "/explore") return `${WORKSPACE_ROOT}/map`;
-  return `${WORKSPACE_ROOT}${suffix}`;
+  if (!suffix) return DRONE_WORKSPACE_ROOT;
+  if (suffix === "/explore") return `${DRONE_WORKSPACE_ROOT}/map`;
+  return `${DRONE_WORKSPACE_ROOT}${suffix}`;
 }
 
 function implementationPath(pathname: string): string | null {
-  if (!pathname.startsWith(WORKSPACE_ROOT)) return null;
-  const suffix = pathname.slice(WORKSPACE_ROOT.length);
+  if (!pathname.startsWith(DRONE_WORKSPACE_ROOT)) return null;
+  const suffix = pathname.slice(DRONE_WORKSPACE_ROOT.length);
   if (!suffix) return "/drone";
   if (suffix === "/map") return "/drone/explore";
   if (suffix === "/docs") return "/documentation/drone-platform";
@@ -39,6 +40,11 @@ function withPrivateHeaders(response: NextResponse) {
 }
 
 function protectedResponse(request: NextRequest, pathname: string) {
+  if (pathname === request.nextUrl.pathname) {
+    return withPrivateHeaders(
+      NextResponse.next({ request: { headers: request.headers } }),
+    );
+  }
   const destination = request.nextUrl.clone();
   destination.pathname = pathname;
   return withPrivateHeaders(NextResponse.rewrite(destination));
@@ -83,7 +89,7 @@ export async function proxy(request: NextRequest) {
     );
   }
 
-  if (!role || !APP_ROLES.has(role)) {
+  if (!isAppRole(role)) {
     const login = new URL("/login", request.url);
     login.searchParams.set("error", "role");
     return withPrivateHeaders(
@@ -109,7 +115,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/workspace/drone/:path*",
+    "/workspace/:path*",
     "/drone/:path*",
     "/documentation/drone-platform/:path*",
     "/executive-overview",

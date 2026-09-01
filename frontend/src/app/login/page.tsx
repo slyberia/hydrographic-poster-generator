@@ -3,13 +3,10 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
+import PlatformHeader from "@/components/PlatformHeader";
+import { requestedWorkspaceDestination } from "@/lib/workspaceAccess";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
-
-const WORKSPACE_ROOT = "/workspace/drone";
-
-function requestedDestination(requested: string | null): string {
-  return requested?.startsWith(WORKSPACE_ROOT) ? requested : WORKSPACE_ROOT;
-}
+import "@/styles/hps-workspace.css";
 
 function initialError(errorCode: string | null): string {
   if (!isSupabaseConfigured || errorCode === "config") {
@@ -26,9 +23,12 @@ function initialError(errorCode: string | null): string {
 
 export default function LoginPage() {
   return (
-    <Suspense>
-      <LoginPanel />
-    </Suspense>
+    <div className="hps-theme hps-theme--platform">
+      <PlatformHeader current="workspace" />
+      <Suspense>
+        <LoginPanel />
+      </Suspense>
+    </div>
   );
 }
 
@@ -49,7 +49,7 @@ function LoginPanel() {
     const callback = new URL("/auth/callback", window.location.origin);
     callback.searchParams.set(
       "next",
-      requestedDestination(searchParams.get("next")),
+      requestedWorkspaceDestination(searchParams.get("next")),
     );
 
     const { error: signInError } = await createClient().auth.signInWithOAuth({
@@ -66,19 +66,17 @@ function LoginPanel() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#f5f5f0] px-5 py-10 text-[#24372e]">
-      <section className="w-full max-w-sm border border-[#cad2cc] bg-white p-7 shadow-sm">
-        <p className="mb-2 text-xs font-semibold uppercase text-[#52715f]">
-          Authorized access
-        </p>
-        <h1 className="text-2xl font-semibold">HPS workspace sign in</h1>
-        <p className="mt-3 text-sm leading-6 text-[#52715f]">
-          Continue with an approved Google account. Authentication confirms your
-          identity; workspace access is assigned separately.
+    <main className="workspace-login">
+      <section className="workspace-login__card">
+        <p className="workspace-eyebrow">Authorized access</p>
+        <h1>HPS workspace sign in</h1>
+        <p className="workspace-login__copy">
+          Continue with an approved Google account to access private applications,
+          operational status, documentation, and platform updates.
         </p>
 
         {error && (
-          <p className="mt-5 text-sm text-[#a3342b]" role="alert">
+          <p className="workspace-login__error" role="alert">
             {error}
           </p>
         )}
@@ -87,7 +85,7 @@ function LoginPanel() {
           type="button"
           disabled={busy || !isSupabaseConfigured}
           onClick={signInWithGoogle}
-          className="mt-7 flex w-full items-center justify-center gap-3 border border-[#aebbb3] bg-white px-4 py-2.5 text-sm font-semibold text-[#24372e] hover:border-[#236642] hover:bg-[#f7faf8] focus:outline-none focus:ring-2 focus:ring-[#236642] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          className="workspace-login__button"
         >
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
             <path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.91h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.4Z" />
@@ -98,9 +96,9 @@ function LoginPanel() {
           {busy ? "Opening Google…" : "Continue with Google"}
         </button>
 
-        <p className="mt-5 text-xs leading-5 text-[#6a7f73]">
-          Only accounts granted a viewer, analyst, or administrator role can open
-          the private Drone workspace.
+        <p className="workspace-login__note">
+          Authentication confirms identity; application access is assigned separately
+          as viewer, analyst, or administrator.
         </p>
       </section>
     </main>
