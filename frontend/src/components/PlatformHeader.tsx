@@ -9,10 +9,6 @@ const NAV_ITEMS: Array<{ href: string; label: string; route: PlatformRoute }> = 
 type PlatformHeaderProps = { current?: PlatformRoute };
 
 export default function PlatformHeader({ current = "platform" }: PlatformHeaderProps) {
-  const workspaceItem = current === "workspace"
-    ? { href: "/workspace", label: "Workspace" }
-    : { href: "/login?next=%2Fworkspace", label: "Workspace sign in" };
-
   return (
     <header className="hps-brandbar hps-theme hps-theme--platform">
       <div className="hps-brandbar__inner">
@@ -23,9 +19,6 @@ export default function PlatformHeader({ current = "platform" }: PlatformHeaderP
           {NAV_ITEMS.map((item) => (
             <Link key={item.route} href={item.href} aria-current={current === item.route ? "page" : undefined}>{item.label}</Link>
           ))}
-          <Link href={workspaceItem.href} aria-current={current === "workspace" ? "page" : undefined}>
-            {workspaceItem.label}
-          </Link>
         </div>
       </nav>
     </header>

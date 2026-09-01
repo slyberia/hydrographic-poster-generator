@@ -85,7 +85,8 @@ test("workspace hub server shell exposes no private data on the public homepage"
   expect(workspaceHtml).toContain("Authorized HPS portal");
   expect(workspaceHtml).toContain("Recent platform updates");
   expect(homeHtml).not.toContain("Drone Zoning");
-  expect(homeHtml).toContain("Workspace sign in");
+  expect(homeHtml).toContain("Login");
+  expect(homeHtml).not.toContain("Workspace sign in");
 });
 
 test("workspace hub presents applications, live data status, and updates", async ({ page }) => {
