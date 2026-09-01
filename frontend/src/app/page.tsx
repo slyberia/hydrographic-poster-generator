@@ -54,7 +54,15 @@ export default function PlatformLandingPage() {
           ))}
         </div>
       </section>
-      <footer className="hps-footer"><div className="hps-footer__inner"><span>HPS Geospatial</span><Link href="/documentation">Documentation</Link></div></footer>
+      <footer className="hps-footer">
+        <div className="hps-footer__inner">
+          <span>HPS Geospatial</span>
+          <nav className="hps-footer__links" aria-label="Footer">
+            <Link href="/documentation">Documentation</Link>
+            <Link href="/login?next=%2Fworkspace">Login</Link>
+          </nav>
+        </div>
+      </footer>
     </main>
   );
 }

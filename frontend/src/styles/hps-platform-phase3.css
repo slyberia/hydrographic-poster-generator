@@ -76,6 +76,12 @@
   background: linear-gradient(135deg, #e7ede7, #f8f6ef);
 }
 
+.hps-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
 @media (max-width: 720px) {
   .hps-hero__map,
   .hps-hero__map .overview-map,
