@@ -106,6 +106,7 @@ steps:
       - '-c'
       - |
         gcloud run services describe ${_BACKEND_SERVICE} --region=${_REGION} --format="value(status.url)" > /workspace/backend_url.txt
+        gcloud run services describe ${_FRONTEND_SERVICE} --region=${_REGION} --format="value(status.url)" > /workspace/frontend_url.txt
 
   # ---- 5. Build Frontend (Injecting Discovered Backend URL) ----
   - id: build-frontend
@@ -120,12 +121,15 @@ steps:
           exit 1
         fi
         BACKEND_URL=$$(cat /workspace/backend_url.txt)
+        FRONTEND_URL=$$(cat /workspace/frontend_url.txt)
         echo "Using API URL: $$BACKEND_URL"
+        echo "Using application origin: $$FRONTEND_URL"
         docker build \
           -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_FRONTEND_SERVICE}:$BUILD_ID \
           --build-arg NEXT_PUBLIC_API_URL=$$BACKEND_URL \
           --build-arg NEXT_PUBLIC_SUPABASE_URL=${_SUPABASE_URL} \
           --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${_SUPABASE_PUBLISHABLE_KEY} \
+          --build-arg APP_ORIGIN=$$FRONTEND_URL \
           frontend
 
   # ---- 6. Push Frontend ----

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/utils/supabase/server";
+import { applicationUrl } from "@/utils/applicationUrl";
 
 const WORKSPACE_ROOT = "/workspace/drone";
 const APP_ROLES = new Set(["viewer", "analyst", "admin"]);
@@ -10,7 +11,7 @@ function requestedDestination(requested: string | null): string {
 }
 
 function loginRedirect(request: NextRequest, error: "oauth" | "role") {
-  const destination = new URL("/login", request.url);
+  const destination = applicationUrl("/login", request.url);
   destination.searchParams.set("error", error);
   return NextResponse.redirect(destination);
 }
@@ -32,5 +33,5 @@ export async function GET(request: NextRequest) {
   const destination = requestedDestination(
     request.nextUrl.searchParams.get("next"),
   );
-  return NextResponse.redirect(new URL(destination, request.url));
+  return NextResponse.redirect(applicationUrl(destination, request.url));
 }
