@@ -50,16 +50,21 @@ class ExportService:
         return SIZE_REGISTRY[request.export_size]
 
     @staticmethod
+    def render_canvas(request: ExportRequest) -> Tuple[int, int]:
+        size = ExportService.resolve_size(request)
+        if abs(size.width / size.height - rc.CANVAS_W / rc.CANVAS_H) < ASPECT_TOLERANCE:
+            return rc.CANVAS_W, rc.CANVAS_H
+        return size.width, size.height
+
+    @staticmethod
     def export(clip_result: ClipResult, request: ExportRequest) -> Tuple[bytes, str, str]:
         """Returns (payload_bytes, media_type, filename)."""
         size = ExportService.resolve_size(request)
-        ref_aspect = rc.CANVAS_W / rc.CANVAS_H
-        target_aspect = size.width / size.height
-
-        if abs(target_aspect - ref_aspect) < ASPECT_TOLERANCE:
-            canvas = (rc.CANVAS_W, rc.CANVAS_H)   # scale path (§11.1)
-        else:
-            canvas = (size.width, size.height)    # re-render path (§10)
+        canvas = ExportService.render_canvas(request)
+        if request.export_format == "geotiff":
+            from app.services.georef_service import build_manifest, generate_native_geotiff
+            payload, _ = generate_native_geotiff(clip_result, request, build_manifest(clip_result, request))
+            return payload, "image/tiff", f"hydro_native_{request.export_size}.tif"
 
         svg = SVGRenderer(request, canvas=canvas).generate_svg(clip_result)
 

@@ -8,6 +8,8 @@ import ControlPanel, {
 } from "@/components/ControlPanel";
 import PreviewPane from "@/components/PreviewPane";
 import PosterHeader from "@/components/PosterHeader";
+import GeorefResults from "@/components/GeorefResults";
+import { nativeGeoreference, downloadTiff, type GeorefResult } from "@/lib/georefApi";
 import {
   getGeographies,
   getPresets,
@@ -73,6 +75,7 @@ export default function Page() {
 
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [georefResult, setGeorefResult] = useState<GeorefResult | null>(null);
 
   const previewAbort = useRef<AbortController | null>(null);
 
@@ -244,6 +247,12 @@ export default function Page() {
     setExporting(true);
     setExportError(null);
     try {
+      if (exportSettings.export_format === "geotiff") {
+        const result = await nativeGeoreference({ ...settings, ...exportSettings });
+        setGeorefResult(result);
+        downloadTiff(result);
+        return;
+      }
       const { blob, filename } = await triggerExport({
         ...settings,
         ...exportSettings,
@@ -314,6 +323,10 @@ export default function Page() {
       </aside>
 
       <section className="relative z-10 min-w-0 flex-1">
+        {georefResult && <div className="absolute inset-0 z-30 overflow-y-auto bg-[var(--ui-page)] p-4">
+          <button type="button" className="glass-input mb-4" onClick={() => setGeorefResult(null)}>Back to poster</button>
+          <GeorefResults result={georefResult} />
+        </div>}
         <button
           type="button"
           className="absolute left-2 top-1.5 z-20 rounded-md border border-[var(--ui-border)] bg-[var(--ui-surface)] px-3 py-2 text-xs font-semibold text-[var(--ui-text)] shadow-sm lg:hidden"
