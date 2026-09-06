@@ -1,0 +1,3 @@
+# Human baseline approval
+
+User explicitly approved proceeding on 2026-09-06 after reviewing the baseline summary. Commit: 5395e3a43a73829c0332f9946d7015dcb27bc6c3. Backend: 211 passed, three existing skips (two unavailable live-geography fixtures, one unsupported asset/PDF combination). TypeScript and full frontend lint passed. No failing commands. Browser and production verification are not implied by this approval.

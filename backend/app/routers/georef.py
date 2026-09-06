@@ -3,8 +3,9 @@
 import asyncio
 import base64
 import json
+import math
 from uuid import UUID
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, Query
 from starlette.concurrency import run_in_threadpool
 from app.database import get_repository
 from app.models.export_models import ExportRequest
@@ -16,6 +17,7 @@ from app.services.georef_service import (
     build_manifest,
     decode_image,
     native_result,
+    viewer_image,
 )
 from app.services.georef_recovery import recover_result
 
@@ -47,7 +49,9 @@ async def readiness(repo=Depends(ready_repository)):
 
 
 def encoded_result(payload, qc, preview, manifest, gcps=()):
+    display, placement = viewer_image(payload)
     return {
+        "viewer": {**placement, "png_base64": base64.b64encode(display).decode()},
         "manifest": manifest.model_dump(mode="json"),
         "qc": qc.model_dump(mode="json"),
         "gcps": [g.model_dump(mode="json") for g in gcps],
@@ -65,6 +69,29 @@ async def get_manifest(poster_id: UUID, repo=Depends(get_repository)):
             404, "Poster ID not found; provide metadata or select the source geography"
         )
     return result
+
+
+@router.get("/manifests/{poster_id}/rivers", dependencies=[Depends(processing_slot)])
+async def inspect_rivers(poster_id: UUID, bbox: str = Query(max_length=150), repo=Depends(ready_repository)):
+    from app.services.georef_inspection import inspect_features
+    try:
+        bounds = [float(v) for v in bbox.split(",")]
+        if (len(bounds) != 4 or not all(math.isfinite(v) for v in bounds)
+            or not -180 <= bounds[0] < bounds[2] <= 180
+            or not -85 <= bounds[1] < bounds[3] <= 85):
+            raise ValueError()
+    except ValueError:
+        raise HTTPException(422, "Use west,south,east,north bounds without crossing the dateline")
+    manifest = await GeorefRepository(repo.pool).get_manifest(poster_id)
+    if manifest is None:
+        raise HTTPException(404, "Poster manifest not found")
+    request = ExportRequest.model_validate(manifest.render_settings)
+    clip = await ClippingService.clip_rivers(repo, request.geography_id,
+        request.density_preset, request.classification_preset)
+    current = build_manifest(clip, request)
+    if current.hydro_rivers_reference["feature_ids_sha256"] != manifest.hydro_rivers_reference.get("feature_ids_sha256"):
+        raise HTTPException(409, "Source record selection changed since generation; generate a new result before inspection")
+    return await run_in_threadpool(inspect_features, clip, bounds)
 
 
 @router.post("/native", dependencies=[Depends(processing_slot)])
@@ -85,7 +112,7 @@ async def native(request: ExportRequest, repo=Depends(ready_repository)):
             "Native map has no validated visible river network. Check source, styling and layout.",
         )
     await GeorefRepository(repo.pool).save(manifest, qc)
-    return encoded_result(payload, qc, preview, manifest)
+    return await run_in_threadpool(encoded_result, payload, qc, preview, manifest)
 
 
 @router.post("/recover", dependencies=[Depends(processing_slot)])
@@ -163,7 +190,7 @@ async def recover(
         result = await run_in_threadpool(recover_result, raster, clip, manifest, opts)
         geotiff, qc, gcps, preview = result
         await stored.save(manifest, qc, gcps)
-        return encoded_result(geotiff, qc, preview, manifest, gcps)
+        return await run_in_threadpool(encoded_result, geotiff, qc, preview, manifest, gcps)
     except (ValueError, json.JSONDecodeError) as exc:
         raise HTTPException(422, str(exc)) from exc
     finally:

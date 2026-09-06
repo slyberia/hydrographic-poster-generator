@@ -10,7 +10,7 @@ from scipy.ndimage import distance_transform_edt
 from pyproj import CRS, Transformer
 from app.models.georef_models import AlignmentQcReport
 
-QC_VERSION = "network-v1"
+QC_VERSION = "network-v2"
 MAX_QC_SIDE = 1600
 
 
@@ -150,7 +150,29 @@ def validate_raster(
         },
         "threshold_status": "provisional; evaluate on regional benchmarks",
         "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+            "registration_basis": "known_render_transform" if mode == "native" else "matched_correspondences",
+            "independent_transform_accuracy": {"status": "not_measured"},
+            "absolute_geographic_accuracy": {"status": "not_measured", "reason": "No independent surveyed reference supplied"},
+            "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability",
+        },
     }
+    # Report scale variation, including shear, across the preview; not Mercator metres.
+    samples = np.array([[x, y] for x in np.linspace(0, small.width, 3)
+                        for y in np.linspace(0, small.height, 3)])
+    distances = np.concatenate([ground_errors(apply_affine(transform, samples),
+        apply_affine(transform, samples + [3 * np.cos(angle), 3 * np.sin(angle)]), manifest)
+        for angle in np.linspace(0, 2 * np.pi, 16, endpoint=False)])
+    metrics["tolerance_ground_m"] = {"min": float(distances.min()), "max": float(distances.max()),
+        "method": "sampled across preview and directions; approximate range"}
+    inverse = ~pixel_to_world
+    vertices = [p[:2] for g in geometries for line in
+                ([g["coordinates"]] if g["type"] == "LineString" else g["coordinates"]) for p in line]
+    if vertices:
+        px = apply_affine(inverse, vertices)
+        report.out_of_frame_vertices = int(np.sum((px[:, 0] < 0) | (px[:, 1] < 0)
+            | (px[:, 0] > image.width) | (px[:, 1] > image.height)))
+    metrics["out_of_frame_vertices_measured"] = True
     if not observed.any() or not reference.any():
         report.warnings.append("No visible river network to validate")
         report.metrics = metrics
@@ -186,7 +208,7 @@ def validate_raster(
         held = [g for g in all_held if g.is_inlier]
         metrics["withheld_rejected_count"] = len(all_held) - len(held)
         metrics["withheld_reporting"] = (
-            "All withheld correspondences reported; verified subset and rejected count also shown. Independent benchmark grid tests the full transform."
+            "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request."
         )
         fitted = [g for g in gcps if g.used_for_fit and g.is_inlier]
         for label, points in (
@@ -200,10 +222,13 @@ def validate_raster(
                 metrics[label] = error_summary(
                     ground_errors(apply_affine(pixel_to_world, pixels), world, manifest)
                 )
+                residual_px = np.linalg.norm(apply_affine(~pixel_to_world, world) - pixels, axis=1)
+                metrics[label + "_pixels"] = {"count": len(points), "median": float(np.median(residual_px)),
+                    "rmse": float(np.sqrt(np.mean(residual_px**2))), "p95": float(np.percentile(residual_px, 95))}
         if len(held) < 3:
             report.status = "warning" if report.status == "passed" else report.status
             report.warnings.append(
-                "Fewer than three independent withheld correspondences"
+                "Fewer than three verified withheld correspondences; these are not independently surveyed"
             )
     if report.status != "passed":
         report.warnings.append(

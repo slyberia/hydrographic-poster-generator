@@ -9,7 +9,7 @@ library, projective transforms, or AI matching service.
 - In Studio, choose **GEOTIFF** in the export format selector
   and download. The result panel shows a source overlay and measured QC, with
   downloadable GeoTIFF, manifest, and report.
-- Open **Georeference** to upload a PNG, JPEG, or TIFF. New PNG exports carry
+- Open **Georeference** in navigation (page title: **Georeferencer**) to upload a PNG, JPEG, or TIFF. New PNG exports carry
   embedded provenance. Alternatively supply its poster UUID or manifest JSON.
 - For legacy images, select the source country/administrative region and density.
   API callers can also supply the original render settings. Matching assumes the
@@ -68,6 +68,12 @@ review; lower scores fail. Network matching has a three-pixel tolerance at a
 maximum 1600-pixel QC dimension. A passing score is not a probability, a surveyed
 accuracy guarantee, or proof that every pixel is within three original-image pixels.
 Nearest-ink displacement is affected by line width, raster resolution, and sampling.
+QC `network-v2` separates registration evidence, tolerant network agreement, and
+unmeasured absolute accuracy. It adds the approximate ground-distance range of
+the three-QC-pixel tolerance, measured out-of-frame source-vertex counts, and
+withheld residuals in uploaded-image pixels. Withheld matches share the source
+reference and are not independently surveyed control points. No acceptance
+thresholds changed in this reporting update.
 Blank images, insufficient/clustered/collinear points, unsupported transforms,
 and failed network validation return an error without a misleading TIFF.
 
@@ -75,12 +81,22 @@ and failed network validation return an error without a misleading TIFF.
 
 - `GET /georef/readiness`: checks required metadata columns; 503 if unavailable.
 - `GET /georef/manifests/{poster_id}`: retrieve a known UUID; no listing endpoint.
+- `GET /georef/manifests/{poster_id}/rivers?bbox=west,south,east,north`:
+  read-only viewport inspection, at most 250 reaches from the existing clipped
+  selection. Bounds are longitude/latitude and must not cross the dateline.
+  Returns GeoJSON in EPSG:4326, `truncated`, source attribution, existing reach
+  attributes and `name_status: not_evaluated`. A changed source-ID selection
+  returns 409; ID equality does not prove unchanged source geometry.
 - `POST /georef/native`: existing `ExportRequest` JSON.
 - `POST /georef/recover`: multipart `image` and JSON-string `options`.
   Options include `manifest`, `poster_id`, `geography_id`, `density_preset`,
   `classification_preset`, `render_settings`, `gcps`, `transform` (`auto`,
   `similarity`, `affine`). Conflicting identity/source metadata is rejected.
 - Successful processing returns manifest, QC, GCPs, base64 TIFF/preview, filename.
+  An additive `viewer` contains an ephemeral PNG (maximum side 1000), dimensions,
+  EPSG:3857 CRS and six pixel-edge affine coefficients `[a,b,c,d,e,f]`, where
+  `X=a*x+b*y+c; Y=d*x+e*y+f`. QC `metrics.raster` records full TIFF placement.
+  Old clients ignore these fields; new clients handle responses without a viewer.
 - Existing `/export` accepts `geotiff` and returns a binary TIFF. Existing PNG/SVG
   downloads embed manifests. All formats expose `X-Poster-ID`; PDF provenance can
   be retrieved through that UUID.
@@ -95,6 +111,26 @@ Downloaded samples/test fixtures are explicit local deliverables, not a hosted c
 Assess worker memory, request size/time limits, and ingress abuse controls before
 public deployment, especially for high-resolution posters. Deployment is not part
 of this execution unit.
+
+## Geographic inspection (local implementation, not yet released)
+
+Open geographic inspection below either Native or Recovery results. The viewer
+places the actual TIFF thumbnail using its complete affine transform, including
+rotation and shear. Change opacity and optionally enable the OpenStreetMap
+basemap; the latter sends tile requests to OSM and is visual context, not an
+independent accuracy test. Tiles are never bundled into downloads.
+
+Load rivers in the current view, then click a blue source line or select a reach
+ID with the keyboard. Missing attributes are explicitly unavailable. Zoom in and
+reload when the 250-reach cap is reached. Failed requests retain the last source
+overlay; clearing or closing cancels pending browser requests. Source geometry is
+viewport-clipped for display, not written back or used to alter QC/export.
+
+River naming remains **not evaluated**, including Guyana. No inferred name,
+probability, independently verified label or global naming coverage is claimed.
+The pilot needs a reproducible named reference and separately reviewed evaluation
+examples before name candidates can be released. Existing HydroRIVERS attributes
+are not a river-name catalog. See GEOREFERENCING_INSPECTION.md for phase evidence.
 
 ## Supabase persistence
 

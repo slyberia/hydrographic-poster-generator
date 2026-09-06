@@ -169,6 +169,9 @@ def render_poster(clip, request, *, rivers_only=False):
 
 
 def write_geotiff(image, pixel_to_world, manifest, qc=None):
+    if qc:
+        qc.metrics["raster"] = {"crs": "EPSG:3857", "width": image.width, "height": image.height,
+            "pixel_to_world": list(pixel_to_world)[:6], "coordinate_convention": "pixel_edges"}
     array = np.asarray(image.convert("RGBA"))
     with MemoryFile() as memory:
         with memory.open(
@@ -195,6 +198,18 @@ def write_geotiff(image, pixel_to_world, manifest, qc=None):
             if qc:
                 dataset.update_tags(alignment_qc=qc.model_dump_json())
         return memory.read()
+
+
+def viewer_image(payload):
+    """Bounded display derivative; preserve the complete affine, including rotation/shear."""
+    from rasterio.enums import Resampling
+    with MemoryFile(payload) as memory, memory.open() as dataset:
+        factor = min(1, 1000 / max(dataset.width, dataset.height))
+        width, height = max(1, round(dataset.width * factor)), max(1, round(dataset.height * factor))
+        pixels = dataset.read(out_shape=(4, height, width), resampling=Resampling.bilinear)
+        transform = dataset.transform * Affine.scale(dataset.width / width, dataset.height / height)
+    return png_bytes(Image.fromarray(np.moveaxis(pixels, 0, 2))), {
+        "width": width, "height": height, "crs": "EPSG:3857", "pixel_to_world": list(transform)[:6]}
 
 
 def native_result(clip, request, manifest=None):

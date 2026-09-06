@@ -1,47 +1,73 @@
 {
   "schema_version": 1,
-  "phase_id": "georef-release",
-  "phase_name": "Georeferencing MVP calibration and release",
+  "phase_id": "georef-inspection",
+  "phase_name": "QC, basemap inspection and Guyana major-river naming pilot",
   "status": "approved",
   "approved_by_human": true,
-  "human_approval": "2026-09-06 user approved phase update for 086827c and acceptance of release evidence; browser and production verification still required.",
-  "baseline_commit": "086827c7e55985ac5c66df1a33404e5be80acb85",
-  "branch": "codex/georef-release",
+  "human_approval": "2026-09-06: user explicitly approved updating phase for agreed QC, basemap, river inspection and Guyana naming pilot including related code/tests/docs, and collecting a fresh baseline for review. User subsequently approved that baseline with: I approve, proceed. See baseline_approved.json.",
+  "baseline_commit": "5395e3a43a73829c0332f9946d7015dcb27bc6c3",
+  "branch": "codex/georef-inspection",
   "protected_branches": [
     "main"
   ],
   "allowed_paths": [
     ".agents/state/current_phase.json",
-    ".agents/config/verification_commands_georef_release.json",
-    ".agents/state/baselines/georef-release/**",
-    ".agents/state/verifications/georef-release/**",
-    "docs/GEOREFERENCING_RELEASE.md"
+    ".agents/config/verification_commands_georef_inspection.json",
+    ".agents/state/baselines/georef-inspection/**",
+    ".agents/state/verifications/georef-inspection/**",
+    ".agents/state/inventories/georef-inspection/**",
+    "backend/app/models/georef*.py",
+    "backend/app/services/georef*.py",
+    "backend/app/routers/georef.py",
+    "backend/app/repository/georef*.py",
+    "backend/tests/test_georef*.py",
+    "frontend/src/app/georeference/**",
+    "frontend/src/components/Georef*.tsx",
+    "frontend/src/lib/georef*.ts",
+    "frontend/e2e/georef*.ts",
+    "frontend/package.json",
+    "frontend/package-lock.json",
+    "scripts/*georef*",
+    "docs/GEOREFERENCING*.md"
   ],
   "known_preexisting_changes": [
     ".agents/state/current_phase.json",
-    ".agents/config/verification_commands_georef_release.json",
-    ".agents/state/baselines/georef-release/**"
+    ".agents/config/verification_commands_georef_inspection.json",
+    ".agents/state/baselines/georef-inspection/**",
+    ".agents/state/inventories/georef-inspection/**"
   ],
   "scope_exempt_paths": [
     "work/**",
     "frontend/test-results/**"
   ],
-  "excluded_paths": [],
+  "excluded_paths": [
+    "cloudbuild.yaml",
+    "db/migrations/**"
+  ],
   "approved_operations": [
-    "record_user_approved_release_evidence",
-    "run_release_tests",
-    "commit_release_metadata",
-    "push_release_branch",
-    "deploy_existing_cloud_build_pipeline",
-    "verify_production"
+    "create_isolated_local_branch",
+    "record_phase_approval",
+    "inspect",
+    "run_baseline_tests",
+    "collect_reference_inventory",
+    "implement_scoped_changes_after_baseline_approval",
+    "run_local_verification",
+    "prepare_draft_pr_content",
+    "commit_scoped_changes_user_approved_2026_09_06",
+    "push_codex_georef_inspection_to_origin_user_approved_2026_09_06",
+    "publish_draft_pr_to_main_user_approved_2026_09_06"
   ],
   "prohibited_operations": [
-    "merge_main",
+    "deploy",
+    "production_write",
+    "merge",
     "force_push",
     "secret_change",
-    "destructive_database_operation",
-    "discard_user_work"
+    "discard_user_work",
+    "commit_source_geospatial_datasets",
+    "global_name_coverage",
+    "poster_basemap_export"
   ],
-  "verification_commands_file": ".agents/config/verification_commands_georef_release.json",
-  "approved_baseline_file": ".agents/state/baselines/georef-release/baseline_approved.json"
+  "verification_commands_file": ".agents/config/verification_commands_georef_inspection.json",
+  "approved_baseline_file": ".agents/state/baselines/georef-inspection/baseline_approved.json"
 }
