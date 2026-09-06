@@ -7,6 +7,10 @@ from app.models.export_models import ExportRequest
 from app.services.clipping_service import ClippingService
 from app.services.export_service import ExportService
 from app.services.audit_service import AuditService
+from app.services.georef_service import build_manifest, generate_native_geotiff, png_bytes
+from io import BytesIO
+from PIL import Image
+from app.repository.georef_repository import GeorefRepository
 
 router = APIRouter()
 
@@ -20,8 +24,28 @@ async def generate_export(request: ExportRequest,
     except ValueError as exc:  # unknown geography or density preset
         raise HTTPException(status_code=404, detail=str(exc))
 
+    georef_manifest = None
+    alignment_qc = None
     try:
-        payload, media_type, filename = ExportService.export(clip_result, request)
+        if clip_result.metadata.bbox_3857:
+            georef_manifest = build_manifest(clip_result, request)
+        if request.export_format == "geotiff":
+            payload, alignment_qc = generate_native_geotiff(clip_result, request, georef_manifest)
+            if alignment_qc.status == "failed":
+                raise ValueError("Native source-network validation failed; check styling and map layout")
+            media_type, filename = "image/tiff", f"hydro_poster_native_{request.export_size}.tif"
+        else:
+            payload, media_type, filename = ExportService.export(clip_result, request)
+            if georef_manifest and request.export_format == "png":
+                # Trusted renderer output: upload-specific limits must not restrict existing exports.
+                with Image.open(BytesIO(payload)) as image:
+                    payload = png_bytes(image, georef_manifest)
+            elif georef_manifest and request.export_format == "svg":
+                from xml.sax.saxutils import escape
+                svg = payload.decode("utf-8")
+                start = svg.index(">", svg.index("<svg")) + 1
+                metadata = '<metadata id="poster-geospatial-manifest">' + escape(georef_manifest.model_dump_json()) + '</metadata>'
+                payload = (svg[:start] + metadata + svg[start:]).encode("utf-8")
     except ValueError as exc:  # unknown palette/typography preset
         raise HTTPException(status_code=422, detail=str(exc))
 
@@ -73,12 +97,16 @@ async def generate_export(request: ExportRequest,
     )
 
     AuditService.queue_audit_log(background_tasks, repo.pool, manifest)
+    if georef_manifest is not None:
+        await GeorefRepository(repo.pool).save(georef_manifest, alignment_qc)
 
     return Response(
         content=payload,
         media_type=media_type,
         headers={
             "Content-Disposition": f'attachment; filename="{filename}"',
-            "X-Export-Manifest": manifest.model_dump_json()
+            "X-Export-Manifest": manifest.model_dump_json(),
+            "X-Poster-ID": str(georef_manifest.poster_id) if georef_manifest else "",
+            "X-Alignment-QC": alignment_qc.model_dump_json() if alignment_qc else "",
         },
     )

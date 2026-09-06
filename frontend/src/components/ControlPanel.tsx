@@ -53,7 +53,7 @@ const EXPORT_SIZES: { id: ExportSize; label: string }[] = [
   { id: "custom", label: "Custom…" },
 ];
 
-const EXPORT_FORMATS: ExportFormat[] = ["png", "svg", "pdf"];
+const EXPORT_FORMATS: ExportFormat[] = ["png", "svg", "pdf", "geotiff"];
 
 interface ControlPanelProps {
   regions: GeographyRegion[];

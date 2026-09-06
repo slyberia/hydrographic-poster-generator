@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-type PosterRoute = "home" | "studio" | "about" | "docs";
+type PosterRoute = "home" | "studio" | "about" | "docs" | "georeference";
 
 type PosterHeaderProps = {
   current: PosterRoute;
@@ -10,6 +10,7 @@ type PosterHeaderProps = {
 const NAV_ITEMS: Array<{ href: string; label: string; route: PosterRoute }> = [
   { href: "/poster", label: "Home", route: "home" },
   { href: "/studio", label: "Studio", route: "studio" },
+  { href: "/georeference", label: "Georeference", route: "georeference" },
   { href: "/about", label: "About", route: "about" },
   { href: "/docs", label: "Docs", route: "docs" },
 ];

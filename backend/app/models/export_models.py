@@ -4,7 +4,7 @@ from pydantic import BaseModel, model_validator
 
 from app.models.render_models import RenderRequest
 
-ExportFormat = Literal["svg", "png", "pdf"]
+ExportFormat = Literal["svg", "png", "pdf", "geotiff"]
 ExportSize = Literal[
     "digital_poster",
     "high_res_poster",

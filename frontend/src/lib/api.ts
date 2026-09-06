@@ -154,7 +154,7 @@ export interface RenderRequest {
   layout_overrides?: LayoutOverrides;
 }
 
-export type ExportFormat = "svg" | "png" | "pdf";
+export type ExportFormat = "svg" | "png" | "pdf" | "geotiff";
 
 export type ExportSize =
   | "digital_poster"

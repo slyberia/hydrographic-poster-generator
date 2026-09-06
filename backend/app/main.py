@@ -65,6 +65,8 @@ app.add_middleware(
         "X-Geography-Name",      # poster metadata
         "X-Export-Manifest",     # poster export sidecar
         "X-Feature-Summary",     # poster feature manifest
+        "X-Poster-ID",
+        "X-Alignment-QC",        # Native Mode validation report
         "X-Usage-Warning",       # admin quota bypass warning
     ],
 )
@@ -82,6 +84,8 @@ app.include_router(presets.router, prefix="/presets", tags=["Presets"])
 app.include_router(clip.router, tags=["Spatial Processing"])
 app.include_router(preview.router, tags=["Render Pipeline"])
 app.include_router(export.router, tags=["Export Pipeline"])
+from app.routers import georef
+app.include_router(georef.router)
 app.include_router(drone.router, tags=["Drone Zoning"], include_in_schema=False)
 app.include_router(
     public_drone.router,
