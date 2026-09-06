@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "phase_id": "georef-release",
+  "commit": "086827c7e55985ac5c66df1a33404e5be80acb85",
+  "status": "approved",
+  "approved_by_human": true,
+  "approval_source": "2026-09-06 user approved phase update for 086827c and acceptance of release evidence; browser and production verification still required.",
+  "summary": {
+    "backend": {
+      "passed": 211,
+      "skipped": 3
+    },
+    "calibration": {
+      "passed": 40,
+      "native_passed": 5,
+      "countries": [
+        "Jamaica",
+        "Belize"
+      ]
+    },
+    "typescript": "passed",
+    "frontend_lint": "passed",
+    "production_build": "passed"
+  },
+  "test_cases": [],
+  "limitations": [
+    "Approval records aggregate command results, not a per-test identity baseline.",
+    "Calibration is provisional, not globally surveyed accuracy.",
+    "Browser and production verification remain required."
+  ]
+}
