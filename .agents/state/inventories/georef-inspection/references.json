@@ -1,0 +1,367 @@
+{
+  "schema_version": 1,
+  "repository_root": "C:\\Users\\kyleg\\Documents\\Codex\\2026-09-05\\referenced-chatgpt-conversation-this-is-an\\work\\inspection",
+  "symbols": [
+    "GeorefResults",
+    "GeorefResult",
+    "validate_raster",
+    "recover_result",
+    "encoded_result"
+  ],
+  "match_count": 44,
+  "matches": [
+    {
+      "symbol": "GeorefResults",
+      "file": ".agents\\state\\inventories\\georef-inspection\\references.json",
+      "line": 5,
+      "context": "3:   \"repository_root\": \"C:\\\\Users\\\\kyleg\\\\Documents\\\\Codex\\\\2026-09-05\\\\referenced-chatgpt-conversation-this-is-an\\\\work\\\\inspection\",\n4:   \"symbols\": [\n5:     \"GeorefResults\",\n6:     \"GeorefResult\",\n7:     \"validate_raster\",",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": ".agents\\state\\inventories\\georef-inspection\\references.json",
+      "line": 5,
+      "context": "3:   \"repository_root\": \"C:\\\\Users\\\\kyleg\\\\Documents\\\\Codex\\\\2026-09-05\\\\referenced-chatgpt-conversation-this-is-an\\\\work\\\\inspection\",\n4:   \"symbols\": [\n5:     \"GeorefResults\",\n6:     \"GeorefResult\",\n7:     \"validate_raster\",",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": ".agents\\state\\inventories\\georef-inspection\\references.json",
+      "line": 6,
+      "context": "4:   \"symbols\": [\n5:     \"GeorefResults\",\n6:     \"GeorefResult\",\n7:     \"validate_raster\",\n8:     \"recover_result\",",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "validate_raster",
+      "file": ".agents\\state\\inventories\\georef-inspection\\references.json",
+      "line": 7,
+      "context": "5:     \"GeorefResults\",\n6:     \"GeorefResult\",\n7:     \"validate_raster\",\n8:     \"recover_result\",\n9:     \"encoded_result\"",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "recover_result",
+      "file": ".agents\\state\\inventories\\georef-inspection\\references.json",
+      "line": 8,
+      "context": "6:     \"GeorefResult\",\n7:     \"validate_raster\",\n8:     \"recover_result\",\n9:     \"encoded_result\"\n10:   ],",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "encoded_result",
+      "file": ".agents\\state\\inventories\\georef-inspection\\references.json",
+      "line": 9,
+      "context": "7:     \"validate_raster\",\n8:     \"recover_result\",\n9:     \"encoded_result\"\n10:   ],\n11:   \"match_count\": 0,",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "validate_raster",
+      "file": "backend\\tests\\test_georef_pipeline.py",
+      "line": 14,
+      "context": "12:     manifest_affine,\n13: )\n14: from app.services.georef_validation import validate_raster\n15: \n16: ",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "validate_raster",
+      "file": "backend\\tests\\test_georef_pipeline.py",
+      "line": 97,
+      "context": "95:     x, y, _, _ = frame_box(m)\n96:     incorrect = ~manifest_affine(m) * Affine.translation(x + 250, y + 200)\n97:     qc, _, _ = validate_raster(image, incorrect, clip, m, mode=\"native\")\n98:     assert qc.status == \"failed\"\n99:     assert qc.metrics[\"network_displacement\"][\"rmse_m\"] > 5",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "recover_result",
+      "file": "backend\\tests\\test_georef_recovery.py",
+      "line": 5,
+      "context": "3: from app.models.georef_models import RecoveryOptions, GroundControlPoint\n4: from app.services.georef_service import build_manifest\n5: from app.services.georef_recovery import recover_result, fit_registration\n6: from app.services.georef_benchmark import Recipe, evaluate\n7: from test_georef_pipeline import network, request",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "recover_result",
+      "file": "backend\\tests\\test_georef_recovery.py",
+      "line": 43,
+      "context": "41:     m = build_manifest(clip, request())\n42:     with pytest.raises(ValueError):\n43:         recover_result(\n44:             Image.new(\"RGBA\", (1200, 1200), \"white\"), clip, m, RecoveryOptions()\n45:         )",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "recover_result",
+      "file": "backend\\app\\routers\\georef.py",
+      "line": 20,
+      "context": "18:     native_result,\n19: )\n20: from app.services.georef_recovery import recover_result\n21: \n22: router = APIRouter(prefix=\"/georef\", tags=[\"Georeferencing\"])",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "encoded_result",
+      "file": "backend\\app\\routers\\georef.py",
+      "line": 49,
+      "context": "47: \n48: \n49: def encoded_result(payload, qc, preview, manifest, gcps=()):\n50:     return {\n51:         \"manifest\": manifest.model_dump(mode=\"json\"),",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "encoded_result",
+      "file": "backend\\app\\routers\\georef.py",
+      "line": 88,
+      "context": "86:         )\n87:     await GeorefRepository(repo.pool).save(manifest, qc)\n88:     return encoded_result(payload, qc, preview, manifest)\n89: \n90: ",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "recover_result",
+      "file": "backend\\app\\routers\\georef.py",
+      "line": 163,
+      "context": "161:         else:\n162:             manifest = canonical\n163:         result = await run_in_threadpool(recover_result, raster, clip, manifest, opts)\n164:         geotiff, qc, gcps, preview = result\n165:         await stored.save(manifest, qc, gcps)",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "encoded_result",
+      "file": "backend\\app\\routers\\georef.py",
+      "line": 166,
+      "context": "164:         geotiff, qc, gcps, preview = result\n165:         await stored.save(manifest, qc, gcps)\n166:         return encoded_result(geotiff, qc, preview, manifest, gcps)\n167:     except (ValueError, json.JSONDecodeError) as exc:\n168:         raise HTTPException(422, str(exc)) from exc",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "recover_result",
+      "file": "backend\\app\\services\\georef_benchmark.py",
+      "line": 16,
+      "context": "14:     frame_box,\n15: )\n16: from app.services.georef_recovery import recover_result\n17: from app.services.georef_validation import apply_affine, ground_errors, error_summary\n18: ",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "recover_result",
+      "file": "backend\\app\\services\\georef_benchmark.py",
+      "line": 104,
+      "context": "102:         }\n103:         try:\n104:             _, qc, _, _ = recover_result(image, clip, manifest, RecoveryOptions())\n105:             recovered = Affine(*qc.metrics[\"canonical_to_upload\"])\n106:             left, top, right, bottom = frame_box(manifest)",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "validate_raster",
+      "file": "backend\\app\\services\\georef_recovery.py",
+      "line": 19,
+      "context": "17:     river_mask,\n18:     apply_affine,\n19:     validate_raster,\n20:     alignment_preview,\n21: )",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "recover_result",
+      "file": "backend\\app\\services\\georef_recovery.py",
+      "line": 187,
+      "context": "185: \n186: \n187: def recover_result(image, clip, manifest, options):\n188:     gcps = options.gcps or correspondences(image, clip, manifest)\n189:     models = (",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "validate_raster",
+      "file": "backend\\app\\services\\georef_recovery.py",
+      "line": 220,
+      "context": "218:                 g.pixel_x -= int(x0)\n219:                 g.pixel_y -= int(y0)\n220:             qc, observed, reference = validate_raster(\n221:                 cropped,\n222:                 pixel_to_world,",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "validate_raster",
+      "file": "backend\\app\\services\\georef_service.py",
+      "line": 201,
+      "context": "199: \n200: def native_result(clip, request, manifest=None):\n201:     from app.services.georef_validation import validate_raster, alignment_preview\n202: \n203:     manifest = manifest or build_manifest(clip, request)",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "validate_raster",
+      "file": "backend\\app\\services\\georef_service.py",
+      "line": 207,
+      "context": "205:     left, top, _, _ = frame_box(manifest)\n206:     pixel_to_world = ~manifest_affine(manifest) * Affine.translation(left, top)\n207:     qc, observed, reference = validate_raster(\n208:         image, pixel_to_world, clip, manifest, mode=\"native\"\n209:     )",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "validate_raster",
+      "file": "backend\\app\\services\\georef_validation.py",
+      "line": 100,
+      "context": "98: \n99: \n100: def validate_raster(\n101:     image,\n102:     pixel_to_world,",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\components\\GeorefResults.tsx",
+      "line": 3,
+      "context": "1: \"use client\";\n2: import Image from \"next/image\";\n3: import { downloadJson, downloadTiff, type GeorefResult } from \"@/lib/georefApi\";\n4: \n5: export default function GeorefResults({ result }: { result: GeorefResult }) {",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResults",
+      "file": "frontend\\src\\components\\GeorefResults.tsx",
+      "line": 5,
+      "context": "3: import { downloadJson, downloadTiff, type GeorefResult } from \"@/lib/georefApi\";\n4: \n5: export default function GeorefResults({ result }: { result: GeorefResult }) {\n6:   const metrics = result.qc.metrics;\n7:   const distance = metrics.network_displacement;",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\components\\GeorefResults.tsx",
+      "line": 5,
+      "context": "3: import { downloadJson, downloadTiff, type GeorefResult } from \"@/lib/georefApi\";\n4: \n5: export default function GeorefResults({ result }: { result: GeorefResult }) {\n6:   const metrics = result.qc.metrics;\n7:   const distance = metrics.network_displacement;",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\lib\\georefApi.ts",
+      "line": 3,
+      "context": "1: import type { ExportRequest } from \"./api\";\n2: \n3: export interface GeorefResult {\n4:   manifest: { poster_id: string; source: Record<string, string> } & Record<string, unknown>;\n5:   qc: {",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\lib\\georefApi.ts",
+      "line": 24,
+      "context": "22: const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? \"http://localhost:8000\";\n23: \n24: async function result(response: Response): Promise<GeorefResult> {\n25:   if (!response.ok) {\n26:     let message = \"Georeferencing failed. Check the image and source, then try again.\";",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\lib\\georefApi.ts",
+      "line": 37,
+      "context": "35: }\n36: \n37: export async function nativeGeoreference(request: ExportRequest): Promise<GeorefResult> {\n38:   return result(await fetch(API_BASE + \"/georef/native\", {\n39:     method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify(request),",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\lib\\georefApi.ts",
+      "line": 58,
+      "context": "56: }\n57: \n58: export function downloadTiff(result: GeorefResult) {\n59:   const bytes = Uint8Array.from(atob(result.geotiff_base64), char => char.charCodeAt(0));\n60:   downloadBlob(new Blob([bytes], { type: \"image/tiff\" }), result.filename);",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResults",
+      "file": "frontend\\src\\app\\georeference\\page.tsx",
+      "line": 4,
+      "context": "2: import { useEffect, useRef, useState } from \"react\";\n3: import PosterHeader from \"@/components/PosterHeader\";\n4: import GeorefResults from \"@/components/GeorefResults\";\n5: import { getGeographies, getGeographyChildren, getPresets, type GeographyRegion, type GeographyDetail, type PresetsResponse } from \"@/lib/api\";\n6: import { recoverGeoreference, type GeorefResult } from \"@/lib/georefApi\";",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\georeference\\page.tsx",
+      "line": 4,
+      "context": "2: import { useEffect, useRef, useState } from \"react\";\n3: import PosterHeader from \"@/components/PosterHeader\";\n4: import GeorefResults from \"@/components/GeorefResults\";\n5: import { getGeographies, getGeographyChildren, getPresets, type GeographyRegion, type GeographyDetail, type PresetsResponse } from \"@/lib/api\";\n6: import { recoverGeoreference, type GeorefResult } from \"@/lib/georefApi\";",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\georeference\\page.tsx",
+      "line": 6,
+      "context": "4: import GeorefResults from \"@/components/GeorefResults\";\n5: import { getGeographies, getGeographyChildren, getPresets, type GeographyRegion, type GeographyDetail, type PresetsResponse } from \"@/lib/api\";\n6: import { recoverGeoreference, type GeorefResult } from \"@/lib/georefApi\";\n7: \n8: export default function GeoreferencePage() {",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\georeference\\page.tsx",
+      "line": 19,
+      "context": "17:   const [sidecar, setSidecar] = useState<File | null>(null);\n18:   const [controlPoints, setControlPoints] = useState<File | null>(null);\n19:   const [result, setResult] = useState<GeorefResult | null>(null);\n20:   const [busy, setBusy] = useState(false);\n21:   const [error, setError] = useState(\"\");",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResults",
+      "file": "frontend\\src\\app\\georeference\\page.tsx",
+      "line": 107,
+      "context": "105:         <p className=\"text-xs\">Only provenance and quality metadata are saved. Image processing is temporary; download the results to keep them.</p>\n106:       </form>\n107:       {result ? <GeorefResults result={result} /> : <section className=\"glass-card p-8\">\n108:         <h2 className=\"text-lg font-semibold\">Check the alignment before using it</h2>\n109:         <p className=\"mt-3 text-sm\">Your result includes a source overlay, measured network displacement, withheld-point validation, and downloads for the GeoTIFF, report and control points.</p>",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\georeference\\page.tsx",
+      "line": 107,
+      "context": "105:         <p className=\"text-xs\">Only provenance and quality metadata are saved. Image processing is temporary; download the results to keep them.</p>\n106:       </form>\n107:       {result ? <GeorefResults result={result} /> : <section className=\"glass-card p-8\">\n108:         <h2 className=\"text-lg font-semibold\">Check the alignment before using it</h2>\n109:         <p className=\"mt-3 text-sm\">Your result includes a source overlay, measured network displacement, withheld-point validation, and downloads for the GeoTIFF, report and control points.</p>",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResults",
+      "file": "frontend\\src\\app\\studio\\page.tsx",
+      "line": 11,
+      "context": "9: import PreviewPane from \"@/components/PreviewPane\";\n10: import PosterHeader from \"@/components/PosterHeader\";\n11: import GeorefResults from \"@/components/GeorefResults\";\n12: import { nativeGeoreference, downloadTiff, type GeorefResult } from \"@/lib/georefApi\";\n13: import {",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\studio\\page.tsx",
+      "line": 11,
+      "context": "9: import PreviewPane from \"@/components/PreviewPane\";\n10: import PosterHeader from \"@/components/PosterHeader\";\n11: import GeorefResults from \"@/components/GeorefResults\";\n12: import { nativeGeoreference, downloadTiff, type GeorefResult } from \"@/lib/georefApi\";\n13: import {",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\studio\\page.tsx",
+      "line": 12,
+      "context": "10: import PosterHeader from \"@/components/PosterHeader\";\n11: import GeorefResults from \"@/components/GeorefResults\";\n12: import { nativeGeoreference, downloadTiff, type GeorefResult } from \"@/lib/georefApi\";\n13: import {\n14:   getGeographies,",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\studio\\page.tsx",
+      "line": 78,
+      "context": "76:   const [exporting, setExporting] = useState(false);\n77:   const [exportError, setExportError] = useState<string | null>(null);\n78:   const [georefResult, setGeorefResult] = useState<GeorefResult | null>(null);\n79: \n80:   const previewAbort = useRef<AbortController | null>(null);",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\studio\\page.tsx",
+      "line": 252,
+      "context": "250:       if (exportSettings.export_format === \"geotiff\") {\n251:         const result = await nativeGeoreference({ ...settings, ...exportSettings });\n252:         setGeorefResult(result);\n253:         downloadTiff(result);\n254:         return;",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\studio\\page.tsx",
+      "line": 327,
+      "context": "325:       <section className=\"relative z-10 min-w-0 flex-1\">\n326:         {georefResult && <div className=\"absolute inset-0 z-30 overflow-y-auto bg-[var(--ui-page)] p-4\">\n327:           <button type=\"button\" className=\"glass-input mb-4\" onClick={() => setGeorefResult(null)}>Back to poster</button>\n328:           <GeorefResults result={georefResult} />\n329:         </div>}",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResults",
+      "file": "frontend\\src\\app\\studio\\page.tsx",
+      "line": 328,
+      "context": "326:         {georefResult && <div className=\"absolute inset-0 z-30 overflow-y-auto bg-[var(--ui-page)] p-4\">\n327:           <button type=\"button\" className=\"glass-input mb-4\" onClick={() => setGeorefResult(null)}>Back to poster</button>\n328:           <GeorefResults result={georefResult} />\n329:         </div>}\n330:         <button",
+      "classification": "unclassified",
+      "review_required": true
+    },
+    {
+      "symbol": "GeorefResult",
+      "file": "frontend\\src\\app\\studio\\page.tsx",
+      "line": 328,
+      "context": "326:         {georefResult && <div className=\"absolute inset-0 z-30 overflow-y-auto bg-[var(--ui-page)] p-4\">\n327:           <button type=\"button\" className=\"glass-input mb-4\" onClick={() => setGeorefResult(null)}>Back to poster</button>\n328:           <GeorefResults result={georefResult} />\n329:         </div>}\n330:         <button",
+      "classification": "unclassified",
+      "review_required": true
+    }
+  ],
+  "warning": "This is a reference inventory, not a completed dependency map."
+}

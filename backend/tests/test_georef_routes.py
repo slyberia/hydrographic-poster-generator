@@ -47,7 +47,42 @@ def test_native_route_has_qc_and_metadata(client):
     body = response.json()
     assert body["qc"]["status"] == "passed"
     assert body["geotiff_base64"] and body["preview_base64"]
+    assert body["viewer"]["crs"] == "EPSG:3857"
+    assert len(body["viewer"]["pixel_to_world"]) == 6
+    assert body["qc"]["metrics"]["raster"]["coordinate_convention"] == "pixel_edges"
     save.assert_awaited_once()
+
+
+def test_inspection_reads_existing_source_without_saving(client):
+    c, save = client
+    manifest = build_manifest(network(), request())
+    with patch("app.repository.georef_repository.GeorefRepository.get_manifest",
+               new_callable=AsyncMock, return_value=manifest):
+        response = c.get(f"/georef/manifests/{manifest.poster_id}/rivers?bbox=-1,-1,1,1")
+    assert response.status_code == 200
+    assert len(response.json()["features"]) == 45
+    save.assert_not_awaited()
+
+
+@pytest.mark.parametrize("bounds", ["nan,0,1,1", "0,1,0,2", "-181,0,1,1", "0,0,1,90", "1,2,3"])
+def test_inspection_invalid_bounds(client, bounds):
+    c, save = client
+    manifest = build_manifest(network(), request())
+    assert c.get(f"/georef/manifests/{manifest.poster_id}/rivers?bbox={bounds}").status_code == 422
+    save.assert_not_awaited()
+
+
+def test_inspection_rejects_changed_selection_and_missing_manifest(client):
+    c, save = client
+    manifest = build_manifest(network(), request())
+    manifest.hydro_rivers_reference["feature_ids_sha256"] = "changed"
+    route = f"/georef/manifests/{manifest.poster_id}/rivers?bbox=-1,-1,1,1"
+    with patch("app.repository.georef_repository.GeorefRepository.get_manifest",
+               new_callable=AsyncMock, return_value=manifest) as lookup:
+        assert c.get(route).status_code == 409
+        lookup.return_value = None
+        assert c.get(route).status_code == 404
+    save.assert_not_awaited()
 
 
 def test_embedded_provenance_upload_through_real_recovery(client):

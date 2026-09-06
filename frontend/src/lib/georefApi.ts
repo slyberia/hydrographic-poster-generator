@@ -1,6 +1,7 @@
 import type { ExportRequest } from "./api";
 
 export interface GeorefResult {
+  viewer?: GeorefViewer;
   manifest: { poster_id: string; source: Record<string, string> } & Record<string, unknown>;
   qc: {
     status: "passed" | "warning" | "failed";
@@ -17,6 +18,20 @@ export interface GeorefResult {
   geotiff_base64: string;
   preview_base64: string;
   filename: string;
+}
+
+export interface GeorefViewer {
+  width: number; height: number; crs: "EPSG:3857";
+  pixel_to_world: [number, number, number, number, number, number]; png_base64: string;
+}
+
+export type InspectedRivers = GeoJSON.FeatureCollection & { truncated: boolean };
+
+export async function inspectRivers(posterId: string, bbox: number[], signal?: AbortSignal): Promise<InspectedRivers> {
+  const response = await fetch(API_BASE + "/georef/manifests/" + encodeURIComponent(posterId)
+    + "/rivers?bbox=" + encodeURIComponent(bbox.join(",")), { signal });
+  if (!response.ok) throw new Error("River inspection unavailable. Try a smaller area or retry later.");
+  return response.json();
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";

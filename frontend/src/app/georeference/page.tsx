@@ -63,7 +63,7 @@ export default function GeoreferencePage() {
     <PosterHeader current="georeference" />
     <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 p-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
       <form onSubmit={analyze} className="glass-card min-w-0 space-y-4 p-5">
-        <h1 className="text-2xl font-semibold">Recover a poster</h1>
+        <h1 className="text-2xl font-semibold">Georeferencer</h1>
         <p className="text-sm">Restore geographic coordinates to a Hydro Poster image. Supports rotation, resizing, margin cropping and JPEG compression.</p>
         <label className="block text-sm">Poster image
           <input className="glass-input mt-1" type="file" accept=".png,.jpg,.jpeg,.tif,.tiff" required disabled={busy}
