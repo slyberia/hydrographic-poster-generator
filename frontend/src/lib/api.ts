@@ -180,6 +180,7 @@ export interface PreviewResult {
 export interface ExportResult {
   blob: Blob;
   filename: string;
+  posterId: string | null;
 }
 
 // -------------------------------------------------------------------- helpers
@@ -304,5 +305,5 @@ export async function triggerExport(
   const filename =
     match?.[1] ?? `hydro_export.${request.export_format}`;
 
-  return { blob: await res.blob(), filename };
+  return { blob: await res.blob(), filename, posterId: res.headers.get("X-Poster-ID") || null };
 }

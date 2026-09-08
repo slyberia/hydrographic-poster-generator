@@ -1,0 +1,425 @@
+{
+  "captured_at": "2026-09-07T18:51:56.032536+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "Eight named Guyana river systems plus a bounded unnamed-waterway sample",
+  "objects": [
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Essequibo River",
+      "source_name": "Essequibo River",
+      "osm_type": "relation",
+      "osm_id": 2736317,
+      "name_status": "matched"
+    },
+    {
+      "name": "Demerara River",
+      "source_name": "Demerara River",
+      "osm_type": "relation",
+      "osm_id": 4780938,
+      "name_status": "matched"
+    },
+    {
+      "name": "Berbice River",
+      "source_name": "Berbice River",
+      "osm_type": "way",
+      "osm_id": 819192587,
+      "name_status": "matched"
+    },
+    {
+      "name": "Berbice River",
+      "source_name": "Berbice River",
+      "osm_type": "way",
+      "osm_id": 818947786,
+      "name_status": "matched"
+    },
+    {
+      "name": "Berbice River",
+      "source_name": "Berbice River",
+      "osm_type": "way",
+      "osm_id": 81564782,
+      "name_status": "matched"
+    },
+    {
+      "name": "Berbice River",
+      "source_name": "Berbice River",
+      "osm_type": "way",
+      "osm_id": 818947784,
+      "name_status": "matched"
+    },
+    {
+      "name": "Berbice River",
+      "source_name": "Berbice River",
+      "osm_type": "way",
+      "osm_id": 1321954560,
+      "name_status": "matched"
+    },
+    {
+      "name": "Berbice River",
+      "source_name": "Berbice River",
+      "osm_type": "way",
+      "osm_id": 81603812,
+      "name_status": "matched"
+    },
+    {
+      "name": "Berbice River",
+      "source_name": "Berbice River",
+      "osm_type": "way",
+      "osm_id": 1321954559,
+      "name_status": "matched"
+    },
+    {
+      "name": "Berbice River",
+      "source_name": "Berbice River",
+      "osm_type": "way",
+      "osm_id": 1321954561,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Corentyne River",
+      "source_name": "Courantyne",
+      "osm_type": "relation",
+      "osm_id": 10351536,
+      "name_status": "matched"
+    },
+    {
+      "name": "Cuyuni River",
+      "source_name": "R\u00edo Cuyun\u00ed",
+      "osm_type": "way",
+      "osm_id": 664712239,
+      "name_status": "matched"
+    },
+    {
+      "name": "Mazaruni River",
+      "source_name": "R\u00edo Mazarun\u00ed",
+      "osm_type": "relation",
+      "osm_id": 9235898,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 55498300,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 821195479,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 1230511835,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 1230633838,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 55498298,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 821195481,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 1230666657,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 1230511833,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 1230636372,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 1230511836,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 1230666658,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 821167299,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 1230633839,
+      "name_status": "matched"
+    },
+    {
+      "name": "Potaro River",
+      "source_name": "Potaro River",
+      "osm_type": "way",
+      "osm_id": 1230511839,
+      "name_status": "matched"
+    },
+    {
+      "name": "Rupununi River",
+      "source_name": "Rupununi River",
+      "osm_type": "relation",
+      "osm_id": 11306045,
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": [
+    {"osm_type": "way", "osm_id": 54062300, "verified_unnamed": true},
+    {"osm_type": "way", "osm_id": 54896501, "verified_unnamed": true},
+    {"osm_type": "way", "osm_id": 54896504, "verified_unnamed": true},
+    {"osm_type": "way", "osm_id": 55503915, "verified_unnamed": true},
+    {"osm_type": "way", "osm_id": 55503918, "verified_unnamed": true},
+    {"osm_type": "way", "osm_id": 55503920, "verified_unnamed": true},
+    {"osm_type": "way", "osm_id": 55946216, "verified_unnamed": true},
+    {"osm_type": "way", "osm_id": 301513640, "verified_unnamed": true},
+    {"osm_type": "way", "osm_id": 378593043, "verified_unnamed": true}
+  ]
+}

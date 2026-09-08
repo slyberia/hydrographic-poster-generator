@@ -85,6 +85,24 @@ def test_inspection_rejects_changed_selection_and_missing_manifest(client):
     save.assert_not_awaited()
 
 
+def test_guyana_name_manifest_and_immutable_dataset(client):
+    c, save = client
+    manifest = build_manifest(network(), request())
+    manifest.source["geography_id"] = "3d43dc73-e0ba-4abf-ab0b-b73729f66a70"
+    with patch("app.repository.georef_repository.GeorefRepository.get_manifest",
+               new_callable=AsyncMock, return_value=manifest):
+        response = c.get(f"/georef/manifests/{manifest.poster_id}/river-names")
+    assert response.status_code == 200
+    assert response.json()["evaluation"]["status"] == "passed"
+    assert "max-age=60" in response.headers["cache-control"]
+
+    artifact = c.get(response.json()["artifact"]["url"])
+    assert artifact.status_code == 200
+    assert artifact.json()["metadata"]["country"] == "Guyana"
+    assert "immutable" in artifact.headers["cache-control"]
+    save.assert_not_awaited()
+
+
 def test_embedded_provenance_upload_through_real_recovery(client):
     c, save = client
     clip = network()

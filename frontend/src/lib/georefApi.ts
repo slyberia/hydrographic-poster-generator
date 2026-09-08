@@ -27,10 +27,45 @@ export interface GeorefViewer {
 
 export type InspectedRivers = GeoJSON.FeatureCollection & { truncated: boolean };
 
+export type RiverNameStatus = "matched" | "ambiguous" | "unnamed_in_source" | "not_evaluated";
+export interface RiverNameRecord {
+  name_status: RiverNameStatus;
+  name: string | null;
+  candidate_name?: string;
+  confidence?: number;
+  source_refs: string[];
+}
+export interface RiverNameManifest {
+  country: string;
+  country_code: string;
+  dataset_version: string;
+  disclaimer: string;
+  evaluation: { status: "passed" | "warning"; counts: Record<string, number> };
+  artifact: { url: string; indexed_reach_count: number; feature_count: number };
+}
+export type RiverNameDataset = GeoJSON.FeatureCollection & {
+  metadata: { source: string; source_license: string; disclaimer: string; evaluated_systems: string[] };
+  name_index: Record<string, RiverNameRecord>;
+};
+
 export async function inspectRivers(posterId: string, bbox: number[], signal?: AbortSignal): Promise<InspectedRivers> {
   const response = await fetch(API_BASE + "/georef/manifests/" + encodeURIComponent(posterId)
     + "/rivers?bbox=" + encodeURIComponent(bbox.join(",")), { signal });
   if (!response.ok) throw new Error("River inspection unavailable. Try a smaller area or retry later.");
+  return response.json();
+}
+
+export async function getRiverNameManifest(posterId: string, signal?: AbortSignal): Promise<RiverNameManifest> {
+  const response = await fetch(API_BASE + "/georef/manifests/" + encodeURIComponent(posterId) + "/river-names", { signal });
+  if (!response.ok) throw new Error(response.status === 404
+    ? "River names have not been evaluated for this geography."
+    : "River-name metadata is temporarily unavailable.");
+  return response.json();
+}
+
+export async function getRiverNameDataset(url: string, signal?: AbortSignal): Promise<RiverNameDataset> {
+  const response = await fetch((url.startsWith("http") ? "" : API_BASE) + url, { signal, cache: "force-cache" });
+  if (!response.ok) throw new Error("The evaluated river-name layer is temporarily unavailable.");
   return response.json();
 }
 

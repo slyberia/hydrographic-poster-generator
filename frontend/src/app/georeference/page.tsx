@@ -23,6 +23,9 @@ export default function GeoreferencePage() {
 
   useEffect(() => {
     const abort = new AbortController();
+    const linked = new URLSearchParams(window.location.search).get("poster_id")
+      ?? sessionStorage.getItem("hydro:last-poster-id");
+    if (linked) queueMicrotask(() => setPosterId(linked));
     Promise.all([getGeographies(abort.signal), getPresets(abort.signal)])
       .then(([geo, styles]) => { setRegions(geo.regions); setPresets(styles); })
       .catch(err => { if (!abort.signal.aborted) setError(String(err)); });
@@ -70,9 +73,7 @@ export default function GeoreferencePage() {
             onChange={e => { setImage(e.target.files?.[0] ?? null); setResult(null); }} />
         </label>
         <p className="text-xs">PNG, JPEG or TIFF · Up to 25 MB and 40 megapixels. Embedded provenance is detected automatically.</p>
-        <label className="block text-sm">Poster ID (optional)
-          <input className="glass-input mt-1" value={posterId} disabled={busy} onChange={e => setPosterId(e.target.value)} placeholder="From a previous export" />
-        </label>
+        {posterId && <p className="text-xs">Linked automatically to your latest Studio export.</p>}
         <label className="block text-sm">Source geography (for images without metadata)
           <select className="glass-select mt-1" value={geography} disabled={busy} onChange={e => { setGeography(e.target.value); setChild(""); setChildren([]); }}>
             <option value="">Use embedded metadata or poster ID</option>
@@ -94,8 +95,10 @@ export default function GeoreferencePage() {
           </select>
         </label>
         <details className="text-sm"><summary>Metadata and control points</summary>
+          <label className="mt-3 block">Poster ID (optional)<input className="glass-input" value={posterId} disabled={busy} onChange={e => setPosterId(e.target.value)} placeholder="From a previous export" /></label>
           <label className="mt-3 block">Manifest JSON (optional)<input className="glass-input" type="file" accept=".json" disabled={busy} onChange={e => setSidecar(e.target.files?.[0] ?? null)} /></label>
           <label className="mt-3 block">Control-point JSON (optional)<input className="glass-input" type="file" accept=".json" disabled={busy} onChange={e => setControlPoints(e.target.files?.[0] ?? null)} /></label>
+          <p className="mt-2 text-xs">Most Studio exports need none of these. A manifest comes from a georeferencing result; control points are independently measured reference pairs supplied by the user.</p>
           <p className="mt-2 text-xs">At least 12 well-distributed pairs, with source_x/source_y in EPSG:3857 and pixel_x/pixel_y in the uploaded image. The system withholds points for validation.</p>
         </details>
         <button className="glass-input font-semibold" type="submit" disabled={!image || busy}>{busy ? "Analyzing…" : "Analyze alignment"}</button>

@@ -76,6 +76,7 @@ export default function Page() {
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [georefResult, setGeorefResult] = useState<GeorefResult | null>(null);
+  const [latestPosterId, setLatestPosterId] = useState<string | null>(null);
 
   const previewAbort = useRef<AbortController | null>(null);
 
@@ -249,14 +250,20 @@ export default function Page() {
     try {
       if (exportSettings.export_format === "geotiff") {
         const result = await nativeGeoreference({ ...settings, ...exportSettings });
+        sessionStorage.setItem("hydro:last-poster-id", result.manifest.poster_id);
+        setLatestPosterId(result.manifest.poster_id);
         setGeorefResult(result);
         downloadTiff(result);
         return;
       }
-      const { blob, filename } = await triggerExport({
+      const { blob, filename, posterId } = await triggerExport({
         ...settings,
         ...exportSettings,
       });
+      if (posterId) {
+        sessionStorage.setItem("hydro:last-poster-id", posterId);
+        setLatestPosterId(posterId);
+      }
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
@@ -323,6 +330,9 @@ export default function Page() {
       </aside>
 
       <section className="relative z-10 min-w-0 flex-1">
+        {latestPosterId && !georefResult && <div className="absolute right-4 top-4 z-30 glass-card flex items-center gap-3 p-3 text-sm">
+          <span>Export ready.</span><a className="glass-input" href={`/georeference?poster_id=${encodeURIComponent(latestPosterId)}`}>Verify in Georeferencer</a>
+        </div>}
         {georefResult && <div className="absolute inset-0 z-30 overflow-y-auto bg-[var(--ui-page)] p-4">
           <button type="button" className="glass-input mb-4" onClick={() => setGeorefResult(null)}>Back to poster</button>
           <GeorefResults result={georefResult} />
