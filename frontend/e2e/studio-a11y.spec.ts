@@ -100,8 +100,7 @@ test("a11y-3: metadata checkboxes and export operable by keyboard; QA list is a 
   const state = await openStudio(page);
 
   // Space toggles a granular metadata checkbox.
-  const granular = page.locator("section", { hasText: "Content" }).locator("div.border-l");
-  const northArrow = granular.getByRole("checkbox", { name: "North Arrow", exact: true });
+  const northArrow = page.getByRole("checkbox", { name: "North Arrow", exact: true });
   await northArrow.focus();
   await page.keyboard.press("Space");
   await expect(northArrow).not.toBeChecked();

@@ -29,7 +29,7 @@ for (const viewport of VIEWPORTS) {
     await expect(page.getByRole("heading", { level: 1, name: "Connecting Form and Function." })).toBeVisible();
     await expect(page.getByRole("heading", { level: 3, name: "Hydrographic Poster Generator" })).toBeVisible();
     const header = page.getByRole("banner");
-    const footer = page.getByRole("contentinfo");
+    const footer = page.getByRole("navigation", { name: "Footer" });
     await expect(header.getByRole("link", { name: "Login" })).toHaveCount(0);
     await expect(footer.getByRole("link", { name: "Login" })).toHaveAttribute("href", "/login?next=%2Fworkspace");
     await expect(footer.getByRole("link", { name: "Documentation" })).toHaveAttribute("href", "/documentation");

@@ -29,7 +29,7 @@ test("workspace view chooser presents two authenticated application paths", asyn
 
 test("legacy Drone routes canonicalize into the workspace", async ({ request }) => {
   const response = await request.get("/drone/explore", { maxRedirects: 0 });
-  expect(response.status()).toBe(307);
+  expect(response.status()).toBe(308);
   expect(response.headers().location).toContain("/workspace/drone/map");
   expect(response.headers()["x-robots-tag"]).toBe("noindex, nofollow, noarchive");
 });

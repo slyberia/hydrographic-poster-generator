@@ -47,6 +47,8 @@ export function useReferenceLayers(options: {
   const [zoom, setZoom] = useState(0);
   const [artifactState, setArtifactState] = useState<"idle" | "loading" | "ready" | "unavailable">("idle");
   const artifactRequestStarted = useRef(false);
+  const dynamicRequests = useRef(new Set<ReferenceLayerKey>());
+  const dynamicLoaded = useRef(new Set<ReferenceLayerKey>());
 
   const allowedKey = options.allowed?.join(",") ?? "*";
   const defaultsKey = JSON.stringify(options.enabledDefaults ?? {});
@@ -74,14 +76,17 @@ export function useReferenceLayers(options: {
   }, [allowed, enabledDefaults]);
 
   const loadDynamic = useCallback(async (key: ReferenceLayerKey) => {
-    if (data[key] || loading.has(key) || errors[key]) return;
+    if (data[key] || loading.has(key) || errors[key] || dynamicLoaded.current.has(key) || dynamicRequests.current.has(key)) return;
+    dynamicRequests.current.add(key);
     setLoading((previous) => new Set(previous).add(key));
     try {
       const collection = await publicDroneApi.getReferenceLayer(key, config?.version);
+      dynamicLoaded.current.add(key);
       setData((previous) => ({ ...previous, [key]: collection }));
     } catch {
       setErrors((previous) => ({ ...previous, [key]: "Unavailable. Toggle to retry." }));
     } finally {
+      dynamicRequests.current.delete(key);
       setLoading((previous) => {
         const next = new Set(previous);
         next.delete(key);

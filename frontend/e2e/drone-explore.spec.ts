@@ -167,7 +167,7 @@ test("loads published zoning inside the local authenticated-workspace harness", 
   const requested = await installPublicMock(page);
   await page.goto("/workspace/drone/map");
 
-  await expect(page.getByRole("heading", { name: /Public Explorer/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Published Map/ })).toBeVisible();
   await expect(page.getByText("Planning guidance, not flight authorization.")).toBeVisible();
   await expect(page.getByText(/Published July 20, 2026|Published 20 July 2026/)).toBeVisible();
   await expect(page.getByRole("button", { name: /Prohibited/ })).toBeVisible();

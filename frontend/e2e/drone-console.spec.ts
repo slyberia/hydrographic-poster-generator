@@ -98,7 +98,7 @@ test("reference-layer failures are surfaced once instead of retrying indefinitel
 
   for (let i = 0; i < 5; i += 1) await page.locator(".leaflet-control-zoom-in").click();
   await page.getByRole("checkbox", { name: "Schools" }).click();
-  await expect(page.getByText("Unavailable. Toggle to retry.")).toBeVisible();
+  await expect(page.locator(".reference-row", { hasText: "Schools" }).getByRole("status")).toHaveText("Unavailable. Toggle to retry.");
   expect(failedSchoolRequests).toBe(1);
   expect(state.requested.filter((p) => p === "/workspace/drone/reference-layers/schools")).toHaveLength(0);
 });
