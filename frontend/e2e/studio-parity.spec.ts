@@ -99,7 +99,7 @@ test.describe("pointer drag", () => {
 
 test("parity-3: metadata checkboxes — payload metadata_options mirror UI state exactly", async ({ page }) => {
   const state = await openStudio(page);
-  const granular = page.locator("section", { hasText: "Content" }).locator("div.border-l");
+  const granular = page.locator("div.border-l").filter({ has: page.getByRole("checkbox", { name: "Title", exact: true }) });
 
   const expected: Record<string, boolean> = {
     show_title: true,

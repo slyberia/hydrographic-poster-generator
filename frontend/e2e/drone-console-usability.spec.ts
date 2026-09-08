@@ -54,7 +54,7 @@ test("the rail links to the dashboard and opens methodology in-console", async (
     "href",
     "/workspace/drone/dashboard",
   );
-  await expect(page.getByRole("link", { name: "Public Explorer" })).toHaveAttribute(
+  await expect(page.getByRole("link", { name: "Published Map" })).toHaveAttribute(
     "href",
     "/workspace/drone/map",
   );
@@ -72,7 +72,7 @@ test("admins can approve and publish completed runs", async ({ page }) => {
 
   await page.getByRole("button", { name: "Publish", exact: true }).click();
   await expect.poll(() => state.lifecyclePosts).toContain("run-2:publish");
-  await expect(page.getByText("Run published. The Public Explorer is now updated.")).toBeVisible();
+  await expect(page.getByText("Run published. The Published Map is now updated.")).toBeVisible();
 });
 
 test("Escape closes the selected-cell report", async ({ page }) => {
@@ -91,7 +91,7 @@ test("Escape closes the selected-cell report", async ({ page }) => {
   // Keep the click inside the scored cell but away from the Milestone C
   // airport marker, which is intentionally interactive and can otherwise
   // consume the map click.
-  await page.mouse.click(box.x + box.width * 0.3, box.y + box.height * 0.3);
+  await page.mouse.click(box.x + box.width * 0.4, box.y + box.height * 0.3);
 
   const drawer = page.getByRole("dialog", { name: "Location report" });
   await expect(drawer).toBeVisible();

@@ -202,7 +202,7 @@ export async function installMockBackend(page: Page): Promise<MockState> {
       layers: REFERENCE_CONFIG.layers.map((layer) => ({ key: layer.key, group: layer.group, available: layer.available !== false, feature_count: layer.available === false ? 0 : 1 })),
     });
     if (path === "/workspace/drone/reference-artifact-v2.geojson") return json(route, unifiedReferenceGeojson());
-    const reference = path.match(/^\/public\/drone\/reference-layers\/([^/]+)$/);
+    const reference = path.match(/^\/workspace\/drone\/reference-layers\/([^/]+)$/);
     if (reference) return json(route, referenceGeojson(reference[1]));
 
     const lifecycle = path.match(/^\/runs\/([^/]+)\/(approve|publish|archive)$/);

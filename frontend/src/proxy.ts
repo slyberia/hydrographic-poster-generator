@@ -60,7 +60,7 @@ export async function proxy(request: NextRequest) {
   if (!configured && process.env.NODE_ENV !== "production") {
     if (canonicalPath !== request.nextUrl.pathname) {
       return withPrivateHeaders(
-        NextResponse.redirect(new URL(canonicalPath, request.url)),
+        NextResponse.redirect(new URL(canonicalPath, request.url), 308),
       );
     }
     return protectedResponse(
@@ -101,7 +101,7 @@ export async function proxy(request: NextRequest) {
     return withPrivateHeaders(
       copySupabaseCookies(
         supabaseResponse,
-        NextResponse.redirect(new URL(canonicalPath, request.url)),
+        NextResponse.redirect(new URL(canonicalPath, request.url), 308),
       ),
     );
   }
