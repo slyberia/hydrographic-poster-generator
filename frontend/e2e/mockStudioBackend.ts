@@ -135,12 +135,8 @@ export async function installStudioMockBackend(page: Page): Promise<StudioMockSt
         state.failPreview === "malformed"
           ? FIXTURE_SVG.slice(0, Math.floor(FIXTURE_SVG.length / 2)) // truncated document
           : FIXTURE_SVG;
-      // NOTE: the real backend sends X-River-Count / X-Geography-Name and
-      // Content-Disposition, but its CORSMiddleware sets no expose_headers,
-      // so a cross-origin browser client cannot read them (fetch header
-      // filtering). The headers are included here for fidelity; assertions
-      // must expect the client's fallback behavior (null river count,
-      // default export filename) until the backend exposes them.
+      // Response metadata is included for API fidelity. Tests that need a
+      // cross-origin-readable header explicitly expose that header below.
       return route.fulfill({
         status: 200,
         contentType: "image/svg+xml",
@@ -155,7 +151,11 @@ export async function installStudioMockBackend(page: Page): Promise<StudioMockSt
       return route.fulfill({
         status: 200,
         contentType: "image/png",
-        headers: { "Content-Disposition": 'attachment; filename="hydro_poster_digital_poster.png"' },
+        headers: {
+          "Content-Disposition": 'attachment; filename="hydro_poster_digital_poster.png"',
+          "X-Poster-ID": "00000000-0000-4000-8000-000000000001",
+          "Access-Control-Expose-Headers": "X-Poster-ID",
+        },
         body: PNG_1X1,
       });
     }

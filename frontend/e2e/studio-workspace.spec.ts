@@ -44,6 +44,23 @@ test("control hierarchy exposes one legend state and keeps advanced controls col
   await expect(page.getByLabel("title block X offset")).toBeVisible();
 });
 
+test("completed exports retain a hidden poster ID and offer direct verification", async ({ page }) => {
+  await openRenderedStudio(page);
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download" }).click();
+  await downloadPromise;
+
+  const verification = page.getByRole("link", { name: "Verify in Georeferencer" });
+  await expect(verification).toHaveAttribute(
+    "href",
+    "/georeference?poster_id=00000000-0000-4000-8000-000000000001",
+  );
+  expect(await page.evaluate(() => sessionStorage.getItem("hydro:last-poster-id"))).toBe(
+    "00000000-0000-4000-8000-000000000001",
+  );
+});
+
 test("compact workspace uses a control drawer and keeps the canvas within the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 900 });
   await installStudioMockBackend(page);

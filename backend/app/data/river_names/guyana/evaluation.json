@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "targets": {
+    "Essequibo River": {
+      "source_feature_count": 22,
+      "matched_reach_count": 467,
+      "median_distance_m": 305.0,
+      "p95_distance_m": 2937.9
+    },
+    "Demerara River": {
+      "source_feature_count": 1,
+      "matched_reach_count": 193,
+      "median_distance_m": 279.6,
+      "p95_distance_m": 3051.2
+    },
+    "Berbice River": {
+      "source_feature_count": 8,
+      "matched_reach_count": 86,
+      "median_distance_m": 289.2,
+      "p95_distance_m": 3074.4
+    },
+    "Corentyne River": {
+      "source_feature_count": 10,
+      "matched_reach_count": 170,
+      "median_distance_m": 266.5,
+      "p95_distance_m": 2756.2
+    },
+    "Cuyuni River": {
+      "source_feature_count": 1,
+      "matched_reach_count": 11,
+      "median_distance_m": 1881.3,
+      "p95_distance_m": 3408.3
+    },
+    "Mazaruni River": {
+      "source_feature_count": 1,
+      "matched_reach_count": 361,
+      "median_distance_m": 322.4,
+      "p95_distance_m": 3079.6
+    },
+    "Potaro River": {
+      "source_feature_count": 14,
+      "matched_reach_count": 144,
+      "median_distance_m": 206.4,
+      "p95_distance_m": 2653.5
+    },
+    "Rupununi River": {
+      "source_feature_count": 1,
+      "matched_reach_count": 156,
+      "median_distance_m": 484.4,
+      "p95_distance_m": 2710.8
+    }
+  },
+  "counts": {
+    "matched": 1588,
+    "ambiguous": 97,
+    "unnamed_in_source": 7
+  },
+  "limitations": [
+    "This is source-to-source agreement, not surveyed ground truth.",
+    "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+    "A name is shown only when the pilot matcher reaches its threshold; ambiguous results abstain."
+  ]
+}

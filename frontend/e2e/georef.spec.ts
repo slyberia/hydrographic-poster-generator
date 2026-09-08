@@ -45,6 +45,7 @@ test("recover real-source PNG, view QC, download, and retain result after an err
   const qcPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Download QC report" }).click();
   expect((await qcPromise).suggestedFilename()).toBe("alignment-qc.json");
+  await page.getByText("Metadata and control points", { exact: true }).click();
   await page.getByLabel("Poster ID (optional)", { exact: true }).fill("not-a-uuid");
   await page.getByRole("button", { name: "Analyze alignment" }).click();
   await expect(page.locator("form [role=alert]")).toBeVisible({ timeout: 30000 });

@@ -5,7 +5,7 @@ import base64
 import json
 import math
 from uuid import UUID
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, Query
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, Query, Response
 from starlette.concurrency import run_in_threadpool
 from app.database import get_repository
 from app.models.export_models import ExportRequest
@@ -69,6 +69,33 @@ async def get_manifest(poster_id: UUID, repo=Depends(get_repository)):
             404, "Poster ID not found; provide metadata or select the source geography"
         )
     return result
+
+
+@router.get("/manifests/{poster_id}/river-names")
+async def river_name_manifest(poster_id: UUID, response: Response, repo=Depends(get_repository)):
+    from app.services.river_name_service import manifest_for_geography
+    manifest = await GeorefRepository(repo.pool).get_manifest(poster_id)
+    if manifest is None:
+        raise HTTPException(404, "Poster manifest not found")
+    try:
+        payload = await run_in_threadpool(
+            manifest_for_geography, manifest.source.get("geography_id", "")
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    response.headers["Cache-Control"] = "public, max-age=60, stale-while-revalidate=3600"
+    return payload
+
+
+@router.get("/river-names/{country}/{version}")
+async def river_name_dataset(country: str, version: str, response: Response):
+    from app.services.river_name_service import dataset
+    try:
+        payload = await run_in_threadpool(dataset, country, version)
+    except FileNotFoundError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    return payload
 
 
 @router.get("/manifests/{poster_id}/rivers", dependencies=[Depends(processing_slot)])

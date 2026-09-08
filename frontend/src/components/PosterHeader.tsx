@@ -10,7 +10,7 @@ type PosterHeaderProps = {
 const NAV_ITEMS: Array<{ href: string; label: string; route: PosterRoute }> = [
   { href: "/poster", label: "Home", route: "home" },
   { href: "/studio", label: "Studio", route: "studio" },
-  { href: "/georeference", label: "Georeference", route: "georeference" },
+  { href: "/georeference", label: "Georeferencer", route: "georeference" },
   { href: "/about", label: "About", route: "about" },
   { href: "/docs", label: "Docs", route: "docs" },
 ];
