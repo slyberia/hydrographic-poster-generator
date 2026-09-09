@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "slug": "guyana",
+  "country": "Guyana",
+  "country_code": "GY",
+  "geography_id": "3d43dc73-e0ba-4abf-ab0b-b73729f66a70",
+  "independent_reference": {
+    "publisher": "Guyana Lands and Surveys Commission",
+    "title": "Major Rivers",
+    "url": "https://factpage.glsc.gov.gy/major-rivers/"
+  },
+  "targets": [
+    {"name": "Essequibo River", "aliases": ["essequibo", "esequibo"], "queries": ["Essequibo River, Guyana", "Esequibo River, Guyana"]},
+    {"name": "Demerara River", "aliases": ["demerara"], "queries": ["Demerara River, Guyana"]},
+    {"name": "Berbice River", "aliases": ["berbice"], "queries": ["Berbice River, Guyana"]},
+    {"name": "Corentyne River", "aliases": ["corentyne", "courantyne", "corantijn"], "queries": ["Corentyne River, Guyana", "Courantyne River, Guyana", "Corantijn River, Suriname"]},
+    {"name": "Cuyuni River", "aliases": ["cuyuni", "cuyun"], "queries": ["Cuyuni River, Guyana"]},
+    {"name": "Mazaruni River", "aliases": ["mazaruni"], "queries": ["Mazaruni River, Guyana"]},
+    {"name": "Potaro River", "aliases": ["potaro"], "queries": ["Potaro River, Guyana"]},
+    {"name": "Rupununi River", "aliases": ["rupununi"], "queries": ["Rupununi River, Guyana"]}
+  ],
+  "unnamed_reach_evidence": {
+    "60031704": 54062300,
+    "60038486": 301513640,
+    "60038915": 301513640,
+    "60053006": 55946216,
+    "60062395": 54896501,
+    "60063183": 54896504,
+    "60085249": 378593043,
+    "60088075": 55503918,
+    "60091509": 55503920,
+    "60096166": 55503915
+  }
+}

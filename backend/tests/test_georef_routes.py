@@ -103,6 +103,26 @@ def test_guyana_name_manifest_and_immutable_dataset(client):
     save.assert_not_awaited()
 
 
+def test_belize_name_manifest_preserves_partial_evaluation(client):
+    c, save = client
+    manifest = build_manifest(network(), request())
+    manifest.source["geography_id"] = "3060e4d0-361c-4095-808e-bccfffb8426f"
+    with patch(
+        "app.repository.georef_repository.GeorefRepository.get_manifest",
+        new_callable=AsyncMock,
+        return_value=manifest,
+    ):
+        response = c.get(f"/georef/manifests/{manifest.poster_id}/river-names")
+
+    assert response.status_code == 200
+    assert response.json()["country"] == "Belize"
+    assert response.json()["coverage_status"] == "partial"
+    artifact = c.get(response.json()["artifact"]["url"])
+    assert artifact.status_code == 200
+    assert artifact.json()["metadata"]["country_code"] == "BZ"
+    save.assert_not_awaited()
+
+
 def test_embedded_provenance_upload_through_real_recovery(client):
     c, save = client
     clip = network()

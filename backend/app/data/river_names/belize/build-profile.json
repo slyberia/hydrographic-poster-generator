@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "slug": "belize",
+  "country": "Belize",
+  "country_code": "BZ",
+  "geography_id": "3060e4d0-361c-4095-808e-bccfffb8426f",
+  "independent_reference": {
+    "publisher": "Government of Belize",
+    "title": "National Hydrological Service river and watershed references",
+    "url": "https://naturalresources.gov.bz/index.php/faq-hydrology/",
+    "supporting_url": "https://naturalresources.gov.bz/wp-content/uploads/Flood-Forecast-June-20-2022.pdf"
+  },
+  "targets": [
+    {"name": "Rio Hondo", "aliases": ["rio hondo", "hondo river"], "queries": ["Rio Hondo, Belize", "Hondo River, Belize"]},
+    {"name": "New River", "aliases": ["new river"], "queries": ["New River, Belize"]},
+    {"name": "Belize River", "aliases": ["belize river", "belize old river"], "queries": ["Belize River, Belize", "Belize Old River, Belize"]},
+    {"name": "Mopan River", "aliases": ["mopan"], "queries": ["Mopan River, Belize"]},
+    {"name": "Macal River", "aliases": ["macal"], "queries": ["Macal River, Belize"]},
+    {"name": "Sibun River", "aliases": ["sibun"], "queries": ["Sibun River, Belize"]},
+    {"name": "Moho River", "aliases": ["moho"], "queries": ["Moho River, Belize"]},
+    {"name": "Sarstoon River", "aliases": ["sarstoon", "sarstun"], "queries": ["Sarstoon River, Belize", "Río Sarstún, Guatemala"]}
+  ],
+  "unnamed_reach_evidence": {}
+}

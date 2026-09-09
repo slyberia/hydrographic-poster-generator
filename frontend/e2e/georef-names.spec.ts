@@ -18,7 +18,7 @@ test("lazy Guyana names expose four color-coded, explicit states", async ({ page
       gcps: [], geotiff_base64: "", preview_base64: PNG, filename: "guyana.tif",
     });
     if (url.pathname.endsWith("/river-names")) return json({
-      country: "Guyana", country_code: "GY", dataset_version: "v1",
+      country: "Guyana", country_code: "GY", dataset_version: "v1", coverage_status: "partial",
       disclaimer: "River-name completeness varies by country and local mapping practice.",
       evaluation: { status: "passed", counts: { matched: 1, ambiguous: 1, unnamed_in_source: 1 } },
       artifact: { url: "/georef/river-names/guyana/v1", indexed_reach_count: 3, feature_count: 1 },
@@ -61,6 +61,10 @@ test("lazy Guyana names expose four color-coded, explicit states", async ({ page
   ]);
   await expect(map).toContainText("3 evaluated reach associations loaded");
   await expect(map).toContainText("completeness varies by country");
+  await expect(map).toContainText("Country evaluation: partial");
+  const downloadPromise = page.waitForEvent("download");
+  await map.getByRole("button", { name: "Download naming QC" }).click();
+  expect((await downloadPromise).suggestedFilename()).toBe("gy-river-naming-qc.json");
   await map.getByRole("button", { name: "Load rivers in view" }).click();
   const reaches = map.getByRole("combobox");
   await reaches.selectOption("1");

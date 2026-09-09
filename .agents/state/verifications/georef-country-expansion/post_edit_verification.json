@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-09T03:01:12.757798+00:00",
+  "phase_id": "georef-country-expansion",
+  "baseline_commit": "343c5fc78199b90474394e8048bba720fb37d324",
+  "approved_baseline_file": ".agents\\state\\baselines\\georef-country-expansion\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_georef_country_expansion.json",
+    ".agents/state/baselines/georef-country-expansion/backend.stderr.txt",
+    ".agents/state/baselines/georef-country-expansion/backend.stdout.txt",
+    ".agents/state/baselines/georef-country-expansion/baseline_approved.json",
+    ".agents/state/baselines/georef-country-expansion/baseline_review.md",
+    ".agents/state/baselines/georef-country-expansion/baseline_unapproved.md",
+    ".agents/state/baselines/georef-country-expansion/frontend_lint.stderr.txt",
+    ".agents/state/baselines/georef-country-expansion/frontend_lint.stdout.txt",
+    ".agents/state/baselines/georef-country-expansion/typescript.stderr.txt",
+    ".agents/state/baselines/georef-country-expansion/typescript.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/inventories/georef-country-expansion/boundaries.md",
+    ".agents/state/inventories/georef-country-expansion/references.json",
+    ".agents/state/verifications/georef-country-expansion/backend.xml",
+    "backend/app/data/river_names/belize/1601a5e8f1093db1050190856943a498c22150d103ddeedb935c8abe2c67b683.json",
+    "backend/app/data/river_names/belize/build-profile.json",
+    "backend/app/data/river_names/belize/evaluation.json",
+    "backend/app/data/river_names/belize/manifest.json",
+    "backend/app/data/river_names/belize/source-record.json",
+    "backend/app/data/river_names/guyana/build-profile.json",
+    "backend/app/services/river_name_service.py",
+    "backend/tests/test_georef_routes.py",
+    "backend/tests/test_river_names.py",
+    "docs/GEOREFERENCING_MVP.md",
+    "docs/GUYANA_RIVER_NAMES.md",
+    "docs/RIVER_NAME_COVERAGE.md",
+    "frontend/e2e/georef-names.spec.ts",
+    "frontend/src/components/GeorefMap.tsx",
+    "frontend/src/lib/georefApi.ts",
+    "scripts/build_river_name_artifact.py"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-country-expansion/backend.xml"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 17471.938,
+      "stdout_file": ".agents\\state\\verifications\\georef-country-expansion\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-country-expansion\\backend.stderr.txt",
+      "test_case_count": 234
+    },
+    {
+      "name": "typescript",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 10.766,
+      "stdout_file": ".agents\\state\\verifications\\georef-country-expansion\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-country-expansion\\typescript.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 16334.859,
+      "stdout_file": ".agents\\state\\verifications\\georef-country-expansion\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-country-expansion\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

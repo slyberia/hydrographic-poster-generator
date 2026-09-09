@@ -126,11 +126,12 @@ reload when the 250-reach cap is reached. Failed requests retain the last source
 overlay; clearing or closing cancels pending browser requests. Source geometry is
 viewport-clipped for display, not written back or used to alter QC/export.
 
-River naming remains **not evaluated**, including Guyana. No inferred name,
-probability, independently verified label or global naming coverage is claimed.
-The pilot needs a reproducible named reference and separately reviewed evaluation
-examples before name candidates can be released. Existing HydroRIVERS attributes
-are not a river-name catalog. See GEOREFERENCING_INSPECTION.md for phase evidence.
+River naming is an optional, country-evaluated inspection layer. Guyana is
+verified under the source-to-source pilot criteria and Belize is explicitly
+partial; unsupported reaches and countries remain `not_evaluated`. No inferred
+name or global completeness is claimed, and a naming match is not surveyed
+positional evidence. Existing HydroRIVERS attributes are not a river-name
+catalog. See `RIVER_NAME_COVERAGE.md` for evidence and expansion rules.
 
 ## Supabase persistence
 
