@@ -1,0 +1,84 @@
+{
+  "schema_version": 2,
+  "status": "warning",
+  "coverage_status": "partial",
+  "independent_reference": {
+    "publisher": "Government of Belize",
+    "title": "National Hydrological Service river and watershed references",
+    "url": "https://naturalresources.gov.bz/index.php/faq-hydrology/",
+    "supporting_url": "https://naturalresources.gov.bz/wp-content/uploads/Flood-Forecast-June-20-2022.pdf"
+  },
+  "target_summary": {
+    "evaluated": 8,
+    "passed": 7,
+    "failed": 1
+  },
+  "targets": {
+    "Rio Hondo": {
+      "source_object_count": 0,
+      "display_segment_count": 0,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "New River": {
+      "source_object_count": 3,
+      "display_segment_count": 3,
+      "matched_reach_count": 25,
+      "median_distance_m": 260.4,
+      "p95_distance_m": 2573.6
+    },
+    "Belize River": {
+      "source_object_count": 1,
+      "display_segment_count": 7,
+      "matched_reach_count": 58,
+      "median_distance_m": 172.9,
+      "p95_distance_m": 2913.4
+    },
+    "Mopan River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 3,
+      "median_distance_m": 1329.4,
+      "p95_distance_m": 3682.2
+    },
+    "Macal River": {
+      "source_object_count": 1,
+      "display_segment_count": 2,
+      "matched_reach_count": 27,
+      "median_distance_m": 124.6,
+      "p95_distance_m": 1277.7
+    },
+    "Sibun River": {
+      "source_object_count": 1,
+      "display_segment_count": 1152,
+      "matched_reach_count": 23,
+      "median_distance_m": 116.1,
+      "p95_distance_m": 2443.9
+    },
+    "Moho River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 26,
+      "median_distance_m": 254.9,
+      "p95_distance_m": 3239.2
+    },
+    "Sarstoon River": {
+      "source_object_count": 1,
+      "display_segment_count": 2,
+      "matched_reach_count": 16,
+      "median_distance_m": 179.4,
+      "p95_distance_m": 2658.5
+    }
+  },
+  "counts": {
+    "matched": 178,
+    "ambiguous": 5
+  },
+  "limitations": [
+    "This is source-to-source agreement, not surveyed ground truth.",
+    "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+    "Independent references validate the evaluation scope, not every OSM geometry or name.",
+    "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+  ]
+}

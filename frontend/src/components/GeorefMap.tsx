@@ -148,7 +148,10 @@ export default function GeorefMap({ viewer, posterId }: { viewer: GeorefViewer; 
       <dt>River name</dt><dd>{displayedName}</dd><dt>Name status</dt><dd style={{ color: STATUS[selectedStatus].color }} className="font-semibold">{STATUS[selectedStatus].label}</dd>
       {selectedRecord?.confidence != null && <><dt>Match confidence</dt><dd>{Math.round(selectedRecord.confidence * 100)}%</dd></>}
     </dl>}
-    {nameManifest && <><p className="text-xs">Pilot evaluation: {nameManifest.evaluation.status}. {nameManifest.disclaimer} © OpenStreetMap contributors, ODbL 1.0.</p>
-      <button type="button" className="glass-input" onClick={() => downloadJson(nameManifest.evaluation, "guyana-river-naming-qc.json")}>Download naming QC</button></>}
+    {nameManifest && <><p className="text-xs">Country evaluation: {nameManifest.coverage_status ?? nameManifest.evaluation.status}. {nameManifest.disclaimer} © OpenStreetMap contributors, ODbL 1.0.</p>
+      <button type="button" className="glass-input" onClick={() => downloadJson(
+        nameManifest.evaluation,
+        `${nameManifest.country_code.toLowerCase()}-river-naming-qc.json`,
+      )}>Download naming QC</button></>}
   </section>;
 }

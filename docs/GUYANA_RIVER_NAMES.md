@@ -40,7 +40,8 @@ always displays this disclaimer:
 
 ## Method and limitations
 
-`scripts/build_river_name_artifact.py` performs a bounded, offline source build:
+`scripts/build_river_name_artifact.py` performs a bounded, profile-driven
+offline source build:
 
 1. Retrieve and cache the eight target river systems from OSM/Nominatim at no
    more than one request per second.
@@ -58,8 +59,11 @@ be interpreted as positional error in either source.
 Rebuild deliberately, outside runtime traffic:
 
 ```text
-python scripts/build_river_name_artifact.py
+python scripts/build_river_name_artifact.py --country guyana
 ```
 
 The checked-in `manifest.json`, `evaluation.json`, `source-record.json` and
 content-addressed dataset make the released baseline inspectable and repeatable.
+Country-specific targets, aliases and independent reference metadata now live in
+`build-profile.json`; the matching algorithm is shared with subsequent country
+evaluations.

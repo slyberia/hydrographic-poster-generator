@@ -41,10 +41,11 @@ export interface RiverNameManifest {
   dataset_version: string;
   disclaimer: string;
   evaluation: { status: "passed" | "warning"; counts: Record<string, number> };
+  coverage_status?: "verified" | "partial" | "unavailable";
   artifact: { url: string; indexed_reach_count: number; feature_count: number };
 }
 export type RiverNameDataset = GeoJSON.FeatureCollection & {
-  metadata: { source: string; source_license: string; disclaimer: string; evaluated_systems: string[] };
+  metadata: { country: string; country_code: string; source: string; source_license: string; disclaimer: string; evaluated_systems: string[] };
   name_index: Record<string, RiverNameRecord>;
 };
 
