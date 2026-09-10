@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-10T18:49:58.539180+00:00",
+  "phase_id": "georef-artifact-delivery",
+  "baseline_commit": "fe5decf1f5a3f42a3455264835ae10c1ae715573",
+  "approved_baseline_file": ".agents\\state\\baselines\\georef-artifact-delivery\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_georef_artifact_delivery.json",
+    ".agents/state/baselines/georef-artifact-delivery/backend.stderr.txt",
+    ".agents/state/baselines/georef-artifact-delivery/backend.stdout.txt",
+    ".agents/state/baselines/georef-artifact-delivery/baseline_approved.json",
+    ".agents/state/baselines/georef-artifact-delivery/baseline_review.md",
+    ".agents/state/baselines/georef-artifact-delivery/baseline_unapproved.json",
+    ".agents/state/baselines/georef-artifact-delivery/baseline_unapproved.md",
+    ".agents/state/baselines/georef-artifact-delivery/frontend_lint.stderr.txt",
+    ".agents/state/baselines/georef-artifact-delivery/frontend_lint.stdout.txt",
+    ".agents/state/baselines/georef-artifact-delivery/typescript.stderr.txt",
+    ".agents/state/baselines/georef-artifact-delivery/typescript.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/georef-artifact-delivery/backend.stderr.txt",
+    ".agents/state/verifications/georef-artifact-delivery/backend.stdout.txt",
+    ".agents/state/verifications/georef-artifact-delivery/backend.xml",
+    ".agents/state/verifications/georef-artifact-delivery/frontend_lint.stderr.txt",
+    ".agents/state/verifications/georef-artifact-delivery/frontend_lint.stdout.txt",
+    ".agents/state/verifications/georef-artifact-delivery/post_edit_verification.json",
+    ".agents/state/verifications/georef-artifact-delivery/post_edit_verification.md",
+    ".agents/state/verifications/georef-artifact-delivery/typescript.stderr.txt",
+    ".agents/state/verifications/georef-artifact-delivery/typescript.stdout.txt",
+    "backend/app/routers/georef.py",
+    "backend/app/services/georef_artifact_delivery.py",
+    "backend/tests/test_georef_artifact_delivery.py",
+    "docs/GEOREFERENCING_PHASE_8_ARTIFACT_DELIVERY.md",
+    "scripts/build_georef_artifact.py"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-artifact-delivery/backend.xml"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 70.494,
+      "stdout_file": ".agents\\state\\verifications\\georef-artifact-delivery\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-artifact-delivery\\backend.stderr.txt",
+      "test_case_count": 241
+    },
+    {
+      "name": "typescript",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 1.855,
+      "stdout_file": ".agents\\state\\verifications\\georef-artifact-delivery\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-artifact-delivery\\typescript.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 8.154,
+      "stdout_file": ".agents\\state\\verifications\\georef-artifact-delivery\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-artifact-delivery\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

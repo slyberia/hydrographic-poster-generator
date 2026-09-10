@@ -74,6 +74,7 @@ async def get_manifest(poster_id: UUID, repo=Depends(get_repository)):
 @router.get("/manifests/{poster_id}/river-names")
 async def river_name_manifest(poster_id: UUID, response: Response, repo=Depends(get_repository)):
     from app.services.river_name_service import manifest_for_geography
+    from app.services.georef_artifact_delivery import delivered_artifact_url
     manifest = await GeorefRepository(repo.pool).get_manifest(poster_id)
     if manifest is None:
         raise HTTPException(404, "Poster manifest not found")
@@ -83,18 +84,25 @@ async def river_name_manifest(poster_id: UUID, response: Response, repo=Depends(
         )
     except FileNotFoundError as exc:
         raise HTTPException(404, str(exc)) from exc
+    version = payload.get("dataset_version")
+    if isinstance(version, str):
+        payload["artifact"]["url"] = delivered_artifact_url(
+            {"artifact": {"object_path": f"river-names/{payload['country']}/{version}.json"}},
+            payload["artifact"]["url"],
+        )
     response.headers["Cache-Control"] = "public, max-age=60, stale-while-revalidate=3600"
     return payload
 
 
 @router.get("/river-names/{country}/{version}")
 async def river_name_dataset(country: str, version: str, response: Response):
+    from app.services.georef_artifact_delivery import IMMUTABLE_CACHE_CONTROL
     from app.services.river_name_service import dataset
     try:
         payload = await run_in_threadpool(dataset, country, version)
     except FileNotFoundError as exc:
         raise HTTPException(404, str(exc)) from exc
-    response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    response.headers["Cache-Control"] = IMMUTABLE_CACHE_CONTROL
     return payload
 
 
