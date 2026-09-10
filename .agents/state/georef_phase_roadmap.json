@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "program_id": "hps-geospatial-georeferencing",
+  "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
+  "current_phase_id": "georef-recovery-calibration",
+  "current_phase_gate": "Phase 7 implementation is merged; country-level benchmark evidence and the Phase 7 closeout walkthrough remain before advancing.",
+  "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
+  "phases": [
+    {
+      "phase_id": "georef-recovery-calibration",
+      "phase_number": 7,
+      "name": "Recovery calibration and real-world benchmarking",
+      "status": "implementation_merged_closeout_pending",
+      "exit_requirements": [
+        "Run and record country-level benchmark evidence for Guyana, Belize, and Jamaica.",
+        "Complete the Phase 7 walkthrough, including scope, baseline comparison, verification, risks, rollback, and unresolved human decisions.",
+        "Keep benchmark results distinct from surveyed accuracy claims and preserve explicit partial or unavailable outcomes."
+      ]
+    },
+    {
+      "phase_id": "georef-artifact-delivery",
+      "phase_number": 8,
+      "name": "Reference artifact architecture and delivery",
+      "status": "planned_not_approved",
+      "depends_on": ["georef-recovery-calibration"],
+      "objective": "Establish immutable artifact manifests, GCS/CDN delivery and caching, versioned URLs, integrity checks, and a packaged offline fallback.",
+      "must_not_include": [
+        "Country coverage expansion",
+        "Database migrations",
+        "Runtime OSM/Nominatim or other scraping",
+        "Raw source dataset commits"
+      ]
+    },
+    {
+      "phase_id": "georef-geoparquet-foundation",
+      "phase_number": "8A",
+      "name": "GeoParquet reusable data-product foundation",
+      "status": "planned_not_approved",
+      "depends_on": ["georef-artifact-delivery"],
+      "must_complete_before": ["georef-caribbean-coverage", "georef-central-american-coverage", "georef-south-american-coverage"],
+      "objective": "Define and validate the canonical GeoParquet artifact for reusable geospatial and AI workflows, including schema, geometry encoding, CRS, precision, attributes, provenance, country partitioning, deterministic builds, hashes, and interoperability.",
+      "delivery_contract": "Use the canonical data product for downstream reuse; choose the browser delivery representation through a measured bakeoff. PMTiles/MVT may be a derived display artifact and GeoJSON may remain a debug/export representation rather than the canonical store.",
+      "required_validation": [
+        "Compare GeoParquet with FlatGeobuf and PMTiles/MVT for size, build cost, access pattern, and operational complexity.",
+        "Exercise the same artifact path intended for production Recovery matching and browser display.",
+        "Verify Python, R, and browser interoperability without forcing the browser to parse the canonical artifact if a derived display artifact is superior."
+      ],
+      "must_not_include": [
+        "Country coverage expansion",
+        "Database migrations unless separately approved by evidence",
+        "Recovery algorithm replacement unless Phase 7 evidence requires it",
+        "Raw source dataset commits"
+      ]
+    },
+    {
+      "phase_id": "georef-caribbean-coverage",
+      "phase_number": 9,
+      "name": "Caribbean country coverage batch",
+      "status": "planned_not_approved",
+      "depends_on": ["georef-geoparquet-foundation"],
+      "objective": "Build and benchmark bounded country increments using the established artifact and provenance contracts; weak countries may remain partial or unavailable."
+    },
+    {
+      "phase_id": "georef-central-american-coverage",
+      "phase_number": 10,
+      "name": "Central American country coverage batch",
+      "status": "planned_not_approved",
+      "depends_on": ["georef-geoparquet-foundation", "georef-caribbean-coverage"],
+      "objective": "Build and benchmark bounded country increments using the established artifact and provenance contracts; weak countries may remain partial or unavailable."
+    },
+    {
+      "phase_id": "georef-south-american-coverage",
+      "phase_number": 11,
+      "name": "South American country coverage batch",
+      "status": "planned_not_approved",
+      "depends_on": ["georef-geoparquet-foundation", "georef-central-american-coverage"],
+      "objective": "Build and benchmark bounded country increments using the established artifact and provenance contracts; weak countries may remain partial or unavailable."
+    },
+    {
+      "phase_id": "georef-program-closeout",
+      "phase_number": "final",
+      "name": "Georeferencing program closeout",
+      "status": "planned_not_approved",
+      "depends_on": ["georef-south-american-coverage"],
+      "objective": "Confirm the final supported-country inventory, artifact manifests and hashes, benchmark evidence, known limitations, operational fallback, documentation, and rollback procedures."
+    }
+  ],
+  "conditional_follow_ons": [
+    {
+      "name": "Field or surveyed accuracy validation",
+      "status": "not_scheduled",
+      "trigger": "Only if a separately approved accuracy objective and independent control data are established."
+    },
+    {
+      "name": "Recovery algorithm improvement",
+      "status": "not_scheduled",
+      "trigger": "Only if benchmark evidence demonstrates a production-relevant failure that the current algorithm cannot address."
+    },
+    {
+      "name": "Database or schema migration",
+      "status": "not_scheduled",
+      "trigger": "Only if the artifact/delivery design proves a migration is necessary; it requires its own explicit approval and rollback plan."
+    }
+  ],
+  "permanent_exclusions": [
+    "Runtime Nominatim or other live scraping",
+    "Committing raw source geospatial datasets",
+    "Representing source-name agreement as surveyed positional accuracy"
+  ]
+}
