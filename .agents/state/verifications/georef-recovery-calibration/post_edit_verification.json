@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-10T14:51:37.181962+00:00",
+  "phase_id": "georef-recovery-calibration",
+  "baseline_commit": "f933f9e5489340cd204ec84ec3aee007999f2188",
+  "approved_baseline_file": ".agents\\state\\baselines\\georef-recovery-calibration\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_georef_recovery_calibration.json",
+    ".agents/state/baselines/georef-recovery-calibration/backend.stderr.txt",
+    ".agents/state/baselines/georef-recovery-calibration/backend.stdout.txt",
+    ".agents/state/baselines/georef-recovery-calibration/baseline_approved.json",
+    ".agents/state/baselines/georef-recovery-calibration/baseline_unapproved.json",
+    ".agents/state/baselines/georef-recovery-calibration/baseline_unapproved.md",
+    ".agents/state/baselines/georef-recovery-calibration/frontend_lint.stderr.txt",
+    ".agents/state/baselines/georef-recovery-calibration/frontend_lint.stdout.txt",
+    ".agents/state/baselines/georef-recovery-calibration/typescript.stderr.txt",
+    ".agents/state/baselines/georef-recovery-calibration/typescript.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/georef-recovery-calibration/backend.stderr.txt",
+    ".agents/state/verifications/georef-recovery-calibration/backend.stdout.txt",
+    ".agents/state/verifications/georef-recovery-calibration/backend.xml",
+    ".agents/state/verifications/georef-recovery-calibration/frontend_lint.stderr.txt",
+    ".agents/state/verifications/georef-recovery-calibration/frontend_lint.stdout.txt",
+    ".agents/state/verifications/georef-recovery-calibration/full-backend.xml",
+    ".agents/state/verifications/georef-recovery-calibration/post_edit_verification.json",
+    ".agents/state/verifications/georef-recovery-calibration/post_edit_verification.md",
+    ".agents/state/verifications/georef-recovery-calibration/typescript.stderr.txt",
+    ".agents/state/verifications/georef-recovery-calibration/typescript.stdout.txt",
+    ".agents/state/verifications/georef-release/backend.stderr.txt",
+    ".agents/state/verifications/georef-release/backend.stdout.txt",
+    ".agents/state/verifications/georef-release/frontend_lint.stderr.txt",
+    ".agents/state/verifications/georef-release/frontend_lint.stdout.txt",
+    ".agents/state/verifications/georef-release/post_edit_verification.json",
+    ".agents/state/verifications/georef-release/post_edit_verification.md",
+    ".agents/state/verifications/georef-release/typescript.stderr.txt",
+    ".agents/state/verifications/georef-release/typescript.stdout.txt",
+    ".playwright-cli/console-2026-09-07T18-32-29-017Z.log",
+    ".playwright-cli/page-2026-09-07T18-32-29-515Z.yml",
+    ".playwright-cli/page-2026-09-07T18-32-58-629Z.yml",
+    ".playwright-cli/page-2026-09-07T18-33-15-765Z.yml",
+    ".playwright-cli/page-2026-09-07T18-33-49-222Z.yml",
+    "backend/app/services/georef_benchmark.py",
+    "backend/tests/test_georef_recovery.py",
+    "docs/GEOREFERENCING_PHASE_7_RECOVERY_CALIBRATION.md",
+    "work/browser-recovery.tif",
+    "work/georef-jamaica.json",
+    "work/georef-mobile.png",
+    "work/georef-native-browser.png",
+    "work/georef-recovery-browser.png",
+    "work/jamaica-poster.png",
+    "work/playwright-release.config.cjs"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-recovery-calibration/backend.xml"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 169.109,
+      "stdout_file": ".agents\\state\\verifications\\georef-recovery-calibration\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-recovery-calibration\\backend.stderr.txt",
+      "test_case_count": 237
+    },
+    {
+      "name": "typescript",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 7.515,
+      "stdout_file": ".agents\\state\\verifications\\georef-recovery-calibration\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-recovery-calibration\\typescript.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 26.985,
+      "stdout_file": ".agents\\state\\verifications\\georef-recovery-calibration\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-recovery-calibration\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

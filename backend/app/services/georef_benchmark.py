@@ -2,6 +2,8 @@
 
 import io
 from dataclasses import dataclass, asdict
+import time
+import tracemalloc
 import numpy as np
 import cv2
 from affine import Affine
@@ -25,6 +27,9 @@ class Recipe:
     scale_y: float = 1
     crop_fraction: float = 0
     jpeg_quality: int | None = None
+    shear_x: float = 0
+    shear_y: float = 0
+    perspective: bool = False
 
 
 RECIPES = [
@@ -33,6 +38,7 @@ RECIPES = [
     Recipe("rotation_90", rotation=90),
     Recipe("resize", scale_x=0.75, scale_y=0.75),
     Recipe("anisotropic", scale_x=0.85, scale_y=1.1),
+    Recipe("affine_shear", shear_x=8, shear_y=-4),
     Recipe("crop", crop_fraction=0.10),
     Recipe("jpeg", jpeg_quality=70),
     Recipe(
@@ -43,6 +49,7 @@ RECIPES = [
         crop_fraction=0.05,
         jpeg_quality=80,
     ),
+    Recipe("unsupported_perspective", perspective=True),
 ]
 
 
@@ -50,6 +57,7 @@ def alter(image, recipe):
     width, height = image.size
     transform = (
         Affine.rotation(recipe.rotation)
+        * Affine.shear(recipe.shear_x, recipe.shear_y)
         * Affine.scale(recipe.scale_x, recipe.scale_y)
         * Affine.translation(-width / 2, -height / 2)
     )
@@ -66,13 +74,27 @@ def alter(image, recipe):
     )
     rgba = np.asarray(image)
     border = tuple(int(v) for v in rgba[0, 0])
-    changed = cv2.warpAffine(
-        rgba,
-        np.array(list(cv_transform)[:6]).reshape(2, 3),
-        out_size,
-        flags=cv2.INTER_LINEAR,
-        borderValue=border,
-    )
+    if recipe.perspective:
+        source_corners = np.float32([[0, 0], [width, 0], [width, height], [0, height]])
+        destination_corners = np.float32([
+            [0.12 * width, 0.03 * height],
+            [0.91 * width, 0.00 * height],
+            [0.98 * width, 0.96 * height],
+            [0.02 * width, 1.00 * height],
+        ])
+        matrix = cv2.getPerspectiveTransform(source_corners, destination_corners)
+        changed = cv2.warpPerspective(
+            rgba, matrix, (width, height), flags=cv2.INTER_LINEAR, borderValue=border
+        )
+        out_size = (width, height)
+    else:
+        changed = cv2.warpAffine(
+            rgba,
+            np.array(list(cv_transform)[:6]).reshape(2, 3),
+            out_size,
+            flags=cv2.INTER_LINEAR,
+            borderValue=border,
+        )
     margin_x, margin_y = (
         int(out_size[0] * recipe.crop_fraction),
         int(out_size[1] * recipe.crop_fraction),
@@ -100,8 +122,16 @@ def evaluate(clip, request, recipes=RECIPES):
             "recipe": asdict(recipe),
             "truth_canonical_to_upload": list(truth)[:6],
         }
+        started = time.perf_counter()
+        tracemalloc.start()
         try:
             _, qc, _, _ = recover_result(image, clip, manifest, RecoveryOptions())
+            _, peak_memory = tracemalloc.get_traced_memory()
+            elapsed_ms = (time.perf_counter() - started) * 1000
+            if recipe.perspective:
+                record.update(status="false_accept", reason="Unsupported projective transform was accepted")
+                results.append(record)
+                continue
             recovered = Affine(*qc.metrics["canonical_to_upload"])
             left, top, right, bottom = frame_box(manifest)
             grid = np.array(
@@ -137,14 +167,76 @@ def evaluate(clip, request, recipes=RECIPES):
                         95,
                     )
                 ),
+                runtime_ms=elapsed_ms,
+                peak_memory_bytes=peak_memory,
             )
         except ValueError as exc:
-            record.update(status="failed", reason=str(exc))
+            record.update(
+                status="rejected" if recipe.perspective else "failed",
+                reason=str(exc),
+                runtime_ms=(time.perf_counter() - started) * 1000,
+                peak_memory_bytes=tracemalloc.get_traced_memory()[1],
+            )
+        finally:
+            tracemalloc.stop()
         results.append(record)
+    supported = [r for r in results if not r["recipe"].get("perspective")]
+    accepted = [r for r in supported if r["status"] == "passed"]
+    false_accepts = [r for r in results if r["status"] == "false_accept"]
+    accepted_errors = [r["p95_error_pixels"] for r in accepted]
     return {
-        "version": 1,
+        "version": 2,
         "source_reference": manifest.hydro_rivers_reference,
         "renderer": manifest.generator,
         "recipes": results,
+        "summary": {
+            "supported_case_count": len(supported),
+            "successful_recovery_count": len(accepted),
+            "successful_recovery_rate": len(accepted) / max(1, len(supported)),
+            "false_accept_count": len(false_accepts),
+            "false_reject_count": sum(r["status"] == "failed" for r in supported),
+            "accepted_p95_error_pixels": {
+                "count": len(accepted_errors),
+                "p95": float(np.percentile(accepted_errors, 95)) if accepted_errors else None,
+            },
+            "accuracy_boundaries": {
+                "source_network_agreement": "Measured by independent raster-to-source network comparison.",
+                "registration_accuracy": "Measured by independent benchmark transforms in uploaded-image pixels.",
+                "surveyed_absolute_accuracy": "Not measured; no surveyed ground-control reference is supplied.",
+                "physical_capture_validation": "Not measured; cases are procedurally simulated, not field scans or photos.",
+            },
+        },
         "retention": "Recipes and numeric results only; derivative images discarded",
+    }
+
+
+def evaluate_wrong_source(source_clip, wrong_clip, request):
+    """Evaluate a wrong-source negative without retaining either raster derivative."""
+    wrong_manifest = build_manifest(wrong_clip, request)
+    image = render_poster(source_clip, request)
+    started = time.perf_counter()
+    tracemalloc.start()
+    try:
+        recover_result(image, wrong_clip, wrong_manifest, RecoveryOptions())
+    except ValueError as exc:
+        return {
+            "case": "wrong_source",
+            "status": "rejected",
+            "reason": str(exc),
+            "runtime_ms": (time.perf_counter() - started) * 1000,
+            "peak_memory_bytes": tracemalloc.get_traced_memory()[1],
+            "source_identity": "different clip from expected manifest",
+            "surveyed_absolute_accuracy": "not measured",
+        }
+    finally:
+        peak_memory = tracemalloc.get_traced_memory()[1]
+        tracemalloc.stop()
+    return {
+        "case": "wrong_source",
+        "status": "false_accept",
+        "reason": "Recovery accepted a raster against a different source network",
+        "runtime_ms": (time.perf_counter() - started) * 1000,
+        "peak_memory_bytes": peak_memory,
+        "source_identity": "different clip from expected manifest",
+        "surveyed_absolute_accuracy": "not measured",
     }
