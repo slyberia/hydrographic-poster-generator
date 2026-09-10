@@ -3,7 +3,7 @@ from PIL import Image
 from app.models.georef_models import RecoveryOptions, GroundControlPoint
 from app.services.georef_service import build_manifest
 from app.services.georef_recovery import recover_result, fit_registration
-from app.services.georef_benchmark import Recipe, evaluate
+from app.services.georef_benchmark import Recipe, evaluate, evaluate_wrong_source
 from test_georef_pipeline import network, request
 
 
@@ -16,6 +16,7 @@ from test_georef_pipeline import network, request
         Recipe("resized", scale_x=0.75, scale_y=0.75),
         Recipe("cropped", crop_fraction=0.1),
         Recipe("anisotropic", scale_x=0.85, scale_y=1.1),
+        Recipe("affine_shear", shear_x=8, shear_y=-4),
         Recipe("jpeg", jpeg_quality=70),
         Recipe(
             "combined",
@@ -68,3 +69,23 @@ def test_outside_image_gcps_are_rejected_before_fitting():
     ]
     with pytest.raises(ValueError, match="inside"):
         fit_registration(points, m, "affine", (1200, 1200))
+
+
+def test_benchmark_reports_phase7_evidence_and_rejects_projective_case():
+    result = evaluate(
+        network(), request(), [Recipe("shear", shear_x=8), Recipe("perspective", perspective=True)]
+    )
+    assert result["summary"]["successful_recovery_rate"] == 1
+    assert result["summary"]["false_accept_count"] == 0
+    assert result["summary"]["accuracy_boundaries"]["physical_capture_validation"].startswith("Not measured")
+    assert result["recipes"][1]["status"] == "rejected"
+    assert result["recipes"][0]["runtime_ms"] >= 0
+    assert result["recipes"][0]["peak_memory_bytes"] > 0
+
+
+def test_wrong_source_is_a_measured_negative():
+    source = network()
+    wrong = network()
+    wrong.features = wrong.features[:8]
+    result = evaluate_wrong_source(source, wrong, request())
+    assert result["status"] == "rejected", result
