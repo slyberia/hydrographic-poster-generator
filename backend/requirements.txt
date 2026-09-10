@@ -14,3 +14,4 @@ scipy==1.15.3
 opencv-python-headless==4.12.0.88
 Pillow==11.3.0
 pyproj==3.7.2
+pyarrow==25.0.1
