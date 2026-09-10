@@ -24,6 +24,14 @@ Phase 8 delivery, Phase 8A GeoParquet architecture, country expansion, database 
   - Command: `C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe -m pytest backend/tests/test_georef_recovery.py -q -rs`
   - Result: `14 passed in 79.98s`
 - The suite covers unchanged, rotation, resize, crop, JPEG degradation, anisotropic scaling, affine shear, combined degradation, unsupported projective distortion, wrong-source rejection, blank-image fail-closed behavior, collinear-control rejection, and out-of-image control rejection.
+- The authorized live Guyana benchmark completed on 2026-09-10:
+  - Report: `.agents/state/verifications/georef-recovery-calibration/guyana-benchmark.json`
+  - Source: HydroRIVERS `hydro_rivers`, stream order `>= 3`, `6,635` features.
+  - Supported cases: `9/9` passed; successful-recovery rate `1.0`.
+  - Negative cases: `0` false accepts, `0` false rejects; unsupported perspective was rejected.
+  - Accepted-case p95 independent error: `0.74181004127336` uploaded-image pixels.
+  - Per-case runtime: approximately `12.98–18.99` seconds; peak traced Python memory: approximately `236.7–329.5 MB`.
+  - Report SHA-256: `46CC9B5B09D9406D97A70E9734DC84B0401A42EB09B168BDA536DFEF618559EF`.
 
 ### Existing country-level evidence
 
@@ -40,10 +48,11 @@ Phase 8 delivery, Phase 8A GeoParquet architecture, country expansion, database 
 - The benchmark does not claim surveyed absolute accuracy or physical capture validation.
 - The repository preflight passes with the roadmap and walkthrough changes committed within the approved Phase 7 paths.
 
-### Remaining closeout gate
+### Closeout determination
 
-- A committed, country-specific Guyana Recovery benchmark report was not found in the current repository or Phase 7 verification directory.
-- Phase 7 should remain `closeout_pending` until Guyana evidence is either generated through the approved offline/live benchmark workflow or explicitly waived by human review with a documented rationale.
+- The Guyana-specific evidence gate is satisfied by the authorized live run and retained numeric report.
+- Results meet the Phase 7 initial targets: zero false accepts for the unsupported-projective case, at least 95% supported-case success, and accepted-case p95 error no greater than eight uploaded-image pixels.
+- The result is still provisional calibration evidence; it is not surveyed absolute accuracy or physical-capture validation.
 
 ## Risks and rollback
 
@@ -54,9 +63,9 @@ Phase 8 delivery, Phase 8A GeoParquet architecture, country expansion, database 
 ## Exit criteria
 
 - Implementation and regression criteria: pass.
-- Country-level evidence criteria: pending Guyana-specific report or explicit human waiver.
-- Phase status: not yet closed.
+- Country-level evidence criteria: pass; Guyana report retained at the path above.
+- Phase status: closeout-ready, pending human review and merge of the closeout PR.
 
 ## Next action
 
-Generate and review the Guyana country-level report using the same benchmark path as the Jamaica and Belize evidence. Once that gate passes, update this walkthrough with the report identity and numeric results, mark Phase 7 closed, and prepare the Phase 7 closeout PR. Do not begin Phase 8 or Phase 8A automatically.
+Review and merge the Phase 7 closeout PR containing this walkthrough and the retained Guyana numeric report. Do not begin Phase 8 or Phase 8A automatically; they remain separately gated planned phases.

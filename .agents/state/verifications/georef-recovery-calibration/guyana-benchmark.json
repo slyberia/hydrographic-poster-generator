@@ -1,0 +1,1440 @@
+{
+  "version": 2,
+  "source_reference": {
+    "table": "hydro_rivers",
+    "id_field": "hydrorivers_id",
+    "geography_id": "3d43dc73-e0ba-4abf-ab0b-b73729f66a70",
+    "min_stream_order": 3,
+    "feature_count": 6635,
+    "feature_ids_sha256": "5f1ecda83245b468b05568bf0e77b728a1487deaec7e6791415aa315b4bd1eda",
+    "geometry_in_manifest": false
+  },
+  "renderer": {
+    "name": "hydrographic-poster-generator",
+    "version": "georef-2"
+  },
+  "recipes": [
+    {
+      "recipe": {
+        "name": "unchanged",
+        "rotation": 0,
+        "scale_x": 1,
+        "scale_y": 1,
+        "crop_fraction": 0,
+        "jpeg_quality": null,
+        "shear_x": 0,
+        "shear_y": 0,
+        "perspective": false
+      },
+      "truth_canonical_to_upload": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "status": "passed",
+      "transformation": "similarity",
+      "qc": {
+        "version": "network-v2",
+        "qc_width": 1158,
+        "qc_height": 1558,
+        "thresholds": {
+          "pass_network_f1": 0.85,
+          "review_network_f1": 0.6,
+          "tolerance_qc_px": 3
+        },
+        "threshold_status": "provisional; evaluate on regional benchmarks",
+        "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+          "registration_basis": "matched_correspondences",
+          "independent_transform_accuracy": {
+            "status": "not_measured"
+          },
+          "absolute_geographic_accuracy": {
+            "status": "not_measured",
+            "reason": "No independent surveyed reference supplied"
+          },
+          "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability"
+        },
+        "tolerance_ground_m": {
+          "min": 1553.6197148482895,
+          "max": 1582.009262450617,
+          "method": "sampled across preview and directions; approximate range"
+        },
+        "out_of_frame_vertices_measured": true,
+        "network_precision": 1.0,
+        "network_recall": 1.0,
+        "network_f1": 1.0,
+        "network_displacement": {
+          "count": 10000,
+          "median_m": 0.0,
+          "rmse_m": 10.418798771746564,
+          "p95_m": 0.0,
+          "max_m": 525.4023962304412
+        },
+        "network_p95_qc_px": 0.0,
+        "coverage_fraction": 0.02185499766096652,
+        "withheld_rejected_count": 0,
+        "withheld_reporting": "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request.",
+        "withheld": {
+          "count": 50,
+          "median_m": 17.82364954302858,
+          "rmse_m": 71.38485163989988,
+          "p95_m": 111.23019363988014,
+          "max_m": 365.97345894938445
+        },
+        "withheld_pixels": {
+          "count": 50,
+          "median": 0.03398232946025189,
+          "rmse": 0.1367985847816914,
+          "p95": 0.21288480334596088
+        },
+        "withheld_verified": {
+          "count": 50,
+          "median_m": 17.82364954302858,
+          "rmse_m": 71.38485163989988,
+          "p95_m": 111.23019363988014,
+          "max_m": 365.97345894938445
+        },
+        "withheld_verified_pixels": {
+          "count": 50,
+          "median": 0.03398232946025189,
+          "rmse": 0.1367985847816914,
+          "p95": 0.21288480334596088
+        },
+        "fit": {
+          "count": 150,
+          "median_m": 21.263959420182566,
+          "rmse_m": 74.84470464438284,
+          "p95_m": 174.90629544584635,
+          "max_m": 264.10991410539077
+        },
+        "fit_pixels": {
+          "count": 150,
+          "median": 0.040417338007458795,
+          "rmse": 0.14309339678367142,
+          "p95": 0.33326766658104834
+        },
+        "inlier_count": 150,
+        "withheld_count": 50,
+        "withheld_match_ratio": 1.0,
+        "withheld_median_px": 0.03398232945997048,
+        "landmark_coverage": 0.48113405397840364,
+        "input_crop": [
+          310,
+          421,
+          1468,
+          1979
+        ],
+        "canonical_to_upload": [
+          1.0000331698698686,
+          2.5532605515910726e-06,
+          -0.03372141735799841,
+          -2.5532605515910726e-06,
+          1.0000331698698686,
+          -0.0349478657431021
+        ],
+        "gcp_residual_units": "uploaded pixels",
+        "gcps_coordinate_space": "output cropped raster pixel edges",
+        "raster": {
+          "crs": "EPSG:3857",
+          "width": 1158,
+          "height": 1558,
+          "pixel_to_world": [
+            527.0868219641713,
+            -0.0013457453515864372,
+            -6866684.5721404515,
+            -0.0013457453515864372,
+            -527.0868219641713,
+            952973.778900114
+          ],
+          "coordinate_convention": "pixel_edges"
+        }
+      },
+      "independent_grid": {
+        "count": 81,
+        "median_m": 10.49909894081159,
+        "rmse_m": 10.978591038290817,
+        "p95_m": 16.19593696506864,
+        "max_m": 18.384808896752038
+      },
+      "p95_error_pixels": 0.03116659681603783,
+      "runtime_ms": 17843.510200007586,
+      "peak_memory_bytes": 269891431
+    },
+    {
+      "recipe": {
+        "name": "rotation_17",
+        "rotation": 17,
+        "scale_x": 1,
+        "scale_y": 1,
+        "crop_fraction": 0,
+        "jpeg_quality": null,
+        "shear_x": 0,
+        "shear_y": 0,
+        "perspective": false
+      },
+      "truth_canonical_to_upload": [
+        0.9563047559630354,
+        -0.29237170472273677,
+        701.8022408968558,
+        0.29237170472273677,
+        0.9563047559630354,
+        0.5369290661681134
+      ],
+      "status": "passed",
+      "transformation": "similarity",
+      "qc": {
+        "version": "network-v2",
+        "qc_width": 1367,
+        "qc_height": 1600,
+        "thresholds": {
+          "pass_network_f1": 0.85,
+          "review_network_f1": 0.6,
+          "tolerance_qc_px": 3
+        },
+        "threshold_status": "provisional; evaluate on regional benchmarks",
+        "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+          "registration_basis": "matched_correspondences",
+          "independent_transform_accuracy": {
+            "status": "not_measured"
+          },
+          "absolute_geographic_accuracy": {
+            "status": "not_measured",
+            "reason": "No independent surveyed reference supplied"
+          },
+          "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability"
+        },
+        "tolerance_ground_m": {
+          "min": 1767.6241315356563,
+          "max": 1808.9939073911949,
+          "method": "sampled across preview and directions; approximate range"
+        },
+        "out_of_frame_vertices_measured": true,
+        "network_precision": 1.0,
+        "network_recall": 1.0,
+        "network_f1": 1.0,
+        "network_displacement": {
+          "count": 10000,
+          "median_m": 0.0,
+          "rmse_m": 27.470634074813354,
+          "p95_m": 0.0,
+          "max_m": 601.8544154748599
+        },
+        "network_p95_qc_px": 0.0,
+        "coverage_fraction": 0.016497805413313825,
+        "withheld_rejected_count": 0,
+        "withheld_reporting": "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request.",
+        "withheld": {
+          "count": 50,
+          "median_m": 325.6331205862547,
+          "rmse_m": 458.04693102486203,
+          "p95_m": 787.9380770833927,
+          "max_m": 1236.0670801614328
+        },
+        "withheld_pixels": {
+          "count": 50,
+          "median": 0.6209900654353329,
+          "rmse": 0.8749772430512684,
+          "p95": 1.4980244776430771
+        },
+        "withheld_verified": {
+          "count": 50,
+          "median_m": 325.6331205862547,
+          "rmse_m": 458.04693102486203,
+          "p95_m": 787.9380770833927,
+          "max_m": 1236.0670801614328
+        },
+        "withheld_verified_pixels": {
+          "count": 50,
+          "median": 0.6209900654353329,
+          "rmse": 0.8749772430512684,
+          "p95": 1.4980244776430771
+        },
+        "fit": {
+          "count": 150,
+          "median_m": 327.2861177450468,
+          "rmse_m": 432.5461812224663,
+          "p95_m": 805.012548621817,
+          "max_m": 1066.707747919497
+        },
+        "fit_pixels": {
+          "count": 150,
+          "median": 0.62563548428616,
+          "rmse": 0.8264301425663759,
+          "p95": 1.540446878100698
+        },
+        "inlier_count": 150,
+        "withheld_count": 50,
+        "withheld_match_ratio": 1.0,
+        "withheld_median_px": 0.6209900654348137,
+        "landmark_coverage": 0.4715413445231006,
+        "input_crop": [
+          420,
+          494,
+          1982,
+          2322
+        ],
+        "canonical_to_upload": [
+          0.9564937557533113,
+          -0.29247309400891536,
+          701.9059968118197,
+          0.29247309400891536,
+          0.9564937557533113,
+          0.2142662861391933
+        ],
+        "gcp_residual_units": "uploaded pixels",
+        "gcps_coordinate_space": "output cropped raster pixel edges",
+        "raster": {
+          "crs": "EPSG:3857",
+          "width": 1562,
+          "height": 1828,
+          "pixel_to_world": [
+            503.9599025704929,
+            154.09897981523056,
+            -7096076.13533293,
+            154.09897981523056,
+            -503.9599025704929,
+            882606.531967325
+          ],
+          "coordinate_convention": "pixel_edges"
+        }
+      },
+      "independent_grid": {
+        "count": 81,
+        "median_m": 102.31485395955684,
+        "rmse_m": 105.29156970822005,
+        "p95_m": 156.63867150540878,
+        "max_m": 182.67263678898553
+      },
+      "p95_error_pixels": 0.29998436498778985,
+      "runtime_ms": 18994.886500004213,
+      "peak_memory_bytes": 329519361
+    },
+    {
+      "recipe": {
+        "name": "rotation_90",
+        "rotation": 90,
+        "scale_x": 1,
+        "scale_y": 1,
+        "crop_fraction": 0,
+        "jpeg_quality": null,
+        "shear_x": 0,
+        "shear_y": 0,
+        "perspective": false
+      },
+      "truth_canonical_to_upload": [
+        0.0,
+        -1.0,
+        2400.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "status": "passed",
+      "transformation": "similarity",
+      "qc": {
+        "version": "network-v2",
+        "qc_width": 1557,
+        "qc_height": 1157,
+        "thresholds": {
+          "pass_network_f1": 0.85,
+          "review_network_f1": 0.6,
+          "tolerance_qc_px": 3
+        },
+        "threshold_status": "provisional; evaluate on regional benchmarks",
+        "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+          "registration_basis": "matched_correspondences",
+          "independent_transform_accuracy": {
+            "status": "not_measured"
+          },
+          "absolute_geographic_accuracy": {
+            "status": "not_measured",
+            "reason": "No independent surveyed reference supplied"
+          },
+          "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability"
+        },
+        "tolerance_ground_m": {
+          "min": 1553.6812731561506,
+          "max": 1582.0569599809896,
+          "method": "sampled across preview and directions; approximate range"
+        },
+        "out_of_frame_vertices_measured": true,
+        "network_precision": 1.0,
+        "network_recall": 1.0,
+        "network_f1": 1.0,
+        "network_displacement": {
+          "count": 10000,
+          "median_m": 0.0,
+          "rmse_m": 252.84861272080082,
+          "p95_m": 522.922522248484,
+          "max_m": 523.4515357987324
+        },
+        "network_p95_qc_px": 1.0,
+        "coverage_fraction": 0.02190403391936158,
+        "withheld_rejected_count": 0,
+        "withheld_reporting": "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request.",
+        "withheld": {
+          "count": 50,
+          "median_m": 90.34379714688299,
+          "rmse_m": 184.08089199399396,
+          "p95_m": 335.65332992823375,
+          "max_m": 600.2159088193067
+        },
+        "withheld_pixels": {
+          "count": 50,
+          "median": 0.17256938481477943,
+          "rmse": 0.3518334346496201,
+          "p95": 0.6413218749230181
+        },
+        "withheld_verified": {
+          "count": 50,
+          "median_m": 90.34379714688299,
+          "rmse_m": 184.08089199399396,
+          "p95_m": 335.65332992823375,
+          "max_m": 600.2159088193067
+        },
+        "withheld_verified_pixels": {
+          "count": 50,
+          "median": 0.17256938481477943,
+          "rmse": 0.3518334346496201,
+          "p95": 0.6413218749230181
+        },
+        "fit": {
+          "count": 150,
+          "median_m": 93.30705809756516,
+          "rmse_m": 147.65969368838597,
+          "p95_m": 271.3911083450416,
+          "max_m": 555.34603738871
+        },
+        "fit_pixels": {
+          "count": 150,
+          "median": 0.17848124000595586,
+          "rmse": 0.28227003712340915,
+          "p95": 0.5200132190854918
+        },
+        "inlier_count": 150,
+        "withheld_count": 50,
+        "withheld_match_ratio": 1.0,
+        "withheld_median_px": 0.17256938481394796,
+        "landmark_coverage": 0.4453325119149418,
+        "input_crop": [
+          422,
+          310,
+          1979,
+          1467
+        ],
+        "canonical_to_upload": [
+          -8.017244031500412e-06,
+          -1.0000022307512577,
+          2400.7535398347914,
+          1.0000022307512577,
+          -8.017244031500412e-06,
+          -0.003572232571568912
+        ],
+        "gcp_residual_units": "uploaded pixels",
+        "gcps_coordinate_space": "output cropped raster pixel edges",
+        "raster": {
+          "crs": "EPSG:3857",
+          "width": 1557,
+          "height": 1157,
+          "pixel_to_world": [
+            -0.0042259049920185905,
+            527.1031294990523,
+            -6866686.479354093,
+            527.1031294990523,
+            0.0042259049920185905,
+            131890.295424356
+          ],
+          "coordinate_convention": "pixel_edges"
+        }
+      },
+      "independent_grid": {
+        "count": 81,
+        "median_m": 387.8842491574953,
+        "rmse_m": 387.8180921181199,
+        "p95_m": 390.6475785953337,
+        "max_m": 391.1469693263108
+      },
+      "p95_error_pixels": 0.748883361001532,
+      "runtime_ms": 17657.87160000764,
+      "peak_memory_bytes": 258419149
+    },
+    {
+      "recipe": {
+        "name": "resize",
+        "rotation": 0,
+        "scale_x": 0.75,
+        "scale_y": 0.75,
+        "crop_fraction": 0,
+        "jpeg_quality": null,
+        "shear_x": 0,
+        "shear_y": 0,
+        "perspective": false
+      },
+      "truth_canonical_to_upload": [
+        0.75,
+        0.0,
+        0.0,
+        0.0,
+        0.75,
+        0.0
+      ],
+      "status": "passed",
+      "transformation": "similarity",
+      "qc": {
+        "version": "network-v2",
+        "qc_width": 868,
+        "qc_height": 1168,
+        "thresholds": {
+          "pass_network_f1": 0.85,
+          "review_network_f1": 0.6,
+          "tolerance_qc_px": 3
+        },
+        "threshold_status": "provisional; evaluate on regional benchmarks",
+        "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+          "registration_basis": "matched_correspondences",
+          "independent_transform_accuracy": {
+            "status": "not_measured"
+          },
+          "absolute_geographic_accuracy": {
+            "status": "not_measured",
+            "reason": "No independent surveyed reference supplied"
+          },
+          "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability"
+        },
+        "tolerance_ground_m": {
+          "min": 2071.542080041468,
+          "max": 2109.397254829263,
+          "method": "sampled across preview and directions; approximate range"
+        },
+        "out_of_frame_vertices_measured": true,
+        "network_precision": 1.0,
+        "network_recall": 1.0,
+        "network_f1": 1.0,
+        "network_displacement": {
+          "count": 10000,
+          "median_m": 0.0,
+          "rmse_m": 61.146881065884436,
+          "p95_m": 0.0,
+          "max_m": 702.351547523175
+        },
+        "network_p95_qc_px": 0.0,
+        "coverage_fraction": 0.029106629947604316,
+        "withheld_rejected_count": 0,
+        "withheld_reporting": "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request.",
+        "withheld": {
+          "count": 50,
+          "median_m": 101.71816826019744,
+          "rmse_m": 176.44342238983688,
+          "p95_m": 348.4183819439874,
+          "max_m": 562.6109758673266
+        },
+        "withheld_pixels": {
+          "count": 50,
+          "median": 0.1459207022740987,
+          "rmse": 0.2525510793441382,
+          "p95": 0.49706512821339094
+        },
+        "withheld_verified": {
+          "count": 50,
+          "median_m": 101.71816826019744,
+          "rmse_m": 176.44342238983688,
+          "p95_m": 348.4183819439874,
+          "max_m": 562.6109758673266
+        },
+        "withheld_verified_pixels": {
+          "count": 50,
+          "median": 0.1459207022740987,
+          "rmse": 0.2525510793441382,
+          "p95": 0.49706512821339094
+        },
+        "fit": {
+          "count": 150,
+          "median_m": 98.42653172684389,
+          "rmse_m": 174.6305055977027,
+          "p95_m": 355.9023108963455,
+          "max_m": 616.3369711050353
+        },
+        "fit_pixels": {
+          "count": 150,
+          "median": 0.1410125333665684,
+          "rmse": 0.2505355807663513,
+          "p95": 0.5122863592768421
+        },
+        "inlier_count": 150,
+        "withheld_count": 50,
+        "withheld_match_ratio": 1.0,
+        "withheld_median_px": 0.14592070227437015,
+        "landmark_coverage": 0.4474483797080697,
+        "input_crop": [
+          233,
+          316,
+          1101,
+          1484
+        ],
+        "canonical_to_upload": [
+          0.7500058743923264,
+          -1.6257738306711548e-05,
+          0.0046025966170526456,
+          1.6257738306711548e-05,
+          0.7500058743923264,
+          -0.05839873087683767
+        ],
+        "gcp_residual_units": "uploaded pixels",
+        "gcps_coordinate_space": "output cropped raster pixel edges",
+        "raster": {
+          "crs": "EPSG:3857",
+          "width": 868,
+          "height": 1168,
+          "pixel_to_world": [
+            702.8002354625511,
+            0.015234470422385689,
+            -6866344.659319113,
+            0.015234470422385689,
+            -702.8002354625511,
+            952773.8012464717
+          ],
+          "coordinate_convention": "pixel_edges"
+        }
+      },
+      "independent_grid": {
+        "count": 81,
+        "median_m": 27.14180556820843,
+        "rmse_m": 27.579262255237243,
+        "p95_m": 33.868263231619814,
+        "max_m": 35.13748421069429
+      },
+      "p95_error_pixels": 0.048516134928596334,
+      "runtime_ms": 14166.715899991686,
+      "peak_memory_bytes": 236701592
+    },
+    {
+      "recipe": {
+        "name": "anisotropic",
+        "rotation": 0,
+        "scale_x": 0.85,
+        "scale_y": 1.1,
+        "crop_fraction": 0,
+        "jpeg_quality": null,
+        "shear_x": 0,
+        "shear_y": 0,
+        "perspective": false
+      },
+      "truth_canonical_to_upload": [
+        0.85,
+        0.0,
+        0.0,
+        0.0,
+        1.1,
+        0.0
+      ],
+      "status": "passed",
+      "transformation": "affine",
+      "qc": {
+        "version": "network-v2",
+        "qc_width": 918,
+        "qc_height": 1600,
+        "thresholds": {
+          "pass_network_f1": 0.85,
+          "review_network_f1": 0.6,
+          "tolerance_qc_px": 3
+        },
+        "threshold_status": "provisional; evaluate on regional benchmarks",
+        "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+          "registration_basis": "matched_correspondences",
+          "independent_transform_accuracy": {
+            "status": "not_measured"
+          },
+          "absolute_geographic_accuracy": {
+            "status": "not_measured",
+            "reason": "No independent surveyed reference supplied"
+          },
+          "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability"
+        },
+        "tolerance_ground_m": {
+          "min": 1512.0340619730175,
+          "max": 1993.3468915277494,
+          "method": "sampled across preview and directions; approximate range"
+        },
+        "out_of_frame_vertices_measured": true,
+        "network_precision": 1.0,
+        "network_recall": 1.0,
+        "network_f1": 1.0,
+        "network_displacement": {
+          "count": 10000,
+          "median_m": 0.0,
+          "rmse_m": 23.104966438034207,
+          "p95_m": 0.0,
+          "max_m": 664.2810086189364
+        },
+        "network_p95_qc_px": 0.0,
+        "coverage_fraction": 0.024500953159041394,
+        "withheld_rejected_count": 0,
+        "withheld_reporting": "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request.",
+        "withheld": {
+          "count": 50,
+          "median_m": 542.5593544185972,
+          "rmse_m": 816.8062547551796,
+          "p95_m": 1667.1717558989776,
+          "max_m": 2305.6077616283746
+        },
+        "withheld_pixels": {
+          "count": 50,
+          "median": 0.9546293488154516,
+          "rmse": 1.5173924855185077,
+          "p95": 3.1547116506035233
+        },
+        "withheld_verified": {
+          "count": 50,
+          "median_m": 542.5593544185972,
+          "rmse_m": 816.8062547551796,
+          "p95_m": 1667.1717558989776,
+          "max_m": 2305.6077616283746
+        },
+        "withheld_verified_pixels": {
+          "count": 50,
+          "median": 0.9546293488154516,
+          "rmse": 1.5173924855185077,
+          "p95": 3.1547116506035233
+        },
+        "fit": {
+          "count": 145,
+          "median_m": 508.2323008344906,
+          "rmse_m": 747.6195387585464,
+          "p95_m": 1378.8825928731244,
+          "max_m": 2534.1782810347877
+        },
+        "fit_pixels": {
+          "count": 145,
+          "median": 0.9410571716207916,
+          "rmse": 1.3750965972104652,
+          "p95": 2.60997996717786
+        },
+        "inlier_count": 145,
+        "withheld_count": 50,
+        "withheld_match_ratio": 1.0,
+        "withheld_median_px": 0.9546293488145112,
+        "landmark_coverage": 0.5001739003654418,
+        "input_crop": [
+          264,
+          464,
+          1247,
+          2177
+        ],
+        "canonical_to_upload": [
+          0.8498679442885134,
+          -9.707490020741886e-06,
+          0.24391983628640979,
+          0.00016720489696003154,
+          1.1001187062301505,
+          -0.25243017214103913
+        ],
+        "gcp_residual_units": "uploaded pixels",
+        "gcps_coordinate_space": "output cropped raster pixel edges",
+        "raster": {
+          "crs": "EPSG:3857",
+          "width": 983,
+          "height": 1713,
+          "pixel_to_world": [
+            620.2190681460446,
+            0.005472837049861039,
+            -6866509.6034233365,
+            0.09426588675814301,
+            -479.1340256908089,
+            952481.896128624
+          ],
+          "coordinate_convention": "pixel_edges"
+        }
+      },
+      "independent_grid": {
+        "count": 81,
+        "median_m": 86.17386219674357,
+        "rmse_m": 89.3391272776565,
+        "p95_m": 125.2080777923745,
+        "max_m": 141.12652434035778
+      },
+      "p95_error_pixels": 0.21954942127619173,
+      "runtime_ms": 12981.06760000519,
+      "peak_memory_bytes": 236701395
+    },
+    {
+      "recipe": {
+        "name": "affine_shear",
+        "rotation": 0,
+        "scale_x": 1,
+        "scale_y": 1,
+        "crop_fraction": 0,
+        "jpeg_quality": null,
+        "shear_x": 8,
+        "shear_y": -4,
+        "perspective": false
+      },
+      "truth_canonical_to_upload": [
+        1.0,
+        0.14054083470239145,
+        0.3509983571302655,
+        -0.06992681194351041,
+        1.0,
+        111.94144955480829
+      ],
+      "status": "passed",
+      "transformation": "affine",
+      "qc": {
+        "version": "network-v2",
+        "qc_width": 1344,
+        "qc_height": 1600,
+        "thresholds": {
+          "pass_network_f1": 0.85,
+          "review_network_f1": 0.6,
+          "tolerance_qc_px": 3
+        },
+        "threshold_status": "provisional; evaluate on regional benchmarks",
+        "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+          "registration_basis": "matched_correspondences",
+          "independent_transform_accuracy": {
+            "status": "not_measured"
+          },
+          "absolute_geographic_accuracy": {
+            "status": "not_measured",
+            "reason": "No independent surveyed reference supplied"
+          },
+          "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability"
+        },
+        "tolerance_ground_m": {
+          "min": 1530.7726555101658,
+          "max": 1664.9240937407458,
+          "method": "sampled across preview and directions; approximate range"
+        },
+        "out_of_frame_vertices_measured": true,
+        "network_precision": 1.0,
+        "network_recall": 1.0,
+        "network_f1": 1.0,
+        "network_displacement": {
+          "count": 10000,
+          "median_m": 0.0,
+          "rmse_m": 23.889588906967262,
+          "p95_m": 0.0,
+          "max_m": 535.7264662816546
+        },
+        "network_p95_qc_px": 0.0,
+        "coverage_fraction": 0.018438895089285715,
+        "withheld_rejected_count": 0,
+        "withheld_reporting": "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request.",
+        "withheld": {
+          "count": 50,
+          "median_m": 295.1557135715554,
+          "rmse_m": 470.65859708028205,
+          "p95_m": 897.9757241795094,
+          "max_m": 1363.9431751355821
+        },
+        "withheld_pixels": {
+          "count": 50,
+          "median": 0.5647857023260023,
+          "rmse": 0.9122908647094509,
+          "p95": 1.6840065411266947
+        },
+        "withheld_verified": {
+          "count": 50,
+          "median_m": 295.1557135715554,
+          "rmse_m": 470.65859708028205,
+          "p95_m": 897.9757241795094,
+          "max_m": 1363.9431751355821
+        },
+        "withheld_verified_pixels": {
+          "count": 50,
+          "median": 0.5647857023260023,
+          "rmse": 0.9122908647094509,
+          "p95": 1.6840065411266947
+        },
+        "fit": {
+          "count": 148,
+          "median_m": 293.94505104263294,
+          "rmse_m": 382.9583955552555,
+          "p95_m": 717.3506363492907,
+          "max_m": 1033.2721823747604
+        },
+        "fit_pixels": {
+          "count": 148,
+          "median": 0.5549147745586273,
+          "rmse": 0.7311420596140062,
+          "p95": 1.3439968924892713
+        },
+        "inlier_count": 148,
+        "withheld_count": 50,
+        "withheld_match_ratio": 1.0,
+        "withheld_median_px": 0.5647857023262237,
+        "landmark_coverage": 0.4922228631871118,
+        "input_crop": [
+          370,
+          431,
+          1746,
+          2069
+        ],
+        "canonical_to_upload": [
+          1.0003508401172974,
+          0.1405225227583961,
+          -0.029779572484870735,
+          -0.07017577371251753,
+          1.0002350515306562,
+          111.98955316891963
+        ],
+        "gcp_residual_units": "uploaded pixels",
+        "gcps_coordinate_space": "output cropped raster pixel edges",
+        "raster": {
+          "crs": "EPSG:3857",
+          "width": 1376,
+          "height": 1638,
+          "pixel_to_world": [
+            521.7770661335069,
+            -73.3041993862856,
+            -6860410.447091683,
+            -36.60750467135976,
+            -521.8374677650403,
+            994878.6980837918
+          ],
+          "coordinate_convention": "pixel_edges"
+        }
+      },
+      "independent_grid": {
+        "count": 81,
+        "median_m": 97.5911786232548,
+        "rmse_m": 131.1410281209217,
+        "p95_m": 235.23377809948437,
+        "max_m": 288.28179230584465
+      },
+      "p95_error_pixels": 0.43541298329099043,
+      "runtime_ms": 14830.82070000819,
+      "peak_memory_bytes": 305687386
+    },
+    {
+      "recipe": {
+        "name": "crop",
+        "rotation": 0,
+        "scale_x": 1,
+        "scale_y": 1,
+        "crop_fraction": 0.1,
+        "jpeg_quality": null,
+        "shear_x": 0,
+        "shear_y": 0,
+        "perspective": false
+      },
+      "truth_canonical_to_upload": [
+        1.0,
+        0.0,
+        -160.0,
+        0.0,
+        1.0,
+        -240.0
+      ],
+      "status": "passed",
+      "transformation": "similarity",
+      "qc": {
+        "version": "network-v2",
+        "qc_width": 1130,
+        "qc_height": 1557,
+        "thresholds": {
+          "pass_network_f1": 0.85,
+          "review_network_f1": 0.6,
+          "tolerance_qc_px": 3
+        },
+        "threshold_status": "provisional; evaluate on regional benchmarks",
+        "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+          "registration_basis": "matched_correspondences",
+          "independent_transform_accuracy": {
+            "status": "not_measured"
+          },
+          "absolute_geographic_accuracy": {
+            "status": "not_measured",
+            "reason": "No independent surveyed reference supplied"
+          },
+          "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability"
+        },
+        "tolerance_ground_m": {
+          "min": 1553.581900706696,
+          "max": 1581.9613890173016,
+          "method": "sampled across preview and directions; approximate range"
+        },
+        "out_of_frame_vertices_measured": true,
+        "network_precision": 1.0,
+        "network_recall": 1.0,
+        "network_f1": 1.0,
+        "network_displacement": {
+          "count": 10000,
+          "median_m": 0.0,
+          "rmse_m": 105.24530903272681,
+          "p95_m": 0.0,
+          "max_m": 737.6352792112312
+        },
+        "network_p95_qc_px": 0.0,
+        "coverage_fraction": 0.02241490044958253,
+        "withheld_rejected_count": 0,
+        "withheld_reporting": "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request.",
+        "withheld": {
+          "count": 50,
+          "median_m": 327.29942414157586,
+          "rmse_m": 430.1641207870504,
+          "p95_m": 696.4460929559054,
+          "max_m": 1217.8691639883182
+        },
+        "withheld_pixels": {
+          "count": 50,
+          "median": 0.6244647842174825,
+          "rmse": 0.8216567758442953,
+          "p95": 1.3277325838955594
+        },
+        "withheld_verified": {
+          "count": 50,
+          "median_m": 327.29942414157586,
+          "rmse_m": 430.1641207870504,
+          "p95_m": 696.4460929559054,
+          "max_m": 1217.8691639883182
+        },
+        "withheld_verified_pixels": {
+          "count": 50,
+          "median": 0.6244647842174825,
+          "rmse": 0.8216567758442953,
+          "p95": 1.3277325838955594
+        },
+        "fit": {
+          "count": 150,
+          "median_m": 297.010934207406,
+          "rmse_m": 429.06773698507664,
+          "p95_m": 856.0914501320406,
+          "max_m": 1242.3437350609252
+        },
+        "fit_pixels": {
+          "count": 150,
+          "median": 0.5691088991713709,
+          "rmse": 0.8201898984470904,
+          "p95": 1.6335948798375772
+        },
+        "inlier_count": 150,
+        "withheld_count": 50,
+        "withheld_match_ratio": 1.0,
+        "withheld_median_px": 0.6244647842171811,
+        "landmark_coverage": 0.4696179711388696,
+        "input_crop": [
+          150,
+          181,
+          1280,
+          1738
+        ],
+        "canonical_to_upload": [
+          1.0000607092375806,
+          0.00016683171262543033,
+          -160.33159102909335,
+          -0.00016683171262543033,
+          1.0000607092375806,
+          -240.15181510772828
+        ],
+        "gcp_residual_units": "uploaded pixels",
+        "gcps_coordinate_space": "output cropped raster pixel edges",
+        "raster": {
+          "crs": "EPSG:3857",
+          "width": 1130,
+          "height": 1557,
+          "pixel_to_world": [
+            527.0722925428535,
+            -0.08792703525906277,
+            -6866568.5419565495,
+            -0.08792703525906277,
+            -527.0722925428535,
+            952891.429498798
+          ],
+          "coordinate_convention": "pixel_edges"
+        }
+      },
+      "independent_grid": {
+        "count": 72,
+        "median_m": 128.12128730511674,
+        "rmse_m": 132.3143045803397,
+        "p95_m": 183.37577635479295,
+        "max_m": 202.9921279826053
+      },
+      "p95_error_pixels": 0.3529679566723813,
+      "runtime_ms": 17566.72260000778,
+      "peak_memory_bytes": 263607328
+    },
+    {
+      "recipe": {
+        "name": "jpeg",
+        "rotation": 0,
+        "scale_x": 1,
+        "scale_y": 1,
+        "crop_fraction": 0,
+        "jpeg_quality": 70,
+        "shear_x": 0,
+        "shear_y": 0,
+        "perspective": false
+      },
+      "truth_canonical_to_upload": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "status": "passed",
+      "transformation": "similarity",
+      "qc": {
+        "version": "network-v2",
+        "qc_width": 1158,
+        "qc_height": 1558,
+        "thresholds": {
+          "pass_network_f1": 0.85,
+          "review_network_f1": 0.6,
+          "tolerance_qc_px": 3
+        },
+        "threshold_status": "provisional; evaluate on regional benchmarks",
+        "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+          "registration_basis": "matched_correspondences",
+          "independent_transform_accuracy": {
+            "status": "not_measured"
+          },
+          "absolute_geographic_accuracy": {
+            "status": "not_measured",
+            "reason": "No independent surveyed reference supplied"
+          },
+          "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability"
+        },
+        "tolerance_ground_m": {
+          "min": 1553.46686720212,
+          "max": 1581.8509842899712,
+          "method": "sampled across preview and directions; approximate range"
+        },
+        "out_of_frame_vertices_measured": true,
+        "network_precision": 0.9697201122853368,
+        "network_recall": 1.0,
+        "network_f1": 0.9846273145479886,
+        "network_displacement": {
+          "count": 10000,
+          "median_m": 0.0,
+          "rmse_m": 118.03850653904952,
+          "p95_m": 519.0588701818624,
+          "max_m": 527.1898545106735
+        },
+        "network_p95_qc_px": 1.0,
+        "coverage_fraction": 0.021868300221044207,
+        "withheld_rejected_count": 0,
+        "withheld_reporting": "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request.",
+        "withheld": {
+          "count": 50,
+          "median_m": 149.81118907748322,
+          "rmse_m": 277.6513896032581,
+          "p95_m": 536.4358473329278,
+          "max_m": 708.8869787460266
+        },
+        "withheld_pixels": {
+          "count": 50,
+          "median": 0.2861278693207616,
+          "rmse": 0.5309242898651836,
+          "p95": 1.0258267652791309
+        },
+        "withheld_verified": {
+          "count": 50,
+          "median_m": 149.81118907748322,
+          "rmse_m": 277.6513896032581,
+          "p95_m": 536.4358473329278,
+          "max_m": 708.8869787460266
+        },
+        "withheld_verified_pixels": {
+          "count": 50,
+          "median": 0.2861278693207616,
+          "rmse": 0.5309242898651836,
+          "p95": 1.0258267652791309
+        },
+        "fit": {
+          "count": 150,
+          "median_m": 174.48646736729592,
+          "rmse_m": 313.3732510236181,
+          "p95_m": 672.7314081755369,
+          "max_m": 907.5715274494745
+        },
+        "fit_pixels": {
+          "count": 150,
+          "median": 0.3337488951287976,
+          "rmse": 0.5989226639134307,
+          "p95": 1.276985367582247
+        },
+        "inlier_count": 150,
+        "withheld_count": 50,
+        "withheld_match_ratio": 1.0,
+        "withheld_median_px": 0.2861278693204814,
+        "landmark_coverage": 0.46179536768157303,
+        "input_crop": [
+          310,
+          421,
+          1468,
+          1979
+        ],
+        "canonical_to_upload": [
+          1.0001332296241177,
+          6.375924684712545e-05,
+          -0.17211043636085824,
+          -6.375924684712545e-05,
+          1.0001332296241177,
+          -0.1611509259763132
+        ],
+        "gcp_residual_units": "uploaded pixels",
+        "gcps_coordinate_space": "output cropped raster pixel edges",
+        "raster": {
+          "crs": "EPSG:3857",
+          "width": 1158,
+          "height": 1558,
+          "pixel_to_world": [
+            527.0340866734014,
+            -0.03359882007088987,
+            -6866641.570040571,
+            -0.03359882007088987,
+            -527.0340866734014,
+            952919.4647954386
+          ],
+          "coordinate_convention": "pixel_edges"
+        }
+      },
+      "independent_grid": {
+        "count": 81,
+        "median_m": 52.01480692938537,
+        "rmse_m": 58.10350172073414,
+        "p95_m": 88.54845393370657,
+        "max_m": 106.07263033294637
+      },
+      "p95_error_pixels": 0.17098826325930003,
+      "runtime_ms": 17552.33930000395,
+      "peak_memory_bytes": 258776310
+    },
+    {
+      "recipe": {
+        "name": "combined",
+        "rotation": -12,
+        "scale_x": 0.9,
+        "scale_y": 1.05,
+        "crop_fraction": 0.05,
+        "jpeg_quality": 80,
+        "shear_x": 0,
+        "shear_y": 0,
+        "perspective": false
+      },
+      "truth_canonical_to_upload": [
+        0.880332840660425,
+        0.21830727535864788,
+        -95.23500295871759,
+        -0.1871205217359839,
+        1.0270549807704958,
+        162.23044046419204
+      ],
+      "status": "passed",
+      "transformation": "affine",
+      "qc": {
+        "version": "network-v2",
+        "qc_width": 1197,
+        "qc_height": 1600,
+        "thresholds": {
+          "pass_network_f1": 0.85,
+          "review_network_f1": 0.6,
+          "tolerance_qc_px": 3
+        },
+        "threshold_status": "provisional; evaluate on regional benchmarks",
+        "distance_crs": "local azimuthal equidistant centered on source bbox",
+        "evidence": {
+          "registration_basis": "matched_correspondences",
+          "independent_transform_accuracy": {
+            "status": "not_measured"
+          },
+          "absolute_geographic_accuracy": {
+            "status": "not_measured",
+            "reason": "No independent surveyed reference supplied"
+          },
+          "network_measurement": "Downsampled raster-to-source agreement, not positioning accuracy or probability"
+        },
+        "tolerance_ground_m": {
+          "min": 1686.5308980032207,
+          "max": 1988.372350843213,
+          "method": "sampled across preview and directions; approximate range"
+        },
+        "out_of_frame_vertices_measured": true,
+        "network_precision": 0.9978964849155826,
+        "network_recall": 0.9999146539216524,
+        "network_f1": 0.9989045500514566,
+        "network_displacement": {
+          "count": 10000,
+          "median_m": 0.0,
+          "rmse_m": 72.54881500809266,
+          "p95_m": 0.0,
+          "max_m": 3582.013112871927
+        },
+        "network_p95_qc_px": 0.0,
+        "coverage_fraction": 0.018353696741854636,
+        "withheld_rejected_count": 0,
+        "withheld_reporting": "All withheld correspondences reported; excluded from fitting but not independent surveyed ground truth. No benchmark grid was run for this request.",
+        "withheld": {
+          "count": 50,
+          "median_m": 401.1286325420483,
+          "rmse_m": 692.3349924640504,
+          "p95_m": 1318.5710609399616,
+          "max_m": 1836.533314148847
+        },
+        "withheld_pixels": {
+          "count": 50,
+          "median": 0.7082115691924149,
+          "rmse": 1.269138266393753,
+          "p95": 2.364474300808285
+        },
+        "withheld_verified": {
+          "count": 50,
+          "median_m": 401.1286325420483,
+          "rmse_m": 692.3349924640504,
+          "p95_m": 1318.5710609399616,
+          "max_m": 1836.533314148847
+        },
+        "withheld_verified_pixels": {
+          "count": 50,
+          "median": 0.7082115691924149,
+          "rmse": 1.269138266393753,
+          "p95": 2.364474300808285
+        },
+        "fit": {
+          "count": 146,
+          "median_m": 422.81632137483984,
+          "rmse_m": 610.8640421941958,
+          "p95_m": 1220.1313226616574,
+          "max_m": 1791.0188199288948
+        },
+        "fit_pixels": {
+          "count": 146,
+          "median": 0.7907915540059751,
+          "rmse": 1.129271553260186,
+          "p95": 2.2759018480413795
+        },
+        "inlier_count": 146,
+        "withheld_count": 50,
+        "withheld_match_ratio": 1.0,
+        "withheld_median_px": 0.7082115691938244,
+        "landmark_coverage": 0.5013469343655136,
+        "input_crop": [
+          270,
+          320,
+          1629,
+          2137
+        ],
+        "canonical_to_upload": [
+          0.8800613229463634,
+          0.2186838919473599,
+          -95.34022289926403,
+          -0.18779992429905043,
+          1.0271577439898993,
+          162.93850829404002
+        ],
+        "gcp_residual_units": "uploaded pixels",
+        "gcps_coordinate_space": "output cropped raster pixel edges",
+        "raster": {
+          "crs": "EPSG:3857",
+          "width": 1359,
+          "height": 1817,
+          "pixel_to_world": [
+            572.9118791367929,
+            -121.97405919936416,
+            -6839948.36852004,
+            -104.74808583342039,
+            -490.8667526823135,
+            1059531.2153011607
+          ],
+          "coordinate_convention": "pixel_edges"
+        }
+      },
+      "independent_grid": {
+        "count": 81,
+        "median_m": 178.42339216427212,
+        "rmse_m": 216.32324330170317,
+        "p95_m": 376.9519341080742,
+        "max_m": 462.3264346688247
+      },
+      "p95_error_pixels": 0.7312000616811016,
+      "runtime_ms": 14780.39689999423,
+      "peak_memory_bytes": 276422719
+    },
+    {
+      "recipe": {
+        "name": "unsupported_perspective",
+        "rotation": 0,
+        "scale_x": 1,
+        "scale_y": 1,
+        "crop_fraction": 0,
+        "jpeg_quality": null,
+        "shear_x": 0,
+        "shear_y": 0,
+        "perspective": true
+      },
+      "truth_canonical_to_upload": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "status": "rejected",
+      "reason": "similarity: Independent withheld landmarks do not validate this registration; affine: Independent withheld landmarks do not validate this registration",
+      "runtime_ms": 10773.493600005168,
+      "peak_memory_bytes": 236700492
+    }
+  ],
+  "summary": {
+    "supported_case_count": 9,
+    "successful_recovery_count": 9,
+    "successful_recovery_rate": 1.0,
+    "false_accept_count": 0,
+    "false_reject_count": 0,
+    "accepted_p95_error_pixels": {
+      "count": 9,
+      "p95": 0.7418100412733598
+    },
+    "accuracy_boundaries": {
+      "source_network_agreement": "Measured by independent raster-to-source network comparison.",
+      "registration_accuracy": "Measured by independent benchmark transforms in uploaded-image pixels.",
+      "surveyed_absolute_accuracy": "Not measured; no surveyed ground-control reference is supplied.",
+      "physical_capture_validation": "Not measured; cases are procedurally simulated, not field scans or photos."
+    }
+  },
+  "retention": "Recipes and numeric results only; derivative images discarded",
+  "request": {
+    "geography_id": "3d43dc73-e0ba-4abf-ab0b-b73729f66a70",
+    "density_preset": "balanced",
+    "classification_preset": "standard",
+    "palette": null,
+    "style": {
+      "schema_version": 2,
+      "mode": "standard",
+      "preset_id": "abyss",
+      "variant": null,
+      "overrides": null
+    },
+    "typography": "gallery_poster",
+    "title": "",
+    "subtitle": "",
+    "design_asset_mode": false,
+    "show_legend": true,
+    "show_metadata": true,
+    "custom_colors": null,
+    "element_transforms": null,
+    "metadata_options": null,
+    "typography_overrides": null,
+    "layout_overrides": null,
+    "export_format": "png",
+    "export_size": "digital_poster",
+    "custom_width": null,
+    "custom_height": null
+  },
+  "rules_source": "database"
+}
