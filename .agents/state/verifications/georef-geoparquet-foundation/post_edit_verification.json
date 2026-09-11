@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-10T19:34:03.607753+00:00",
+  "phase_id": "georef-geoparquet-foundation",
+  "baseline_commit": "a2ec098a95a3a224d10170931030a4336e66515f",
+  "approved_baseline_file": ".agents\\state\\baselines\\georef-geoparquet-foundation\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_georef_geoparquet_foundation.json",
+    ".agents/state/baselines/georef-geoparquet-foundation/backend.stderr.txt",
+    ".agents/state/baselines/georef-geoparquet-foundation/backend.stdout.txt",
+    ".agents/state/baselines/georef-geoparquet-foundation/baseline_approved.json",
+    ".agents/state/baselines/georef-geoparquet-foundation/baseline_review.md",
+    ".agents/state/baselines/georef-geoparquet-foundation/baseline_unapproved.json",
+    ".agents/state/baselines/georef-geoparquet-foundation/baseline_unapproved.md",
+    ".agents/state/baselines/georef-geoparquet-foundation/frontend_lint.stderr.txt",
+    ".agents/state/baselines/georef-geoparquet-foundation/frontend_lint.stdout.txt",
+    ".agents/state/baselines/georef-geoparquet-foundation/typescript.stderr.txt",
+    ".agents/state/baselines/georef-geoparquet-foundation/typescript.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/verifications/georef-geoparquet-foundation/backend.stderr.txt",
+    ".agents/state/verifications/georef-geoparquet-foundation/backend.stdout.txt",
+    ".agents/state/verifications/georef-geoparquet-foundation/backend.xml",
+    ".agents/state/verifications/georef-geoparquet-foundation/frontend_lint.stderr.txt",
+    ".agents/state/verifications/georef-geoparquet-foundation/frontend_lint.stdout.txt",
+    ".agents/state/verifications/georef-geoparquet-foundation/phase_walkthrough.md",
+    ".agents/state/verifications/georef-geoparquet-foundation/post_edit_verification.json",
+    ".agents/state/verifications/georef-geoparquet-foundation/post_edit_verification.md",
+    ".agents/state/verifications/georef-geoparquet-foundation/typescript.stderr.txt",
+    ".agents/state/verifications/georef-geoparquet-foundation/typescript.stdout.txt",
+    "backend/app/services/georef_geoparquet.py",
+    "backend/requirements.txt",
+    "backend/tests/test_georef_geoparquet.py",
+    "docs/GEOREFERENCING_PHASE_8A_GEOPARQUET.md",
+    "scripts/build_geoparquet.py",
+    "scripts/compare_geospatial_artifacts.py",
+    "work/format-bakeoff/z0-x0-y0.mvt",
+    "work/geoparquet-comparison.json",
+    "work/geoparquet-smoke/comparison.json",
+    "work/geoparquet-smoke/guyana.parquet",
+    "work/geoparquet-smoke/manifest.json"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-geoparquet-foundation/backend.xml"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 68.865,
+      "stdout_file": ".agents\\state\\verifications\\georef-geoparquet-foundation\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-geoparquet-foundation\\backend.stderr.txt",
+      "test_case_count": 243
+    },
+    {
+      "name": "typescript",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 2.465,
+      "stdout_file": ".agents\\state\\verifications\\georef-geoparquet-foundation\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-geoparquet-foundation\\typescript.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 10.071,
+      "stdout_file": ".agents\\state\\verifications\\georef-geoparquet-foundation\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-geoparquet-foundation\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}
