@@ -3,7 +3,7 @@
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
   "current_phase_id": "georef-caribbean-coverage",
-  "current_phase_gate": "Phase 9 is approved to begin on its isolated branch; implementation remains gated on the recorded baseline receiving separate human approval.",
+  "current_phase_gate": "Phase 9 implementation is complete and its closeout is pending PR review/merge; Phase 10 remains gated on the merged Phase 9 baseline.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -56,7 +56,7 @@
       "phase_id": "georef-caribbean-coverage",
       "phase_number": 9,
       "name": "Caribbean country coverage batch",
-      "status": "active_implementation",
+      "status": "implementation_complete_closeout_pending",
       "depends_on": ["georef-geoparquet-foundation"],
       "objective": "Build and benchmark bounded Caribbean country increments using the established artifact, GeoParquet, and provenance contracts; weak countries may remain partial or unavailable.",
       "scope_notes": [

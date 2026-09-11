@@ -2,9 +2,9 @@
   "schema_version": 1,
   "phase_id": "georef-caribbean-coverage",
   "phase_name": "Caribbean country coverage batch",
-  "status": "approved",
+  "status": "implementation_complete_closeout_pending",
   "approved_by_human": true,
-  "human_approval": "2026-09-11: user explicitly approved starting Phase 9 Caribbean country coverage. Baseline approval is pending separate review.",
+  "human_approval": "2026-09-11: user explicitly approved starting Phase 9 Caribbean country coverage and approved its recorded baseline.",
   "baseline_commit": "863d52b716f9ef686b3956f8ed1fce1d2753dbff",
   "branch": "codex/georef-phase-9-caribbean-coverage",
   "protected_branches": ["main"],
@@ -17,6 +17,6 @@
   "verification_commands_file": ".agents/config/verification_commands_georef_caribbean_coverage.json",
   "approved_baseline_file": ".agents/state/baselines/georef-caribbean-coverage/baseline_approved.json",
   "program_roadmap_file": ".agents/state/georef_phase_roadmap.json",
-  "next_phase_id": "georef-caribbean-coverage",
+  "next_phase_id": "georef-central-american-coverage",
   "next_phase_gate": "Do not activate Phase 10 until Phase 9 closeout is complete and Phase 10 receives its own scope, baseline, and human approval."
 }
