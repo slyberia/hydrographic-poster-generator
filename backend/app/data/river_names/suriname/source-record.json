@@ -1,0 +1,167 @@
+{
+  "captured_at": "2026-09-11T17:20:58.040882+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "7 independently referenced Suriname river systems",
+  "independent_reference": {
+    "publisher": "Government of Suriname",
+    "title": "Strategic Environmental and Social Assessment for the Mining Sector of Suriname \u2014 Scoping Report",
+    "url": "https://gov.sr/wp-content/uploads/2023/03/Scoping-Report-FINAL-Incl-Appendix.pdf"
+  },
+  "objects": [
+    {
+      "name": "Marowijne River",
+      "source_name": "Le Maroni - Marowijne",
+      "osm_type": "relation",
+      "osm_id": 6480759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Marowijne River",
+      "source_name": "Le Maroni - Marowijne",
+      "osm_type": "relation",
+      "osm_id": 6480759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Marowijne River",
+      "source_name": "Le Maroni - Marowijne",
+      "osm_type": "relation",
+      "osm_id": 6480759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Marowijne River",
+      "source_name": "Le Maroni - Marowijne",
+      "osm_type": "relation",
+      "osm_id": 6480759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Marowijne River",
+      "source_name": "Le Maroni - Marowijne",
+      "osm_type": "relation",
+      "osm_id": 6480759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Marowijne River",
+      "source_name": "Le Maroni - Marowijne",
+      "osm_type": "relation",
+      "osm_id": 6480759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Marowijne River",
+      "source_name": "Le Maroni - Marowijne",
+      "osm_type": "relation",
+      "osm_id": 6480759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Commewijne River",
+      "source_name": "Commewijne",
+      "osm_type": "way",
+      "osm_id": 966850669,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Commewijne River",
+      "source_name": "Commewijne",
+      "osm_type": "way",
+      "osm_id": 967343426,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Commewijne River",
+      "source_name": "Commewijne",
+      "osm_type": "way",
+      "osm_id": 966763729,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Commewijne River",
+      "source_name": "Commewijne",
+      "osm_type": "way",
+      "osm_id": 966763730,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Commewijne River",
+      "source_name": "Commewijne",
+      "osm_type": "way",
+      "osm_id": 966840923,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Commewijne River",
+      "source_name": "Commewijne",
+      "osm_type": "way",
+      "osm_id": 354413122,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Commewijne River",
+      "source_name": "Commewijne",
+      "osm_type": "way",
+      "osm_id": 967582010,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Suriname River",
+      "source_name": "Suriname",
+      "osm_type": "relation",
+      "osm_id": 6285505,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Suriname River",
+      "source_name": "Suriname",
+      "osm_type": "way",
+      "osm_id": 143862890,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Suriname River",
+      "source_name": "Suriname",
+      "osm_type": "way",
+      "osm_id": 649330601,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

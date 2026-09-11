@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "country": "Suriname",
+  "country_code": "SUR",
+  "geography_id": "91d56b28-6b91-4b64-bff6-4ed789a75577",
+  "dataset_version": "81d764e3de5c3a2272a2c3d5e2ed0228e9f0d2d2f2afe17ce74b44f6b02b3851",
+  "generated_at": "2026-09-11T17:20:58.040882+00:00",
+  "coverage_status": "partial",
+  "artifact": {
+    "path": "81d764e3de5c3a2272a2c3d5e2ed0228e9f0d2d2f2afe17ce74b44f6b02b3851.json",
+    "sha256": "81d764e3de5c3a2272a2c3d5e2ed0228e9f0d2d2f2afe17ce74b44f6b02b3851",
+    "byte_size": 370834,
+    "feature_count": 17,
+    "indexed_reach_count": 418
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "warning",
+    "coverage_status": "partial",
+    "independent_reference": {
+      "publisher": "Government of Suriname",
+      "title": "Strategic Environmental and Social Assessment for the Mining Sector of Suriname \u2014 Scoping Report",
+      "url": "https://gov.sr/wp-content/uploads/2023/03/Scoping-Report-FINAL-Incl-Appendix.pdf"
+    },
+    "target_summary": {
+      "evaluated": 7,
+      "passed": 3,
+      "failed": 4
+    },
+    "targets": {
+      "Marowijne River": {
+        "source_object_count": 1,
+        "display_segment_count": 7,
+        "matched_reach_count": 215,
+        "median_distance_m": 192.7,
+        "p95_distance_m": 2617.9
+      },
+      "Commewijne River": {
+        "source_object_count": 7,
+        "display_segment_count": 7,
+        "matched_reach_count": 50,
+        "median_distance_m": 231.3,
+        "p95_distance_m": 2643.7
+      },
+      "Suriname River": {
+        "source_object_count": 3,
+        "display_segment_count": 3,
+        "matched_reach_count": 132,
+        "median_distance_m": 236.3,
+        "p95_distance_m": 2975.7
+      },
+      "Saramacca River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Coppename River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Nickerie River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Corantijn River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      }
+    },
+    "counts": {
+      "matched": 397,
+      "ambiguous": 21
+    },
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

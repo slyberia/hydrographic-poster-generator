@@ -2,8 +2,8 @@
   "schema_version": 1,
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
-  "current_phase_id": "georef-central-american-coverage",
-  "current_phase_gate": "Phase 10 implementation is complete and its closeout is pending review/merge; Phase 11 remains gated on the finalized Phase 10 main state.",
+  "current_phase_id": "georef-south-american-coverage",
+  "current_phase_gate": "Phase 11 is approved to begin on its isolated branch; implementation remains gated on the recorded baseline receiving separate human approval.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -21,7 +21,7 @@
       "phase_id": "georef-artifact-delivery",
       "phase_number": 8,
       "name": "Reference artifact architecture and delivery",
-      "status": "planned_not_approved",
+      "status": "active_implementation",
       "depends_on": ["georef-recovery-calibration"],
       "objective": "Establish immutable artifact manifests, GCS/CDN delivery and caching, versioned URLs, integrity checks, and a packaged offline fallback.",
       "must_not_include": [
@@ -95,7 +95,17 @@
       "name": "South American country coverage batch",
       "status": "planned_not_approved",
       "depends_on": ["georef-geoparquet-foundation", "georef-central-american-coverage"],
-      "objective": "Build and benchmark bounded country increments using the established artifact and provenance contracts; weak countries may remain partial or unavailable."
+      "objective": "Build and benchmark bounded South American country increments using the established artifact, GeoParquet, and provenance contracts; weak countries may remain partial or unavailable.",
+      "scope_notes": [
+        "Begin with a bounded Suriname increment; remaining countries require separate internal slices.",
+        "Guyana is already covered and is not reworked in this phase.",
+        "Do not commit raw source geospatial datasets, add runtime scraping, alter the canonical GeoParquet schema, or change delivery architecture."
+      ],
+      "exit_requirements": [
+        "Each selected South American country has a bounded profile, provenance record, deterministic artifact manifest, and benchmark result.",
+        "Country outcomes and limitations are documented as verified, partial, or unavailable.",
+        "All scoped tests pass against the approved baseline and a Phase 11 walkthrough records rollback and unresolved risks."
+      ]
     },
     {
       "phase_id": "georef-program-closeout",
