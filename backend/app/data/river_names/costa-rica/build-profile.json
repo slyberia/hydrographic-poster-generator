@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "slug": "costa-rica",
+  "country": "Costa Rica",
+  "country_code": "CRI",
+  "geography_id": "cbbb4aa4-65ec-42d4-ba69-3428318e2442",
+  "independent_reference": {
+    "publisher": "Comisión Nacional de Emergencias de Costa Rica",
+    "title": "Cuencas hidrográficas de Costa Rica",
+    "url": "https://www.cne.go.cr/CEDO-CRID/pdf/spa/doc934/doc934-b1.pdf"
+  },
+  "targets": [
+    {"name": "Tempisque River", "aliases": ["tempisque", "rio tempisque", "río tempisque"], "queries": ["Río Tempisque, Costa Rica", "Tempisque River, Costa Rica"]},
+    {"name": "Tárcoles River", "aliases": ["tarcoles", "tárcoles", "rio tarcoles", "río tarcoles"], "queries": ["Río Tárcoles, Costa Rica", "Tarcoles River, Costa Rica"]},
+    {"name": "Reventazón River", "aliases": ["reventazon", "reventazón", "rio reventazon", "río reventazón"], "queries": ["Río Reventazón, Costa Rica", "Reventazon River, Costa Rica"]},
+    {"name": "Pacuare River", "aliases": ["pacuare", "rio pacuare", "río pacuare"], "queries": ["Río Pacuare, Costa Rica", "Pacuare River, Costa Rica"]},
+    {"name": "Térraba River", "aliases": ["terraba", "térraba", "rio terraba", "río térraba"], "queries": ["Río Térraba, Costa Rica", "Terraba River, Costa Rica"]},
+    {"name": "Sixaola River", "aliases": ["sixaola", "rio sixaola", "río sixaola"], "queries": ["Río Sixaola, Costa Rica", "Sixaola River, Costa Rica"]}
+  ]
+}
