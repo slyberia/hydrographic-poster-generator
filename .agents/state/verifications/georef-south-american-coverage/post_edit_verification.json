@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-11T17:24:42.709718+00:00",
+  "phase_id": "georef-south-american-coverage",
+  "baseline_commit": "aa3c1fff32bf42071a897cb0b8361b9bb8a493e8",
+  "approved_baseline_file": ".agents\\state\\baselines\\georef-south-american-coverage\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_georef_south_american_coverage.json",
+    ".agents/state/baselines/georef-south-american-coverage/backend.stderr.txt",
+    ".agents/state/baselines/georef-south-american-coverage/backend.stdout.txt",
+    ".agents/state/baselines/georef-south-american-coverage/baseline_approved.json",
+    ".agents/state/baselines/georef-south-american-coverage/baseline_unapproved.json",
+    ".agents/state/baselines/georef-south-american-coverage/baseline_unapproved.md",
+    ".agents/state/baselines/georef-south-american-coverage/frontend_lint.stderr.txt",
+    ".agents/state/baselines/georef-south-american-coverage/frontend_lint.stdout.txt",
+    ".agents/state/baselines/georef-south-american-coverage/typescript.stderr.txt",
+    ".agents/state/baselines/georef-south-american-coverage/typescript.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/georef_phase_roadmap.json",
+    ".agents/state/verifications/georef-south-american-coverage/backend.xml",
+    "backend/app/data/river_names/suriname/81d764e3de5c3a2272a2c3d5e2ed0228e9f0d2d2f2afe17ce74b44f6b02b3851.json",
+    "backend/app/data/river_names/suriname/build-profile.json",
+    "backend/app/data/river_names/suriname/evaluation.json",
+    "backend/app/data/river_names/suriname/manifest.json",
+    "backend/app/data/river_names/suriname/source-record.json",
+    "backend/tests/test_river_names.py",
+    "docs/RIVER_NAME_COVERAGE.md"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-south-american-coverage/backend.xml"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 123.05,
+      "stdout_file": ".agents\\state\\verifications\\georef-south-american-coverage\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-south-american-coverage\\backend.stderr.txt",
+      "test_case_count": 246
+    },
+    {
+      "name": "typescript",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 7.874,
+      "stdout_file": ".agents\\state\\verifications\\georef-south-american-coverage\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-south-american-coverage\\typescript.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 28.55,
+      "stdout_file": ".agents\\state\\verifications\\georef-south-american-coverage\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-south-american-coverage\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}
