@@ -1,0 +1,518 @@
+{
+  "captured_at": "2026-09-11T16:53:01.002297+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "6 independently referenced Costa Rica river systems",
+  "independent_reference": {
+    "publisher": "Comisi\u00f3n Nacional de Emergencias de Costa Rica",
+    "title": "Cuencas hidrogr\u00e1ficas de Costa Rica",
+    "url": "https://www.cne.go.cr/CEDO-CRID/pdf/spa/doc934/doc934-b1.pdf"
+  },
+  "objects": [
+    {
+      "name": "Tempisque River",
+      "source_name": "R\u00edo Tempisque",
+      "osm_type": "relation",
+      "osm_id": 6403989,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 32512719,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 384272260,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 72008555,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 72008560,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 384274106,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 384436147,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 1391619343,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 381460820,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 1391618128,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 384274037,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 72008558,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 360682674,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 384615457,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 384269659,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 72005600,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 72008553,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 381460824,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 384616108,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 72008556,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e1rcoles River",
+      "source_name": "R\u00edo Grande de T\u00e1rcoles",
+      "osm_type": "way",
+      "osm_id": 381460814,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "relation",
+      "osm_id": 6403987,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 383300758,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 383300606,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 382989472,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 199923681,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 41727138,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 977448539,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 612093841,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 612093840,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 199923581,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "R\u00edo Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 383197552,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "Ri\u00f3 Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 510324564,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "Ri\u00f3 Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 41727134,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "Ri\u00f3 Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 41727132,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Reventaz\u00f3n River",
+      "source_name": "Ri\u00f3 Reventaz\u00f3n",
+      "osm_type": "way",
+      "osm_id": 41727139,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Pacuare River",
+      "source_name": "R\u00edo Pacuare",
+      "osm_type": "relation",
+      "osm_id": 12000489,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Pacuare River",
+      "source_name": "R\u00edo Pacuare",
+      "osm_type": "relation",
+      "osm_id": 12000489,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Pacuare River",
+      "source_name": "R\u00edo Pacuare",
+      "osm_type": "relation",
+      "osm_id": 12000489,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Pacuare River",
+      "source_name": "R\u00edo Pacuare",
+      "osm_type": "relation",
+      "osm_id": 12000489,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Pacuare River",
+      "source_name": "R\u00edo Pacuare",
+      "osm_type": "relation",
+      "osm_id": 12000489,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 317596764,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 421889541,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 907899052,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 907899053,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 421887613,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 907899064,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 421700591,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 416481116,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 908113959,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 416606807,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 907899065,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 416481789,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 908113958,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "T\u00e9rraba River",
+      "source_name": "R\u00edo Grande de T\u00e9rraba",
+      "osm_type": "way",
+      "osm_id": 416602532,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Sixaola River",
+      "source_name": "R\u00edo Sixaola",
+      "osm_type": "way",
+      "osm_id": 383698406,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

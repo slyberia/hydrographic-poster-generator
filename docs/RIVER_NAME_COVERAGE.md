@@ -90,6 +90,22 @@ Independent target reference:
   Jamaica 2022*:
   https://www.wra.gov.jm/wp-content/uploads/2024/09/A-National-Water-Resources-Master-Plan-for-Jamaica-2022.pdf
 
+### Costa Rica — verified
+
+The first Phase 10 increment uses six bounded systems from the Comisión
+Nacional de Emergencias de Costa Rica reference: Tempisque River, Tárcoles
+River, Reventazón River, Pacuare River, Térraba River, and Sixaola River. All
+six targets produced qualifying OSM source geometry and confidently associated
+HydroRIVERS reaches in the bounded evaluation. This is source-to-source
+agreement for the selected systems, not a claim of surveyed positional
+accuracy or complete national river-name coverage.
+
+Independent target reference:
+
+- Comisión Nacional de Emergencias de Costa Rica, *Cuencas hidrográficas de
+  Costa Rica*:
+  https://www.cne.go.cr/CEDO-CRID/pdf/spa/doc934/doc934-b1.pdf
+
 ## Adding another country
 
 1. Select a bounded, representative target set from a national or similarly

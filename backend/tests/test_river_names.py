@@ -10,6 +10,7 @@ from scripts.build_river_name_artifact import canonical_name, load_profile
 GUYANA_ID = "3d43dc73-e0ba-4abf-ab0b-b73729f66a70"
 BELIZE_ID = "3060e4d0-361c-4095-808e-bccfffb8426f"
 JAMAICA_ID = "3918122c-61f6-43cb-84cf-5e8213ab0b23"
+COSTA_RICA_ID = "cbbb4aa4-65ec-42d4-ba69-3428318e2442"
 
 
 def test_multilingual_and_alternate_names_are_normalized():
@@ -90,4 +91,22 @@ def test_jamaica_artifact_is_content_addressed_and_records_partial_coverage():
         "evaluated": 5, "passed": 4, "failed": 1
     }
     assert manifest["evaluation"]["targets"]["Montego River"]["matched_reach_count"] == 0
+    assert manifest["artifact"]["indexed_reach_count"] == len(result["name_index"])
+
+
+def test_costa_rica_artifact_is_content_addressed_and_passes_all_targets():
+    profile = load_profile("costa-rica")
+    assert profile["geography_id"] == COSTA_RICA_ID
+    assert profile["independent_reference"]["publisher"] == "Comisión Nacional de Emergencias de Costa Rica"
+    assert canonical_name("Río Tárcoles, Costa Rica", profile) == "Tárcoles River"
+
+    manifest = manifest_for_geography(COSTA_RICA_ID)
+    result = dataset("costa-rica", manifest["dataset_version"])
+    canonical = json.dumps(result, separators=(",", ":"), sort_keys=True).encode()
+
+    assert hashlib.sha256(canonical).hexdigest() == manifest["dataset_version"]
+    assert manifest["coverage_status"] == "verified"
+    assert manifest["evaluation"]["target_summary"] == {
+        "evaluated": 6, "passed": 6, "failed": 0
+    }
     assert manifest["artifact"]["indexed_reach_count"] == len(result["name_index"])

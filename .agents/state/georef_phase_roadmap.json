@@ -2,8 +2,8 @@
   "schema_version": 1,
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
-  "current_phase_id": "georef-caribbean-coverage",
-  "current_phase_gate": "Phase 9 implementation is complete and its closeout is pending PR review/merge; Phase 10 remains gated on the merged Phase 9 baseline.",
+  "current_phase_id": "georef-central-american-coverage",
+  "current_phase_gate": "Phase 10 is approved to begin on its isolated branch; implementation remains gated on the recorded baseline receiving separate human approval.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -75,9 +75,19 @@
       "phase_id": "georef-central-american-coverage",
       "phase_number": 10,
       "name": "Central American country coverage batch",
-      "status": "planned_not_approved",
+      "status": "active_implementation",
       "depends_on": ["georef-geoparquet-foundation", "georef-caribbean-coverage"],
-      "objective": "Build and benchmark bounded country increments using the established artifact and provenance contracts; weak countries may remain partial or unavailable."
+      "objective": "Build and benchmark bounded Central American country increments using the established artifact, GeoParquet, and provenance contracts; weak countries may remain partial or unavailable.",
+      "scope_notes": [
+        "Begin with a bounded Costa Rica increment; later Central American countries require the same independent review and remain separate internal slices.",
+        "Belize is already covered by Phase 9 and is not reworked in this phase.",
+        "Do not commit raw source geospatial datasets, add runtime scraping, alter the canonical GeoParquet schema, or change delivery architecture."
+      ],
+      "exit_requirements": [
+        "Each selected Central American country has a bounded profile, provenance record, deterministic artifact manifest, and benchmark result.",
+        "Country outcomes and limitations are documented as verified, partial, or unavailable.",
+        "All scoped tests pass against the approved baseline and a Phase 10 walkthrough records rollback and unresolved risks."
+      ]
     },
     {
       "phase_id": "georef-south-american-coverage",
