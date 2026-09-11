@@ -8,7 +8,7 @@
   "baseline_commit": "863d52b716f9ef686b3956f8ed1fce1d2753dbff",
   "branch": "codex/georef-phase-9-caribbean-coverage",
   "protected_branches": ["main"],
-  "allowed_paths": [".agents/state/current_phase.json", ".agents/state/georef_phase_roadmap.json", ".agents/config/verification_commands_georef_caribbean_coverage.json", ".agents/state/baselines/georef-caribbean-coverage/**", ".agents/state/inventories/georef-caribbean-coverage/**", ".agents/state/verifications/georef-caribbean-coverage/**", "backend/app/data/river_names/<country>/**", "backend/app/services/river_name_service.py", "backend/tests/test_river_names.py", "scripts/build_river_name_artifact.py", "docs/RIVER_NAME_COVERAGE.md", "docs/GEOREFERENCING_PHASE_9_CARIBBEAN_COVERAGE.md"],
+  "allowed_paths": [".agents/state/current_phase.json", ".agents/state/georef_phase_roadmap.json", ".agents/config/verification_commands_georef_caribbean_coverage.json", ".agents/state/baselines/georef-caribbean-coverage/**", ".agents/state/inventories/georef-caribbean-coverage/**", ".agents/state/verifications/georef-caribbean-coverage/**", "backend/app/data/river_names/jamaica/**", "backend/app/services/river_name_service.py", "backend/tests/test_river_names.py", "scripts/build_river_name_artifact.py", "docs/RIVER_NAME_COVERAGE.md", "docs/GEOREFERENCING_PHASE_9_CARIBBEAN_COVERAGE.md"],
   "scope_exempt_paths": ["work/**", "frontend/test-results/**", ".playwright-cli/**", ".agents/state/verifications/georef-release/**"],
   "known_preexisting_changes": [],
   "excluded_paths": ["cloudbuild.yaml", "db/migrations/**", "backend/app/data/river_names/**/source-geospatial/**", "**/*.shp", "**/*.fgb", "**/*.gpkg", "**/*.parquet"],
