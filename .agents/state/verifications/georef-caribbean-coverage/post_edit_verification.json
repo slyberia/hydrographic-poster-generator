@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-11T16:08:09.173266+00:00",
+  "phase_id": "georef-caribbean-coverage",
+  "baseline_commit": "863d52b716f9ef686b3956f8ed1fce1d2753dbff",
+  "approved_baseline_file": ".agents\\state\\baselines\\georef-caribbean-coverage\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_georef_caribbean_coverage.json",
+    ".agents/state/baselines/georef-caribbean-coverage/backend.stderr.txt",
+    ".agents/state/baselines/georef-caribbean-coverage/backend.stdout.txt",
+    ".agents/state/baselines/georef-caribbean-coverage/baseline_approved.json",
+    ".agents/state/baselines/georef-caribbean-coverage/baseline_unapproved.json",
+    ".agents/state/baselines/georef-caribbean-coverage/baseline_unapproved.md",
+    ".agents/state/baselines/georef-caribbean-coverage/frontend_lint.stderr.txt",
+    ".agents/state/baselines/georef-caribbean-coverage/frontend_lint.stdout.txt",
+    ".agents/state/baselines/georef-caribbean-coverage/typescript.stderr.txt",
+    ".agents/state/baselines/georef-caribbean-coverage/typescript.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/georef_phase_roadmap.json",
+    ".agents/state/verifications/georef-caribbean-coverage/backend.stderr.txt",
+    ".agents/state/verifications/georef-caribbean-coverage/backend.stdout.txt",
+    ".agents/state/verifications/georef-caribbean-coverage/backend.xml",
+    ".agents/state/verifications/georef-caribbean-coverage/frontend_lint.stderr.txt",
+    ".agents/state/verifications/georef-caribbean-coverage/frontend_lint.stdout.txt",
+    ".agents/state/verifications/georef-caribbean-coverage/post_edit_verification.json",
+    ".agents/state/verifications/georef-caribbean-coverage/post_edit_verification.md",
+    ".agents/state/verifications/georef-caribbean-coverage/typescript.stderr.txt",
+    ".agents/state/verifications/georef-caribbean-coverage/typescript.stdout.txt",
+    "backend/app/data/river_names/jamaica/build-profile.json",
+    "backend/app/data/river_names/jamaica/da8057032e63852a3cbd81a635ab0e329aae6b50709168e1f2e7c7e6a33afaca.json",
+    "backend/app/data/river_names/jamaica/evaluation.json",
+    "backend/app/data/river_names/jamaica/manifest.json",
+    "backend/app/data/river_names/jamaica/source-record.json",
+    "backend/tests/test_river_names.py",
+    "docs/RIVER_NAME_COVERAGE.md"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-caribbean-coverage/backend.xml"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 159.19,
+      "stdout_file": ".agents\\state\\verifications\\georef-caribbean-coverage\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-caribbean-coverage\\backend.stderr.txt",
+      "test_case_count": 244
+    },
+    {
+      "name": "typescript",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 5.107,
+      "stdout_file": ".agents\\state\\verifications\\georef-caribbean-coverage\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-caribbean-coverage\\typescript.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 17.451,
+      "stdout_file": ".agents\\state\\verifications\\georef-caribbean-coverage\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-caribbean-coverage\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}

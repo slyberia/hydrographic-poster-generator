@@ -9,6 +9,7 @@ from scripts.build_river_name_artifact import canonical_name, load_profile
 
 GUYANA_ID = "3d43dc73-e0ba-4abf-ab0b-b73729f66a70"
 BELIZE_ID = "3060e4d0-361c-4095-808e-bccfffb8426f"
+JAMAICA_ID = "3918122c-61f6-43cb-84cf-5e8213ab0b23"
 
 
 def test_multilingual_and_alternate_names_are_normalized():
@@ -71,3 +72,22 @@ def test_belize_artifact_is_partial_without_fabricating_rio_hondo():
     assert {item["name_status"] for item in result["name_index"].values()} <= {
         "matched", "ambiguous", "unnamed_in_source"
     }
+
+
+def test_jamaica_artifact_is_content_addressed_and_records_partial_coverage():
+    profile = load_profile("jamaica")
+    assert profile["geography_id"] == JAMAICA_ID
+    assert profile["independent_reference"]["publisher"] == "Jamaica Water Resources Authority"
+    assert canonical_name("Great River, Jamaica", profile) == "Great River"
+
+    manifest = manifest_for_geography(JAMAICA_ID)
+    result = dataset("jamaica", manifest["dataset_version"])
+    canonical = json.dumps(result, separators=(",", ":"), sort_keys=True).encode()
+
+    assert hashlib.sha256(canonical).hexdigest() == manifest["dataset_version"]
+    assert manifest["coverage_status"] == "partial"
+    assert manifest["evaluation"]["target_summary"] == {
+        "evaluated": 5, "passed": 4, "failed": 1
+    }
+    assert manifest["evaluation"]["targets"]["Montego River"]["matched_reach_count"] == 0
+    assert manifest["artifact"]["indexed_reach_count"] == len(result["name_index"])
