@@ -2,8 +2,8 @@
   "schema_version": 1,
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
-  "current_phase_id": "georef-recovery-calibration",
-  "current_phase_gate": "Phase 7 implementation is merged; country-level benchmark evidence and the Phase 7 closeout walkthrough remain before advancing.",
+  "current_phase_id": "georef-caribbean-coverage",
+  "current_phase_gate": "Phase 9 is approved to begin on its isolated branch; implementation remains gated on the recorded baseline receiving separate human approval.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -56,9 +56,20 @@
       "phase_id": "georef-caribbean-coverage",
       "phase_number": 9,
       "name": "Caribbean country coverage batch",
-      "status": "planned_not_approved",
+      "status": "active_implementation",
       "depends_on": ["georef-geoparquet-foundation"],
-      "objective": "Build and benchmark bounded country increments using the established artifact and provenance contracts; weak countries may remain partial or unavailable."
+      "objective": "Build and benchmark bounded Caribbean country increments using the established artifact, GeoParquet, and provenance contracts; weak countries may remain partial or unavailable.",
+      "scope_notes": [
+        "Use small independently reviewable country increments rather than an all-or-nothing regional release.",
+        "Record country-level benchmark outcomes as verified, partial, or unavailable; do not represent source-name agreement as surveyed accuracy.",
+        "Do not commit raw source geospatial datasets or add runtime scraping.",
+        "Phase 9 does not change the canonical GeoParquet schema or delivery architecture; defects in those foundations require a separately approved scope update."
+      ],
+      "exit_requirements": [
+        "Each selected Caribbean country has a bounded profile, provenance record, deterministic artifact manifest, and benchmark result.",
+        "Country outcomes and limitations are documented without blocking on weak or unavailable countries.",
+        "All scoped tests pass against the approved baseline and a Phase 9 walkthrough records rollback and unresolved risks."
+      ]
     },
     {
       "phase_id": "georef-central-american-coverage",

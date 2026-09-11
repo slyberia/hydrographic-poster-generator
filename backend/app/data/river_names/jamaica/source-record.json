@@ -1,0 +1,140 @@
+{
+  "captured_at": "2026-09-11T15:58:57.080009+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced Jamaica river systems",
+  "independent_reference": {
+    "publisher": "Jamaica Water Resources Authority",
+    "title": "A National Water Resources Master Plan for Jamaica 2022",
+    "url": "https://www.wra.gov.jm/wp-content/uploads/2024/09/A-National-Water-Resources-Master-Plan-for-Jamaica-2022.pdf"
+  },
+  "objects": [
+    {
+      "name": "Great River",
+      "source_name": "Great River",
+      "osm_type": "way",
+      "osm_id": 27247835,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Grande",
+      "source_name": "Rio Grande River",
+      "osm_type": "way",
+      "osm_id": 336011418,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Grande",
+      "source_name": "Back Rio Grande River",
+      "osm_type": "way",
+      "osm_id": 205564580,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Grande",
+      "source_name": "Rio Grande River",
+      "osm_type": "way",
+      "osm_id": 935769450,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Grande",
+      "source_name": "Rio Grande River",
+      "osm_type": "way",
+      "osm_id": 935769451,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Grande",
+      "source_name": "Back Rio Grande River",
+      "osm_type": "way",
+      "osm_id": 754734145,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Cobre",
+      "source_name": "Rio Cobre",
+      "osm_type": "way",
+      "osm_id": 50436492,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Cobre",
+      "source_name": "Rio Cobre",
+      "osm_type": "way",
+      "osm_id": 50340163,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Cobre",
+      "source_name": "Rio Cobre",
+      "osm_type": "way",
+      "osm_id": 30098465,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Cobre",
+      "source_name": "Rio Cobre",
+      "osm_type": "way",
+      "osm_id": 133307440,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Rio Cobre",
+      "source_name": "Rio Cobre",
+      "osm_type": "way",
+      "osm_id": 216074111,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Black River",
+      "source_name": "Black River",
+      "osm_type": "relation",
+      "osm_id": 19377113,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Black River",
+      "source_name": "Black River",
+      "osm_type": "way",
+      "osm_id": 310853978,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Black River",
+      "source_name": "Black River",
+      "osm_type": "way",
+      "osm_id": 836095269,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

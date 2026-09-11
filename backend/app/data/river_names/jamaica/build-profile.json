@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "slug": "jamaica",
+  "country": "Jamaica",
+  "country_code": "JAM",
+  "geography_id": "3918122c-61f6-43cb-84cf-5e8213ab0b23",
+  "independent_reference": {
+    "publisher": "Jamaica Water Resources Authority",
+    "title": "A National Water Resources Master Plan for Jamaica 2022",
+    "url": "https://www.wra.gov.jm/wp-content/uploads/2024/09/A-National-Water-Resources-Master-Plan-for-Jamaica-2022.pdf"
+  },
+  "targets": [
+    {"name": "Great River", "aliases": ["great river"], "queries": ["Great River, Jamaica"]},
+    {"name": "Montego River", "aliases": ["montego", "montego river"], "queries": ["Montego River, Jamaica"]},
+    {"name": "Rio Grande", "aliases": ["rio grande"], "queries": ["Rio Grande, Jamaica"]},
+    {"name": "Rio Cobre", "aliases": ["rio cobre"], "queries": ["Rio Cobre, Jamaica"]},
+    {"name": "Black River", "aliases": ["black river"], "queries": ["Black River, Jamaica"]}
+  ]
+}

@@ -75,6 +75,21 @@ Independent target references:
 - Government of Belize flood report:
   https://naturalresources.gov.bz/wp-content/uploads/Flood-Forecast-June-20-2022.pdf
 
+### Jamaica — partial
+
+The first Phase 9 increment uses five bounded systems from the Jamaica Water
+Resources Authority national plan: Great River, Montego River, Rio Grande, Rio
+Cobre, and Black River. Four targets produced both qualifying OSM source
+geometry and confidently associated HydroRIVERS reaches. Montego River remains
+unverified in this build, so Jamaica is reported as `partial` rather than being
+treated as nationally complete.
+
+Independent target reference:
+
+- Jamaica Water Resources Authority, *A National Water Resources Master Plan for
+  Jamaica 2022*:
+  https://www.wra.gov.jm/wp-content/uploads/2024/09/A-National-Water-Resources-Master-Plan-for-Jamaica-2022.pdf
+
 ## Adding another country
 
 1. Select a bounded, representative target set from a national or similarly

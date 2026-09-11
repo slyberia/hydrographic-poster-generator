@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "country": "Jamaica",
+  "country_code": "JAM",
+  "geography_id": "3918122c-61f6-43cb-84cf-5e8213ab0b23",
+  "dataset_version": "da8057032e63852a3cbd81a635ab0e329aae6b50709168e1f2e7c7e6a33afaca",
+  "generated_at": "2026-09-11T15:58:57.080009+00:00",
+  "coverage_status": "partial",
+  "artifact": {
+    "path": "da8057032e63852a3cbd81a635ab0e329aae6b50709168e1f2e7c7e6a33afaca.json",
+    "sha256": "da8057032e63852a3cbd81a635ab0e329aae6b50709168e1f2e7c7e6a33afaca",
+    "byte_size": 122971,
+    "feature_count": 14,
+    "indexed_reach_count": 31
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "warning",
+    "coverage_status": "partial",
+    "independent_reference": {
+      "publisher": "Jamaica Water Resources Authority",
+      "title": "A National Water Resources Master Plan for Jamaica 2022",
+      "url": "https://www.wra.gov.jm/wp-content/uploads/2024/09/A-National-Water-Resources-Master-Plan-for-Jamaica-2022.pdf"
+    },
+    "target_summary": {
+      "evaluated": 5,
+      "passed": 4,
+      "failed": 1
+    },
+    "targets": {
+      "Great River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 4,
+        "median_distance_m": 123.0,
+        "p95_distance_m": 883.0
+      },
+      "Montego River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Rio Grande": {
+        "source_object_count": 5,
+        "display_segment_count": 5,
+        "matched_reach_count": 3,
+        "median_distance_m": 126.2,
+        "p95_distance_m": 531.5
+      },
+      "Rio Cobre": {
+        "source_object_count": 5,
+        "display_segment_count": 5,
+        "matched_reach_count": 12,
+        "median_distance_m": 189.7,
+        "p95_distance_m": 2282.3
+      },
+      "Black River": {
+        "source_object_count": 3,
+        "display_segment_count": 3,
+        "matched_reach_count": 12,
+        "median_distance_m": 205.7,
+        "p95_distance_m": 2949.2
+      }
+    },
+    "counts": {
+      "matched": 31
+    },
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}
