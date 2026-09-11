@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-11T16:56:56.240626+00:00",
+  "phase_id": "georef-central-american-coverage",
+  "baseline_commit": "f2c95af2a94a28aae241332ab92cea2fb95a1251",
+  "approved_baseline_file": ".agents\\state\\baselines\\georef-central-american-coverage\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_georef_central_american_coverage.json",
+    ".agents/state/baselines/georef-central-american-coverage/backend.stderr.txt",
+    ".agents/state/baselines/georef-central-american-coverage/backend.stdout.txt",
+    ".agents/state/baselines/georef-central-american-coverage/baseline_approved.json",
+    ".agents/state/baselines/georef-central-american-coverage/baseline_unapproved.json",
+    ".agents/state/baselines/georef-central-american-coverage/baseline_unapproved.md",
+    ".agents/state/baselines/georef-central-american-coverage/frontend_lint.stderr.txt",
+    ".agents/state/baselines/georef-central-american-coverage/frontend_lint.stdout.txt",
+    ".agents/state/baselines/georef-central-american-coverage/typescript.stderr.txt",
+    ".agents/state/baselines/georef-central-american-coverage/typescript.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/georef_phase_roadmap.json",
+    ".agents/state/verifications/georef-central-american-coverage/backend.xml",
+    "backend/app/data/river_names/costa-rica/2557e3f731637fa0c75fa4430dd24ec90d5918904a647a7daa9172dedb538acf.json",
+    "backend/app/data/river_names/costa-rica/build-profile.json",
+    "backend/app/data/river_names/costa-rica/evaluation.json",
+    "backend/app/data/river_names/costa-rica/manifest.json",
+    "backend/app/data/river_names/costa-rica/source-record.json",
+    "backend/tests/test_river_names.py",
+    "docs/RIVER_NAME_COVERAGE.md"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-central-american-coverage/backend.xml"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 130.812,
+      "stdout_file": ".agents\\state\\verifications\\georef-central-american-coverage\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-central-american-coverage\\backend.stderr.txt",
+      "test_case_count": 245
+    },
+    {
+      "name": "typescript",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 5.715,
+      "stdout_file": ".agents\\state\\verifications\\georef-central-american-coverage\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-central-american-coverage\\typescript.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 23.105,
+      "stdout_file": ".agents\\state\\verifications\\georef-central-american-coverage\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-central-american-coverage\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}
