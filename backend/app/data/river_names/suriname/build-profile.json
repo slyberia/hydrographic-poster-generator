@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "slug": "suriname",
+  "country": "Suriname",
+  "country_code": "SUR",
+  "geography_id": "91d56b28-6b91-4b64-bff6-4ed789a75577",
+  "independent_reference": {
+    "publisher": "Government of Suriname",
+    "title": "Strategic Environmental and Social Assessment for the Mining Sector of Suriname — Scoping Report",
+    "url": "https://gov.sr/wp-content/uploads/2023/03/Scoping-Report-FINAL-Incl-Appendix.pdf"
+  },
+  "targets": [
+    {"name": "Marowijne River", "aliases": ["marowijne", "maroni", "marowini", "marowijne river"], "queries": ["Marowijne River, Suriname", "Maroni River, Suriname"]},
+    {"name": "Commewijne River", "aliases": ["commewijne", "commewijne river"], "queries": ["Commewijne River, Suriname"]},
+    {"name": "Suriname River", "aliases": ["suriname", "suriname river"], "queries": ["Suriname River, Suriname"]},
+    {"name": "Saramacca River", "aliases": ["saramacca", "saramaka", "saramacca river"], "queries": ["Saramacca River, Suriname"]},
+    {"name": "Coppename River", "aliases": ["coppename", "coppename river"], "queries": ["Coppename River, Suriname"]},
+    {"name": "Nickerie River", "aliases": ["nickerie", "nickerie river"], "queries": ["Nickerie River, Suriname"]},
+    {"name": "Corantijn River", "aliases": ["corantijn", "corentyne", "corantijn river", "corentyne river"], "queries": ["Corantijn River, Suriname", "Corentyne River, Suriname"]}
+  ]
+}

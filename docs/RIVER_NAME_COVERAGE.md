@@ -106,6 +106,21 @@ Independent target reference:
   Costa Rica*:
   https://www.cne.go.cr/CEDO-CRID/pdf/spa/doc934/doc934-b1.pdf
 
+### Suriname — partial
+
+The first Phase 11 increment uses the seven major rivers identified by the
+Government of Suriname: Marowijne, Commewijne, Suriname, Saramacca, Coppename,
+Nickerie, and Corantijn. Three targets produced qualifying OSM source geometry
+and confidently associated HydroRIVERS reaches. Saramacca, Coppename, Nickerie,
+and Corantijn produced no qualifying source object in this bounded build, so
+Suriname is reported as `partial`; no missing matches are fabricated.
+
+Independent target reference:
+
+- Government of Suriname, *Strategic Environmental and Social Assessment for
+  the Mining Sector of Suriname — Scoping Report*:
+  https://gov.sr/wp-content/uploads/2023/03/Scoping-Report-FINAL-Incl-Appendix.pdf
+
 ## Adding another country
 
 1. Select a bounded, representative target set from a national or similarly
