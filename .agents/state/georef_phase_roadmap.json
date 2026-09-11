@@ -3,7 +3,7 @@
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
   "current_phase_id": "georef-central-american-coverage",
-  "current_phase_gate": "Phase 10 is approved to begin on its isolated branch; implementation remains gated on the recorded baseline receiving separate human approval.",
+  "current_phase_gate": "Phase 10 implementation is complete and its closeout is pending review/merge; Phase 11 remains gated on the finalized Phase 10 main state.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -75,7 +75,7 @@
       "phase_id": "georef-central-american-coverage",
       "phase_number": 10,
       "name": "Central American country coverage batch",
-      "status": "active_implementation",
+      "status": "implementation_complete_closeout_pending",
       "depends_on": ["georef-geoparquet-foundation", "georef-caribbean-coverage"],
       "objective": "Build and benchmark bounded Central American country increments using the established artifact, GeoParquet, and provenance contracts; weak countries may remain partial or unavailable.",
       "scope_notes": [
