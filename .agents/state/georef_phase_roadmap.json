@@ -2,10 +2,25 @@
   "schema_version": 1,
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
-  "current_phase_id": "georef-south-american-coverage",
-  "current_phase_gate": "Phase 11 implementation is complete for the selected Suriname increment; closeout is pending review/merge before the final program closeout can begin.",
+  "current_phase_id": "georef-country-etl-hitl",
+  "current_phase_gate": "Phase 12 is approved for implementation after the merged Phase 11 closeout; it must reproduce the five existing country outcomes before new coverage is attempted.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
+    {
+      "phase_id": "georef-country-etl-hitl",
+      "phase_number": 12,
+      "name": "Country ETL and HITL review automation",
+      "status": "implementation_complete_closeout_pending",
+      "depends_on": ["georef-south-american-coverage"],
+      "objective": "Turn country evaluation into a deterministic ETL and review pipeline with a machine-readable registry, reproducible HITL rubric, exception queue, standardized evidence bundles, and regression equivalence for Belize, Costa Rica, Guyana, Jamaica, and Suriname.",
+      "required_validation": [
+        "The five existing country outcomes are reproduced without changing their artifacts or classifications.",
+        "Automated checks distinguish routine pass, review required, and blocked outcomes.",
+        "Missing qualifying source objects remain target-level not_evaluated.",
+        "No new country coverage, production write, runtime scraping, database migration, or delivery-architecture change is introduced."
+      ],
+      "must_not_include": ["Country coverage expansion", "Database migrations", "Runtime scraping", "Recovery algorithm replacement", "Delivery architecture changes", "Raw source dataset commits"]
+    },
     {
       "phase_id": "georef-recovery-calibration",
       "phase_number": 7,

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "purpose": "Approved country evaluation inputs and regression expectations.",
+  "countries": [
+    {"slug":"belize","country_code":"BZ","status":"partial","manifest":"belize/manifest.json"},
+    {"slug":"costa-rica","country_code":"CRI","status":"verified","manifest":"costa-rica/manifest.json"},
+    {"slug":"guyana","country_code":"GY","status":"passed","manifest":"guyana/manifest.json"},
+    {"slug":"jamaica","country_code":"JAM","status":"partial","manifest":"jamaica/manifest.json"},
+    {"slug":"suriname","country_code":"SUR","status":"partial","manifest":"suriname/manifest.json"}
+  ]
+}

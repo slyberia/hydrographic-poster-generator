@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-11T23:13:15.121688+00:00",
+  "phase_id": "georef-country-etl-hitl",
+  "baseline_commit": "05f772b7b03d898e101072aa619631ac415b1ba8",
+  "approved_baseline_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_georef_phase_12.json",
+    ".agents/state/baselines/georef-country-etl-hitl/backend.stderr.txt",
+    ".agents/state/baselines/georef-country-etl-hitl/backend.stdout.txt",
+    ".agents/state/baselines/georef-country-etl-hitl/baseline_approved.json",
+    ".agents/state/baselines/georef-country-etl-hitl/baseline_approved.md",
+    ".agents/state/baselines/georef-country-etl-hitl/baseline_review.md",
+    ".agents/state/baselines/georef-country-etl-hitl/baseline_unapproved.json",
+    ".agents/state/baselines/georef-country-etl-hitl/baseline_unapproved.md",
+    ".agents/state/baselines/georef-country-etl-hitl/frontend_lint.stderr.txt",
+    ".agents/state/baselines/georef-country-etl-hitl/frontend_lint.stdout.txt",
+    ".agents/state/baselines/georef-country-etl-hitl/typescript.stderr.txt",
+    ".agents/state/baselines/georef-country-etl-hitl/typescript.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/georef_phase_roadmap.json",
+    ".agents/state/verifications/georef-country-etl-hitl/backend.xml",
+    "backend/app/data/river_names/country_registry.json",
+    "backend/app/services/georef_country_pipeline.py",
+    "backend/tests/test_georef_country_pipeline.py",
+    "docs/GEOREFERENCING_HITL_REVIEW_RUBRIC.md",
+    "docs/GEOREFERENCING_PHASE_12_COUNTRY_ETL_HITL.md",
+    "scripts/evaluate_country.py"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-country-etl-hitl/backend.xml"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 150.298,
+      "stdout_file": ".agents\\state\\verifications\\georef-country-etl-hitl\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-country-etl-hitl\\backend.stderr.txt",
+      "test_case_count": 249
+    },
+    {
+      "name": "typescript",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 7.938,
+      "stdout_file": ".agents\\state\\verifications\\georef-country-etl-hitl\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-country-etl-hitl\\typescript.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 28.208,
+      "stdout_file": ".agents\\state\\verifications\\georef-country-etl-hitl\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-country-etl-hitl\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}
