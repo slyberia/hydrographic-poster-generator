@@ -33,3 +33,10 @@ Review the rubric thresholds and the intentional Guyana legacy-schema flag
 before merging. Review the broad portal references in the newly seeded profiles
 before treating their source provenance as final. Follow-up corrections remain
 separately reviewable.
+
+## Closeout decision
+
+The human reviewer accepted the rubric thresholds, the intentional Guyana
+legacy-schema flag, the bounded provenance limitations in the seeded profiles,
+and the four withheld country outcomes. Phase 12 is closed. The final program
+closeout remains a separate phase and gate.

@@ -10,7 +10,7 @@
       "phase_id": "georef-country-etl-hitl",
       "phase_number": 12,
       "name": "Country ETL and HITL review automation",
-      "status": "implementation_complete_closeout_pending",
+      "status": "closed",
       "depends_on": ["georef-south-american-coverage"],
       "objective": "Turn country evaluation into a deterministic ETL and review pipeline, define approved build profiles for the 21 unevaluated countries, and run the 21-country expansion with reproducible evidence and HITL review.",
       "required_validation": [
