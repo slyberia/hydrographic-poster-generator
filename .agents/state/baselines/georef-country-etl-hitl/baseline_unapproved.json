@@ -4,8 +4,8 @@
   "approved_by_human": false,
   "phase_id": "georef-country-etl-hitl",
   "branch": "codex/georef-phase-12-country-etl-hitl",
-  "commit": "05f772b7b03d898e101072aa619631ac415b1ba8",
-  "generated_at": "2026-09-11T23:03:44.666331+00:00",
+  "commit": "0e78a1217ff15713bfdd0930e96a319439398e56",
+  "generated_at": "2026-09-11T23:32:04.260378+00:00",
   "commands_file": ".agents\\config\\verification_commands_georef_phase_12.json",
   "commands": [
     {
@@ -21,11 +21,11 @@
         "--junitxml=.agents/state/verifications/georef-country-etl-hitl/backend.xml"
       ],
       "exit_code": 0,
-      "duration_seconds": 197.568,
+      "duration_seconds": 112.791,
       "stdout_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\backend.stdout.txt",
       "stderr_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\backend.stderr.txt",
       "junit_xml": ".agents/state/verifications/georef-country-etl-hitl/backend.xml",
-      "test_case_count": 246,
+      "test_case_count": 249,
       "classification": "not_applicable"
     },
     {
@@ -37,7 +37,7 @@
         "--noEmit"
       ],
       "exit_code": 0,
-      "duration_seconds": 10.363,
+      "duration_seconds": 4.79,
       "stdout_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\typescript.stdout.txt",
       "stderr_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\typescript.stderr.txt",
       "junit_xml": null,
@@ -53,7 +53,7 @@
         "."
       ],
       "exit_code": 0,
-      "duration_seconds": 133.114,
+      "duration_seconds": 17.381,
       "stdout_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\frontend_lint.stdout.txt",
       "stderr_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\frontend_lint.stderr.txt",
       "junit_xml": null,
@@ -718,6 +718,24 @@
     },
     {
       "id": "backend.tests.test_georef_artifact_delivery::test_cdn_is_optional_and_uses_the_packaged_route_by_default",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_country_pipeline::test_registry_covers_existing_evaluated_countries",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_country_pipeline::test_review_reproduces_existing_country_statuses_and_flags_limitations",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_country_pipeline::test_review_output_is_json_serializable",
       "status": "passed",
       "message": "",
       "classification": "not_applicable"

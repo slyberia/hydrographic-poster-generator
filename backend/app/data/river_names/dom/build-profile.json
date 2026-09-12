@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "dom",
+  "country": "Dominican Republic",
+  "country_code": "DOM",
+  "geography_id": "c5653596-20f4-464d-8d35-13030af4ebab",
+  "independent_reference": {
+    "publisher": "Instituto Nacional de Recursos Hidráulicos",
+    "title": "Cuentas del Agua de la República Dominicana",
+    "url": "https://cdn.bancentral.gov.do/documents/mig/otras-publicaciones/Cuentas_del_Agua_RD.pdf"
+  },
+  "targets": [
+    {
+      "name": "Yaque del Norte River",
+      "aliases": [
+        "rio yaque del norte",
+        "río yaque del norte",
+        "yaque del norte",
+        "yaque del norte river"
+      ],
+      "queries": [
+        "Yaque del Norte River, Dominican Republic"
+      ]
+    },
+    {
+      "name": "Yuna River",
+      "aliases": [
+        "rio yuna",
+        "río yuna",
+        "yuna",
+        "yuna river"
+      ],
+      "queries": [
+        "Yuna River, Dominican Republic"
+      ]
+    },
+    {
+      "name": "Yaque del Sur River",
+      "aliases": [
+        "rio yaque del sur",
+        "río yaque del sur",
+        "yaque del sur",
+        "yaque del sur river"
+      ],
+      "queries": [
+        "Yaque del Sur River, Dominican Republic"
+      ]
+    },
+    {
+      "name": "Ozama River",
+      "aliases": [
+        "ozama",
+        "ozama river",
+        "rio ozama",
+        "río ozama"
+      ],
+      "queries": [
+        "Ozama River, Dominican Republic"
+      ]
+    },
+    {
+      "name": "Nizao River",
+      "aliases": [
+        "nizao",
+        "nizao river",
+        "rio nizao",
+        "río nizao"
+      ],
+      "queries": [
+        "Nizao River, Dominican Republic"
+      ]
+    }
+  ]
+}

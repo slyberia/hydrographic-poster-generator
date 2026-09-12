@@ -1,0 +1,41 @@
+{
+  "captured_at": "2026-09-11T23:46:54.295866+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "4 independently referenced Saint Lucia river systems",
+  "independent_reference": {
+    "publisher": "Government of Saint Lucia",
+    "title": "National water resources information",
+    "url": "https://www.govt.lc/"
+  },
+  "objects": [
+    {
+      "name": "Cul de Sac River",
+      "source_name": "Cul de Sac River",
+      "osm_type": "way",
+      "osm_id": 372246867,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Dennery River",
+      "source_name": "Dennery River",
+      "osm_type": "relation",
+      "osm_id": 14573566,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Roseau River",
+      "source_name": "Roseau River",
+      "osm_type": "way",
+      "osm_id": 26296129,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

@@ -1,0 +1,140 @@
+{
+  "captured_at": "2026-09-11T23:45:37.395316+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced Ecuador river systems",
+  "independent_reference": {
+    "publisher": "Ministerio del Ambiente, Agua y Transici\u00f3n Ecol\u00f3gica",
+    "title": "National water resources information",
+    "url": "https://www.ambiente.gob.ec/"
+  },
+  "objects": [
+    {
+      "name": "Guayas River",
+      "source_name": "R\u00edo Guayas",
+      "osm_type": "relation",
+      "osm_id": 2127886,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Guayas River",
+      "source_name": "R\u00edo Guayas",
+      "osm_type": "relation",
+      "osm_id": 2127886,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Guayas River",
+      "source_name": "R\u00edo Guayas",
+      "osm_type": "relation",
+      "osm_id": 2127886,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Esmeraldas River",
+      "source_name": "R\u00edo Esmeraldas",
+      "osm_type": "relation",
+      "osm_id": 4502127,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Esmeraldas River",
+      "source_name": "R\u00edo Esmeraldas",
+      "osm_type": "relation",
+      "osm_id": 7613556,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Esmeraldas River",
+      "source_name": "R\u00edo Esmeraldas",
+      "osm_type": "relation",
+      "osm_id": 7613556,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Napo River",
+      "source_name": "RIO NAPO",
+      "osm_type": "way",
+      "osm_id": 1553736267,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Napo River",
+      "source_name": "R\u00edo Anzu",
+      "osm_type": "way",
+      "osm_id": 28727157,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Pastaza River",
+      "source_name": "R\u00edo Pastaza",
+      "osm_type": "relation",
+      "osm_id": 2127879,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Pastaza River",
+      "source_name": "R\u00edo Pastaza",
+      "osm_type": "way",
+      "osm_id": 28935031,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Pastaza River",
+      "source_name": "R\u00edo Pastaza",
+      "osm_type": "way",
+      "osm_id": 28935033,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santiago River",
+      "source_name": "Santiago",
+      "osm_type": "way",
+      "osm_id": 1223945413,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santiago River",
+      "source_name": "Santiago",
+      "osm_type": "way",
+      "osm_id": 129541537,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santiago River",
+      "source_name": "Santiago",
+      "osm_type": "way",
+      "osm_id": 732794582,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

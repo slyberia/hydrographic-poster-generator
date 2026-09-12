@@ -5,9 +5,11 @@ from app.services.georef_country_pipeline import load_registry, review_registere
 
 def test_registry_covers_existing_evaluated_countries():
     registry = load_registry()
-    assert {item["slug"] for item in registry["countries"]} == {
-        "belize", "costa-rica", "guyana", "jamaica", "suriname"
-    }
+    slugs = {item["slug"] for item in registry["countries"]}
+    assert {"belize", "costa-rica", "guyana", "jamaica", "suriname"} <= slugs
+    assert len(slugs) == 26
+    assert sum(item.get("regression_fixture", False) for item in registry["countries"]) == 5
+    assert all(item["profile"].endswith("build-profile.json") for item in registry["countries"])
 
 
 def test_review_reproduces_existing_country_statuses_and_flags_limitations():

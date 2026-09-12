@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "slug": "hti",
+  "country": "Haiti",
+  "country_code": "HTI",
+  "geography_id": "44dd9db5-6a1e-4766-be3c-59030aca395b",
+  "independent_reference": {
+    "publisher": "Ministère de l'Environnement d'Haïti",
+    "title": "National water resources information",
+    "url": "https://mde.gouv.ht/"
+  },
+  "targets": [
+    {
+      "name": "Artibonite River",
+      "aliases": [
+        "artibonite",
+        "artibonite river",
+        "rio artibonite",
+        "río artibonite"
+      ],
+      "queries": [
+        "Artibonite River, Haiti"
+      ]
+    },
+    {
+      "name": "Trois Rivieres",
+      "aliases": [
+        "rio trois rivieres",
+        "río trois rivieres",
+        "trois rivieres"
+      ],
+      "queries": [
+        "Trois Rivieres, Haiti"
+      ]
+    },
+    {
+      "name": "Grande Anse River",
+      "aliases": [
+        "grande anse",
+        "grande anse river",
+        "rio grande anse",
+        "río grande anse"
+      ],
+      "queries": [
+        "Grande Anse River, Haiti"
+      ]
+    },
+    {
+      "name": "Cavaillon River",
+      "aliases": [
+        "cavaillon",
+        "cavaillon river",
+        "rio cavaillon",
+        "río cavaillon"
+      ],
+      "queries": [
+        "Cavaillon River, Haiti"
+      ]
+    }
+  ]
+}

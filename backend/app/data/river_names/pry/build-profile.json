@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "pry",
+  "country": "Paraguay",
+  "country_code": "PRY",
+  "geography_id": "8ad0af82-34f8-48f1-a047-69358a3134e9",
+  "independent_reference": {
+    "publisher": "Ministerio del Ambiente y Desarrollo Sostenible",
+    "title": "Fourth National Communication: Hydrography",
+    "url": "https://www.mades.gov.py/wp-content/uploads/2025/04/Cuarta-Comunicacion-Nacional-de-Paraguay_UNFCCC1.pdf"
+  },
+  "targets": [
+    {
+      "name": "Paraguay River",
+      "aliases": [
+        "paraguay",
+        "paraguay river",
+        "rio paraguay",
+        "río paraguay"
+      ],
+      "queries": [
+        "Paraguay River, Paraguay"
+      ]
+    },
+    {
+      "name": "Parana River",
+      "aliases": [
+        "parana",
+        "parana river",
+        "rio parana",
+        "río parana"
+      ],
+      "queries": [
+        "Parana River, Paraguay"
+      ]
+    },
+    {
+      "name": "Pilcomayo River",
+      "aliases": [
+        "pilcomayo",
+        "pilcomayo river",
+        "rio pilcomayo",
+        "río pilcomayo"
+      ],
+      "queries": [
+        "Pilcomayo River, Paraguay"
+      ]
+    },
+    {
+      "name": "Tebicuary River",
+      "aliases": [
+        "rio tebicuary",
+        "río tebicuary",
+        "tebicuary",
+        "tebicuary river"
+      ],
+      "queries": [
+        "Tebicuary River, Paraguay"
+      ]
+    },
+    {
+      "name": "Ypane River",
+      "aliases": [
+        "rio ypane",
+        "río ypane",
+        "ypane",
+        "ypane river"
+      ],
+      "queries": [
+        "Ypane River, Paraguay"
+      ]
+    }
+  ]
+}

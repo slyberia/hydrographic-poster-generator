@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "guf",
+  "country": "French Guiana",
+  "country_code": "GUF",
+  "geography_id": "f8c7e4d9-ed41-4ba2-ad7b-ccd219ad3a72",
+  "independent_reference": {
+    "publisher": "Direction de l'Environnement de la Guyane",
+    "title": "Hydrological information for French Guiana",
+    "url": "https://www.guyane.developpement-durable.gouv.fr/"
+  },
+  "targets": [
+    {
+      "name": "Maroni River",
+      "aliases": [
+        "maroni",
+        "maroni river",
+        "rio maroni",
+        "río maroni"
+      ],
+      "queries": [
+        "Maroni River, French Guiana"
+      ]
+    },
+    {
+      "name": "Oyapock River",
+      "aliases": [
+        "oyapock",
+        "oyapock river",
+        "rio oyapock",
+        "río oyapock"
+      ],
+      "queries": [
+        "Oyapock River, French Guiana"
+      ]
+    },
+    {
+      "name": "Approuague River",
+      "aliases": [
+        "approuague",
+        "approuague river",
+        "rio approuague",
+        "río approuague"
+      ],
+      "queries": [
+        "Approuague River, French Guiana"
+      ]
+    },
+    {
+      "name": "Mahury River",
+      "aliases": [
+        "mahury",
+        "mahury river",
+        "rio mahury",
+        "río mahury"
+      ],
+      "queries": [
+        "Mahury River, French Guiana"
+      ]
+    },
+    {
+      "name": "Sinnamary River",
+      "aliases": [
+        "rio sinnamary",
+        "río sinnamary",
+        "sinnamary",
+        "sinnamary river"
+      ],
+      "queries": [
+        "Sinnamary River, French Guiana"
+      ]
+    }
+  ]
+}

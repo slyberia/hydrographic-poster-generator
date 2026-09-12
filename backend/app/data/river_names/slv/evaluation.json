@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "status": "warning",
+  "coverage_status": "partial",
+  "independent_reference": {
+    "publisher": "Ministerio de Medio Ambiente y Recursos Naturales",
+    "title": "National water resources information",
+    "url": "https://www.ambiente.gob.sv/"
+  },
+  "target_summary": {
+    "evaluated": 5,
+    "passed": 3,
+    "failed": 2
+  },
+  "targets": {
+    "Lempa River": {
+      "source_object_count": 1,
+      "display_segment_count": 4,
+      "matched_reach_count": 129,
+      "median_distance_m": 183.7,
+      "p95_distance_m": 2539.0
+    },
+    "Paz River": {
+      "source_object_count": 2,
+      "display_segment_count": 2,
+      "matched_reach_count": 24,
+      "median_distance_m": 81.9,
+      "p95_distance_m": 2196.3
+    },
+    "Jiboa River": {
+      "source_object_count": 0,
+      "display_segment_count": 0,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Grande de San Miguel River": {
+      "source_object_count": 0,
+      "display_segment_count": 0,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Goascoran River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 1,
+      "median_distance_m": 3653.3,
+      "p95_distance_m": 3990.1
+    }
+  },
+  "counts": {
+    "matched": 154,
+    "ambiguous": 9
+  },
+  "limitations": [
+    "This is source-to-source agreement, not surveyed ground truth.",
+    "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+    "Independent references validate the evaluation scope, not every OSM geometry or name.",
+    "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+  ]
+}

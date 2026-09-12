@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "country": "El Salvador",
+  "country_code": "SLV",
+  "geography_id": "6660955a-d5c1-4a86-8c6e-623d30ca7a20",
+  "dataset_version": "d4692346677549289aefb7da63b1f2baf9a8c1ff1d2dfde82cdb4acf27d10216",
+  "generated_at": "2026-09-11T23:47:36.385144+00:00",
+  "coverage_status": "partial",
+  "artifact": {
+    "path": "d4692346677549289aefb7da63b1f2baf9a8c1ff1d2dfde82cdb4acf27d10216.json",
+    "sha256": "d4692346677549289aefb7da63b1f2baf9a8c1ff1d2dfde82cdb4acf27d10216",
+    "byte_size": 254069,
+    "feature_count": 7,
+    "indexed_reach_count": 163
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "warning",
+    "coverage_status": "partial",
+    "independent_reference": {
+      "publisher": "Ministerio de Medio Ambiente y Recursos Naturales",
+      "title": "National water resources information",
+      "url": "https://www.ambiente.gob.sv/"
+    },
+    "target_summary": {
+      "evaluated": 5,
+      "passed": 3,
+      "failed": 2
+    },
+    "targets": {
+      "Lempa River": {
+        "source_object_count": 1,
+        "display_segment_count": 4,
+        "matched_reach_count": 129,
+        "median_distance_m": 183.7,
+        "p95_distance_m": 2539.0
+      },
+      "Paz River": {
+        "source_object_count": 2,
+        "display_segment_count": 2,
+        "matched_reach_count": 24,
+        "median_distance_m": 81.9,
+        "p95_distance_m": 2196.3
+      },
+      "Jiboa River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Grande de San Miguel River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Goascoran River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 1,
+        "median_distance_m": 3653.3,
+        "p95_distance_m": 3990.1
+      }
+    },
+    "counts": {
+      "matched": 154,
+      "ambiguous": 9
+    },
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

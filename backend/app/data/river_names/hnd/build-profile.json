@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "hnd",
+  "country": "Honduras",
+  "country_code": "HND",
+  "geography_id": "db1698aa-31b1-4957-a027-96614048703d",
+  "independent_reference": {
+    "publisher": "Secretaría de Recursos Naturales y Ambiente",
+    "title": "National water resources information",
+    "url": "https://www.miambiente.gob.hn/"
+  },
+  "targets": [
+    {
+      "name": "Patuca River",
+      "aliases": [
+        "patuca",
+        "patuca river",
+        "rio patuca",
+        "río patuca"
+      ],
+      "queries": [
+        "Patuca River, Honduras"
+      ]
+    },
+    {
+      "name": "Ulua River",
+      "aliases": [
+        "rio ulua",
+        "río ulua",
+        "ulua",
+        "ulua river"
+      ],
+      "queries": [
+        "Ulua River, Honduras"
+      ]
+    },
+    {
+      "name": "Aguan River",
+      "aliases": [
+        "aguan",
+        "aguan river",
+        "rio aguan",
+        "río aguan"
+      ],
+      "queries": [
+        "Aguan River, Honduras"
+      ]
+    },
+    {
+      "name": "Chamelecon River",
+      "aliases": [
+        "chamelecon",
+        "chamelecon river",
+        "rio chamelecon",
+        "río chamelecon"
+      ],
+      "queries": [
+        "Chamelecon River, Honduras"
+      ]
+    },
+    {
+      "name": "Cangrejal River",
+      "aliases": [
+        "cangrejal",
+        "cangrejal river",
+        "rio cangrejal",
+        "río cangrejal"
+      ],
+      "queries": [
+        "Cangrejal River, Honduras"
+      ]
+    }
+  ]
+}

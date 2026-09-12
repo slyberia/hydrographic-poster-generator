@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "slug": "bhs",
+  "country": "The Bahamas",
+  "country_code": "BHS",
+  "geography_id": "03712a29-e771-4f1b-a7c0-9e610fa84919",
+  "independent_reference": {
+    "publisher": "Government of The Bahamas",
+    "title": "Environmental Baseline Statement",
+    "url": "https://opm.gov.bs/wp-content/uploads/2025/02/space-x-environmental-baseline-statement-25-march-2024.pdf"
+  },
+  "targets": [],
+  "profile_mode": "no_named_perennial_river_systems"
+}

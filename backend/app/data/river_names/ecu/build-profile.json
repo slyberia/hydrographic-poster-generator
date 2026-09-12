@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "ecu",
+  "country": "Ecuador",
+  "country_code": "ECU",
+  "geography_id": "174e7dce-2e7e-4eca-a1d6-4d5d758249f9",
+  "independent_reference": {
+    "publisher": "Ministerio del Ambiente, Agua y Transición Ecológica",
+    "title": "National water resources information",
+    "url": "https://www.ambiente.gob.ec/"
+  },
+  "targets": [
+    {
+      "name": "Guayas River",
+      "aliases": [
+        "guayas",
+        "guayas river",
+        "rio guayas",
+        "río guayas"
+      ],
+      "queries": [
+        "Guayas River, Ecuador"
+      ]
+    },
+    {
+      "name": "Esmeraldas River",
+      "aliases": [
+        "esmeraldas",
+        "esmeraldas river",
+        "rio esmeraldas",
+        "río esmeraldas"
+      ],
+      "queries": [
+        "Esmeraldas River, Ecuador"
+      ]
+    },
+    {
+      "name": "Napo River",
+      "aliases": [
+        "napo",
+        "napo river",
+        "rio napo",
+        "río napo"
+      ],
+      "queries": [
+        "Napo River, Ecuador"
+      ]
+    },
+    {
+      "name": "Pastaza River",
+      "aliases": [
+        "pastaza",
+        "pastaza river",
+        "rio pastaza",
+        "río pastaza"
+      ],
+      "queries": [
+        "Pastaza River, Ecuador"
+      ]
+    },
+    {
+      "name": "Santiago River",
+      "aliases": [
+        "rio santiago",
+        "río santiago",
+        "santiago",
+        "santiago river"
+      ],
+      "queries": [
+        "Santiago River, Ecuador"
+      ]
+    }
+  ]
+}

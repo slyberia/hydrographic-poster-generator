@@ -1,0 +1,13 @@
+{
+  "countries": [
+    {
+      "detail": "{\"detail\":\"Geography '8ad0af82-34f8-48f1-a047-69358a3134e9' not found\"}",
+      "disposition": "accepted_with_limitations",
+      "published": false,
+      "reason": "runtime HydroRIVERS clip is unavailable for the registered geography",
+      "slug": "pry",
+      "status": "unavailable"
+    }
+  ],
+  "schema_version": 1
+}

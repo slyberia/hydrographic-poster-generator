@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "slv",
+  "country": "El Salvador",
+  "country_code": "SLV",
+  "geography_id": "6660955a-d5c1-4a86-8c6e-623d30ca7a20",
+  "independent_reference": {
+    "publisher": "Ministerio de Medio Ambiente y Recursos Naturales",
+    "title": "National water resources information",
+    "url": "https://www.ambiente.gob.sv/"
+  },
+  "targets": [
+    {
+      "name": "Lempa River",
+      "aliases": [
+        "lempa",
+        "lempa river",
+        "rio lempa",
+        "río lempa"
+      ],
+      "queries": [
+        "Lempa River, El Salvador"
+      ]
+    },
+    {
+      "name": "Paz River",
+      "aliases": [
+        "paz",
+        "paz river",
+        "rio paz",
+        "río paz"
+      ],
+      "queries": [
+        "Paz River, El Salvador"
+      ]
+    },
+    {
+      "name": "Jiboa River",
+      "aliases": [
+        "jiboa",
+        "jiboa river",
+        "rio jiboa",
+        "río jiboa"
+      ],
+      "queries": [
+        "Jiboa River, El Salvador"
+      ]
+    },
+    {
+      "name": "Grande de San Miguel River",
+      "aliases": [
+        "grande de san miguel",
+        "grande de san miguel river",
+        "rio grande de san miguel",
+        "río grande de san miguel"
+      ],
+      "queries": [
+        "Grande de San Miguel River, El Salvador"
+      ]
+    },
+    {
+      "name": "Goascoran River",
+      "aliases": [
+        "goascoran",
+        "goascoran river",
+        "rio goascoran",
+        "río goascoran"
+      ],
+      "queries": [
+        "Goascoran River, El Salvador"
+      ]
+    }
+  ]
+}

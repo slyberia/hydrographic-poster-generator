@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "gtm",
+  "country": "Guatemala",
+  "country_code": "GTM",
+  "geography_id": "d78ade66-2be4-4c49-9cde-38240cc7e846",
+  "independent_reference": {
+    "publisher": "Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología",
+    "title": "National hydrological information",
+    "url": "https://insivumeh.gob.gt/"
+  },
+  "targets": [
+    {
+      "name": "Motagua River",
+      "aliases": [
+        "motagua",
+        "motagua river",
+        "rio motagua",
+        "río motagua"
+      ],
+      "queries": [
+        "Motagua River, Guatemala"
+      ]
+    },
+    {
+      "name": "Usumacinta River",
+      "aliases": [
+        "rio usumacinta",
+        "río usumacinta",
+        "usumacinta",
+        "usumacinta river"
+      ],
+      "queries": [
+        "Usumacinta River, Guatemala"
+      ]
+    },
+    {
+      "name": "Polochic River",
+      "aliases": [
+        "polochic",
+        "polochic river",
+        "rio polochic",
+        "río polochic"
+      ],
+      "queries": [
+        "Polochic River, Guatemala"
+      ]
+    },
+    {
+      "name": "Cahabon River",
+      "aliases": [
+        "cahabon",
+        "cahabon river",
+        "rio cahabon",
+        "río cahabon"
+      ],
+      "queries": [
+        "Cahabon River, Guatemala"
+      ]
+    },
+    {
+      "name": "Samatala River",
+      "aliases": [
+        "rio samatala",
+        "río samatala",
+        "samatala",
+        "samatala river"
+      ],
+      "queries": [
+        "Samatala River, Guatemala"
+      ]
+    }
+  ]
+}

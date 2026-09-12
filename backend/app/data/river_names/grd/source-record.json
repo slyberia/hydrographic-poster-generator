@@ -1,0 +1,41 @@
+{
+  "captured_at": "2026-09-11T23:45:51.013729+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "6 independently referenced Grenada river systems",
+  "independent_reference": {
+    "publisher": "Government of Grenada",
+    "title": "National Water Policy and river network assessment",
+    "url": "https://climateresilience.gov.gd/docs/grenada-national-water-policy/"
+  },
+  "objects": [
+    {
+      "name": "Great River",
+      "source_name": "Great River",
+      "osm_type": "way",
+      "osm_id": 25530936,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Great River",
+      "source_name": "Great River",
+      "osm_type": "way",
+      "osm_id": 25566684,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Beausejour River",
+      "source_name": "Beausejour River",
+      "osm_type": "way",
+      "osm_id": 439204478,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

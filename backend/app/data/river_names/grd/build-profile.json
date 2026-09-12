@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "slug": "grd",
+  "country": "Grenada",
+  "country_code": "GRD",
+  "geography_id": "d113cff7-bd13-44db-8f70-618be78cfdee",
+  "independent_reference": {
+    "publisher": "Government of Grenada",
+    "title": "National Water Policy and river network assessment",
+    "url": "https://climateresilience.gov.gd/docs/grenada-national-water-policy/"
+  },
+  "targets": [
+    {
+      "name": "Great River",
+      "aliases": [
+        "great",
+        "great river",
+        "rio great",
+        "río great"
+      ],
+      "queries": [
+        "Great River, Grenada"
+      ]
+    },
+    {
+      "name": "Beausejour River",
+      "aliases": [
+        "beausejour",
+        "beausejour river",
+        "rio beausejour",
+        "río beausejour"
+      ],
+      "queries": [
+        "Beausejour River, Grenada"
+      ]
+    },
+    {
+      "name": "Pearls River",
+      "aliases": [
+        "pearls",
+        "pearls river",
+        "rio pearls",
+        "río pearls"
+      ],
+      "queries": [
+        "Pearls River, Grenada"
+      ]
+    },
+    {
+      "name": "Saint Patrick River",
+      "aliases": [
+        "rio saint patrick",
+        "río saint patrick",
+        "saint patrick",
+        "saint patrick river"
+      ],
+      "queries": [
+        "Saint Patrick River, Grenada"
+      ]
+    },
+    {
+      "name": "Saint John River",
+      "aliases": [
+        "rio saint john",
+        "río saint john",
+        "saint john",
+        "saint john river"
+      ],
+      "queries": [
+        "Saint John River, Grenada"
+      ]
+    },
+    {
+      "name": "Saint Mark River",
+      "aliases": [
+        "rio saint mark",
+        "río saint mark",
+        "saint mark",
+        "saint mark river"
+      ],
+      "queries": [
+        "Saint Mark River, Grenada"
+      ]
+    }
+  ]
+}

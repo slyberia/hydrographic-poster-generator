@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "country": "Guatemala",
+  "country_code": "GTM",
+  "geography_id": "d78ade66-2be4-4c49-9cde-38240cc7e846",
+  "dataset_version": "a8e7f56c27f16b95dcab462301508c6c37ccfc49e7fe0354dd1c9026c7752b31",
+  "generated_at": "2026-09-11T23:46:00.737980+00:00",
+  "coverage_status": "partial",
+  "artifact": {
+    "path": "a8e7f56c27f16b95dcab462301508c6c37ccfc49e7fe0354dd1c9026c7752b31.json",
+    "sha256": "a8e7f56c27f16b95dcab462301508c6c37ccfc49e7fe0354dd1c9026c7752b31",
+    "byte_size": 418117,
+    "feature_count": 16,
+    "indexed_reach_count": 374
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "warning",
+    "coverage_status": "partial",
+    "independent_reference": {
+      "publisher": "Instituto Nacional de Sismolog\u00eda, Vulcanolog\u00eda, Meteorolog\u00eda e Hidrolog\u00eda",
+      "title": "National hydrological information",
+      "url": "https://insivumeh.gob.gt/"
+    },
+    "target_summary": {
+      "evaluated": 5,
+      "passed": 3,
+      "failed": 2
+    },
+    "targets": {
+      "Motagua River": {
+        "source_object_count": 2,
+        "display_segment_count": 6,
+        "matched_reach_count": 198,
+        "median_distance_m": 186.4,
+        "p95_distance_m": 3377.5
+      },
+      "Usumacinta River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Polochic River": {
+        "source_object_count": 1,
+        "display_segment_count": 4,
+        "matched_reach_count": 77,
+        "median_distance_m": 202.4,
+        "p95_distance_m": 3253.5
+      },
+      "Cahabon River": {
+        "source_object_count": 5,
+        "display_segment_count": 6,
+        "matched_reach_count": 76,
+        "median_distance_m": 123.0,
+        "p95_distance_m": 2240.8
+      },
+      "Samatala River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      }
+    },
+    "counts": {
+      "matched": 351,
+      "ambiguous": 23
+    },
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

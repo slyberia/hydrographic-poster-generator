@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "country": "Dominican Republic",
+  "country_code": "DOM",
+  "geography_id": "c5653596-20f4-464d-8d35-13030af4ebab",
+  "dataset_version": "8607efdf1bf78aa1a697d0678c100fe966258722624a3c1af9e02dfc06845995",
+  "generated_at": "2026-09-11T23:45:26.134798+00:00",
+  "coverage_status": "verified",
+  "artifact": {
+    "path": "8607efdf1bf78aa1a697d0678c100fe966258722624a3c1af9e02dfc06845995.json",
+    "sha256": "8607efdf1bf78aa1a697d0678c100fe966258722624a3c1af9e02dfc06845995",
+    "byte_size": 375400,
+    "feature_count": 27,
+    "indexed_reach_count": 211
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "passed",
+    "coverage_status": "verified",
+    "independent_reference": {
+      "publisher": "Instituto Nacional de Recursos Hidr\u00e1ulicos",
+      "title": "Cuentas del Agua de la Rep\u00fablica Dominicana",
+      "url": "https://cdn.bancentral.gov.do/documents/mig/otras-publicaciones/Cuentas_del_Agua_RD.pdf"
+    },
+    "target_summary": {
+      "evaluated": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "targets": {
+      "Yaque del Norte River": {
+        "source_object_count": 5,
+        "display_segment_count": 5,
+        "matched_reach_count": 69,
+        "median_distance_m": 232.9,
+        "p95_distance_m": 2733.6
+      },
+      "Yuna River": {
+        "source_object_count": 9,
+        "display_segment_count": 9,
+        "matched_reach_count": 52,
+        "median_distance_m": 218.1,
+        "p95_distance_m": 3175.1
+      },
+      "Yaque del Sur River": {
+        "source_object_count": 1,
+        "display_segment_count": 2,
+        "matched_reach_count": 31,
+        "median_distance_m": 177.9,
+        "p95_distance_m": 1988.1
+      },
+      "Ozama River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 28,
+        "median_distance_m": 214.9,
+        "p95_distance_m": 1991.2
+      },
+      "Nizao River": {
+        "source_object_count": 10,
+        "display_segment_count": 10,
+        "matched_reach_count": 22,
+        "median_distance_m": 143.7,
+        "p95_distance_m": 554.9
+      }
+    },
+    "counts": {
+      "matched": 202,
+      "ambiguous": 9
+    },
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

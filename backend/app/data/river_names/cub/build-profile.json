@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "cub",
+  "country": "Cuba",
+  "country_code": "CUB",
+  "geography_id": "975b2e35-9eea-4a66-b1af-7f524a2594b0",
+  "independent_reference": {
+    "publisher": "Instituto Nacional de Recursos Hidráulicos",
+    "title": "National hydrological information",
+    "url": "https://www.hidro.gob.cu/"
+  },
+  "targets": [
+    {
+      "name": "Cauto River",
+      "aliases": [
+        "cauto",
+        "cauto river",
+        "rio cauto",
+        "río cauto"
+      ],
+      "queries": [
+        "Cauto River, Cuba"
+      ]
+    },
+    {
+      "name": "Zaza River",
+      "aliases": [
+        "rio zaza",
+        "río zaza",
+        "zaza",
+        "zaza river"
+      ],
+      "queries": [
+        "Zaza River, Cuba"
+      ]
+    },
+    {
+      "name": "Toa River",
+      "aliases": [
+        "rio toa",
+        "río toa",
+        "toa",
+        "toa river"
+      ],
+      "queries": [
+        "Toa River, Cuba"
+      ]
+    },
+    {
+      "name": "Sagua la Grande River",
+      "aliases": [
+        "rio sagua la grande",
+        "río sagua la grande",
+        "sagua la grande",
+        "sagua la grande river"
+      ],
+      "queries": [
+        "Sagua la Grande River, Cuba"
+      ]
+    },
+    {
+      "name": "Mayari River",
+      "aliases": [
+        "mayari",
+        "mayari river",
+        "rio mayari",
+        "río mayari"
+      ],
+      "queries": [
+        "Mayari River, Cuba"
+      ]
+    }
+  ]
+}

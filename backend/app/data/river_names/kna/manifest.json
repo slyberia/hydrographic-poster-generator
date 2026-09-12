@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "country": "Saint Kitts and Nevis",
+  "country_code": "KNA",
+  "geography_id": "df1cc76b-43bb-43c1-b0a7-9f6aafabc585",
+  "dataset_version": "b663b2a27509b53a7721e6b8401c1efb3015f769e278768aede590c04c6c18da",
+  "generated_at": "2026-09-11T23:46:47.327201+00:00",
+  "coverage_status": "unavailable",
+  "artifact": {
+    "path": "b663b2a27509b53a7721e6b8401c1efb3015f769e278768aede590c04c6c18da.json",
+    "sha256": "b663b2a27509b53a7721e6b8401c1efb3015f769e278768aede590c04c6c18da",
+    "byte_size": 7075,
+    "feature_count": 13,
+    "indexed_reach_count": 0
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "warning",
+    "coverage_status": "unavailable",
+    "independent_reference": {
+      "publisher": "Government of Saint Kitts and Nevis",
+      "title": "National water resources information",
+      "url": "https://www.gov.kn/"
+    },
+    "target_summary": {
+      "evaluated": 3,
+      "passed": 0,
+      "failed": 3
+    },
+    "targets": {
+      "Wingfield River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Cayon River": {
+        "source_object_count": 12,
+        "display_segment_count": 12,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "College Street Ghaut": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      }
+    },
+    "counts": {},
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

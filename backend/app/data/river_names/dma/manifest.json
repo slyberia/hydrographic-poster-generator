@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "country": "Dominica",
+  "country_code": "DMA",
+  "geography_id": "4a7adee4-70ad-457c-94e9-7b0bfaf8eab7",
+  "dataset_version": "3abcf0565b71acb368733bab8821df7a2559175cf67c6ce9f274140fca078e7a",
+  "generated_at": "2026-09-11T23:45:16.534822+00:00",
+  "coverage_status": "unavailable",
+  "artifact": {
+    "path": "3abcf0565b71acb368733bab8821df7a2559175cf67c6ce9f274140fca078e7a.json",
+    "sha256": "3abcf0565b71acb368733bab8821df7a2559175cf67c6ce9f274140fca078e7a",
+    "byte_size": 26772,
+    "feature_count": 6,
+    "indexed_reach_count": 0
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "warning",
+    "coverage_status": "unavailable",
+    "independent_reference": {
+      "publisher": "Government of Dominica",
+      "title": "National adaptation and water resources information",
+      "url": "https://dominica.gov.dm/"
+    },
+    "target_summary": {
+      "evaluated": 4,
+      "passed": 0,
+      "failed": 4
+    },
+    "targets": {
+      "Roseau River": {
+        "source_object_count": 2,
+        "display_segment_count": 2,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Layou River": {
+        "source_object_count": 2,
+        "display_segment_count": 2,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Indian River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Picard River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      }
+    },
+    "counts": {},
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

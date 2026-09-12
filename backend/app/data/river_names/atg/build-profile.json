@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "slug": "atg",
+  "country": "Antigua and Barbuda",
+  "country_code": "ATG",
+  "geography_id": "440b9b80-dbbf-40f8-8fa7-a0b08c4c144e",
+  "independent_reference": {
+    "publisher": "Antigua and Barbuda Department of Environment",
+    "title": "National Communication on Climate Change",
+    "url": "https://environment.gov.ag/wp-content/uploads/2025/10/unfccc-nc2.pdf"
+  },
+  "targets": [],
+  "profile_mode": "no_named_perennial_river_systems"
+}

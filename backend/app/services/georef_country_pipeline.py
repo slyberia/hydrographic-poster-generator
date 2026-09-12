@@ -21,8 +21,8 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict[str, Any]:
     if registry.get("schema_version") != 1 or not isinstance(countries, list):
         raise ValueError("Invalid country registry.")
     for item in countries:
-        if not item.get("slug") or not item.get("manifest") or not item.get("status"):
-            raise ValueError("Registry entries require slug, manifest, and status.")
+        if not item.get("slug") or not item.get("manifest") or not item.get("status") or not item.get("profile"):
+            raise ValueError("Registry entries require slug, profile, manifest, and status.")
     return registry
 
 
@@ -95,6 +95,8 @@ def review_registered_countries(registry_path: Path = REGISTRY_PATH) -> list[dic
     registry = load_registry(registry_path)
     results = []
     for item in registry["countries"]:
+        if not item.get("regression_fixture"):
+            continue
         manifest = json.loads((DATA_ROOT / item["manifest"]).read_text(encoding="utf-8"))
         results.append(review_manifest(manifest, item["status"]))
     return results

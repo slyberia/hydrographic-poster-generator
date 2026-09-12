@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "slug": "lca",
+  "country": "Saint Lucia",
+  "country_code": "LCA",
+  "geography_id": "83858bfc-772f-4ede-bdde-88ac8d388753",
+  "independent_reference": {
+    "publisher": "Government of Saint Lucia",
+    "title": "National water resources information",
+    "url": "https://www.govt.lc/"
+  },
+  "targets": [
+    {
+      "name": "Cul de Sac River",
+      "aliases": [
+        "cul de sac",
+        "cul de sac river",
+        "rio cul de sac",
+        "río cul de sac"
+      ],
+      "queries": [
+        "Cul de Sac River, Saint Lucia"
+      ]
+    },
+    {
+      "name": "Mabouya River",
+      "aliases": [
+        "mabouya",
+        "mabouya river",
+        "rio mabouya",
+        "río mabouya"
+      ],
+      "queries": [
+        "Mabouya River, Saint Lucia"
+      ]
+    },
+    {
+      "name": "Dennery River",
+      "aliases": [
+        "dennery",
+        "dennery river",
+        "rio dennery",
+        "río dennery"
+      ],
+      "queries": [
+        "Dennery River, Saint Lucia"
+      ]
+    },
+    {
+      "name": "Roseau River",
+      "aliases": [
+        "rio roseau",
+        "roseau",
+        "roseau river",
+        "río roseau"
+      ],
+      "queries": [
+        "Roseau River, Saint Lucia"
+      ]
+    }
+  ]
+}

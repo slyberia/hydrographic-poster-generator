@@ -1,0 +1,311 @@
+{
+  "captured_at": "2026-09-11T23:44:54.491920+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced Cuba river systems",
+  "independent_reference": {
+    "publisher": "Instituto Nacional de Recursos Hidr\u00e1ulicos",
+    "title": "National hydrological information",
+    "url": "https://www.hidro.gob.cu/"
+  },
+  "objects": [
+    {
+      "name": "Cauto River",
+      "source_name": "R\u00edo Cauto",
+      "osm_type": "relation",
+      "osm_id": 19236371,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 305899351,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 393084594,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 123937027,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 116532484,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 120118165,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 124419934,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 321537348,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 392543802,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 124419932,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 392543804,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 120117545,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 317574758,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 317574759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 120118166,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 1167751567,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Zaza River",
+      "source_name": "Zaza",
+      "osm_type": "way",
+      "osm_id": 1167751568,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Toa River",
+      "source_name": "Toa",
+      "osm_type": "relation",
+      "osm_id": 19364679,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Toa River",
+      "source_name": "Toa",
+      "osm_type": "way",
+      "osm_id": 41572679,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Toa River",
+      "source_name": "Toa",
+      "osm_type": "way",
+      "osm_id": 41572680,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Sagua la Grande River",
+      "source_name": "Sagua La Grande",
+      "osm_type": "way",
+      "osm_id": 212985496,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 118107354,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 156831863,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 1341147133,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 1341147134,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 118107336,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 118107495,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 118107398,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 1191524508,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 1272939465,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 156831857,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 118107551,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mayari River",
+      "source_name": "R\u00edo Mayar\u00ed",
+      "osm_type": "way",
+      "osm_id": 1191524506,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}
