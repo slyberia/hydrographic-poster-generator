@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "ury",
+  "country": "Uruguay",
+  "country_code": "URY",
+  "geography_id": "8e4156af-eafb-437a-94c8-3446b50fee89",
+  "independent_reference": {
+    "publisher": "Ministerio de Ambiente de Uruguay",
+    "title": "Regiones hidrográficas",
+    "url": "https://www.gub.uy/ministerio-ambiente/politicas-y-gestion/regiones-hidrograficas-1"
+  },
+  "targets": [
+    {
+      "name": "Uruguay River",
+      "aliases": [
+        "rio uruguay",
+        "río uruguay",
+        "uruguay",
+        "uruguay river"
+      ],
+      "queries": [
+        "Uruguay River, Uruguay"
+      ]
+    },
+    {
+      "name": "Negro River",
+      "aliases": [
+        "negro",
+        "negro river",
+        "rio negro",
+        "río negro"
+      ],
+      "queries": [
+        "Negro River, Uruguay"
+      ]
+    },
+    {
+      "name": "Santa Lucia River",
+      "aliases": [
+        "rio santa lucia",
+        "río santa lucia",
+        "santa lucia",
+        "santa lucia river"
+      ],
+      "queries": [
+        "Santa Lucia River, Uruguay"
+      ]
+    },
+    {
+      "name": "Santa Lucia Chico River",
+      "aliases": [
+        "rio santa lucia chico",
+        "río santa lucia chico",
+        "santa lucia chico",
+        "santa lucia chico river"
+      ],
+      "queries": [
+        "Santa Lucia Chico River, Uruguay"
+      ]
+    },
+    {
+      "name": "San Jose River",
+      "aliases": [
+        "rio san jose",
+        "río san jose",
+        "san jose",
+        "san jose river"
+      ],
+      "queries": [
+        "San Jose River, Uruguay"
+      ]
+    }
+  ]
+}

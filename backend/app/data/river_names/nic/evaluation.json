@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "status": "warning",
+  "coverage_status": "partial",
+  "independent_reference": {
+    "publisher": "Ministerio del Ambiente y los Recursos Naturales",
+    "title": "National hydrological information",
+    "url": "https://www.marena.gob.ni/"
+  },
+  "target_summary": {
+    "evaluated": 5,
+    "passed": 3,
+    "failed": 2
+  },
+  "targets": {
+    "Coco River": {
+      "source_object_count": 1,
+      "display_segment_count": 6,
+      "matched_reach_count": 302,
+      "median_distance_m": 174.4,
+      "p95_distance_m": 2481.7
+    },
+    "Grande de Matagalpa River": {
+      "source_object_count": 2,
+      "display_segment_count": 4,
+      "matched_reach_count": 233,
+      "median_distance_m": 154.0,
+      "p95_distance_m": 2569.8
+    },
+    "Escondido River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 64,
+      "median_distance_m": 262.5,
+      "p95_distance_m": 3066.4
+    },
+    "San Juan River": {
+      "source_object_count": 0,
+      "display_segment_count": 0,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Prin zapolka River": {
+      "source_object_count": 0,
+      "display_segment_count": 0,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    }
+  },
+  "counts": {
+    "matched": 599,
+    "ambiguous": 22
+  },
+  "limitations": [
+    "This is source-to-source agreement, not surveyed ground truth.",
+    "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+    "Independent references validate the evaluation scope, not every OSM geometry or name.",
+    "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+  ]
+}

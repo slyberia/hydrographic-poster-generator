@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "country": "Panama",
+  "country_code": "PAN",
+  "geography_id": "9becb85d-3ebf-40f5-8025-5671c9e0e6cc",
+  "dataset_version": "58b0fab69a72cce38a3fedad0e34bc2e1ef040e618ea7f6f5242b925a1010493",
+  "generated_at": "2026-09-11T23:47:16.239131+00:00",
+  "coverage_status": "partial",
+  "artifact": {
+    "path": "58b0fab69a72cce38a3fedad0e34bc2e1ef040e618ea7f6f5242b925a1010493.json",
+    "sha256": "58b0fab69a72cce38a3fedad0e34bc2e1ef040e618ea7f6f5242b925a1010493",
+    "byte_size": 214526,
+    "feature_count": 56,
+    "indexed_reach_count": 120
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "warning",
+    "coverage_status": "partial",
+    "independent_reference": {
+      "publisher": "Instituto de Meteorolog\u00eda e Hidrolog\u00eda de Panam\u00e1",
+      "title": "National hydrological information",
+      "url": "https://www.imhpa.gob.pa/"
+    },
+    "target_summary": {
+      "evaluated": 5,
+      "passed": 2,
+      "failed": 3
+    },
+    "targets": {
+      "Chagres River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 50,
+        "median_distance_m": 284.1,
+        "p95_distance_m": 3267.1
+      },
+      "Tuira River": {
+        "source_object_count": 20,
+        "display_segment_count": 20,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Chucunaque River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Bayano River": {
+        "source_object_count": 8,
+        "display_segment_count": 8,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Santa Maria River": {
+        "source_object_count": 26,
+        "display_segment_count": 26,
+        "matched_reach_count": 64,
+        "median_distance_m": 205.2,
+        "p95_distance_m": 3562.3
+      }
+    },
+    "counts": {
+      "matched": 114,
+      "ambiguous": 6
+    },
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

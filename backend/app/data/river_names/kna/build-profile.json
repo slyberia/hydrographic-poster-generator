@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "slug": "kna",
+  "country": "Saint Kitts and Nevis",
+  "country_code": "KNA",
+  "geography_id": "df1cc76b-43bb-43c1-b0a7-9f6aafabc585",
+  "independent_reference": {
+    "publisher": "Government of Saint Kitts and Nevis",
+    "title": "National water resources information",
+    "url": "https://www.gov.kn/"
+  },
+  "targets": [
+    {
+      "name": "Wingfield River",
+      "aliases": [
+        "rio wingfield",
+        "río wingfield",
+        "wingfield",
+        "wingfield river"
+      ],
+      "queries": [
+        "Wingfield River, Saint Kitts and Nevis"
+      ]
+    },
+    {
+      "name": "Cayon River",
+      "aliases": [
+        "cayon",
+        "cayon river",
+        "rio cayon",
+        "río cayon"
+      ],
+      "queries": [
+        "Cayon River, Saint Kitts and Nevis"
+      ]
+    },
+    {
+      "name": "College Street Ghaut",
+      "aliases": [
+        "college street ghaut",
+        "rio college street ghaut",
+        "río college street ghaut"
+      ],
+      "queries": [
+        "College Street Ghaut, Saint Kitts and Nevis"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "tto",
+  "country": "Trinidad and Tobago",
+  "country_code": "TTO",
+  "geography_id": "69031d50-8109-446b-b162-92502ab91307",
+  "independent_reference": {
+    "publisher": "Water and Sewerage Authority of Trinidad and Tobago",
+    "title": "National water resources information",
+    "url": "https://www.wasa.gov.tt/"
+  },
+  "targets": [
+    {
+      "name": "Caroni River",
+      "aliases": [
+        "caroni",
+        "caroni river",
+        "rio caroni",
+        "río caroni"
+      ],
+      "queries": [
+        "Caroni River, Trinidad and Tobago"
+      ]
+    },
+    {
+      "name": "North Oropouche River",
+      "aliases": [
+        "north oropouche",
+        "north oropouche river",
+        "rio north oropouche",
+        "río north oropouche"
+      ],
+      "queries": [
+        "North Oropouche River, Trinidad and Tobago"
+      ]
+    },
+    {
+      "name": "South Oropouche River",
+      "aliases": [
+        "rio south oropouche",
+        "río south oropouche",
+        "south oropouche",
+        "south oropouche river"
+      ],
+      "queries": [
+        "South Oropouche River, Trinidad and Tobago"
+      ]
+    },
+    {
+      "name": "Nariva River",
+      "aliases": [
+        "nariva",
+        "nariva river",
+        "rio nariva",
+        "río nariva"
+      ],
+      "queries": [
+        "Nariva River, Trinidad and Tobago"
+      ]
+    },
+    {
+      "name": "Ortoire River",
+      "aliases": [
+        "ortoire",
+        "ortoire river",
+        "rio ortoire",
+        "río ortoire"
+      ],
+      "queries": [
+        "Ortoire River, Trinidad and Tobago"
+      ]
+    }
+  ]
+}

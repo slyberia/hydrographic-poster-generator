@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "status": "warning",
+  "coverage_status": "unavailable",
+  "independent_reference": {
+    "publisher": "Government of Saint Lucia",
+    "title": "National water resources information",
+    "url": "https://www.govt.lc/"
+  },
+  "target_summary": {
+    "evaluated": 4,
+    "passed": 0,
+    "failed": 4
+  },
+  "targets": {
+    "Cul de Sac River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Mabouya River": {
+      "source_object_count": 0,
+      "display_segment_count": 0,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Dennery River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Roseau River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    }
+  },
+  "counts": {},
+  "limitations": [
+    "This is source-to-source agreement, not surveyed ground truth.",
+    "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+    "Independent references validate the evaluation scope, not every OSM geometry or name.",
+    "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+  ]
+}

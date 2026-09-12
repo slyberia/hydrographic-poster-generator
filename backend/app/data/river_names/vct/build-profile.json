@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "vct",
+  "country": "Saint Vincent and the Grenadines",
+  "country_code": "VCT",
+  "geography_id": "e0cb94d8-083d-40bf-a6be-d048127b1bc6",
+  "independent_reference": {
+    "publisher": "Government of Saint Vincent and the Grenadines",
+    "title": "National water resources information",
+    "url": "https://www.gov.vc/"
+  },
+  "targets": [
+    {
+      "name": "Buccament River",
+      "aliases": [
+        "buccament",
+        "buccament river",
+        "rio buccament",
+        "río buccament"
+      ],
+      "queries": [
+        "Buccament River, Saint Vincent and the Grenadines"
+      ]
+    },
+    {
+      "name": "Wallilabou River",
+      "aliases": [
+        "rio wallilabou",
+        "río wallilabou",
+        "wallilabou",
+        "wallilabou river"
+      ],
+      "queries": [
+        "Wallilabou River, Saint Vincent and the Grenadines"
+      ]
+    },
+    {
+      "name": "Richmond River",
+      "aliases": [
+        "richmond",
+        "richmond river",
+        "rio richmond",
+        "río richmond"
+      ],
+      "queries": [
+        "Richmond River, Saint Vincent and the Grenadines"
+      ]
+    },
+    {
+      "name": "Rabacca River",
+      "aliases": [
+        "rabacca",
+        "rabacca river",
+        "rio rabacca",
+        "río rabacca"
+      ],
+      "queries": [
+        "Rabacca River, Saint Vincent and the Grenadines"
+      ]
+    },
+    {
+      "name": "Colonarie River",
+      "aliases": [
+        "colonarie",
+        "colonarie river",
+        "rio colonarie",
+        "río colonarie"
+      ],
+      "queries": [
+        "Colonarie River, Saint Vincent and the Grenadines"
+      ]
+    }
+  ]
+}

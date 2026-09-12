@@ -2,10 +2,27 @@
   "schema_version": 1,
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
-  "current_phase_id": "georef-south-american-coverage",
-  "current_phase_gate": "Phase 11 implementation is complete for the selected Suriname increment; closeout is pending review/merge before the final program closeout can begin.",
+  "current_phase_id": "georef-country-etl-hitl",
+      "current_phase_gate": "Phase 12 is approved for end-to-end ETL automation and the 21-country expansion after the merged Phase 11 closeout; the five existing countries are regression fixtures only.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
+    {
+      "phase_id": "georef-country-etl-hitl",
+      "phase_number": 12,
+      "name": "Country ETL and HITL review automation",
+      "status": "closed",
+      "depends_on": ["georef-south-american-coverage"],
+      "objective": "Turn country evaluation into a deterministic ETL and review pipeline, define approved build profiles for the 21 unevaluated countries, and run the 21-country expansion with reproducible evidence and HITL review.",
+      "required_validation": [
+        "The five existing country outcomes are reproduced without changing their artifacts or classifications.",
+        "The 21 unevaluated countries receive approved profiles and an ETL result or an explicit unavailable/not_evaluated outcome.",
+        "The 21-country report records 4 verified, 7 partial, and 10 unavailable outcomes, with 17 published artifacts and 4 withheld outcomes.",
+        "Automated checks distinguish routine pass, review required, and blocked outcomes.",
+        "Missing qualifying source objects remain target-level not_evaluated.",
+        "No production write, runtime scraping, database migration, or delivery-architecture change is introduced."
+      ],
+      "must_not_include": ["Database migrations", "Runtime scraping at application runtime", "Recovery algorithm replacement", "Delivery architecture changes", "Raw source dataset commits"]
+    },
     {
       "phase_id": "georef-recovery-calibration",
       "phase_number": 7,

@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "status": "warning",
+  "coverage_status": "partial",
+  "independent_reference": {
+    "publisher": "Direction de l'Environnement de la Guyane",
+    "title": "Hydrological information for French Guiana",
+    "url": "https://www.guyane.developpement-durable.gouv.fr/"
+  },
+  "target_summary": {
+    "evaluated": 5,
+    "passed": 4,
+    "failed": 1
+  },
+  "targets": {
+    "Maroni River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 11,
+      "median_distance_m": 1409.5,
+      "p95_distance_m": 3665.1
+    },
+    "Oyapock River": {
+      "source_object_count": 0,
+      "display_segment_count": 0,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Approuague River": {
+      "source_object_count": 3,
+      "display_segment_count": 5,
+      "matched_reach_count": 169,
+      "median_distance_m": 165.1,
+      "p95_distance_m": 2984.6
+    },
+    "Mahury River": {
+      "source_object_count": 1,
+      "display_segment_count": 2,
+      "matched_reach_count": 87,
+      "median_distance_m": 154.6,
+      "p95_distance_m": 3036.0
+    },
+    "Sinnamary River": {
+      "source_object_count": 4,
+      "display_segment_count": 4,
+      "matched_reach_count": 171,
+      "median_distance_m": 136.7,
+      "p95_distance_m": 2759.6
+    }
+  },
+  "counts": {
+    "matched": 438,
+    "ambiguous": 20
+  },
+  "limitations": [
+    "This is source-to-source agreement, not surveyed ground truth.",
+    "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+    "Independent references validate the evaluation scope, not every OSM geometry or name.",
+    "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+  ]
+}

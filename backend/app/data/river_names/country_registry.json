@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "purpose": "Approved country evaluation inputs and regression expectations for all current geography inventory entries.",
+  "countries": [
+    {
+      "slug": "atg",
+      "country_code": "ATG",
+      "status": "unavailable",
+      "profile": "atg/build-profile.json",
+      "manifest": "atg/manifest.json"
+    },
+    {
+      "slug": "belize",
+      "country_code": "BZ",
+      "status": "partial",
+      "profile": "belize/build-profile.json",
+      "manifest": "belize/manifest.json",
+      "regression_fixture": true
+    },
+    {
+      "slug": "bhs",
+      "country_code": "BHS",
+      "status": "unavailable",
+      "profile": "bhs/build-profile.json",
+      "manifest": "bhs/manifest.json"
+    },
+    {
+      "slug": "brb",
+      "country_code": "BRB",
+      "status": "unavailable",
+      "profile": "brb/build-profile.json",
+      "manifest": "brb/manifest.json"
+    },
+    {
+      "slug": "costa-rica",
+      "country_code": "CRI",
+      "status": "verified",
+      "profile": "costa-rica/build-profile.json",
+      "manifest": "costa-rica/manifest.json",
+      "regression_fixture": true
+    },
+    {
+      "slug": "cub",
+      "country_code": "CUB",
+      "status": "verified",
+      "profile": "cub/build-profile.json",
+      "manifest": "cub/manifest.json"
+    },
+    {
+      "slug": "dma",
+      "country_code": "DMA",
+      "status": "unavailable",
+      "profile": "dma/build-profile.json",
+      "manifest": "dma/manifest.json"
+    },
+    {
+      "slug": "dom",
+      "country_code": "DOM",
+      "status": "verified",
+      "profile": "dom/build-profile.json",
+      "manifest": "dom/manifest.json"
+    },
+    {
+      "slug": "ecu",
+      "country_code": "ECU",
+      "status": "verified",
+      "profile": "ecu/build-profile.json",
+      "manifest": "ecu/manifest.json"
+    },
+    {
+      "slug": "grd",
+      "country_code": "GRD",
+      "status": "unavailable",
+      "profile": "grd/build-profile.json",
+      "manifest": "grd/manifest.json"
+    },
+    {
+      "slug": "gtm",
+      "country_code": "GTM",
+      "status": "partial",
+      "profile": "gtm/build-profile.json",
+      "manifest": "gtm/manifest.json"
+    },
+    {
+      "slug": "guf",
+      "country_code": "GUF",
+      "status": "partial",
+      "profile": "guf/build-profile.json",
+      "manifest": "guf/manifest.json"
+    },
+    {
+      "slug": "guyana",
+      "country_code": "GY",
+      "status": "passed",
+      "profile": "guyana/build-profile.json",
+      "manifest": "guyana/manifest.json",
+      "regression_fixture": true
+    },
+    {
+      "slug": "hnd",
+      "country_code": "HND",
+      "status": "partial",
+      "profile": "hnd/build-profile.json",
+      "manifest": "hnd/manifest.json"
+    },
+    {
+      "slug": "hti",
+      "country_code": "HTI",
+      "status": "verified",
+      "profile": "hti/build-profile.json",
+      "manifest": "hti/manifest.json"
+    },
+    {
+      "slug": "jamaica",
+      "country_code": "JAM",
+      "status": "partial",
+      "profile": "jamaica/build-profile.json",
+      "manifest": "jamaica/manifest.json",
+      "regression_fixture": true
+    },
+    {
+      "slug": "kna",
+      "country_code": "KNA",
+      "status": "unavailable",
+      "profile": "kna/build-profile.json",
+      "manifest": "kna/manifest.json"
+    },
+    {
+      "slug": "lca",
+      "country_code": "LCA",
+      "status": "unavailable",
+      "profile": "lca/build-profile.json",
+      "manifest": "lca/manifest.json"
+    },
+    {
+      "slug": "nic",
+      "country_code": "NIC",
+      "status": "partial",
+      "profile": "nic/build-profile.json",
+      "manifest": "nic/manifest.json"
+    },
+    {
+      "slug": "pan",
+      "country_code": "PAN",
+      "status": "partial",
+      "profile": "pan/build-profile.json",
+      "manifest": "pan/manifest.json"
+    },
+    {
+      "slug": "pry",
+      "country_code": "PRY",
+      "status": "unavailable",
+      "profile": "pry/build-profile.json",
+      "manifest": "pry/manifest.json"
+    },
+    {
+      "slug": "slv",
+      "country_code": "SLV",
+      "status": "partial",
+      "profile": "slv/build-profile.json",
+      "manifest": "slv/manifest.json"
+    },
+    {
+      "slug": "suriname",
+      "country_code": "SUR",
+      "status": "partial",
+      "profile": "suriname/build-profile.json",
+      "manifest": "suriname/manifest.json",
+      "regression_fixture": true
+    },
+    {
+      "slug": "tto",
+      "country_code": "TTO",
+      "status": "unavailable",
+      "profile": "tto/build-profile.json",
+      "manifest": "tto/manifest.json"
+    },
+    {
+      "slug": "ury",
+      "country_code": "URY",
+      "status": "partial",
+      "profile": "ury/build-profile.json",
+      "manifest": "ury/manifest.json"
+    },
+    {
+      "slug": "vct",
+      "country_code": "VCT",
+      "status": "unavailable",
+      "profile": "vct/build-profile.json",
+      "manifest": "vct/manifest.json"
+    }
+  ]
+}

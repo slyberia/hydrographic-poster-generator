@@ -1,0 +1,77 @@
+{
+  "schema_version": 2,
+  "country": "Trinidad and Tobago",
+  "country_code": "TTO",
+  "geography_id": "69031d50-8109-446b-b162-92502ab91307",
+  "dataset_version": "dc59b6f175d5947fbc0d782a165e0a27fb29f5361dcdcdaba0b22033011df76c",
+  "generated_at": "2026-09-11T23:47:46.013474+00:00",
+  "coverage_status": "unavailable",
+  "artifact": {
+    "path": "dc59b6f175d5947fbc0d782a165e0a27fb29f5361dcdcdaba0b22033011df76c.json",
+    "sha256": "dc59b6f175d5947fbc0d782a165e0a27fb29f5361dcdcdaba0b22033011df76c",
+    "byte_size": 72989,
+    "feature_count": 21,
+    "indexed_reach_count": 0
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "warning",
+    "coverage_status": "unavailable",
+    "independent_reference": {
+      "publisher": "Water and Sewerage Authority of Trinidad and Tobago",
+      "title": "National water resources information",
+      "url": "https://www.wasa.gov.tt/"
+    },
+    "target_summary": {
+      "evaluated": 5,
+      "passed": 0,
+      "failed": 5
+    },
+    "targets": {
+      "Caroni River": {
+        "source_object_count": 11,
+        "display_segment_count": 11,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "North Oropouche River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "South Oropouche River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Nariva River": {
+        "source_object_count": 2,
+        "display_segment_count": 2,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Ortoire River": {
+        "source_object_count": 7,
+        "display_segment_count": 7,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      }
+    },
+    "counts": {},
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "slug": "dma",
+  "country": "Dominica",
+  "country_code": "DMA",
+  "geography_id": "4a7adee4-70ad-457c-94e9-7b0bfaf8eab7",
+  "independent_reference": {
+    "publisher": "Government of Dominica",
+    "title": "National adaptation and water resources information",
+    "url": "https://dominica.gov.dm/"
+  },
+  "targets": [
+    {
+      "name": "Roseau River",
+      "aliases": [
+        "rio roseau",
+        "roseau",
+        "roseau river",
+        "río roseau"
+      ],
+      "queries": [
+        "Roseau River, Dominica"
+      ]
+    },
+    {
+      "name": "Layou River",
+      "aliases": [
+        "layou",
+        "layou river",
+        "rio layou",
+        "río layou"
+      ],
+      "queries": [
+        "Layou River, Dominica"
+      ]
+    },
+    {
+      "name": "Indian River",
+      "aliases": [
+        "indian",
+        "indian river",
+        "rio indian",
+        "río indian"
+      ],
+      "queries": [
+        "Indian River, Dominica"
+      ]
+    },
+    {
+      "name": "Picard River",
+      "aliases": [
+        "picard",
+        "picard river",
+        "rio picard",
+        "río picard"
+      ],
+      "queries": [
+        "Picard River, Dominica"
+      ]
+    }
+  ]
+}

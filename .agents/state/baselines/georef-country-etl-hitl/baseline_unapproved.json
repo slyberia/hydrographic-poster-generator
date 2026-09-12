@@ -1,0 +1,1561 @@
+{
+  "schema_version": 1,
+  "status": "unapproved",
+  "approved_by_human": false,
+  "phase_id": "georef-country-etl-hitl",
+  "branch": "codex/georef-phase-12-country-etl-hitl",
+  "commit": "0e78a1217ff15713bfdd0930e96a319439398e56",
+  "generated_at": "2026-09-11T23:32:04.260378+00:00",
+  "commands_file": ".agents\\config\\verification_commands_georef_phase_12.json",
+  "commands": [
+    {
+      "name": "backend",
+      "cwd": ".",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-country-etl-hitl/backend.xml"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 112.791,
+      "stdout_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\backend.stderr.txt",
+      "junit_xml": ".agents/state/verifications/georef-country-etl-hitl/backend.xml",
+      "test_case_count": 249,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "typescript",
+      "cwd": "frontend",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 4.79,
+      "stdout_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\typescript.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    },
+    {
+      "name": "frontend_lint",
+      "cwd": "frontend",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "exit_code": 0,
+      "duration_seconds": 17.381,
+      "stdout_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\baselines\\georef-country-etl-hitl\\frontend_lint.stderr.txt",
+      "junit_xml": null,
+      "test_case_count": 0,
+      "classification": "not_applicable"
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "backend.tests.test_auth::test_missing_bearer_token_is_rejected",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_auth::test_verified_app_metadata_role_builds_principal",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_auth::test_user_metadata_does_not_grant_a_role",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_auth::test_viewer_cannot_use_analyst_route",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_auth::test_analyst_can_use_analyst_route",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_auth::test_admin_satisfies_lower_role_requirements",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_scale_and_padding",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_corner_vectors[point0-expected0]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_corner_vectors[point1-expected1]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_corner_vectors[point2-expected2]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_corner_vectors[point3-expected3]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_all_points_inside_zone",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_aspect_preserved_wide_bbox",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_scale_bar_math",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_southern_hemisphere_spread_symmetry",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_coordinate_projector::test_degenerate_bbox_rejected",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_dashboard::test_freshness_flags_stale_publication",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_dashboard::test_freshness_none_when_unpublished",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_dashboard::test_run_history_groups_zone_distribution_per_run",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_dashboard::test_get_dashboard_empty_when_no_study_area",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_dashboard::test_get_dashboard_assembles_published_metrics",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_dashboard::test_dashboard_requires_authentication",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_mercator_known_points",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_mercator_doubles_per_zoom",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_latitude_is_clamped_to_mercator_limit",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_viewport_normalises_swapped_and_clamps_lat",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_choose_zoom_keeps_tile_count_bounded",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_choose_zoom_respects_small_viewport",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_build_svg_zones_colours_and_attribution",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_build_svg_hidden_zone_is_omitted",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_build_svg_volatility_mode_uses_category_colour",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_build_svg_boundary_overlay_is_stroked_not_filled",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_build_svg_degrades_without_tiles",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_export::test_render_png_and_pdf_bytes",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_geojson_contract::test_cell_export_makes_null_score_semantics_explicit",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_geojson_contract::test_legacy_published_rows_use_derived_semantics_at_read_time",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_geojson_contract::test_dissolved_export_omits_per_cell_attributes_and_uses_union_query",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_geojson_contract::test_unknown_geometry_mode_is_rejected_before_database_access",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_geojson_contract::test_run_write_contract_labels_hard_constraints_and_scores",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_approve_moves_complete_draft_to_approved",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_approve_rejects_incomplete_run",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_approve_rejects_non_draft",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_approve_unknown_run_is_not_found",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_publish_supersedes_incumbent_transactionally",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_publish_with_no_incumbent_archives_nothing",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_publish_rejects_unapproved_run",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_archive_from_published",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_archive_already_archived_rejected",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_public_config_reports_published_metadata",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_public_config_with_nothing_published",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_public_config_exposes_materialized_artifact_metadata",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_materialization_is_optional_without_storage_credentials",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_public_report_excludes_scores_and_weights",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_public_zoning_without_publication_is_not_found",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_public_zoning_returns_dissolved_aggregate_features",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_internal_run_list_requires_authentication",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_publish_requires_admin_role",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_publish_allowed_for_admin",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_published_config_requires_viewer_authentication",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_publication::test_public_openapi_omits_drone_workspace_contracts",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_reference_layers::test_reference_layer_registry_has_stable_categories_and_scale_thresholds",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_reference_layers::test_aviation_reference_contract_is_non_classifying",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_reference_layers::test_reference_geojson_normalizes_jsonb_strings_from_asyncpg",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_reference_layers::test_reference_layers_have_a_separate_request_budget",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_reference_layers::test_dynamic_infrastructure_queries_cast_parameter_types",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_reference_layers::test_reference_config_advertises_stable_manifest_when_storage_is_configured",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_reference_layers::test_unified_reference_features_include_client_filter_keys",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_reference_layers::test_reference_materialization_is_optional_without_storage_credentials",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_reference_layers::test_reference_materialization_writes_content_addressed_artifact_and_manifest",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_sweep_id_scoping",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_flip_definition_consistent",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_children_only_stddev",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_idempotent_trigger",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_staleness_marks_failed",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_dynamic_factor_count",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_list_runs_excludes_children",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_delete_run_removes_children_and_volatility",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_delete_run_missing_returns_false",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_volatility_categories",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_params_merge_preserves_thresholds",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_persisted_summary_preferred",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_persisted_volatility_preferred",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_drone_sensitivity::test_null_scores_excluded",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_export_service::test_scale_path_png_dims_exact",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_export_service::test_rerender_path_instagram_no_letterbox",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_export_service::test_square_design_asset_transparent",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_export_service::test_pdf_physical_page_size_18x24",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_export_service::test_pdf_default_px_to_pt",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_export_service::test_svg_passthrough",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_export_service::test_custom_size_limits",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_export_service::test_design_asset_pdf_rejected",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_match_osm_element_school",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_match_osm_element_no_match",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_public_safety_and_government_osm_mappings_are_reference_only",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_normalize_tags",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_match_osm_element_disjunctive",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_osm_element_to_geojson_point",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_osm_element_to_geojson_polygon",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_build_overpass_query",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_manual_features_structure",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_feature_ingestion::test_parse_osm_pbf_file",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_flag_presets::test_flag_catalog_covers_dataset_and_g20_country_union",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_flag_presets::test_every_flag_has_complete_light_and_dark_tokens",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_flag_presets::test_existing_guyana_and_usa_tokens_remain_compatible",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_flag_presets::test_migration_snapshot_matches_canonical_catalog",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_flag_presets::test_typed_presets_response_exposes_every_flag",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_artifact_delivery::test_canonical_json_is_reproducible_and_content_addressed",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_artifact_delivery::test_manifest_records_integrity_size_and_immutable_policy",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_artifact_delivery::test_checksum_and_size_are_verified",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_artifact_delivery::test_cdn_is_optional_and_uses_the_packaged_route_by_default",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_country_pipeline::test_registry_covers_existing_evaluated_countries",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_country_pipeline::test_review_reproduces_existing_country_statuses_and_flags_limitations",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_country_pipeline::test_review_output_is_json_serializable",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_geoparquet::test_geoparquet_metadata_declares_wkb_and_schema",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_geoparquet::test_geoparquet_is_deterministic_and_round_trips_features",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_inspection::test_viewer_preserves_affine_corners[affine0]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_inspection::test_viewer_preserves_affine_corners[affine1]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_inspection::test_no_ink_still_reports_unmeasured_accuracy_and_scale",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_inspection::test_inspection_is_bounded_without_mutating_source",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_inspection::test_empty_viewport_returns_no_features",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_inspection::test_viewport_segment_crossing_and_exclusion",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_native::test_manifest_contains_known_render_transform",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_native::test_native_alignment_matches_hydrorivers_ids",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_native::test_geotiff_has_tiff_header_and_rgba_pixels",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_pipeline::test_native_real_tiff_crs_crop_inverse_and_pixels[settings0]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_pipeline::test_native_real_tiff_crs_crop_inverse_and_pixels[settings1]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_pipeline::test_native_real_tiff_crs_crop_inverse_and_pixels[settings2]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_pipeline::test_wrong_georeference_fails_network_validation",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_pipeline::test_manifest_contains_source_identity_and_all_layout_settings",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_registration_validates_heldout_and_ground_truth[recipe0]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_registration_validates_heldout_and_ground_truth[recipe1]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_registration_validates_heldout_and_ground_truth[recipe2]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_registration_validates_heldout_and_ground_truth[recipe3]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_registration_validates_heldout_and_ground_truth[recipe4]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_registration_validates_heldout_and_ground_truth[recipe5]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_registration_validates_heldout_and_ground_truth[recipe6]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_registration_validates_heldout_and_ground_truth[recipe7]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_registration_validates_heldout_and_ground_truth[recipe8]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_blank_image_fails_closed",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_collinear_gcps_are_rejected",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_outside_image_gcps_are_rejected_before_fitting",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_benchmark_reports_phase7_evidence_and_rejects_projective_case",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_recovery::test_wrong_source_is_a_measured_negative",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_repository::test_manifest_run_and_points_use_one_transaction",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_repository::test_gcp_failure_exits_transaction_with_error",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_repository::test_manifest_read_restores_json_columns_and_version",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_native_route_has_qc_and_metadata",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_inspection_reads_existing_source_without_saving",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_inspection_invalid_bounds[nan,0,1,1]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_inspection_invalid_bounds[0,1,0,2]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_inspection_invalid_bounds[-181,0,1,1]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_inspection_invalid_bounds[0,0,1,90]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_inspection_invalid_bounds[1,2,3]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_inspection_rejects_changed_selection_and_missing_manifest",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_guyana_name_manifest_and_immutable_dataset",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_belize_name_manifest_preserves_partial_evaluation",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_embedded_provenance_upload_through_real_recovery",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_missing_provenance_is_actionable",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_invalid_upload_and_perspective_option_rejected",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_database_failure_does_not_claim_persistence",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_missing_schema_fails_readiness_before_processing",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_existing_exports_embed_matching_lightweight_provenance[png]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_georef_routes::test_existing_exports_embed_matching_lightweight_provenance[svg]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_golden::test_golden_images",
+      "status": "skipped",
+      "message": "Geography IDs not yet populated from database\nC:\\Users\\kyleg\\Documents\\Codex\\2026-09-05\\referenced-chatgpt-conversation-this-is-an\\work\\release\\backend\\tests\\test_golden.py:20: Geography IDs not yet populated from database",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_grid_generation::test_select_region_feature_success",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_grid_generation::test_select_region_feature_not_found",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_grid_generation::test_generate_h3_grid_polygon",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_ingestion_dry_run::test_validate_taxonomy_registry_success[asyncio]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_ingestion_dry_run::test_validate_taxonomy_registry_inactive_layer_fails[asyncio]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_ingestion_dry_run::test_validate_taxonomy_registry_missing_subtype_fails[asyncio]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_layout_resolver::test_resolve_layout_clamps_legacy_transforms",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_layout_resolver::test_resolve_layout_clamps_overrides",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_layout_resolver::test_resolve_layout_valid_values_are_untouched",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_phase2a_baseline::test_legacy_render_request_valid",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_phase2a_baseline::test_legacy_export_request_valid",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[baseline]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[meta_show_title_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[meta_show_subtitle_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[meta_show_legend_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[meta_show_north_arrow_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[meta_show_scale_bar_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[meta_show_data_credits_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[typography_overrides]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[layout_overrides]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_preview_export_byte_identical[design_asset_mode]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_svg_parity_holds_at_preview_canvas",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-baseline]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-meta_show_title_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-meta_show_subtitle_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-meta_show_legend_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-meta_show_north_arrow_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-meta_show_scale_bar_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-meta_show_data_credits_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-typography_overrides]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-layout_overrides]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[digital_poster-design_asset_mode]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-baseline]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-meta_show_title_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-meta_show_subtitle_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-meta_show_legend_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-meta_show_north_arrow_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-meta_show_scale_bar_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-meta_show_data_credits_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-typography_overrides]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-layout_overrides]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_png_dimensions_exact[instagram_portrait-design_asset_mode]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[baseline]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[meta_show_title_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[meta_show_subtitle_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[meta_show_legend_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[meta_show_north_arrow_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[meta_show_scale_bar_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[meta_show_data_credits_off]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[typography_overrides]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[layout_overrides]",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_page_box_matches[design_asset_mode]",
+      "status": "skipped",
+      "message": "design assets are PNG/SVG only (contract \u00a712)\nC:\\Users\\kyleg\\Documents\\Codex\\2026-09-05\\referenced-chatgpt-conversation-this-is-an\\work\\release\\backend\\tests\\test_render_parity.py:161: design assets are PNG/SVG only (contract \u00a712)",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_render_parity::test_pdf_physical_print_page_box",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_river_names::test_multilingual_and_alternate_names_are_normalized",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_river_names::test_guyana_artifact_is_content_addressed_and_passes_all_targets",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_river_names::test_unsupported_country_and_version_are_not_fabricated",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_river_names::test_belize_profile_is_independently_scoped",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_river_names::test_belize_artifact_is_partial_without_fabricating_rio_hondo",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_river_names::test_jamaica_artifact_is_content_addressed_and_records_partial_coverage",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_river_names::test_costa_rica_artifact_is_content_addressed_and_passes_all_targets",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_river_names::test_suriname_artifact_is_content_addressed_and_records_partial_coverage",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_routers::test_cors_exposes_download_and_manifest_headers",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_routers::test_preview_endpoint",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_routers::test_debug_sensitivity_endpoint",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_routers::test_export_endpoint",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_rules_service::test_database_load_falls_back_only_for_entirely_missing_categories",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_rules_service::test_database_flag_category_remains_authoritative_when_present",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_rules_service::test_reload_clears_stale_database_rules_before_replacement",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_scenarios::test_scenarios",
+      "status": "skipped",
+      "message": "Geography IDs not yet populated from database\nC:\\Users\\kyleg\\Documents\\Codex\\2026-09-05\\referenced-chatgpt-conversation-this-is-an\\work\\release\\backend\\tests\\test_scenarios.py:64: Geography IDs not yet populated from database",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_supabase_security_hardening::test_all_warned_functions_receive_empty_search_paths",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_supabase_security_hardening::test_runtime_database_references_are_schema_qualified",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_supabase_security_hardening::test_hardening_does_not_weaken_rls_or_relocate_postgis",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_root_element_contract",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_one_path_per_feature_with_classes",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_poster_chrome_present",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_design_asset_mode_strips_chrome",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_scale_bar_values_match_contract",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_scale_bar_omitted_for_tall_maps",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_empty_rivers_still_renders_frame",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_user_text_is_escaped",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_missing_bbox_rejected",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_svg_is_well_formed_xml",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_svg_renderer::test_unknown_presets_rejected",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_usage_limits::test_non_admin_is_rate_limited",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    },
+    {
+      "id": "backend.tests.test_usage_limits::test_admin_bypasses_limit_but_gets_warning",
+      "status": "passed",
+      "message": "",
+      "classification": "not_applicable"
+    }
+  ],
+  "notes": "All baselines require manual human review and approval in baseline_review.md before starting implementation."
+}

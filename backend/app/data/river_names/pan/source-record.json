@@ -1,0 +1,518 @@
+{
+  "captured_at": "2026-09-11T23:47:16.239131+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced Panama river systems",
+  "independent_reference": {
+    "publisher": "Instituto de Meteorolog\u00eda e Hidrolog\u00eda de Panam\u00e1",
+    "title": "National hydrological information",
+    "url": "https://www.imhpa.gob.pa/"
+  },
+  "objects": [
+    {
+      "name": "Chagres River",
+      "source_name": "R\u00edo Chagres",
+      "osm_type": "relation",
+      "osm_id": 3600468,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 676156536,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 303405821,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 827076425,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 603920252,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 826620312,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 826620315,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 826620311,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 826621971,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 603920253,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 826630402,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 826627268,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 603928310,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 722010988,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 303405820,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 826621968,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 827743782,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 826621969,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 827076428,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 947051693,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Tuira River",
+      "source_name": "R\u00edo Tuira",
+      "osm_type": "way",
+      "osm_id": 560117500,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Chucunaque River",
+      "source_name": "R\u00edo Chucunaque",
+      "osm_type": "relation",
+      "osm_id": 12003646,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Bayano River",
+      "source_name": "Rio Bayano",
+      "osm_type": "way",
+      "osm_id": 829015731,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Bayano River",
+      "source_name": "Rio Bayano",
+      "osm_type": "way",
+      "osm_id": 829015730,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Bayano River",
+      "source_name": "Rio Bayano",
+      "osm_type": "way",
+      "osm_id": 828917876,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Bayano River",
+      "source_name": "Rio Bayano",
+      "osm_type": "way",
+      "osm_id": 828917062,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Bayano River",
+      "source_name": "Rio Bayano",
+      "osm_type": "way",
+      "osm_id": 833033366,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Bayano River",
+      "source_name": "Rio Bayano",
+      "osm_type": "way",
+      "osm_id": 39217122,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Bayano River",
+      "source_name": "Rio Bayano",
+      "osm_type": "way",
+      "osm_id": 833033367,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Bayano River",
+      "source_name": "Rio Bayano",
+      "osm_type": "way",
+      "osm_id": 675442771,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "Ribeir\u00e3o Santa Maria",
+      "osm_type": "way",
+      "osm_id": 875287892,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 193149006,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 674680109,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 756117010,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 815105706,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 775617772,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 674657821,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 674680090,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 609800841,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 88623671,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 193149002,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 674680110,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 609820846,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 478441170,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 674657825,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 609820844,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 815095986,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 674657823,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 605961984,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 609823152,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 825995202,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 605961556,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 606173411,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 605961900,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 605962746,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Santa Maria River",
+      "source_name": "R\u00edo Santa Mar\u00eda",
+      "osm_type": "way",
+      "osm_id": 605961899,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

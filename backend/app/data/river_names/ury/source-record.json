@@ -1,0 +1,32 @@
+{
+  "captured_at": "2026-09-11T23:47:56.960174+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced Uruguay river systems",
+  "independent_reference": {
+    "publisher": "Ministerio de Ambiente de Uruguay",
+    "title": "Regiones hidrogr\u00e1ficas",
+    "url": "https://www.gub.uy/ministerio-ambiente/politicas-y-gestion/regiones-hidrograficas-1"
+  },
+  "objects": [
+    {
+      "name": "Uruguay River",
+      "source_name": "Arroyo Sauce del Uruguay",
+      "osm_type": "relation",
+      "osm_id": 18841559,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Uruguay River",
+      "source_name": "R\u00edo Uruguay",
+      "osm_type": "way",
+      "osm_id": 203599960,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

@@ -1,0 +1,158 @@
+{
+  "captured_at": "2026-09-11T23:46:00.737980+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced Guatemala river systems",
+  "independent_reference": {
+    "publisher": "Instituto Nacional de Sismolog\u00eda, Vulcanolog\u00eda, Meteorolog\u00eda e Hidrolog\u00eda",
+    "title": "National hydrological information",
+    "url": "https://insivumeh.gob.gt/"
+  },
+  "objects": [
+    {
+      "name": "Motagua River",
+      "source_name": "R\u00edo Motagua",
+      "osm_type": "relation",
+      "osm_id": 4595641,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Motagua River",
+      "source_name": "R\u00edo Motagua",
+      "osm_type": "relation",
+      "osm_id": 4595641,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Motagua River",
+      "source_name": "R\u00edo Motagua",
+      "osm_type": "relation",
+      "osm_id": 4595641,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Motagua River",
+      "source_name": "R\u00edo Motagua",
+      "osm_type": "relation",
+      "osm_id": 4595641,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Motagua River",
+      "source_name": "R\u00edo Motagua",
+      "osm_type": "relation",
+      "osm_id": 4595641,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Motagua River",
+      "source_name": "R\u00edo Motagua",
+      "osm_type": "way",
+      "osm_id": 1230209569,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Polochic River",
+      "source_name": "R\u00edo Polochic",
+      "osm_type": "relation",
+      "osm_id": 5974605,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Polochic River",
+      "source_name": "R\u00edo Polochic",
+      "osm_type": "relation",
+      "osm_id": 5974605,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Polochic River",
+      "source_name": "R\u00edo Polochic",
+      "osm_type": "relation",
+      "osm_id": 5974605,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Polochic River",
+      "source_name": "R\u00edo Polochic",
+      "osm_type": "relation",
+      "osm_id": 5974605,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cahabon River",
+      "source_name": "R\u00edo Cahab\u00f3n",
+      "osm_type": "relation",
+      "osm_id": 5974604,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cahabon River",
+      "source_name": "R\u00edo Cahab\u00f3n",
+      "osm_type": "relation",
+      "osm_id": 5974604,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cahabon River",
+      "source_name": "R\u00edo Cahab\u00f3n",
+      "osm_type": "way",
+      "osm_id": 1452456756,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cahabon River",
+      "source_name": "R\u00edo Cahab\u00f3n",
+      "osm_type": "way",
+      "osm_id": 300092018,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cahabon River",
+      "source_name": "R\u00edo Cahab\u00f3n",
+      "osm_type": "way",
+      "osm_id": 1461924639,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cahabon River",
+      "source_name": "R\u00edo Cahab\u00f3n",
+      "osm_type": "way",
+      "osm_id": 1461924638,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

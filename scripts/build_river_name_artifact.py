@@ -37,7 +37,7 @@ def load_profile(country: str | Path) -> dict[str, Any]:
         path = DATA_ROOT / str(country) / "build-profile.json"
     profile = json.loads(path.read_text(encoding="utf-8"))
     required = {"slug", "country", "country_code", "geography_id", "targets", "independent_reference"}
-    if not required.issubset(profile) or not profile["targets"]:
+    if not required.issubset(profile) or (not profile["targets"] and profile.get("profile_mode") != "no_named_perennial_river_systems"):
         raise ValueError(f"Incomplete country build profile: {path}")
     names = [target.get("name") for target in profile["targets"]]
     if any(not name for name in names) or len(names) != len(set(names)):

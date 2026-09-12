@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "status": "warning",
+  "coverage_status": "partial",
+  "independent_reference": {
+    "publisher": "Instituto de Meteorolog\u00eda e Hidrolog\u00eda de Panam\u00e1",
+    "title": "National hydrological information",
+    "url": "https://www.imhpa.gob.pa/"
+  },
+  "target_summary": {
+    "evaluated": 5,
+    "passed": 2,
+    "failed": 3
+  },
+  "targets": {
+    "Chagres River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 50,
+      "median_distance_m": 284.1,
+      "p95_distance_m": 3267.1
+    },
+    "Tuira River": {
+      "source_object_count": 20,
+      "display_segment_count": 20,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Chucunaque River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Bayano River": {
+      "source_object_count": 8,
+      "display_segment_count": 8,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Santa Maria River": {
+      "source_object_count": 26,
+      "display_segment_count": 26,
+      "matched_reach_count": 64,
+      "median_distance_m": 205.2,
+      "p95_distance_m": 3562.3
+    }
+  },
+  "counts": {
+    "matched": 114,
+    "ambiguous": 6
+  },
+  "limitations": [
+    "This is source-to-source agreement, not surveyed ground truth.",
+    "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+    "Independent references validate the evaluation scope, not every OSM geometry or name.",
+    "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+  ]
+}

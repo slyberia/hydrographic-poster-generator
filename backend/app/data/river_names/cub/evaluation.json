@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "status": "passed",
+  "coverage_status": "verified",
+  "independent_reference": {
+    "publisher": "Instituto Nacional de Recursos Hidr\u00e1ulicos",
+    "title": "National hydrological information",
+    "url": "https://www.hidro.gob.cu/"
+  },
+  "target_summary": {
+    "evaluated": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "targets": {
+    "Cauto River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 61,
+      "median_distance_m": 173.3,
+      "p95_distance_m": 2453.0
+    },
+    "Zaza River": {
+      "source_object_count": 16,
+      "display_segment_count": 16,
+      "matched_reach_count": 35,
+      "median_distance_m": 184.9,
+      "p95_distance_m": 1173.7
+    },
+    "Toa River": {
+      "source_object_count": 3,
+      "display_segment_count": 3,
+      "matched_reach_count": 5,
+      "median_distance_m": 91.4,
+      "p95_distance_m": 255.4
+    },
+    "Sagua la Grande River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 1,
+      "median_distance_m": 1557.6,
+      "p95_distance_m": 2214.8
+    },
+    "Mayari River": {
+      "source_object_count": 12,
+      "display_segment_count": 12,
+      "matched_reach_count": 16,
+      "median_distance_m": 159.2,
+      "p95_distance_m": 1629.6
+    }
+  },
+  "counts": {
+    "matched": 118,
+    "ambiguous": 8
+  },
+  "limitations": [
+    "This is source-to-source agreement, not surveyed ground truth.",
+    "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+    "Independent references validate the evaluation scope, not every OSM geometry or name.",
+    "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+  ]
+}

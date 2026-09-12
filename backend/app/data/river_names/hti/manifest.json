@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "country": "Haiti",
+  "country_code": "HTI",
+  "geography_id": "44dd9db5-6a1e-4766-be3c-59030aca395b",
+  "dataset_version": "819733c07abe94d86b7225682d12a99d8a505ddecdb035f94e16dba960a6b17b",
+  "generated_at": "2026-09-11T23:46:41.090590+00:00",
+  "coverage_status": "verified",
+  "artifact": {
+    "path": "819733c07abe94d86b7225682d12a99d8a505ddecdb035f94e16dba960a6b17b.json",
+    "sha256": "819733c07abe94d86b7225682d12a99d8a505ddecdb035f94e16dba960a6b17b",
+    "byte_size": 213644,
+    "feature_count": 36,
+    "indexed_reach_count": 95
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "passed",
+    "coverage_status": "verified",
+    "independent_reference": {
+      "publisher": "Minist\u00e8re de l'Environnement d'Ha\u00efti",
+      "title": "National water resources information",
+      "url": "https://mde.gouv.ht/"
+    },
+    "target_summary": {
+      "evaluated": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "targets": {
+      "Artibonite River": {
+        "source_object_count": 11,
+        "display_segment_count": 23,
+        "matched_reach_count": 66,
+        "median_distance_m": 179.5,
+        "p95_distance_m": 2653.1
+      },
+      "Trois Rivieres": {
+        "source_object_count": 8,
+        "display_segment_count": 8,
+        "matched_reach_count": 19,
+        "median_distance_m": 134.3,
+        "p95_distance_m": 295.9
+      },
+      "Grande Anse River": {
+        "source_object_count": 1,
+        "display_segment_count": 1,
+        "matched_reach_count": 4,
+        "median_distance_m": 129.1,
+        "p95_distance_m": 3200.5
+      },
+      "Cavaillon River": {
+        "source_object_count": 1,
+        "display_segment_count": 4,
+        "matched_reach_count": 4,
+        "median_distance_m": 263.7,
+        "p95_distance_m": 896.9
+      }
+    },
+    "counts": {
+      "matched": 93,
+      "ambiguous": 2
+    },
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

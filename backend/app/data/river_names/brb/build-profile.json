@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "slug": "brb",
+  "country": "Barbados",
+  "country_code": "BRB",
+  "geography_id": "eeb54b82-b7d3-49c6-b723-0f733eb726ed",
+  "independent_reference": {
+    "publisher": "Government of Barbados",
+    "title": "First National Report on Biodiversity",
+    "url": "https://biodiversity.gov.bb/wp-content/uploads/2018/12/1st-National-Report.pdf"
+  },
+  "targets": [],
+  "profile_mode": "no_named_perennial_river_systems"
+}

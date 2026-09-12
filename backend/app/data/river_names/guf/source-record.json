@@ -1,0 +1,122 @@
+{
+  "captured_at": "2026-09-11T23:46:12.000659+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced French Guiana river systems",
+  "independent_reference": {
+    "publisher": "Direction de l'Environnement de la Guyane",
+    "title": "Hydrological information for French Guiana",
+    "url": "https://www.guyane.developpement-durable.gouv.fr/"
+  },
+  "objects": [
+    {
+      "name": "Maroni River",
+      "source_name": "Crique Maroni",
+      "osm_type": "way",
+      "osm_id": 700807775,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Approuague River",
+      "source_name": "L'Approuague",
+      "osm_type": "way",
+      "osm_id": 1308417887,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Approuague River",
+      "source_name": "L'Approuague",
+      "osm_type": "way",
+      "osm_id": 1308417886,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Approuague River",
+      "source_name": "L'Approuague",
+      "osm_type": "relation",
+      "osm_id": 6480755,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Approuague River",
+      "source_name": "L'Approuague",
+      "osm_type": "relation",
+      "osm_id": 6480755,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Approuague River",
+      "source_name": "L'Approuague",
+      "osm_type": "relation",
+      "osm_id": 6480755,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mahury River",
+      "source_name": "Le Mahury",
+      "osm_type": "relation",
+      "osm_id": 536759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Mahury River",
+      "source_name": "Le Mahury",
+      "osm_type": "relation",
+      "osm_id": 536759,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Sinnamary River",
+      "source_name": "Le Sinnamary",
+      "osm_type": "way",
+      "osm_id": 701108669,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Sinnamary River",
+      "source_name": "Le Sinnamary",
+      "osm_type": "relation",
+      "osm_id": 17820378,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Sinnamary River",
+      "source_name": "Crique Sinnamary",
+      "osm_type": "way",
+      "osm_id": 612049733,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Sinnamary River",
+      "source_name": "La Counamama Branche Sinnamary",
+      "osm_type": "way",
+      "osm_id": 341031228,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

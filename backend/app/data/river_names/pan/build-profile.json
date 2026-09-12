@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "pan",
+  "country": "Panama",
+  "country_code": "PAN",
+  "geography_id": "9becb85d-3ebf-40f5-8025-5671c9e0e6cc",
+  "independent_reference": {
+    "publisher": "Instituto de Meteorología e Hidrología de Panamá",
+    "title": "National hydrological information",
+    "url": "https://www.imhpa.gob.pa/"
+  },
+  "targets": [
+    {
+      "name": "Chagres River",
+      "aliases": [
+        "chagres",
+        "chagres river",
+        "rio chagres",
+        "río chagres"
+      ],
+      "queries": [
+        "Chagres River, Panama"
+      ]
+    },
+    {
+      "name": "Tuira River",
+      "aliases": [
+        "rio tuira",
+        "río tuira",
+        "tuira",
+        "tuira river"
+      ],
+      "queries": [
+        "Tuira River, Panama"
+      ]
+    },
+    {
+      "name": "Chucunaque River",
+      "aliases": [
+        "chucunaque",
+        "chucunaque river",
+        "rio chucunaque",
+        "río chucunaque"
+      ],
+      "queries": [
+        "Chucunaque River, Panama"
+      ]
+    },
+    {
+      "name": "Bayano River",
+      "aliases": [
+        "bayano",
+        "bayano river",
+        "rio bayano",
+        "río bayano"
+      ],
+      "queries": [
+        "Bayano River, Panama"
+      ]
+    },
+    {
+      "name": "Santa Maria River",
+      "aliases": [
+        "rio santa maria",
+        "río santa maria",
+        "santa maria",
+        "santa maria river"
+      ],
+      "queries": [
+        "Santa Maria River, Panama"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,338 @@
+{
+  "captured_at": "2026-09-11T23:46:41.090590+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "4 independently referenced Haiti river systems",
+  "independent_reference": {
+    "publisher": "Minist\u00e8re de l'Environnement d'Ha\u00efti",
+    "title": "National water resources information",
+    "url": "https://mde.gouv.ht/"
+  },
+  "objects": [
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "relation",
+      "osm_id": 1240526,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 1366019435,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 1366019436,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 310400686,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 1366026037,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 1366026035,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 1366026038,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 1366026039,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 1366026040,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 1366026041,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Artibonite River",
+      "source_name": "Rivi\u00e8re de l'Artibonite",
+      "osm_type": "way",
+      "osm_id": 543357702,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Trois Rivieres",
+      "source_name": "Les Trois Rivi\u00e8res",
+      "osm_type": "way",
+      "osm_id": 48477201,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Trois Rivieres",
+      "source_name": "Les Trois Rivi\u00e8res",
+      "osm_type": "way",
+      "osm_id": 82813084,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Trois Rivieres",
+      "source_name": "Les Trois Rivi\u00e8res",
+      "osm_type": "way",
+      "osm_id": 1472449154,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Trois Rivieres",
+      "source_name": "Les Trois Rivi\u00e8res",
+      "osm_type": "way",
+      "osm_id": 48475427,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Trois Rivieres",
+      "source_name": "Les Trois Rivi\u00e8res",
+      "osm_type": "way",
+      "osm_id": 48475510,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Trois Rivieres",
+      "source_name": "Les Trois Rivi\u00e8res",
+      "osm_type": "way",
+      "osm_id": 48475442,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Trois Rivieres",
+      "source_name": "Les Trois Rivi\u00e8res",
+      "osm_type": "way",
+      "osm_id": 51282029,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Trois Rivieres",
+      "source_name": "Les Trois Rivi\u00e8res",
+      "osm_type": "way",
+      "osm_id": 242828774,
+      "source_category": "waterway",
+      "source_type": "stream",
+      "name_status": "matched"
+    },
+    {
+      "name": "Grande Anse River",
+      "source_name": "Rivi\u00e8re de la Grande-Anse",
+      "osm_type": "way",
+      "osm_id": 48534410,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cavaillon River",
+      "source_name": "Rivi\u00e8re de Cavaillon",
+      "osm_type": "relation",
+      "osm_id": 1253790,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cavaillon River",
+      "source_name": "Rivi\u00e8re de Cavaillon",
+      "osm_type": "relation",
+      "osm_id": 1253790,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cavaillon River",
+      "source_name": "Rivi\u00e8re de Cavaillon",
+      "osm_type": "relation",
+      "osm_id": 1253790,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cavaillon River",
+      "source_name": "Rivi\u00e8re de Cavaillon",
+      "osm_type": "relation",
+      "osm_id": 1253790,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

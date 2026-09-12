@@ -1,0 +1,257 @@
+{
+  "captured_at": "2026-09-11T23:45:26.134798+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced Dominican Republic river systems",
+  "independent_reference": {
+    "publisher": "Instituto Nacional de Recursos Hidr\u00e1ulicos",
+    "title": "Cuentas del Agua de la Rep\u00fablica Dominicana",
+    "url": "https://cdn.bancentral.gov.do/documents/mig/otras-publicaciones/Cuentas_del_Agua_RD.pdf"
+  },
+  "objects": [
+    {
+      "name": "Yaque del Norte River",
+      "source_name": "R\u00edo Yaque del Norte",
+      "osm_type": "relation",
+      "osm_id": 390103,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yaque del Norte River",
+      "source_name": "R\u00edo Yaque del Norte",
+      "osm_type": "way",
+      "osm_id": 192843952,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yaque del Norte River",
+      "source_name": "R\u00edo Yaque del Norte",
+      "osm_type": "way",
+      "osm_id": 223482520,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yaque del Norte River",
+      "source_name": "R\u00edo Yaque del Norte",
+      "osm_type": "way",
+      "osm_id": 31872497,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yaque del Norte River",
+      "source_name": "R\u00edo Yaque del Norte",
+      "osm_type": "way",
+      "osm_id": 31872496,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yuna River",
+      "source_name": "R\u00edo Yuna",
+      "osm_type": "way",
+      "osm_id": 31753392,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yuna River",
+      "source_name": "R\u00edo Yuna",
+      "osm_type": "way",
+      "osm_id": 135615662,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yuna River",
+      "source_name": "R\u00edo Yuna",
+      "osm_type": "way",
+      "osm_id": 933027433,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yuna River",
+      "source_name": "R\u00edo Yuna",
+      "osm_type": "way",
+      "osm_id": 933027432,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yuna River",
+      "source_name": "Rio Yuna",
+      "osm_type": "way",
+      "osm_id": 135615675,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yuna River",
+      "source_name": "Rio Yuna",
+      "osm_type": "way",
+      "osm_id": 173125552,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yuna River",
+      "source_name": "R\u00edo Yuna",
+      "osm_type": "way",
+      "osm_id": 28610614,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yuna River",
+      "source_name": "R\u00edo Yuna",
+      "osm_type": "way",
+      "osm_id": 364949432,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yuna River",
+      "source_name": "R\u00edo Yuna",
+      "osm_type": "way",
+      "osm_id": 178330192,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yaque del Sur River",
+      "source_name": "R\u00edo Yaque del Sur",
+      "osm_type": "relation",
+      "osm_id": 3477722,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Yaque del Sur River",
+      "source_name": "R\u00edo Yaque del Sur",
+      "osm_type": "relation",
+      "osm_id": 3477722,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Ozama River",
+      "source_name": "R\u00edo Ozama",
+      "osm_type": "relation",
+      "osm_id": 19669425,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 396009617,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 679985584,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 396013888,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 1392342031,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 80751912,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 396006651,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 396006658,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 262072684,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 1392342032,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Nizao River",
+      "source_name": "R\u00edo Nizao",
+      "osm_type": "way",
+      "osm_id": 679985585,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

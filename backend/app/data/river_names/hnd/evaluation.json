@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "status": "warning",
+  "coverage_status": "partial",
+  "independent_reference": {
+    "publisher": "Secretar\u00eda de Recursos Naturales y Ambiente",
+    "title": "National water resources information",
+    "url": "https://www.miambiente.gob.hn/"
+  },
+  "target_summary": {
+    "evaluated": 5,
+    "passed": 4,
+    "failed": 1
+  },
+  "targets": {
+    "Patuca River": {
+      "source_object_count": 1,
+      "display_segment_count": 4,
+      "matched_reach_count": 140,
+      "median_distance_m": 210.6,
+      "p95_distance_m": 2447.0
+    },
+    "Ulua River": {
+      "source_object_count": 0,
+      "display_segment_count": 0,
+      "matched_reach_count": 0,
+      "median_distance_m": null,
+      "p95_distance_m": null
+    },
+    "Aguan River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 14,
+      "median_distance_m": 859.5,
+      "p95_distance_m": 3549.7
+    },
+    "Chamelecon River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 6,
+      "median_distance_m": 1213.2,
+      "p95_distance_m": 3883.8
+    },
+    "Cangrejal River": {
+      "source_object_count": 1,
+      "display_segment_count": 1,
+      "matched_reach_count": 9,
+      "median_distance_m": 149.0,
+      "p95_distance_m": 2499.6
+    }
+  },
+  "counts": {
+    "matched": 169,
+    "ambiguous": 7
+  },
+  "limitations": [
+    "This is source-to-source agreement, not surveyed ground truth.",
+    "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+    "Independent references validate the evaluation scope, not every OSM geometry or name.",
+    "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+  ]
+}

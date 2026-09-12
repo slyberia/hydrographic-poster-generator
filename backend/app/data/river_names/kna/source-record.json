@@ -1,0 +1,131 @@
+{
+  "captured_at": "2026-09-11T23:46:47.327201+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "3 independently referenced Saint Kitts and Nevis river systems",
+  "independent_reference": {
+    "publisher": "Government of Saint Kitts and Nevis",
+    "title": "National water resources information",
+    "url": "https://www.gov.kn/"
+  },
+  "objects": [
+    {
+      "name": "Wingfield River",
+      "source_name": "Wingfield's River",
+      "osm_type": "way",
+      "osm_id": 854607972,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485982,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485866,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485978,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485983,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485979,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485863,
+      "source_category": "waterway",
+      "source_type": "stream",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 860560973,
+      "source_category": "waterway",
+      "source_type": "stream",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 860560974,
+      "source_category": "waterway",
+      "source_type": "stream",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485984,
+      "source_category": "waterway",
+      "source_type": "stream",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485980,
+      "source_category": "waterway",
+      "source_type": "stream",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485985,
+      "source_category": "waterway",
+      "source_type": "stream",
+      "name_status": "matched"
+    },
+    {
+      "name": "Cayon River",
+      "source_name": "Cayon River",
+      "osm_type": "way",
+      "osm_id": 795485981,
+      "source_category": "waterway",
+      "source_type": "stream",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

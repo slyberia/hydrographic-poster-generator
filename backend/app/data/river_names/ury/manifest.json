@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "country": "Uruguay",
+  "country_code": "URY",
+  "geography_id": "8e4156af-eafb-437a-94c8-3446b50fee89",
+  "dataset_version": "2cc46d69059fd9fb5b4422f1145c40a88a849d8b3fa9918491bef9c52c0afbae",
+  "generated_at": "2026-09-11T23:47:56.960174+00:00",
+  "coverage_status": "partial",
+  "artifact": {
+    "path": "2cc46d69059fd9fb5b4422f1145c40a88a849d8b3fa9918491bef9c52c0afbae.json",
+    "sha256": "2cc46d69059fd9fb5b4422f1145c40a88a849d8b3fa9918491bef9c52c0afbae",
+    "byte_size": 13069,
+    "feature_count": 2,
+    "indexed_reach_count": 6
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "warning",
+    "coverage_status": "partial",
+    "independent_reference": {
+      "publisher": "Ministerio de Ambiente de Uruguay",
+      "title": "Regiones hidrogr\u00e1ficas",
+      "url": "https://www.gub.uy/ministerio-ambiente/politicas-y-gestion/regiones-hidrograficas-1"
+    },
+    "target_summary": {
+      "evaluated": 5,
+      "passed": 1,
+      "failed": 4
+    },
+    "targets": {
+      "Uruguay River": {
+        "source_object_count": 2,
+        "display_segment_count": 2,
+        "matched_reach_count": 4,
+        "median_distance_m": 585.9,
+        "p95_distance_m": 2103.2
+      },
+      "Negro River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Santa Lucia River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "Santa Lucia Chico River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      },
+      "San Jose River": {
+        "source_object_count": 0,
+        "display_segment_count": 0,
+        "matched_reach_count": 0,
+        "median_distance_m": null,
+        "p95_distance_m": null
+      }
+    },
+    "counts": {
+      "matched": 4,
+      "ambiguous": 2
+    },
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

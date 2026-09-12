@@ -1,0 +1,77 @@
+{
+  "captured_at": "2026-09-11T23:47:36.385144+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced El Salvador river systems",
+  "independent_reference": {
+    "publisher": "Ministerio de Medio Ambiente y Recursos Naturales",
+    "title": "National water resources information",
+    "url": "https://www.ambiente.gob.sv/"
+  },
+  "objects": [
+    {
+      "name": "Lempa River",
+      "source_name": "R\u00edo Lempa",
+      "osm_type": "relation",
+      "osm_id": 9405428,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Lempa River",
+      "source_name": "R\u00edo Lempa",
+      "osm_type": "relation",
+      "osm_id": 9405428,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Lempa River",
+      "source_name": "R\u00edo Lempa",
+      "osm_type": "relation",
+      "osm_id": 9405428,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Lempa River",
+      "source_name": "R\u00edo Lempa",
+      "osm_type": "relation",
+      "osm_id": 9405428,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Paz River",
+      "source_name": "R\u00edo Paz",
+      "osm_type": "relation",
+      "osm_id": 4590681,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Paz River",
+      "source_name": "R\u00edo Paz",
+      "osm_type": "way",
+      "osm_id": 413421112,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Goascoran River",
+      "source_name": "R\u00edo Goascor\u00e1n",
+      "osm_type": "way",
+      "osm_id": 1194822898,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "country": "Ecuador",
+  "country_code": "ECU",
+  "geography_id": "174e7dce-2e7e-4eca-a1d6-4d5d758249f9",
+  "dataset_version": "49f7ec6e41623a1a3435c3b680c7528e29d969e9756d182d976179ed6a0e3c9a",
+  "generated_at": "2026-09-11T23:45:37.395316+00:00",
+  "coverage_status": "verified",
+  "artifact": {
+    "path": "49f7ec6e41623a1a3435c3b680c7528e29d969e9756d182d976179ed6a0e3c9a.json",
+    "sha256": "49f7ec6e41623a1a3435c3b680c7528e29d969e9756d182d976179ed6a0e3c9a",
+    "byte_size": 142990,
+    "feature_count": 14,
+    "indexed_reach_count": 321
+  },
+  "evaluation": {
+    "schema_version": 2,
+    "status": "passed",
+    "coverage_status": "verified",
+    "independent_reference": {
+      "publisher": "Ministerio del Ambiente, Agua y Transici\u00f3n Ecol\u00f3gica",
+      "title": "National water resources information",
+      "url": "https://www.ambiente.gob.ec/"
+    },
+    "target_summary": {
+      "evaluated": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "targets": {
+      "Guayas River": {
+        "source_object_count": 1,
+        "display_segment_count": 3,
+        "matched_reach_count": 2,
+        "median_distance_m": 385.2,
+        "p95_distance_m": 3674.3
+      },
+      "Esmeraldas River": {
+        "source_object_count": 2,
+        "display_segment_count": 3,
+        "matched_reach_count": 43,
+        "median_distance_m": 306.5,
+        "p95_distance_m": 2631.3
+      },
+      "Napo River": {
+        "source_object_count": 2,
+        "display_segment_count": 2,
+        "matched_reach_count": 12,
+        "median_distance_m": 1799.5,
+        "p95_distance_m": 3756.0
+      },
+      "Pastaza River": {
+        "source_object_count": 3,
+        "display_segment_count": 3,
+        "matched_reach_count": 246,
+        "median_distance_m": 272.4,
+        "p95_distance_m": 3021.6
+      },
+      "Santiago River": {
+        "source_object_count": 3,
+        "display_segment_count": 3,
+        "matched_reach_count": 4,
+        "median_distance_m": 1933.3,
+        "p95_distance_m": 3739.2
+      }
+    },
+    "counts": {
+      "matched": 307,
+      "ambiguous": 14
+    },
+    "limitations": [
+      "This is source-to-source agreement, not surveyed ground truth.",
+      "Completeness varies with OSM coverage, language, river segmentation and local naming practice.",
+      "Independent references validate the evaluation scope, not every OSM geometry or name.",
+      "A name is shown only when the matcher reaches its threshold; ambiguous results abstain."
+    ]
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL 1.0",
+  "disclaimer": "River-name completeness varies by country, language, OSM coverage, segmentation and local mapping practice."
+}

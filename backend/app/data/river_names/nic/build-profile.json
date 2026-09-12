@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "slug": "nic",
+  "country": "Nicaragua",
+  "country_code": "NIC",
+  "geography_id": "b2597d98-5c22-4c5a-bf62-adcaf8e6cebc",
+  "independent_reference": {
+    "publisher": "Ministerio del Ambiente y los Recursos Naturales",
+    "title": "National hydrological information",
+    "url": "https://www.marena.gob.ni/"
+  },
+  "targets": [
+    {
+      "name": "Coco River",
+      "aliases": [
+        "coco",
+        "coco river",
+        "rio coco",
+        "río coco"
+      ],
+      "queries": [
+        "Coco River, Nicaragua"
+      ]
+    },
+    {
+      "name": "Grande de Matagalpa River",
+      "aliases": [
+        "grande de matagalpa",
+        "grande de matagalpa river",
+        "rio grande de matagalpa",
+        "río grande de matagalpa"
+      ],
+      "queries": [
+        "Grande de Matagalpa River, Nicaragua"
+      ]
+    },
+    {
+      "name": "Escondido River",
+      "aliases": [
+        "escondido",
+        "escondido river",
+        "rio escondido",
+        "río escondido"
+      ],
+      "queries": [
+        "Escondido River, Nicaragua"
+      ]
+    },
+    {
+      "name": "San Juan River",
+      "aliases": [
+        "rio san juan",
+        "río san juan",
+        "san juan",
+        "san juan river"
+      ],
+      "queries": [
+        "San Juan River, Nicaragua"
+      ]
+    },
+    {
+      "name": "Prin zapolka River",
+      "aliases": [
+        "prin zapolka",
+        "prin zapolka river",
+        "rio prin zapolka",
+        "río prin zapolka"
+      ],
+      "queries": [
+        "Prin zapolka River, Nicaragua"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "captured_at": "2026-09-11T23:47:04.633828+00:00",
+  "source": "OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "query_scope": "5 independently referenced Nicaragua river systems",
+  "independent_reference": {
+    "publisher": "Ministerio del Ambiente y los Recursos Naturales",
+    "title": "National hydrological information",
+    "url": "https://www.marena.gob.ni/"
+  },
+  "objects": [
+    {
+      "name": "Coco River",
+      "source_name": "R\u00edo Coco",
+      "osm_type": "relation",
+      "osm_id": 10272504,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Coco River",
+      "source_name": "R\u00edo Coco",
+      "osm_type": "relation",
+      "osm_id": 10272504,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Coco River",
+      "source_name": "R\u00edo Coco",
+      "osm_type": "relation",
+      "osm_id": 10272504,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Coco River",
+      "source_name": "R\u00edo Coco",
+      "osm_type": "relation",
+      "osm_id": 10272504,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Coco River",
+      "source_name": "R\u00edo Coco",
+      "osm_type": "relation",
+      "osm_id": 10272504,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Coco River",
+      "source_name": "R\u00edo Coco",
+      "osm_type": "relation",
+      "osm_id": 10272504,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Grande de Matagalpa River",
+      "source_name": "R\u00edo Grande de Matagalpa",
+      "osm_type": "way",
+      "osm_id": 234456207,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Grande de Matagalpa River",
+      "source_name": "R\u00edo Grande de Matagalpa",
+      "osm_type": "relation",
+      "osm_id": 12145883,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Grande de Matagalpa River",
+      "source_name": "R\u00edo Grande de Matagalpa",
+      "osm_type": "relation",
+      "osm_id": 12145883,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Grande de Matagalpa River",
+      "source_name": "R\u00edo Grande de Matagalpa",
+      "osm_type": "relation",
+      "osm_id": 12145883,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    },
+    {
+      "name": "Escondido River",
+      "source_name": "R\u00edo Escondido",
+      "osm_type": "relation",
+      "osm_id": 12800724,
+      "source_category": "waterway",
+      "source_type": "river",
+      "name_status": "matched"
+    }
+  ],
+  "unnamed_evidence": []
+}
