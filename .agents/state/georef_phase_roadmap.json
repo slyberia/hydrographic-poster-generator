@@ -3,7 +3,7 @@
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
   "current_phase_id": "georef-south-american-coverage",
-  "current_phase_gate": "Phase 11 is approved to begin on its isolated branch; implementation remains gated on the recorded baseline receiving separate human approval.",
+  "current_phase_gate": "Phase 11 implementation is complete for the selected Suriname increment; closeout is pending review/merge before the final program closeout can begin.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -35,7 +35,7 @@
       "phase_id": "georef-geoparquet-foundation",
       "phase_number": "8A",
       "name": "GeoParquet reusable data-product foundation",
-      "status": "planned_not_approved",
+      "status": "implementation_complete_closeout_pending",
       "depends_on": ["georef-artifact-delivery"],
       "must_complete_before": ["georef-caribbean-coverage", "georef-central-american-coverage", "georef-south-american-coverage"],
       "objective": "Define and validate the canonical GeoParquet artifact for reusable geospatial and AI workflows, including schema, geometry encoding, CRS, precision, attributes, provenance, country partitioning, deterministic builds, hashes, and interoperability.",
