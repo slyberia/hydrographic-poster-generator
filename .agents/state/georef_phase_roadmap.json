@@ -3,7 +3,7 @@
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
   "current_phase_id": "georef-ui-ux-polish",
-      "current_phase_gate": "Phase 13 is defined on an isolated branch with a clean merged-main baseline; human approval is required before UI implementation.",
+      "current_phase_gate": "Phase 13 is closed after merge and closeout. Phase 14 is drafted but not approved for implementation.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -52,7 +52,7 @@
       "phase_id": "georef-geoparquet-foundation",
       "phase_number": "8A",
       "name": "GeoParquet reusable data-product foundation",
-      "status": "implementation_complete_closeout_pending",
+      "status": "closed",
       "depends_on": ["georef-artifact-delivery"],
       "must_complete_before": ["georef-caribbean-coverage", "georef-central-american-coverage", "georef-south-american-coverage"],
       "objective": "Define and validate the canonical GeoParquet artifact for reusable geospatial and AI workflows, including schema, geometry encoding, CRS, precision, attributes, provenance, country partitioning, deterministic builds, hashes, and interoperability.",
@@ -128,18 +128,42 @@
       "phase_id": "georef-ui-ux-polish",
       "phase_number": 13,
       "name": "Georeferencer UI/UX polish",
-      "status": "implementation_complete_closeout_pending",
+      "status": "closed",
       "depends_on": ["georef-country-etl-hitl"],
       "objective": "Improve the Georeferencer page's visual hierarchy, progressive task flow, result evidence presentation, map inspection controls, accessibility, and responsive behavior without changing georeferencing semantics or API contracts.",
       "must_not_include": ["Recovery algorithm changes", "Geospatial data or ETL changes", "API contract changes", "Runtime scraping", "Production writes", "Broad application-wide redesign"],
       "exit_requirements": ["Focused browser evidence covers primary upload, error/loading, result, and map-inspection flows.", "Existing backend, TypeScript, and frontend lint verification passes.", "Responsive and accessible interaction behavior is documented in a walkthrough.", "A human-reviewed PR records rollback and unresolved design decisions."]
     },
     {
+      "phase_id": "georef-studio-georef-integration",
+      "phase_number": 14,
+      "name": "Studio–Georeferencer integration and inspection workspace",
+      "status": "planned_not_approved",
+      "depends_on": ["georef-ui-ux-polish"],
+      "objective": "Make Studio-generated posters transferable directly into the Georeferencer, harden the external upload path, improve readiness and inspection UX, and establish a staged path toward a unified geospatial workspace.",
+      "scope_notes": [
+        "Prefer a short-lived, single-use browser handoff for Studio-generated poster blobs and signed provenance metadata; retain manual upload for external and expired handoffs.",
+        "Treat backend upload validation and resource limits as security requirements, not client-only UX checks.",
+        "Make Geographic Inspection a first-class tab and enlarge the existing map without adding unvalidated analytical claims.",
+        "Use shared visual tokens and components for Studio and Georeferencer parity.",
+        "Do not merge the applications into one backend or remove compatibility paths during this phase."
+      ],
+      "must_not_include": ["Recovery algorithm replacement", "Country or ETL changes", "Database migrations unless separately approved", "Runtime scraping", "Production deployment or writes", "Unvalidated confidence or surveyed-accuracy claims"],
+      "exit_requirements": [
+        "Studio can open a generated poster in the Georeferencer before or without a user download, with image and metadata automatically populated.",
+        "Expired, consumed, unavailable, and externally uploaded states are explicit and recoverable.",
+        "Backend and frontend upload defenses are tested against malformed, oversized, misleading, and resource-exhausting inputs.",
+        "Studio blocks selection until geography and preset bootstrap is ready and provides an accessible first-visit information dialog.",
+        "Geographic Inspection is a prominent responsive tab with the existing lazy-loaded controls and disclaimers preserved.",
+        "The shared visual system and staged unified-workspace recommendation are documented without coupling unrelated backends."
+      ]
+    },
+    {
       "phase_id": "georef-program-closeout",
       "phase_number": "final",
       "name": "Georeferencing program closeout",
       "status": "planned_not_approved",
-      "depends_on": ["georef-ui-ux-polish"],
+      "depends_on": ["georef-studio-georef-integration"],
       "objective": "Confirm the final supported-country inventory, artifact manifests and hashes, benchmark evidence, known limitations, operational fallback, documentation, and rollback procedures."
     }
   ],

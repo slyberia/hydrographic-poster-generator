@@ -2,11 +2,11 @@
   "schema_version": 1,
   "phase_id": "georef-ui-ux-polish",
   "phase_name": "Georeferencer UI/UX polish",
-  "status": "implementation_complete_closeout_pending",
+  "status": "closed",
   "approved_by_human": true,
   "human_approval": "2026-09-12: user approved the defined Georeferencer UI/UX polish phase and its baseline gate.",
   "baseline_commit": "eb53a56d37bbafbd1dc911ac643398d534e448e2",
-  "branch": "codex/georef-ui-ux-polish",
+  "branch": "codex/georef-ui-ux-polish-closeout",
   "protected_branches": ["main"],
   "allowed_paths": [".agents/state/current_phase.json", ".agents/state/georef_phase_roadmap.json", ".agents/config/verification_commands_georef_ui_ux.json", ".agents/state/baselines/georef-ui-ux-polish/**", ".agents/state/verifications/georef-ui-ux-polish/**", "frontend/src/app/georeference/**", "frontend/src/app/globals.css", "frontend/src/components/GeorefMap.tsx", "frontend/src/components/GeorefResults.tsx", "frontend/src/components/PosterHeader.tsx", "frontend/src/components/ui/**", "frontend/src/styles/**", "frontend/e2e/georef*.spec.ts", "docs/GEOREFERENCER_UI_UX_POLISH.md"],
   "scope_exempt_paths": ["work/**", "frontend/test-results/**", ".playwright-cli/**", ".agents/state/verifications/georef-release/**"],
@@ -17,6 +17,6 @@
   "verification_commands_file": ".agents/config/verification_commands_georef_ui_ux.json",
   "approved_baseline_file": ".agents/state/baselines/georef-ui-ux-polish/baseline_approved.json",
   "program_roadmap_file": ".agents/state/georef_phase_roadmap.json",
-  "next_phase_id": "georef-program-closeout",
-  "next_phase_gate": "After this UI/UX phase closes, activate the final georeferencing program closeout with its own scope and review."
+  "next_phase_id": "georef-studio-georef-integration",
+  "next_phase_gate": "Phase 13 is closed. Phase 14 is drafted but remains separately gated; establish its approved scope, isolated branch, baseline, and human approval before implementation."
 }
