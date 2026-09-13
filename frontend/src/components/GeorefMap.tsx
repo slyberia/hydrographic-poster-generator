@@ -121,27 +121,29 @@ export default function GeorefMap({ viewer, posterId }: { viewer: GeorefViewer; 
     ? `Possible match: ${selectedRecord.candidate_name}`
     : selectedStatus === "unnamed_in_source" ? "No name in evaluated OSM source" : "Not evaluated");
 
-  return <section className="min-w-0 space-y-3" aria-label="Geographic inspection">
-    <h3 className="font-semibold">Inspect on a map</h3>
-    <p className="text-xs">Basemap is visual context, not surveyed ground truth. Source lines are clipped to the viewport for display only.</p>
-    <label className="block text-sm"><input type="checkbox" checked={basemap} onChange={e=>setBasemap(e.target.checked)} /> Show OpenStreetMap basemap</label>
+  return <section className="georef-map-panel min-w-0 space-y-3" aria-label="Geographic inspection">
+    <div className="georef-map-heading"><div><p className="section-header">Geographic inspection</p><h3 className="mt-1 font-semibold">Inspect on a map</h3></div><span className="georef-map-badge">Lazy loaded</span></div>
+    <p className="text-xs text-[var(--ui-text-muted)]">Basemap is visual context, not surveyed ground truth. Source lines are clipped to the viewport for display only.</p>
+    <div className="georef-map-controls">
+    <label className="georef-toggle"><input className="glass-checkbox" type="checkbox" checked={basemap} onChange={e=>setBasemap(e.target.checked)} /> <span><strong>OpenStreetMap basemap</strong><small>Visual context only</small></span></label>
     <p className="text-xs">Enabling the basemap sends map tile requests to OpenStreetMap. Tiles are not included in downloads.</p>
-    <label className="block text-sm"><input type="checkbox" checked={namesEnabled} disabled={namesBusy} onChange={e=>void toggleNames(e.target.checked)} /> {namesBusy ? "Loading evaluated river names…" : "Show evaluated river names"}</label>
+    <label className="georef-toggle"><input aria-label="Show evaluated river names" className="glass-checkbox" type="checkbox" checked={namesEnabled} disabled={namesBusy} onChange={e=>void toggleNames(e.target.checked)} /> <span><strong>{namesBusy ? "Loading evaluated river names…" : "Evaluated river names"}</strong><small>Versioned OSM-derived layer</small></span></label>
+    </div>
     <p className="text-xs">Names are loaded from a cached, versioned OSM-derived layer. Completeness may vary by country, language, source coverage, segmentation and local mapping practice.</p>
     <p role="status" className="text-xs">{nameMessage}</p>
     {namesEnabled && nameData && <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs" aria-label="River name status legend">
       {(Object.keys(STATUS) as RiverNameStatus[]).map(status => <span key={status}><span aria-hidden="true" style={{ color: STATUS[status].color }}>●</span> {STATUS[status].label}</span>)}
     </div>}
-    <label className="block text-sm">Poster opacity: {Math.round(opacity*100)}% <input aria-label="Poster opacity" type="range" min="0" max="1" step="0.05" value={opacity} onChange={e=>setOpacity(Number(e.target.value))} /></label>
+    <label className="georef-opacity"><span>Poster opacity <strong>{Math.round(opacity*100)}%</strong></span><input aria-label="Poster opacity" type="range" min="0" max="1" step="0.05" value={opacity} onChange={e=>setOpacity(Number(e.target.value))} /></label>
     <div ref={host} className="relative z-0 w-full rounded" style={{ height: 420 }} aria-label="Georeferenced poster map" />
-    <div className="flex flex-wrap gap-2"><button type="button" className="glass-input" disabled={busy} onClick={loadRivers}>{busy ? "Loading rivers…" : "Load rivers in view"}</button>
+    <div className="georef-map-actions"><button type="button" className="btn-primary" disabled={busy} onClick={loadRivers}>{busy ? "Loading rivers…" : "Load rivers in view"}</button>
       <button type="button" className="glass-input" onClick={()=>{request.current?.abort();setBusy(false);setRivers(null);setSelected(null);setMessage("");}}>Clear source overlay</button></div>
     <p role="status" className="break-words text-sm">{message}</p>
-    {!!rivers?.features.length && <label className="block text-sm">Inspect a river reach
+    {!!rivers?.features.length && <label className="glass-label">Inspect a river reach
       <select className="glass-select" value={selected ? String(selected.properties?.hydrorivers_id) : ""} onChange={e=>setSelected(rivers.features.find(f=>String(f.properties?.hydrorivers_id)===e.target.value) ?? null)}>
         <option value="">Click a colored line or choose an ID</option>{rivers.features.map(f=><option key={String(f.properties?.hydrorivers_id)} value={String(f.properties?.hydrorivers_id)}>{String(f.properties?.hydrorivers_id)}</option>)}
       </select></label>}
-    {props && <dl className="grid grid-cols-2 gap-2 text-sm" aria-label="Selected river attributes">
+    {props && <dl className="georef-reach-details grid grid-cols-2 gap-2 text-sm" aria-label="Selected river attributes">
       <dt>HydroRIVERS ID</dt><dd>{String(props.hydrorivers_id)}</dd><dt>Stream order</dt><dd>{props.stream_order ?? "Not available"}</dd>
       <dt>Upstream area</dt><dd>{props.upstream_area == null ? "Not available" : `${props.upstream_area} km²`}</dd>
       <dt>Reach length</dt><dd>{props.length_km == null ? "Not available" : `${props.length_km} km`}</dd>

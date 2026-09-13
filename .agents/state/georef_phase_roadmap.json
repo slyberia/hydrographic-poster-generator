@@ -2,8 +2,8 @@
   "schema_version": 1,
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
-  "current_phase_id": "georef-country-etl-hitl",
-      "current_phase_gate": "Phase 12 is approved for end-to-end ETL automation and the 21-country expansion after the merged Phase 11 closeout; the five existing countries are regression fixtures only.",
+  "current_phase_id": "georef-ui-ux-polish",
+      "current_phase_gate": "Phase 13 is defined on an isolated branch with a clean merged-main baseline; human approval is required before UI implementation.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -125,11 +125,21 @@
       ]
     },
     {
+      "phase_id": "georef-ui-ux-polish",
+      "phase_number": 13,
+      "name": "Georeferencer UI/UX polish",
+      "status": "implementation_complete_closeout_pending",
+      "depends_on": ["georef-country-etl-hitl"],
+      "objective": "Improve the Georeferencer page's visual hierarchy, progressive task flow, result evidence presentation, map inspection controls, accessibility, and responsive behavior without changing georeferencing semantics or API contracts.",
+      "must_not_include": ["Recovery algorithm changes", "Geospatial data or ETL changes", "API contract changes", "Runtime scraping", "Production writes", "Broad application-wide redesign"],
+      "exit_requirements": ["Focused browser evidence covers primary upload, error/loading, result, and map-inspection flows.", "Existing backend, TypeScript, and frontend lint verification passes.", "Responsive and accessible interaction behavior is documented in a walkthrough.", "A human-reviewed PR records rollback and unresolved design decisions."]
+    },
+    {
       "phase_id": "georef-program-closeout",
       "phase_number": "final",
       "name": "Georeferencing program closeout",
       "status": "planned_not_approved",
-      "depends_on": ["georef-south-american-coverage"],
+      "depends_on": ["georef-ui-ux-polish"],
       "objective": "Confirm the final supported-country inventory, artifact manifests and hashes, benchmark evidence, known limitations, operational fallback, documentation, and rollback procedures."
     }
   ],
