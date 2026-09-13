@@ -120,7 +120,7 @@ export default function GeoreferencePage() {
             {(presets?.density ?? [{ id: "balanced", name: "Balanced" }]).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
           </select>
         </section>
-        <details className="georef-advanced"><summary>Metadata and control points <span>Advanced inputs · optional</span></summary>
+        <details className="georef-advanced"><summary><span>Metadata and control points</span> <span>Advanced inputs · optional</span></summary>
           <label className="glass-label mt-4" htmlFor="poster-id">Poster ID <span className="normal-case font-normal tracking-normal">(optional)</span></label><input id="poster-id" className="glass-input" value={posterId} disabled={busy} onChange={e => setPosterId(e.target.value)} placeholder="From a previous export" />
           <label className="glass-label mt-4" htmlFor="manifest-json">Manifest JSON <span className="normal-case font-normal tracking-normal">(optional)</span></label><input id="manifest-json" className="glass-input" type="file" accept=".json" disabled={busy} onChange={e => setSidecar(e.target.files?.[0] ?? null)} />
           <label className="glass-label mt-4" htmlFor="control-points-json">Control-point JSON <span className="normal-case font-normal tracking-normal">(optional)</span></label><input id="control-points-json" className="glass-input" type="file" accept=".json" disabled={busy} onChange={e => setControlPoints(e.target.files?.[0] ?? null)} />

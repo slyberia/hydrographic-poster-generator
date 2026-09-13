@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-12T22:00:59.515837+00:00",
+  "generated_at": "2026-09-13T02:06:21.435675+00:00",
   "phase_id": "georef-ui-ux-polish",
   "baseline_commit": "eb53a56d37bbafbd1dc911ac643398d534e448e2",
   "approved_baseline_file": ".agents\\state\\baselines\\georef-ui-ux-polish\\baseline_approved.json",
@@ -16,19 +16,27 @@
     ".agents/state/baselines/georef-ui-ux-polish/typescript.stderr.txt",
     ".agents/state/baselines/georef-ui-ux-polish/typescript.stdout.txt",
     ".agents/state/current_phase.json",
+    ".agents/state/georef_phase_roadmap.json",
     ".agents/state/verifications/georef-ui-ux-polish/backend.stderr.txt",
     ".agents/state/verifications/georef-ui-ux-polish/backend.stdout.txt",
     ".agents/state/verifications/georef-ui-ux-polish/backend.xml",
     ".agents/state/verifications/georef-ui-ux-polish/frontend_lint.stderr.txt",
     ".agents/state/verifications/georef-ui-ux-polish/frontend_lint.stdout.txt",
+    ".agents/state/verifications/georef-ui-ux-polish/phase_walkthrough.md",
     ".agents/state/verifications/georef-ui-ux-polish/post_edit_verification.json",
     ".agents/state/verifications/georef-ui-ux-polish/post_edit_verification.md",
     ".agents/state/verifications/georef-ui-ux-polish/typescript.stderr.txt",
     ".agents/state/verifications/georef-ui-ux-polish/typescript.stdout.txt",
+    "frontend/e2e/georef.spec.ts",
     "frontend/src/app/georeference/page.tsx",
     "frontend/src/app/globals.css",
     "frontend/src/components/GeorefMap.tsx",
-    "frontend/src/components/GeorefResults.tsx"
+    "frontend/src/components/GeorefResults.tsx",
+    "work/browser-recovery.tif",
+    "work/georef-mobile.png",
+    "work/georef-native-browser.png",
+    "work/georef-recovery-browser.png",
+    "work/jamaica-poster.png"
   ],
   "out_of_scope_paths": [],
   "commands": [
@@ -45,7 +53,7 @@
       ],
       "cwd": ".",
       "exit_code": 0,
-      "duration_seconds": 74.795,
+      "duration_seconds": 58.875,
       "stdout_file": ".agents\\state\\verifications\\georef-ui-ux-polish\\backend.stdout.txt",
       "stderr_file": ".agents\\state\\verifications\\georef-ui-ux-polish\\backend.stderr.txt",
       "test_case_count": 249
@@ -59,7 +67,7 @@
       ],
       "cwd": "frontend",
       "exit_code": 0,
-      "duration_seconds": 2.362,
+      "duration_seconds": 2.671,
       "stdout_file": ".agents\\state\\verifications\\georef-ui-ux-polish\\typescript.stdout.txt",
       "stderr_file": ".agents\\state\\verifications\\georef-ui-ux-polish\\typescript.stderr.txt",
       "test_case_count": 0
@@ -73,7 +81,7 @@
       ],
       "cwd": "frontend",
       "exit_code": 0,
-      "duration_seconds": 9.742,
+      "duration_seconds": 9.032,
       "stdout_file": ".agents\\state\\verifications\\georef-ui-ux-polish\\frontend_lint.stdout.txt",
       "stderr_file": ".agents\\state\\verifications\\georef-ui-ux-polish\\frontend_lint.stderr.txt",
       "test_case_count": 0

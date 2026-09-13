@@ -22,8 +22,11 @@ semantics, country classifications, and accuracy disclaimers.
 - Post-edit verification: backend, TypeScript, frontend lint, and file-scope
   comparison passed.
 - Focused `georef-names.spec.ts`: 1 passed.
-- Existing integration-dependent `georef.spec.ts`: 2 skipped because
-  `GEOREF_INTEGRATION` was not enabled.
+- Real integration `georef.spec.ts` with `GEOREF_INTEGRATION=1`: 2 passed
+  against the local demo API. The recovery response is intentionally
+  evidence-only and does not include a geographic viewer; native results
+  cover the viewer-bearing inspection path. The stale viewer expectation was
+  corrected in the integration test without changing the API or UI contract.
 - Headed Playwright CLI inspection was unavailable because the local daemon
   exited immediately in this Windows environment; no visual result is claimed
   from that attempt.

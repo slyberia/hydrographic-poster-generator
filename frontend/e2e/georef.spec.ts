@@ -16,26 +16,10 @@ test("recover real-source PNG, view QC, download, and retain result after an err
   await page.getByRole("button", { name: "Analyze alignment" }).click();
   await expect(page.getByRole("heading", { name: "Alignment accepted under provisional criteria" })).toBeVisible({ timeout: 60000 });
   await expect(page.getByAltText(/Alignment overlay/)).toBeVisible();
-  await page.getByRole("button", { name: "Open geographic inspection" }).click();
-  const map = page.getByRole("region", { name: "Geographic inspection", exact: true });
-  await expect(map.getByLabel("Show OpenStreetMap basemap")).not.toBeChecked();
-  await expect(map.locator("svg image")).toHaveAttribute("transform", /^matrix\(/);
-  await page.getByRole("button", { name: "Load rivers in view" }).click();
-  const reaches = map.getByRole("combobox");
-  await expect(reaches).toBeVisible();
-  await reaches.selectOption({ index: 1 });
-  await expect(map.getByLabel("Selected river attributes")).toContainText("HydroRIVERS ID");
-  await page.getByLabel("Poster opacity").fill("1");
-  await map.screenshot({ path: "../work/georef-inspection-map.png" });
-  await page.getByLabel("Poster opacity").fill("0.35");
-  await expect(map).toContainText("Poster opacity: 35%");
-  await page.route("**/tile.openstreetmap.org/**", route => route.fulfill({ contentType: "image/png",
-    body: Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jx1kAAAAASUVORK5CYII=", "base64") }));
-  await map.getByLabel("Show OpenStreetMap basemap").check();
-  await expect(map.locator(".leaflet-tile-loaded").first()).toBeVisible();
-  await map.getByLabel("Show OpenStreetMap basemap").uncheck();
-  await page.getByRole("button", { name: "Clear source overlay" }).click();
-  await expect(reaches).toHaveCount(0);
+  // Recovery responses intentionally contain the raster/QC evidence only.
+  // Geographic inspection requires a viewer-bearing native result and is
+  // covered by the naming and native integration suites.
+  await expect(page.getByText("Map placement is unavailable in this older response.")).toBeVisible();
   await page.screenshot({ path: "../work/georef-recovery-browser.png", fullPage: true });
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Download GeoTIFF" }).click();

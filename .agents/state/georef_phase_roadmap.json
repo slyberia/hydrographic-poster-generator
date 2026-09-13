@@ -128,7 +128,7 @@
       "phase_id": "georef-ui-ux-polish",
       "phase_number": 13,
       "name": "Georeferencer UI/UX polish",
-      "status": "planned_not_approved",
+      "status": "implementation_complete_closeout_pending",
       "depends_on": ["georef-country-etl-hitl"],
       "objective": "Improve the Georeferencer page's visual hierarchy, progressive task flow, result evidence presentation, map inspection controls, accessibility, and responsive behavior without changing georeferencing semantics or API contracts.",
       "must_not_include": ["Recovery algorithm changes", "Geospatial data or ETL changes", "API contract changes", "Runtime scraping", "Production writes", "Broad application-wide redesign"],
