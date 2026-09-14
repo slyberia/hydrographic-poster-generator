@@ -2,8 +2,8 @@
   "schema_version": 1,
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
-  "current_phase_id": "georef-studio-georef-integration",
-      "current_phase_gate": "Phase 14 implementation and local verification complete; draft PR review precedes merge. No production deployment or automatic next phase.",
+  "current_phase_id": "georef-program-closeout",
+  "current_phase_gate": "Program closeout audit complete with documented limitations; closeout PR review/merge remains pending. No automatic follow-on or deployment.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -11,7 +11,9 @@
       "phase_number": 12,
       "name": "Country ETL and HITL review automation",
       "status": "closed",
-      "depends_on": ["georef-south-american-coverage"],
+      "depends_on": [
+        "georef-south-american-coverage"
+      ],
       "objective": "Turn country evaluation into a deterministic ETL and review pipeline, define approved build profiles for the 21 unevaluated countries, and run the 21-country expansion with reproducible evidence and HITL review.",
       "required_validation": [
         "The five existing country outcomes are reproduced without changing their artifacts or classifications.",
@@ -21,31 +23,60 @@
         "Missing qualifying source objects remain target-level not_evaluated.",
         "No production write, runtime scraping, database migration, or delivery-architecture change is introduced."
       ],
-      "must_not_include": ["Database migrations", "Runtime scraping at application runtime", "Recovery algorithm replacement", "Delivery architecture changes", "Raw source dataset commits"]
+      "must_not_include": [
+        "Database migrations",
+        "Runtime scraping at application runtime",
+        "Recovery algorithm replacement",
+        "Delivery architecture changes",
+        "Raw source dataset commits"
+      ],
+      "closeout_evidence": {
+        "pr": "#75",
+        "merge_commit": "ed027f4",
+        "consolidated_review": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
+      }
     },
     {
       "phase_id": "georef-recovery-calibration",
       "phase_number": 7,
       "name": "Recovery calibration and real-world benchmarking",
-      "status": "implementation_merged_closeout_pending",
+      "status": "closed",
       "exit_requirements": [
         "Run and record country-level benchmark evidence for Guyana, Belize, and Jamaica.",
         "Complete the Phase 7 walkthrough, including scope, baseline comparison, verification, risks, rollback, and unresolved human decisions.",
         "Keep benchmark results distinct from surveyed accuracy claims and preserve explicit partial or unavailable outcomes."
+      ],
+      "closeout_evidence": {
+        "pr": "#67",
+        "merge_commit": "fe5decf",
+        "consolidated_review": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
+      },
+      "closeout_limitations": [
+        "Guyana current-format report retained; Belize/Jamaica evidence is historical release prose; thresholds remain provisional."
       ]
     },
     {
       "phase_id": "georef-artifact-delivery",
       "phase_number": 8,
       "name": "Reference artifact architecture and delivery",
-      "status": "active_implementation",
-      "depends_on": ["georef-recovery-calibration"],
+      "status": "closed",
+      "depends_on": [
+        "georef-recovery-calibration"
+      ],
       "objective": "Establish immutable artifact manifests, GCS/CDN delivery and caching, versioned URLs, integrity checks, and a packaged offline fallback.",
       "must_not_include": [
         "Country coverage expansion",
         "Database migrations",
         "Runtime OSM/Nominatim or other scraping",
         "Raw source dataset commits"
+      ],
+      "closeout_evidence": {
+        "pr": "#68",
+        "merge_commit": "a2ec098",
+        "consolidated_review": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
+      },
+      "closeout_limitations": [
+        "Packaged delivery and optional CDN contract complete; external publication and CDN failover readiness unverified."
       ]
     },
     {
@@ -53,8 +84,14 @@
       "phase_number": "8A",
       "name": "GeoParquet reusable data-product foundation",
       "status": "closed",
-      "depends_on": ["georef-artifact-delivery"],
-      "must_complete_before": ["georef-caribbean-coverage", "georef-central-american-coverage", "georef-south-american-coverage"],
+      "depends_on": [
+        "georef-artifact-delivery"
+      ],
+      "must_complete_before": [
+        "georef-caribbean-coverage",
+        "georef-central-american-coverage",
+        "georef-south-american-coverage"
+      ],
       "objective": "Define and validate the canonical GeoParquet artifact for reusable geospatial and AI workflows, including schema, geometry encoding, CRS, precision, attributes, provenance, country partitioning, deterministic builds, hashes, and interoperability.",
       "delivery_contract": "Use the canonical data product for downstream reuse; choose the browser delivery representation through a measured bakeoff. PMTiles/MVT may be a derived display artifact and GeoJSON may remain a debug/export representation rather than the canonical store.",
       "required_validation": [
@@ -67,14 +104,24 @@
         "Database migrations unless separately approved by evidence",
         "Recovery algorithm replacement unless Phase 7 evidence requires it",
         "Raw source dataset commits"
+      ],
+      "closeout_evidence": {
+        "pr": "#69",
+        "merge_commit": "863d52b",
+        "consolidated_review": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
+      },
+      "closeout_limitations": [
+        "Python tested; R consumer execution and complete PMTiles archive remain unverified; no committed per-country GeoParquet files."
       ]
     },
     {
       "phase_id": "georef-caribbean-coverage",
       "phase_number": 9,
       "name": "Caribbean country coverage batch",
-      "status": "implementation_complete_closeout_pending",
-      "depends_on": ["georef-geoparquet-foundation"],
+      "status": "closed",
+      "depends_on": [
+        "georef-geoparquet-foundation"
+      ],
       "objective": "Build and benchmark bounded Caribbean country increments using the established artifact, GeoParquet, and provenance contracts; weak countries may remain partial or unavailable.",
       "scope_notes": [
         "Use small independently reviewable country increments rather than an all-or-nothing regional release.",
@@ -86,14 +133,22 @@
         "Each selected Caribbean country has a bounded profile, provenance record, deterministic artifact manifest, and benchmark result.",
         "Country outcomes and limitations are documented without blocking on weak or unavailable countries.",
         "All scoped tests pass against the approved baseline and a Phase 9 walkthrough records rollback and unresolved risks."
-      ]
+      ],
+      "closeout_evidence": {
+        "pr": "#70",
+        "merge_commit": "f2c95af",
+        "consolidated_review": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
+      }
     },
     {
       "phase_id": "georef-central-american-coverage",
       "phase_number": 10,
       "name": "Central American country coverage batch",
-      "status": "implementation_complete_closeout_pending",
-      "depends_on": ["georef-geoparquet-foundation", "georef-caribbean-coverage"],
+      "status": "closed",
+      "depends_on": [
+        "georef-geoparquet-foundation",
+        "georef-caribbean-coverage"
+      ],
       "objective": "Build and benchmark bounded Central American country increments using the established artifact, GeoParquet, and provenance contracts; weak countries may remain partial or unavailable.",
       "scope_notes": [
         "Begin with a bounded Costa Rica increment; later Central American countries require the same independent review and remain separate internal slices.",
@@ -104,14 +159,22 @@
         "Each selected Central American country has a bounded profile, provenance record, deterministic artifact manifest, and benchmark result.",
         "Country outcomes and limitations are documented as verified, partial, or unavailable.",
         "All scoped tests pass against the approved baseline and a Phase 10 walkthrough records rollback and unresolved risks."
-      ]
+      ],
+      "closeout_evidence": {
+        "pr": "#71 / #72",
+        "merge_commit": "aa3c1ff",
+        "consolidated_review": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
+      }
     },
     {
       "phase_id": "georef-south-american-coverage",
       "phase_number": 11,
       "name": "South American country coverage batch",
-      "status": "planned_not_approved",
-      "depends_on": ["georef-geoparquet-foundation", "georef-central-american-coverage"],
+      "status": "closed",
+      "depends_on": [
+        "georef-geoparquet-foundation",
+        "georef-central-american-coverage"
+      ],
       "objective": "Build and benchmark bounded South American country increments using the established artifact, GeoParquet, and provenance contracts; weak countries may remain partial or unavailable.",
       "scope_notes": [
         "Begin with a bounded Suriname increment; remaining countries require separate internal slices.",
@@ -122,33 +185,66 @@
         "Each selected South American country has a bounded profile, provenance record, deterministic artifact manifest, and benchmark result.",
         "Country outcomes and limitations are documented as verified, partial, or unavailable.",
         "All scoped tests pass against the approved baseline and a Phase 11 walkthrough records rollback and unresolved risks."
-      ]
+      ],
+      "closeout_evidence": {
+        "pr": "#73 / #74",
+        "merge_commit": "f1994be",
+        "consolidated_review": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
+      }
     },
     {
       "phase_id": "georef-ui-ux-polish",
       "phase_number": 13,
       "name": "Georeferencer UI/UX polish",
       "status": "closed",
-      "depends_on": ["georef-country-etl-hitl"],
+      "depends_on": [
+        "georef-country-etl-hitl"
+      ],
       "objective": "Improve the Georeferencer page's visual hierarchy, progressive task flow, result evidence presentation, map inspection controls, accessibility, and responsive behavior without changing georeferencing semantics or API contracts.",
-      "must_not_include": ["Recovery algorithm changes", "Geospatial data or ETL changes", "API contract changes", "Runtime scraping", "Production writes", "Broad application-wide redesign"],
-      "exit_requirements": ["Focused browser evidence covers primary upload, error/loading, result, and map-inspection flows.", "Existing backend, TypeScript, and frontend lint verification passes.", "Responsive and accessible interaction behavior is documented in a walkthrough.", "A human-reviewed PR records rollback and unresolved design decisions."]
+      "must_not_include": [
+        "Recovery algorithm changes",
+        "Geospatial data or ETL changes",
+        "API contract changes",
+        "Runtime scraping",
+        "Production writes",
+        "Broad application-wide redesign"
+      ],
+      "exit_requirements": [
+        "Focused browser evidence covers primary upload, error/loading, result, and map-inspection flows.",
+        "Existing backend, TypeScript, and frontend lint verification passes.",
+        "Responsive and accessible interaction behavior is documented in a walkthrough.",
+        "A human-reviewed PR records rollback and unresolved design decisions."
+      ],
+      "closeout_evidence": {
+        "pr": "#76 / #77",
+        "merge_commit": "f7c9875",
+        "consolidated_review": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
+      }
     },
     {
       "phase_id": "georef-studio-georef-integration",
       "phase_number": 14,
       "name": "Studio–Georeferencer integration and inspection workspace",
-      "status": "implementation_complete_review_pending",
-      "depends_on": ["georef-ui-ux-polish"],
+      "status": "closed",
+      "depends_on": [
+        "georef-ui-ux-polish"
+      ],
       "objective": "Make Studio-generated posters transferable directly into the Georeferencer, harden the external upload path, improve readiness and inspection UX, and establish a staged path toward a unified geospatial workspace.",
       "scope_notes": [
-        "Prefer a short-lived, single-use browser handoff for Studio-generated poster blobs and signed provenance metadata; retain manual upload for external and expired handoffs.",
+        "Prefer a short-lived, single-use browser handoff for Studio-generated poster blobs and server-manifest-verified provenance metadata; retain manual upload for external and expired handoffs.",
         "Treat backend upload validation and resource limits as security requirements, not client-only UX checks.",
         "Make Geographic Inspection a first-class tab and enlarge the existing map without adding unvalidated analytical claims.",
         "Use shared visual tokens and components for Studio and Georeferencer parity.",
         "Do not merge the applications into one backend or remove compatibility paths during this phase."
       ],
-      "must_not_include": ["Recovery algorithm replacement", "Country or ETL changes", "Database migrations unless separately approved", "Runtime scraping", "Production deployment or writes", "Unvalidated confidence or surveyed-accuracy claims"],
+      "must_not_include": [
+        "Recovery algorithm replacement",
+        "Country or ETL changes",
+        "Database migrations unless separately approved",
+        "Runtime scraping",
+        "Production deployment or writes",
+        "Unvalidated confidence or surveyed-accuracy claims"
+      ],
       "exit_requirements": [
         "Studio can open a generated poster in the Georeferencer before or without a user download, with image and metadata automatically populated.",
         "Expired, consumed, unavailable, and externally uploaded states are explicit and recoverable.",
@@ -156,15 +252,25 @@
         "Studio blocks selection until geography and preset bootstrap is ready and provides an accessible first-visit information dialog.",
         "Geographic Inspection is a prominent responsive tab with the existing lazy-loaded controls and disclaimers preserved.",
         "The shared visual system and staged unified-workspace recommendation are documented without coupling unrelated backends."
-      ]
+      ],
+      "closeout_evidence": {
+        "pr": "#78",
+        "merge_commit": "b790c7f",
+        "consolidated_review": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
+      }
     },
     {
       "phase_id": "georef-program-closeout",
       "phase_number": "final",
       "name": "Georeferencing program closeout",
-      "status": "planned_not_approved",
-      "depends_on": ["georef-studio-georef-integration"],
-      "objective": "Confirm the final supported-country inventory, artifact manifests and hashes, benchmark evidence, known limitations, operational fallback, documentation, and rollback procedures."
+      "status": "implementation_complete_review_pending",
+      "depends_on": [
+        "georef-studio-georef-integration"
+      ],
+      "objective": "Confirm the final supported-country inventory, artifact manifests and hashes, benchmark evidence, known limitations, operational fallback, documentation, and rollback procedures.",
+      "approved_by_human": true,
+      "human_approval": "2026-09-14 blanket authorization for this phase and its gates.",
+      "closeout_report": "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md"
     }
   ],
   "conditional_follow_ons": [

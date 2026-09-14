@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-14T05:46:13.553125+00:00",
+  "phase_id": "georef-program-closeout",
+  "baseline_commit": "b790c7f20ec53b704016f438df974f76e510ea8f",
+  "approved_baseline_file": ".agents\\state\\baselines\\georef-program-closeout\\baseline_approved.json",
+  "changed_paths": [
+    ".agents/config/verification_commands_georef_program_closeout.json",
+    ".agents/state/baselines/georef-program-closeout/backend.stderr.txt",
+    ".agents/state/baselines/georef-program-closeout/backend.stdout.txt",
+    ".agents/state/baselines/georef-program-closeout/baseline_approved.json",
+    ".agents/state/baselines/georef-program-closeout/baseline_review.md",
+    ".agents/state/baselines/georef-program-closeout/baseline_unapproved.json",
+    ".agents/state/baselines/georef-program-closeout/baseline_unapproved.md",
+    ".agents/state/baselines/georef-program-closeout/frontend_lint.stderr.txt",
+    ".agents/state/baselines/georef-program-closeout/frontend_lint.stdout.txt",
+    ".agents/state/baselines/georef-program-closeout/typescript.stderr.txt",
+    ".agents/state/baselines/georef-program-closeout/typescript.stdout.txt",
+    ".agents/state/current_phase.json",
+    ".agents/state/georef_phase_roadmap.json",
+    ".agents/state/verifications/georef-program-closeout/backend.xml",
+    ".agents/state/verifications/georef-program-closeout/inventory_audit.json",
+    ".agents/state/verifications/georef-program-closeout/reference_review.md",
+    "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md",
+    "scripts/verify_georef_program_closeout.py",
+    "work/check_program_closeout_audit.py",
+    "work/phase14-inspection-desktop.png",
+    "work/phase14-inspection-mobile.png",
+    "work/phase14-real-recovery.png",
+    "work/phase14-references.json",
+    "work/phase14-references.txt",
+    "work/phase14-studio-guide.png",
+    "work/phase14_demo.py",
+    "work/phase14_pr_body.md",
+    "work/program-closeout-references.json"
+  ],
+  "out_of_scope_paths": [],
+  "commands": [
+    {
+      "name": "backend",
+      "command": [
+        "C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "-rs",
+        "--junitxml=.agents/state/verifications/georef-program-closeout/backend.xml"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "duration_seconds": 229.593,
+      "stdout_file": ".agents\\state\\verifications\\georef-program-closeout\\backend.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-program-closeout\\backend.stderr.txt",
+      "test_case_count": 269
+    },
+    {
+      "name": "typescript",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 8.468,
+      "stdout_file": ".agents\\state\\verifications\\georef-program-closeout\\typescript.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-program-closeout\\typescript.stderr.txt",
+      "test_case_count": 0
+    },
+    {
+      "name": "frontend_lint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "frontend",
+      "exit_code": 0,
+      "duration_seconds": 32.282,
+      "stdout_file": ".agents\\state\\verifications\\georef-program-closeout\\frontend_lint.stdout.txt",
+      "stderr_file": ".agents\\state\\verifications\\georef-program-closeout\\frontend_lint.stderr.txt",
+      "test_case_count": 0
+    }
+  ],
+  "comparison": {
+    "unchanged_failures": [],
+    "new_failures": [],
+    "resolved_failures": [],
+    "changed_results": [],
+    "ambiguous_results": []
+  },
+  "blocking_review_required": false
+}
