@@ -97,7 +97,8 @@ export interface StudioMockState {
   failExport: boolean;
 }
 
-export async function installStudioMockBackend(page: Page): Promise<StudioMockState> {
+export async function installStudioMockBackend(page: Page, showGuide = false): Promise<StudioMockState> {
+  if (!showGuide) await page.addInitScript(() => sessionStorage.setItem("hydro:studio-guide-v14", "seen"));
   const state: StudioMockState = {
     previewRequests: [],
     exportRequests: [],

@@ -48,6 +48,8 @@ app = FastAPI(
 # ~19.5k polygons) compresses to a few hundred KB, cutting transfer + the
 # client's perceived run-load time. minimum_size skips tiny responses.
 app.add_middleware(GZipMiddleware, minimum_size=1024)
+from app.services.georef_upload import GeorefUploadGuard
+app.add_middleware(GeorefUploadGuard)
 
 # Configure CORS
 app.add_middleware(
@@ -66,6 +68,7 @@ app.add_middleware(
         "X-Export-Manifest",     # poster export sidecar
         "X-Feature-Summary",     # poster feature manifest
         "X-Poster-ID",
+        "X-Studio-Provenance",
         "X-Alignment-QC",        # Native Mode validation report
         "X-Usage-Warning",       # admin quota bypass warning
     ],

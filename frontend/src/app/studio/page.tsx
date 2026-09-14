@@ -20,6 +20,9 @@ import {
 } from "@/lib/api";
 import { evaluateQA, hasBlockingIssue } from "@/lib/qa";
 import { migratePosterSettings } from "@/lib/state_migration";
+import StudioReadiness from "@/components/StudioReadiness";
+import { cleanupHandoffs, createHandoff } from "@/lib/studioHandoff";
+import type { ExportResult } from "@/lib/api";
 
 const PREVIEW_DEBOUNCE_MS = 500;
 
@@ -77,6 +80,17 @@ export default function Page() {
   const [exportError, setExportError] = useState<string | null>(null);
   const [georefResult, setGeorefResult] = useState<GeorefResult | null>(null);
   const [latestPosterId, setLatestPosterId] = useState<string | null>(null);
+  const [latestExport, setLatestExport] = useState<ExportResult | null>(null);
+  const [bootAttempt, setBootAttempt] = useState(0);
+  const ready = settingsHydrated && presets !== null && regions.length > 0 && !bootError;
+
+  useEffect(() => {
+    const cleanup = () => { void cleanupHandoffs().catch(() => {}); };
+    cleanup();
+    const timer = setInterval(cleanup, 30_000);
+    window.addEventListener("focus", cleanup);
+    return () => { clearInterval(timer); window.removeEventListener("focus", cleanup); };
+  }, []);
 
   const previewAbort = useRef<AbortController | null>(null);
 
@@ -160,11 +174,11 @@ export default function Page() {
         }
       });
     return () => controller.abort();
-  }, [settingsHydrated]);
+  }, [settingsHydrated, bootAttempt]);
 
   // Debounced preview refetch on any setting change.
   useEffect(() => {
-    if (!settings.geography_id) return;
+    if (!ready || !settings.geography_id) return;
 
     const timer = setTimeout(() => {
       previewAbort.current?.abort();
@@ -188,12 +202,12 @@ export default function Page() {
     }, PREVIEW_DEBOUNCE_MS);
 
     return () => clearTimeout(timer);
-  }, [settings]);
+  }, [settings, ready]);
 
   // Persist settings
   useEffect(() => {
     if (settingsHydrated) {
-      localStorage.setItem("hydrorivers_settings", JSON.stringify(settings));
+      try { localStorage.setItem("hydrorivers_settings", JSON.stringify(settings)); } catch { /* Optional browser persistence. */ }
     }
   }, [settings, settingsHydrated]);
 
@@ -242,27 +256,35 @@ export default function Page() {
     [settings, exportSettings, typographyPreset, riverCount, previewError],
   );
 
-  const handleExport = async () => {
-    if (hasBlockingIssue(qaItems)) return;
+  const handleExport = async (transfer = false) => {
+    if (!ready || exporting || hasBlockingIssue(qaItems)) return;
     
     setExporting(true);
     setExportError(null);
     try {
-      if (exportSettings.export_format === "geotiff") {
+      if (!transfer && exportSettings.export_format === "geotiff") {
         const result = await nativeGeoreference({ ...settings, ...exportSettings });
-        sessionStorage.setItem("hydro:last-poster-id", result.manifest.poster_id);
+        try { sessionStorage.setItem("hydro:last-poster-id", result.manifest.poster_id); } catch { /* Optional. */ }
         setLatestPosterId(result.manifest.poster_id);
         setGeorefResult(result);
         downloadTiff(result);
         return;
       }
-      const { blob, filename, posterId } = await triggerExport({
+      const exported = await triggerExport({
         ...settings,
         ...exportSettings,
+        ...(transfer ? { export_format: "png" as const } : {}),
       });
+      const { blob, filename, posterId } = exported;
+      setLatestExport(exported);
       if (posterId) {
-        sessionStorage.setItem("hydro:last-poster-id", posterId);
+        try { sessionStorage.setItem("hydro:last-poster-id", posterId); } catch { /* Optional. */ }
         setLatestPosterId(posterId);
+      }
+      if (transfer) {
+        try { window.location.assign(await createHandoff(exported)); }
+        catch { throw new Error("Browser transfer is unavailable. Download the PNG and upload it manually, or retry."); }
+        return;
       }
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
@@ -278,6 +300,12 @@ export default function Page() {
       setExporting(false);
     }
   };
+
+  async function openLatest() {
+    if (!latestExport) return;
+    try { window.location.assign(await createHandoff(latestExport)); }
+    catch { setExportError("Browser transfer is unavailable. Download the poster and upload it manually, or prepare a PNG again."); }
+  }
 
   return (
     <main className="relative flex h-dvh overflow-hidden bg-[var(--ui-page)]">
@@ -297,6 +325,7 @@ export default function Page() {
         }`}
       >
         <PosterHeader current="studio" variant="workspace" />
+        <StudioReadiness ready={!!ready} error={bootError} onRetry={() => { setBootError(null); setBootAttempt(value => value + 1); }} />
         <button
           type="button"
           className="absolute right-3 top-3 z-[60] flex h-9 w-9 items-center justify-center rounded-md border border-[var(--ui-border)] bg-[var(--ui-surface)] text-lg text-[var(--ui-text-muted)] lg:hidden"
@@ -311,6 +340,7 @@ export default function Page() {
             Failed to reach the API: {bootError}
           </div>
         ) : (
+          <fieldset disabled={!ready} className="min-h-0 flex flex-1 flex-col border-0 p-0" aria-busy={!ready}>
           <ControlPanel
             regions={regions}
             presets={presets}
@@ -320,7 +350,14 @@ export default function Page() {
             onExportSettingsChange={handleExportSettingsChange}
             qaItems={qaItems}
           />
+          </fieldset>
         )}
+        <div className="m-3">
+          <button type="button" className="btn-primary w-full" disabled={!ready || exporting || hasBlockingIssue(qaItems)} onClick={() => handleExport(true)}>
+            {exporting ? "Preparing poster…" : "Open in Georeferencer"}
+          </button>
+          <p className="field-help">Prepares a PNG for inspection. No download needed.</p>
+        </div>
 
         {exportError && (
           <div className="mx-4 mb-4 glass-card p-2.5 text-xs text-[var(--ui-danger)] border-[var(--ui-danger)]/20">
@@ -331,7 +368,7 @@ export default function Page() {
 
       <section className="relative z-10 min-w-0 flex-1">
         {latestPosterId && !georefResult && <div className="absolute right-4 top-4 z-30 glass-card flex items-center gap-3 p-3 text-sm">
-          <span>Export ready.</span><a className="glass-input" href={`/georeference?poster_id=${encodeURIComponent(latestPosterId)}`}>Verify in Georeferencer</a>
+          <span>Export ready.</span>{latestExport && <button type="button" className="btn-secondary" onClick={openLatest}>Verify in Georeferencer</button>}
         </div>}
         {georefResult && <div className="absolute inset-0 z-30 overflow-y-auto bg-[var(--ui-page)] p-4">
           <button type="button" className="glass-input mb-4" onClick={() => setGeorefResult(null)}>Back to poster</button>
@@ -356,9 +393,9 @@ export default function Page() {
           transforms={settings.layout_overrides}
           onTransformsChange={(layout_overrides) => handleSettingsChange({ layout_overrides })}
           onResetTransforms={() => handleSettingsChange({ layout_overrides: {} })}
-          onDownload={handleExport}
+          onDownload={() => handleExport()}
           isDownloading={exporting}
-          exportDisabled={hasBlockingIssue(qaItems)}
+          exportDisabled={!ready || hasBlockingIssue(qaItems)}
         />
       </section>
     </main>

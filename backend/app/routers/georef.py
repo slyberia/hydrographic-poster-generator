@@ -20,8 +20,10 @@ from app.services.georef_service import (
     viewer_image,
 )
 from app.services.georef_recovery import recover_result
+from app.services.georef_upload import raster_worker, BoundedUploadRoute
+from app.services.studio_provenance import verify_provenance
 
-router = APIRouter(prefix="/georef", tags=["Georeferencing"])
+router = APIRouter(prefix="/georef", tags=["Georeferencing"], route_class=BoundedUploadRoute)
 processing_slots = asyncio.Semaphore(2)
 
 
@@ -157,13 +159,24 @@ async def recover(
     repo=Depends(ready_repository),
 ):
     try:
-        if len(options) > 65536:
+        if len(options.encode("utf-8")) > 65536:
             raise ValueError("Recovery options exceed 64 KB")
         opts = RecoveryOptions.model_validate_json(options)
         payload = await image.read(MAX_UPLOAD_BYTES + 1)
-        raster, embedded = decode_image(payload)
+        raster, embedded = await run_in_threadpool(raster_worker, "decode", payload, image.content_type)
         stored = GeorefRepository(repo.pool)
         manifest = opts.manifest
+        provenance_status = "not_supplied"
+        if opts.studio_provenance is not None:
+            provenance_id = UUID(str(opts.studio_provenance.get("poster_id", "")))
+            if opts.poster_id and provenance_id != opts.poster_id:
+                raise ValueError("Studio provenance conflicts with the poster ID")
+            trusted = await stored.get_manifest(provenance_id)
+            trusted = verify_provenance(opts.studio_provenance, trusted, payload)
+            if manifest and manifest != trusted:
+                raise ValueError("Supplied manifest conflicts with Studio provenance")
+            manifest = trusted
+            provenance_status = "verified_server_manifest"
         if manifest is None and embedded:
             if len(embedded) > 65536:
                 raise ValueError("Embedded metadata exceeds 64 KB")
@@ -222,10 +235,12 @@ async def recover(
                 )
         else:
             manifest = canonical
-        result = await run_in_threadpool(recover_result, raster, clip, manifest, opts)
+        result = await run_in_threadpool(raster_worker, "recover", raster, clip, manifest, opts)
         geotiff, qc, gcps, preview = result
         await stored.save(manifest, qc, gcps)
-        return await run_in_threadpool(encoded_result, geotiff, qc, preview, manifest, gcps)
+        response = await run_in_threadpool(encoded_result, geotiff, qc, preview, manifest, gcps)
+        response["studio_provenance_status"] = provenance_status
+        return response
     except (ValueError, json.JSONDecodeError) as exc:
         raise HTTPException(422, str(exc)) from exc
     finally:

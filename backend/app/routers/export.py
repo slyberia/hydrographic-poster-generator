@@ -97,7 +97,10 @@ async def generate_export(request: ExportRequest,
     )
 
     AuditService.queue_audit_log(background_tasks, repo.pool, manifest)
+    studio_provenance = None
     if georef_manifest is not None:
+        from app.services.studio_provenance import attach_provenance
+        studio_provenance = attach_provenance(georef_manifest, payload)
         await GeorefRepository(repo.pool).save(georef_manifest, alignment_qc)
 
     return Response(
@@ -108,5 +111,6 @@ async def generate_export(request: ExportRequest,
             "X-Export-Manifest": manifest.model_dump_json(),
             "X-Poster-ID": str(georef_manifest.poster_id) if georef_manifest else "",
             "X-Alignment-QC": alignment_qc.model_dump_json() if alignment_qc else "",
+            "X-Studio-Provenance": json.dumps(studio_provenance, separators=(",", ":")) if studio_provenance else "",
         },
     )

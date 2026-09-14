@@ -4,6 +4,7 @@ import PosterHeader from "@/components/PosterHeader";
 import GeorefResults from "@/components/GeorefResults";
 import { getGeographies, getGeographyChildren, getPresets, type GeographyRegion, type GeographyDetail, type PresetsResponse } from "@/lib/api";
 import { recoverGeoreference, type GeorefResult } from "@/lib/georefApi";
+import { cleanupHandoffs, consumeHandoff, type HandoffResult } from "@/lib/studioHandoff";
 
 export default function GeoreferencePage() {
   const [image, setImage] = useState<File | null>(null);
@@ -22,21 +23,42 @@ export default function GeoreferencePage() {
   const [dragging, setDragging] = useState(false);
   const controller = useRef<AbortController | null>(null);
   const fileInput = useRef<HTMLInputElement | null>(null);
+  const handoff = useRef<Promise<HandoffResult> | null>(null);
+  const [handoffNotice, setHandoffNotice] = useState("");
+  const [provenance, setProvenance] = useState<Record<string, unknown> | null>(null);
 
   function selectImage(file: File | undefined) {
     if (!file) return;
     setImage(file); setResult(null); setError("");
+    if (handoffNotice) { setPosterId(""); setProvenance(null); setHandoffNotice(""); setSidecar(null); setControlPoints(null); }
   }
 
   useEffect(() => {
     const abort = new AbortController();
-    const linked = new URLSearchParams(window.location.search).get("poster_id")
-      ?? sessionStorage.getItem("hydro:last-poster-id");
+    let active = true;
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("handoff");
+    let linked = params.get("poster_id");
+    try { if (!linked && !token) linked = sessionStorage.getItem("hydro:last-poster-id"); } catch { /* Optional legacy hint. */ }
     if (linked) queueMicrotask(() => setPosterId(linked));
+    if (token) {
+      // Reuse the promise across Strict Mode effect replay; never consume twice.
+      handoff.current ??= consumeHandoff(token, params.get("expires"));
+      void handoff.current.then(value => {
+        if (!active) return;
+        if (value.status === "ready") {
+          setImage(value.file); setPosterId(value.posterId ?? ""); setProvenance(value.provenance);
+          setHandoffNotice("Studio poster loaded. Review its context, then analyze alignment.");
+        } else {
+          setHandoffNotice(`Studio transfer ${value.status}. Prepare it again in Studio or choose an image below.`);
+        }
+        void cleanupHandoffs().catch(() => {});
+      });
+    } else { void cleanupHandoffs().catch(() => {}); }
     Promise.all([getGeographies(abort.signal), getPresets(abort.signal)])
       .then(([geo, styles]) => { setRegions(geo.regions); setPresets(styles); })
       .catch(err => { if (!abort.signal.aborted) setError(String(err)); });
-    return () => { abort.abort(); controller.current?.abort(); };
+    return () => { active = false; abort.abort(); controller.current?.abort(); };
   }, []);
   useEffect(() => {
     if (!geography) return;
@@ -59,6 +81,7 @@ export default function GeoreferencePage() {
       if ((sidecar?.size ?? 0) > 65536 || (controlPoints?.size ?? 0) > 65536) throw new Error("Metadata files must be smaller than 64 KB.");
       const options: Record<string, unknown> = { density_preset: density };
       if (posterId.trim()) options.poster_id = posterId.trim();
+      if (provenance) options.studio_provenance = provenance;
       if (child || geography) options.geography_id = child || geography;
       if (sidecar) options.manifest = JSON.parse(await sidecar.text());
       if (controlPoints) options.gcps = JSON.parse(await controlPoints.text());
@@ -71,7 +94,7 @@ export default function GeoreferencePage() {
 
   return <main className="georef-page min-h-screen bg-[var(--ui-page)] text-[var(--ui-text)]">
     <PosterHeader current="georeference" />
-    <div className="georef-shell mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
+    <div className="georef-shell mx-auto grid max-w-[100rem] grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
       <form onSubmit={analyze} className="georef-panel min-w-0 space-y-5 p-5 sm:p-6">
         <div>
           <p className="section-header">Poster verification</p>
@@ -89,7 +112,7 @@ export default function GeoreferencePage() {
             onDragOver={e => { e.preventDefault(); if (!busy) setDragging(true); }}
             onDragLeave={() => setDragging(false)}
             onDrop={e => { e.preventDefault(); setDragging(false); if (!busy) selectImage(e.dataTransfer.files[0]); }}>
-            <input ref={fileInput} aria-label="Poster image" className="sr-only" type="file" accept=".png,.jpg,.jpeg,.tif,.tiff" required disabled={busy}
+            <input ref={fileInput} aria-label="Poster image" className="sr-only" type="file" accept=".png,.jpg,.jpeg,.tif,.tiff" required={!image} disabled={busy}
               onChange={e => selectImage(e.target.files?.[0])} />
             <span className="georef-upload-icon" aria-hidden="true">↑</span>
             <strong>{image ? image.name : "Drop a poster image here"}</strong>
@@ -97,6 +120,7 @@ export default function GeoreferencePage() {
             <button type="button" className="btn-secondary mt-3" disabled={busy} onClick={() => fileInput.current?.click()}>{image ? "Replace image" : "Choose image"}</button>
           </div>
           <p id="georef-upload-help" className="field-help">Up to 25 MB and 40 megapixels. Embedded provenance is detected automatically.</p>
+          {handoffNotice && <p role="status" className="georef-note">{handoffNotice}</p>}
           {posterId && <p className="georef-note"><span aria-hidden="true">↗</span> Linked automatically to your latest Studio export.</p>}
         </section>
         <section className="georef-form-section" aria-labelledby="georef-context-heading">

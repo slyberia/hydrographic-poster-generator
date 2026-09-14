@@ -7,7 +7,9 @@ import { downloadJson, downloadTiff, type GeorefResult } from "@/lib/georefApi";
 const GeorefMap = dynamic(() => import("./GeorefMap"), { ssr: false, loading: () => <p>Loading map viewer…</p> });
 
 export default function GeorefResults({ result }: { result: GeorefResult }) {
-  const [showMap, setShowMap] = useState(false);
+  const [tab, setTab] = useState("evidence");
+  const tabs = ["evidence", "inspection"];
+  function selectTab(value: string) { setTab(value); document.getElementById("georef-tab-" + value)?.focus(); }
   const metrics = result.qc.metrics;
   const tolerance = metrics.tolerance_ground_m as { min: number; max: number } | undefined;
   const held = metrics.withheld as { count: number; rmse_m: number; p95_m?: number } | undefined;
@@ -21,8 +23,22 @@ export default function GeorefResults({ result }: { result: GeorefResult }) {
         <div><p className="section-header">Analysis complete</p><h2 className="mt-1 text-xl font-semibold">{result.qc.status === "passed" ? "Alignment accepted under provisional criteria" : "Alignment needs review"}</h2>
         <p className="mt-1 text-sm">Agreement with the reference network—not a confidence probability or surveyed accuracy.</p></div>
       </div>
+      <div role="tablist" aria-label="Alignment workspace" className="georef-tabs">
+        {tabs.map(value => <button key={value} id={"georef-tab-" + value} type="button" role="tab"
+          aria-selected={tab === value} aria-controls={"georef-panel-" + value} tabIndex={tab === value ? 0 : -1}
+          onClick={() => setTab(value)} onKeyDown={event => {
+            if (["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) {
+              event.preventDefault();
+              selectTab(event.key === "Home" ? tabs[0] : event.key === "End" ? tabs[1] : tabs[1 - tabs.indexOf(value)]);
+            }
+          }}>{value === "evidence" ? "Alignment evidence" : "Geographic Inspection"}</button>)}
+      </div>
+      <div role="tabpanel" id="georef-panel-evidence" aria-labelledby="georef-tab-evidence" hidden={tab !== "evidence"} className="space-y-5">
       <div className="georef-result-panel">
       <div className="georef-result-meta"><span>Source: {result.manifest.source.rivers}</span><span>Transform: {result.qc.transformation}</span></div>
+      <p className="mb-3 text-sm">{result.studio_provenance_status === "verified_server_manifest"
+        ? "Studio export integrity verified against the server manifest."
+        : "Server-verified Studio provenance is not available for this result. Review the alignment evidence below."}</p>
       <dl className="georef-metrics grid grid-cols-2 gap-3 text-sm">
         <div><dt>Tolerant network agreement (F1)</dt><dd>{metrics.network_f1 == null ? "Not measured" : (metrics.network_f1 * 100).toFixed(1) + "%"}</dd></div>
         <div><dt>Raster-to-source RMSE</dt><dd>{meters(distance?.rmse_m)}</dd></div>
@@ -47,9 +63,13 @@ export default function GeorefResults({ result }: { result: GeorefResult }) {
         className="max-h-[28rem] w-full rounded object-contain" />
       <p className="text-xs">Blue: HydroRIVERS · Orange: poster · White: overlap</p>
       </div>
-      {result.viewer ? <><button className="glass-input" type="button" onClick={()=>setShowMap(!showMap)}>{showMap ? "Hide geographic inspection" : "Open geographic inspection"}</button>
-        {showMap && <GeorefMap key={result.filename} viewer={result.viewer} posterId={result.manifest.poster_id} />}</> :
+      {result.viewer ? <button className="btn-secondary" type="button" onClick={() => selectTab("inspection")}>Open geographic inspection</button> :
         <p className="text-xs">Map placement is unavailable in this older response. Generate a new result to inspect it geographically.</p>}
+      </div>
+      <div role="tabpanel" id="georef-panel-inspection" aria-labelledby="georef-tab-inspection" hidden={tab !== "inspection"}>
+        {tab === "inspection" && (result.viewer ? <GeorefMap key={result.filename} viewer={result.viewer} posterId={result.manifest.poster_id} /> :
+          <p>Map placement is unavailable in this older response. Generate a new result to inspect it geographically.</p>)}
+      </div>
       <div className="georef-downloads">
         <div><p className="section-header">Keep your evidence</p><p className="mt-1 text-xs text-[var(--ui-text-muted)]">Download the aligned image and supporting records for your project.</p></div>
         <div className="flex flex-wrap gap-3">

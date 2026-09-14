@@ -1,6 +1,7 @@
 import type { ExportRequest } from "./api";
 
 export interface GeorefResult {
+  studio_provenance_status?: "verified_server_manifest" | "not_supplied";
   viewer?: GeorefViewer;
   manifest: { poster_id: string; source: Record<string, string> } & Record<string, unknown>;
   qc: {

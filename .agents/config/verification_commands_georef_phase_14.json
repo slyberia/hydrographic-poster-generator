@@ -1,0 +1,4 @@
+{"commands":[
+{"name":"backend","cwd":".","command":["C:/Users/kyleg/Documents/Codex/hydrographic-poster-generator/work/georef-env/Scripts/python.exe","-m","pytest","backend/tests","-q","-rs","--junitxml=.agents/state/verifications/georef-studio-georef-integration/backend.xml"],"junit_xml":".agents/state/verifications/georef-studio-georef-integration/backend.xml"},
+{"name":"typescript","cwd":"frontend","command":["node","node_modules/typescript/bin/tsc","--noEmit"]},
+{"name":"frontend_lint","cwd":"frontend","command":["node","node_modules/eslint/bin/eslint.js","."]}]}

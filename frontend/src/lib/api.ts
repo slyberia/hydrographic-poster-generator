@@ -181,6 +181,7 @@ export interface ExportResult {
   blob: Blob;
   filename: string;
   posterId: string | null;
+  provenance?: Record<string, unknown> | null;
 }
 
 // -------------------------------------------------------------------- helpers
@@ -305,5 +306,10 @@ export async function triggerExport(
   const filename =
     match?.[1] ?? `hydro_export.${request.export_format}`;
 
-  return { blob: await res.blob(), filename, posterId: res.headers.get("X-Poster-ID") || null };
+  let provenance: Record<string, unknown> | null = null;
+  const header = res.headers.get("X-Studio-Provenance");
+  if (header) {
+    try { provenance = JSON.parse(header); } catch { /* Older or malformed sidecar: manual path remains usable. */ }
+  }
+  return { blob: await res.blob(), filename, posterId: res.headers.get("X-Poster-ID") || null, provenance };
 }
