@@ -1,0 +1,2635 @@
+{
+  "audit_status": "pass_with_documented_limitations",
+  "baseline_commit": "b790c7f20ec53b704016f438df974f76e510ea8f",
+  "benchmark": {
+    "absolute_accuracy": "No surveyed control or physical capture validation.",
+    "belize_jamaica": "Historical release prose only; no separate current-format country benchmark reports committed.",
+    "cases": [
+      {
+        "name": "unchanged",
+        "p95_error_pixels": 0.03116659681603783,
+        "status": "passed"
+      },
+      {
+        "name": "rotation_17",
+        "p95_error_pixels": 0.29998436498778985,
+        "status": "passed"
+      },
+      {
+        "name": "rotation_90",
+        "p95_error_pixels": 0.748883361001532,
+        "status": "passed"
+      },
+      {
+        "name": "resize",
+        "p95_error_pixels": 0.048516134928596334,
+        "status": "passed"
+      },
+      {
+        "name": "anisotropic",
+        "p95_error_pixels": 0.21954942127619173,
+        "status": "passed"
+      },
+      {
+        "name": "affine_shear",
+        "p95_error_pixels": 0.43541298329099043,
+        "status": "passed"
+      },
+      {
+        "name": "crop",
+        "p95_error_pixels": 0.3529679566723813,
+        "status": "passed"
+      },
+      {
+        "name": "jpeg",
+        "p95_error_pixels": 0.17098826325930003,
+        "status": "passed"
+      },
+      {
+        "name": "combined",
+        "p95_error_pixels": 0.7312000616811016,
+        "status": "passed"
+      },
+      {
+        "name": "unsupported_perspective",
+        "p95_error_pixels": null,
+        "status": "rejected"
+      }
+    ],
+    "report": ".agents/state/verifications/georef-recovery-calibration/guyana-benchmark.json",
+    "summary": {
+      "accepted_p95_error_pixels": {
+        "count": 9,
+        "p95": 0.7418100412733598
+      },
+      "accuracy_boundaries": {
+        "physical_capture_validation": "Not measured; cases are procedurally simulated, not field scans or photos.",
+        "registration_accuracy": "Measured by independent benchmark transforms in uploaded-image pixels.",
+        "source_network_agreement": "Measured by independent raster-to-source network comparison.",
+        "surveyed_absolute_accuracy": "Not measured; no surveyed ground-control reference is supplied."
+      },
+      "false_accept_count": 0,
+      "false_reject_count": 0,
+      "successful_recovery_count": 9,
+      "successful_recovery_rate": 1.0,
+      "supported_case_count": 9
+    },
+    "wrong_source_in_this_report": false
+  },
+  "countries": [
+    {
+      "country": "Antigua and Barbuda",
+      "country_code": "ATG",
+      "manifest": "backend/app/data/river_names/atg/manifest.json",
+      "packaged": false,
+      "profile": "backend/app/data/river_names/atg/build-profile.json",
+      "slug": "atg",
+      "status": "unavailable",
+      "withheld_reason": "authoritative profile documents no named perennial river systems for this bounded evaluation"
+    },
+    {
+      "artifact": {
+        "byte_size": 1173094,
+        "path": "backend/app/data/river_names/belize/1601a5e8f1093db1050190856943a498c22150d103ddeedb935c8abe2c67b683.json",
+        "sha256": "1601a5e8f1093db1050190856943a498c22150d103ddeedb935c8abe2c67b683"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Belize",
+      "country_code": "BZ",
+      "display_feature_count": 1168,
+      "indexed_name_states": {
+        "ambiguous": 5,
+        "matched": 178
+      },
+      "indexed_reach_count": 183,
+      "manifest": "backend/app/data/river_names/belize/manifest.json",
+      "not_evaluated_targets": [
+        "Rio Hondo"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/belize/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Government of Belize"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 1173094,
+                "feature_count": 1168,
+                "indexed_reach_count": 183,
+                "path": "1601a5e8f1093db1050190856943a498c22150d103ddeedb935c8abe2c67b683.json",
+                "sha256": "1601a5e8f1093db1050190856943a498c22150d103ddeedb935c8abe2c67b683"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 8,
+              "target_summary": {
+                "evaluated": 8,
+                "failed": 1,
+                "passed": 7
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Rio Hondo"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Belize",
+        "country_code": "BZ",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "belize",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 8,
+        "failed": 1,
+        "passed": 7
+      }
+    },
+    {
+      "country": "The Bahamas",
+      "country_code": "BHS",
+      "manifest": "backend/app/data/river_names/bhs/manifest.json",
+      "packaged": false,
+      "profile": "backend/app/data/river_names/bhs/build-profile.json",
+      "slug": "bhs",
+      "status": "unavailable",
+      "withheld_reason": "authoritative profile documents no named perennial river systems for this bounded evaluation"
+    },
+    {
+      "country": "Barbados",
+      "country_code": "BRB",
+      "manifest": "backend/app/data/river_names/brb/manifest.json",
+      "packaged": false,
+      "profile": "backend/app/data/river_names/brb/build-profile.json",
+      "slug": "brb",
+      "status": "unavailable",
+      "withheld_reason": "authoritative profile documents no named perennial river systems for this bounded evaluation"
+    },
+    {
+      "artifact": {
+        "byte_size": 244019,
+        "path": "backend/app/data/river_names/costa-rica/2557e3f731637fa0c75fa4430dd24ec90d5918904a647a7daa9172dedb538acf.json",
+        "sha256": "2557e3f731637fa0c75fa4430dd24ec90d5918904a647a7daa9172dedb538acf"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Costa Rica",
+      "country_code": "CRI",
+      "display_feature_count": 56,
+      "indexed_name_states": {
+        "ambiguous": 17,
+        "matched": 265
+      },
+      "indexed_reach_count": 282,
+      "manifest": "backend/app/data/river_names/costa-rica/manifest.json",
+      "not_evaluated_targets": [],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/costa-rica/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Comisi\u00f3n Nacional de Emergencias de Costa Rica"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 244019,
+                "feature_count": 56,
+                "indexed_reach_count": 282,
+                "path": "2557e3f731637fa0c75fa4430dd24ec90d5918904a647a7daa9172dedb538acf.json",
+                "sha256": "2557e3f731637fa0c75fa4430dd24ec90d5918904a647a7daa9172dedb538acf"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 6,
+              "target_summary": {
+                "evaluated": 6,
+                "failed": 0,
+                "passed": 6
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "verified",
+              "observed": "verified"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": null,
+              "targets": []
+            },
+            "id": "missing_source_objects",
+            "status": "pass"
+          }
+        ],
+        "country": "Costa Rica",
+        "country_code": "CRI",
+        "disposition": "accepted",
+        "observed_country_status": "verified",
+        "schema_version": 1
+      },
+      "slug": "costa-rica",
+      "status": "verified",
+      "target_summary": {
+        "evaluated": 6,
+        "failed": 0,
+        "passed": 6
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 193454,
+        "path": "backend/app/data/river_names/cub/7631f08d31ec5524728aeaab950ad57173f38d53e6a0ba1a16228e3bcb8cef24.json",
+        "sha256": "7631f08d31ec5524728aeaab950ad57173f38d53e6a0ba1a16228e3bcb8cef24"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Cuba",
+      "country_code": "CUB",
+      "display_feature_count": 33,
+      "indexed_name_states": {
+        "ambiguous": 8,
+        "matched": 118
+      },
+      "indexed_reach_count": 126,
+      "manifest": "backend/app/data/river_names/cub/manifest.json",
+      "not_evaluated_targets": [],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/cub/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Instituto Nacional de Recursos Hidr\u00e1ulicos"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 193454,
+                "feature_count": 33,
+                "indexed_reach_count": 126,
+                "path": "7631f08d31ec5524728aeaab950ad57173f38d53e6a0ba1a16228e3bcb8cef24.json",
+                "sha256": "7631f08d31ec5524728aeaab950ad57173f38d53e6a0ba1a16228e3bcb8cef24"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 0,
+                "passed": 5
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "verified",
+              "observed": "verified"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": null,
+              "targets": []
+            },
+            "id": "missing_source_objects",
+            "status": "pass"
+          }
+        ],
+        "country": "Cuba",
+        "country_code": "CUB",
+        "disposition": "accepted",
+        "observed_country_status": "verified",
+        "schema_version": 1
+      },
+      "slug": "cub",
+      "status": "verified",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 0,
+        "passed": 5
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 26772,
+        "path": "backend/app/data/river_names/dma/3abcf0565b71acb368733bab8821df7a2559175cf67c6ce9f274140fca078e7a.json",
+        "sha256": "3abcf0565b71acb368733bab8821df7a2559175cf67c6ce9f274140fca078e7a"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Dominica",
+      "country_code": "DMA",
+      "display_feature_count": 6,
+      "indexed_name_states": {},
+      "indexed_reach_count": 0,
+      "manifest": "backend/app/data/river_names/dma/manifest.json",
+      "not_evaluated_targets": [],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/dma/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Government of Dominica"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 26772,
+                "feature_count": 6,
+                "indexed_reach_count": 0,
+                "path": "3abcf0565b71acb368733bab8821df7a2559175cf67c6ce9f274140fca078e7a.json",
+                "sha256": "3abcf0565b71acb368733bab8821df7a2559175cf67c6ce9f274140fca078e7a"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 4,
+              "target_summary": {
+                "evaluated": 4,
+                "failed": 4,
+                "passed": 0
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "unavailable",
+              "observed": "unavailable"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": null,
+              "targets": []
+            },
+            "id": "missing_source_objects",
+            "status": "pass"
+          }
+        ],
+        "country": "Dominica",
+        "country_code": "DMA",
+        "disposition": "accepted",
+        "observed_country_status": "unavailable",
+        "schema_version": 1
+      },
+      "slug": "dma",
+      "status": "unavailable",
+      "target_summary": {
+        "evaluated": 4,
+        "failed": 4,
+        "passed": 0
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 375400,
+        "path": "backend/app/data/river_names/dom/8607efdf1bf78aa1a697d0678c100fe966258722624a3c1af9e02dfc06845995.json",
+        "sha256": "8607efdf1bf78aa1a697d0678c100fe966258722624a3c1af9e02dfc06845995"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Dominican Republic",
+      "country_code": "DOM",
+      "display_feature_count": 27,
+      "indexed_name_states": {
+        "ambiguous": 9,
+        "matched": 202
+      },
+      "indexed_reach_count": 211,
+      "manifest": "backend/app/data/river_names/dom/manifest.json",
+      "not_evaluated_targets": [],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/dom/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Instituto Nacional de Recursos Hidr\u00e1ulicos"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 375400,
+                "feature_count": 27,
+                "indexed_reach_count": 211,
+                "path": "8607efdf1bf78aa1a697d0678c100fe966258722624a3c1af9e02dfc06845995.json",
+                "sha256": "8607efdf1bf78aa1a697d0678c100fe966258722624a3c1af9e02dfc06845995"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 0,
+                "passed": 5
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "verified",
+              "observed": "verified"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": null,
+              "targets": []
+            },
+            "id": "missing_source_objects",
+            "status": "pass"
+          }
+        ],
+        "country": "Dominican Republic",
+        "country_code": "DOM",
+        "disposition": "accepted",
+        "observed_country_status": "verified",
+        "schema_version": 1
+      },
+      "slug": "dom",
+      "status": "verified",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 0,
+        "passed": 5
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 142990,
+        "path": "backend/app/data/river_names/ecu/49f7ec6e41623a1a3435c3b680c7528e29d969e9756d182d976179ed6a0e3c9a.json",
+        "sha256": "49f7ec6e41623a1a3435c3b680c7528e29d969e9756d182d976179ed6a0e3c9a"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Ecuador",
+      "country_code": "ECU",
+      "display_feature_count": 14,
+      "indexed_name_states": {
+        "ambiguous": 14,
+        "matched": 307
+      },
+      "indexed_reach_count": 321,
+      "manifest": "backend/app/data/river_names/ecu/manifest.json",
+      "not_evaluated_targets": [],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/ecu/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Ministerio del Ambiente, Agua y Transici\u00f3n Ecol\u00f3gica"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 142990,
+                "feature_count": 14,
+                "indexed_reach_count": 321,
+                "path": "49f7ec6e41623a1a3435c3b680c7528e29d969e9756d182d976179ed6a0e3c9a.json",
+                "sha256": "49f7ec6e41623a1a3435c3b680c7528e29d969e9756d182d976179ed6a0e3c9a"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 0,
+                "passed": 5
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "verified",
+              "observed": "verified"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": null,
+              "targets": []
+            },
+            "id": "missing_source_objects",
+            "status": "pass"
+          }
+        ],
+        "country": "Ecuador",
+        "country_code": "ECU",
+        "disposition": "accepted",
+        "observed_country_status": "verified",
+        "schema_version": 1
+      },
+      "slug": "ecu",
+      "status": "verified",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 0,
+        "passed": 5
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 15235,
+        "path": "backend/app/data/river_names/grd/c2aa3889514a8bf615191e88ffb3f0f973eda693b30ba455f4216fc275c4eea8.json",
+        "sha256": "c2aa3889514a8bf615191e88ffb3f0f973eda693b30ba455f4216fc275c4eea8"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Grenada",
+      "country_code": "GRD",
+      "display_feature_count": 3,
+      "indexed_name_states": {},
+      "indexed_reach_count": 0,
+      "manifest": "backend/app/data/river_names/grd/manifest.json",
+      "not_evaluated_targets": [
+        "Pearls River",
+        "Saint John River",
+        "Saint Mark River",
+        "Saint Patrick River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/grd/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Government of Grenada"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 15235,
+                "feature_count": 3,
+                "indexed_reach_count": 0,
+                "path": "c2aa3889514a8bf615191e88ffb3f0f973eda693b30ba455f4216fc275c4eea8.json",
+                "sha256": "c2aa3889514a8bf615191e88ffb3f0f973eda693b30ba455f4216fc275c4eea8"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 6,
+              "target_summary": {
+                "evaluated": 6,
+                "failed": 6,
+                "passed": 0
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "unavailable",
+              "observed": "unavailable"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Pearls River",
+                "Saint John River",
+                "Saint Mark River",
+                "Saint Patrick River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Grenada",
+        "country_code": "GRD",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "unavailable",
+        "schema_version": 1
+      },
+      "slug": "grd",
+      "status": "unavailable",
+      "target_summary": {
+        "evaluated": 6,
+        "failed": 6,
+        "passed": 0
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 418117,
+        "path": "backend/app/data/river_names/gtm/a8e7f56c27f16b95dcab462301508c6c37ccfc49e7fe0354dd1c9026c7752b31.json",
+        "sha256": "a8e7f56c27f16b95dcab462301508c6c37ccfc49e7fe0354dd1c9026c7752b31"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Guatemala",
+      "country_code": "GTM",
+      "display_feature_count": 16,
+      "indexed_name_states": {
+        "ambiguous": 23,
+        "matched": 351
+      },
+      "indexed_reach_count": 374,
+      "manifest": "backend/app/data/river_names/gtm/manifest.json",
+      "not_evaluated_targets": [
+        "Samatala River",
+        "Usumacinta River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/gtm/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Instituto Nacional de Sismolog\u00eda, Vulcanolog\u00eda, Meteorolog\u00eda e Hidrolog\u00eda"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 418117,
+                "feature_count": 16,
+                "indexed_reach_count": 374,
+                "path": "a8e7f56c27f16b95dcab462301508c6c37ccfc49e7fe0354dd1c9026c7752b31.json",
+                "sha256": "a8e7f56c27f16b95dcab462301508c6c37ccfc49e7fe0354dd1c9026c7752b31"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 2,
+                "passed": 3
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Samatala River",
+                "Usumacinta River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Guatemala",
+        "country_code": "GTM",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "gtm",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 2,
+        "passed": 3
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 360739,
+        "path": "backend/app/data/river_names/guf/353203a02d95acfa5b9cf617fbb0fa6f2a32689553001e36b14f317b50300104.json",
+        "sha256": "353203a02d95acfa5b9cf617fbb0fa6f2a32689553001e36b14f317b50300104"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "French Guiana",
+      "country_code": "GUF",
+      "display_feature_count": 12,
+      "indexed_name_states": {
+        "ambiguous": 20,
+        "matched": 438
+      },
+      "indexed_reach_count": 458,
+      "manifest": "backend/app/data/river_names/guf/manifest.json",
+      "not_evaluated_targets": [
+        "Oyapock River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/guf/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Direction de l'Environnement de la Guyane"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 360739,
+                "feature_count": 12,
+                "indexed_reach_count": 458,
+                "path": "353203a02d95acfa5b9cf617fbb0fa6f2a32689553001e36b14f317b50300104.json",
+                "sha256": "353203a02d95acfa5b9cf617fbb0fa6f2a32689553001e36b14f317b50300104"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 1,
+                "passed": 4
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Oyapock River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "French Guiana",
+        "country_code": "GUF",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "guf",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 1,
+        "passed": 4
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 836395,
+        "path": "backend/app/data/river_names/guyana/476fa0c1ef9daa64b65d86965e0288b79007d6187180a7e9f7589e8a80574429.json",
+        "sha256": "476fa0c1ef9daa64b65d86965e0288b79007d6187180a7e9f7589e8a80574429"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Guyana",
+      "country_code": "GY",
+      "display_feature_count": 58,
+      "indexed_name_states": {
+        "ambiguous": 97,
+        "matched": 1588,
+        "unnamed_in_source": 7
+      },
+      "indexed_reach_count": 1692,
+      "manifest": "backend/app/data/river_names/guyana/manifest.json",
+      "not_evaluated_targets": [],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/guyana/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": null
+            },
+            "id": "source_provenance",
+            "status": "review_required"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 836395,
+                "feature_count": 58,
+                "indexed_reach_count": 1692,
+                "path": "476fa0c1ef9daa64b65d86965e0288b79007d6187180a7e9f7589e8a80574429.json",
+                "sha256": "476fa0c1ef9daa64b65d86965e0288b79007d6187180a7e9f7589e8a80574429"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 8,
+              "target_summary": {}
+            },
+            "id": "target_accounting",
+            "status": "review_required"
+          },
+          {
+            "evidence": {
+              "expected": "passed",
+              "observed": "passed"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": null,
+              "targets": []
+            },
+            "id": "missing_source_objects",
+            "status": "pass"
+          }
+        ],
+        "country": "Guyana",
+        "country_code": "GY",
+        "disposition": "review_required",
+        "observed_country_status": "passed",
+        "schema_version": 1
+      },
+      "slug": "guyana",
+      "status": "passed",
+      "target_summary": null
+    },
+    {
+      "artifact": {
+        "byte_size": 86172,
+        "path": "backend/app/data/river_names/hnd/ae749d713c73b7c99c4427103d3d12bd7d4480b7501e3dc7d3af99326e16a3d8.json",
+        "sha256": "ae749d713c73b7c99c4427103d3d12bd7d4480b7501e3dc7d3af99326e16a3d8"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Honduras",
+      "country_code": "HND",
+      "display_feature_count": 7,
+      "indexed_name_states": {
+        "ambiguous": 7,
+        "matched": 169
+      },
+      "indexed_reach_count": 176,
+      "manifest": "backend/app/data/river_names/hnd/manifest.json",
+      "not_evaluated_targets": [
+        "Ulua River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/hnd/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Secretar\u00eda de Recursos Naturales y Ambiente"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 86172,
+                "feature_count": 7,
+                "indexed_reach_count": 176,
+                "path": "ae749d713c73b7c99c4427103d3d12bd7d4480b7501e3dc7d3af99326e16a3d8.json",
+                "sha256": "ae749d713c73b7c99c4427103d3d12bd7d4480b7501e3dc7d3af99326e16a3d8"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 1,
+                "passed": 4
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Ulua River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Honduras",
+        "country_code": "HND",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "hnd",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 1,
+        "passed": 4
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 213644,
+        "path": "backend/app/data/river_names/hti/819733c07abe94d86b7225682d12a99d8a505ddecdb035f94e16dba960a6b17b.json",
+        "sha256": "819733c07abe94d86b7225682d12a99d8a505ddecdb035f94e16dba960a6b17b"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Haiti",
+      "country_code": "HTI",
+      "display_feature_count": 36,
+      "indexed_name_states": {
+        "ambiguous": 2,
+        "matched": 93
+      },
+      "indexed_reach_count": 95,
+      "manifest": "backend/app/data/river_names/hti/manifest.json",
+      "not_evaluated_targets": [],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/hti/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Minist\u00e8re de l'Environnement d'Ha\u00efti"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 213644,
+                "feature_count": 36,
+                "indexed_reach_count": 95,
+                "path": "819733c07abe94d86b7225682d12a99d8a505ddecdb035f94e16dba960a6b17b.json",
+                "sha256": "819733c07abe94d86b7225682d12a99d8a505ddecdb035f94e16dba960a6b17b"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 4,
+              "target_summary": {
+                "evaluated": 4,
+                "failed": 0,
+                "passed": 4
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "verified",
+              "observed": "verified"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": null,
+              "targets": []
+            },
+            "id": "missing_source_objects",
+            "status": "pass"
+          }
+        ],
+        "country": "Haiti",
+        "country_code": "HTI",
+        "disposition": "accepted",
+        "observed_country_status": "verified",
+        "schema_version": 1
+      },
+      "slug": "hti",
+      "status": "verified",
+      "target_summary": {
+        "evaluated": 4,
+        "failed": 0,
+        "passed": 4
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 122971,
+        "path": "backend/app/data/river_names/jamaica/da8057032e63852a3cbd81a635ab0e329aae6b50709168e1f2e7c7e6a33afaca.json",
+        "sha256": "da8057032e63852a3cbd81a635ab0e329aae6b50709168e1f2e7c7e6a33afaca"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Jamaica",
+      "country_code": "JAM",
+      "display_feature_count": 14,
+      "indexed_name_states": {
+        "matched": 31
+      },
+      "indexed_reach_count": 31,
+      "manifest": "backend/app/data/river_names/jamaica/manifest.json",
+      "not_evaluated_targets": [
+        "Montego River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/jamaica/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Jamaica Water Resources Authority"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 122971,
+                "feature_count": 14,
+                "indexed_reach_count": 31,
+                "path": "da8057032e63852a3cbd81a635ab0e329aae6b50709168e1f2e7c7e6a33afaca.json",
+                "sha256": "da8057032e63852a3cbd81a635ab0e329aae6b50709168e1f2e7c7e6a33afaca"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 1,
+                "passed": 4
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Montego River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Jamaica",
+        "country_code": "JAM",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "jamaica",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 1,
+        "passed": 4
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 7075,
+        "path": "backend/app/data/river_names/kna/b663b2a27509b53a7721e6b8401c1efb3015f769e278768aede590c04c6c18da.json",
+        "sha256": "b663b2a27509b53a7721e6b8401c1efb3015f769e278768aede590c04c6c18da"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Saint Kitts and Nevis",
+      "country_code": "KNA",
+      "display_feature_count": 13,
+      "indexed_name_states": {},
+      "indexed_reach_count": 0,
+      "manifest": "backend/app/data/river_names/kna/manifest.json",
+      "not_evaluated_targets": [
+        "College Street Ghaut"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/kna/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Government of Saint Kitts and Nevis"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 7075,
+                "feature_count": 13,
+                "indexed_reach_count": 0,
+                "path": "b663b2a27509b53a7721e6b8401c1efb3015f769e278768aede590c04c6c18da.json",
+                "sha256": "b663b2a27509b53a7721e6b8401c1efb3015f769e278768aede590c04c6c18da"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 3,
+              "target_summary": {
+                "evaluated": 3,
+                "failed": 3,
+                "passed": 0
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "unavailable",
+              "observed": "unavailable"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "College Street Ghaut"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Saint Kitts and Nevis",
+        "country_code": "KNA",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "unavailable",
+        "schema_version": 1
+      },
+      "slug": "kna",
+      "status": "unavailable",
+      "target_summary": {
+        "evaluated": 3,
+        "failed": 3,
+        "passed": 0
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 17366,
+        "path": "backend/app/data/river_names/lca/5a7ed5878b506bd59ddcd8f612fa124d2d7a62dcb73c5ff3712a723fe1bdeb52.json",
+        "sha256": "5a7ed5878b506bd59ddcd8f612fa124d2d7a62dcb73c5ff3712a723fe1bdeb52"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Saint Lucia",
+      "country_code": "LCA",
+      "display_feature_count": 3,
+      "indexed_name_states": {},
+      "indexed_reach_count": 0,
+      "manifest": "backend/app/data/river_names/lca/manifest.json",
+      "not_evaluated_targets": [
+        "Mabouya River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/lca/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Government of Saint Lucia"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 17366,
+                "feature_count": 3,
+                "indexed_reach_count": 0,
+                "path": "5a7ed5878b506bd59ddcd8f612fa124d2d7a62dcb73c5ff3712a723fe1bdeb52.json",
+                "sha256": "5a7ed5878b506bd59ddcd8f612fa124d2d7a62dcb73c5ff3712a723fe1bdeb52"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 4,
+              "target_summary": {
+                "evaluated": 4,
+                "failed": 4,
+                "passed": 0
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "unavailable",
+              "observed": "unavailable"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Mabouya River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Saint Lucia",
+        "country_code": "LCA",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "unavailable",
+        "schema_version": 1
+      },
+      "slug": "lca",
+      "status": "unavailable",
+      "target_summary": {
+        "evaluated": 4,
+        "failed": 4,
+        "passed": 0
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 458564,
+        "path": "backend/app/data/river_names/nic/6d019afab308a4ae0e332afded65e014e849cc3d67f6929d11f438c83953a719.json",
+        "sha256": "6d019afab308a4ae0e332afded65e014e849cc3d67f6929d11f438c83953a719"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Nicaragua",
+      "country_code": "NIC",
+      "display_feature_count": 11,
+      "indexed_name_states": {
+        "ambiguous": 22,
+        "matched": 599
+      },
+      "indexed_reach_count": 621,
+      "manifest": "backend/app/data/river_names/nic/manifest.json",
+      "not_evaluated_targets": [
+        "Prin zapolka River",
+        "San Juan River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/nic/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Ministerio del Ambiente y los Recursos Naturales"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 458564,
+                "feature_count": 11,
+                "indexed_reach_count": 621,
+                "path": "6d019afab308a4ae0e332afded65e014e849cc3d67f6929d11f438c83953a719.json",
+                "sha256": "6d019afab308a4ae0e332afded65e014e849cc3d67f6929d11f438c83953a719"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 2,
+                "passed": 3
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Prin zapolka River",
+                "San Juan River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Nicaragua",
+        "country_code": "NIC",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "nic",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 2,
+        "passed": 3
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 214526,
+        "path": "backend/app/data/river_names/pan/58b0fab69a72cce38a3fedad0e34bc2e1ef040e618ea7f6f5242b925a1010493.json",
+        "sha256": "58b0fab69a72cce38a3fedad0e34bc2e1ef040e618ea7f6f5242b925a1010493"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Panama",
+      "country_code": "PAN",
+      "display_feature_count": 56,
+      "indexed_name_states": {
+        "ambiguous": 6,
+        "matched": 114
+      },
+      "indexed_reach_count": 120,
+      "manifest": "backend/app/data/river_names/pan/manifest.json",
+      "not_evaluated_targets": [],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/pan/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Instituto de Meteorolog\u00eda e Hidrolog\u00eda de Panam\u00e1"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 214526,
+                "feature_count": 56,
+                "indexed_reach_count": 120,
+                "path": "58b0fab69a72cce38a3fedad0e34bc2e1ef040e618ea7f6f5242b925a1010493.json",
+                "sha256": "58b0fab69a72cce38a3fedad0e34bc2e1ef040e618ea7f6f5242b925a1010493"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 3,
+                "passed": 2
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": null,
+              "targets": []
+            },
+            "id": "missing_source_objects",
+            "status": "pass"
+          }
+        ],
+        "country": "Panama",
+        "country_code": "PAN",
+        "disposition": "accepted",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "pan",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 3,
+        "passed": 2
+      }
+    },
+    {
+      "country": "Paraguay",
+      "country_code": "PRY",
+      "manifest": "backend/app/data/river_names/pry/manifest.json",
+      "packaged": false,
+      "profile": "backend/app/data/river_names/pry/build-profile.json",
+      "slug": "pry",
+      "status": "unavailable",
+      "withheld_reason": "runtime HydroRIVERS clip is unavailable for the registered geography"
+    },
+    {
+      "artifact": {
+        "byte_size": 254069,
+        "path": "backend/app/data/river_names/slv/d4692346677549289aefb7da63b1f2baf9a8c1ff1d2dfde82cdb4acf27d10216.json",
+        "sha256": "d4692346677549289aefb7da63b1f2baf9a8c1ff1d2dfde82cdb4acf27d10216"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "El Salvador",
+      "country_code": "SLV",
+      "display_feature_count": 7,
+      "indexed_name_states": {
+        "ambiguous": 9,
+        "matched": 154
+      },
+      "indexed_reach_count": 163,
+      "manifest": "backend/app/data/river_names/slv/manifest.json",
+      "not_evaluated_targets": [
+        "Grande de San Miguel River",
+        "Jiboa River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/slv/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Ministerio de Medio Ambiente y Recursos Naturales"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 254069,
+                "feature_count": 7,
+                "indexed_reach_count": 163,
+                "path": "d4692346677549289aefb7da63b1f2baf9a8c1ff1d2dfde82cdb4acf27d10216.json",
+                "sha256": "d4692346677549289aefb7da63b1f2baf9a8c1ff1d2dfde82cdb4acf27d10216"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 2,
+                "passed": 3
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Grande de San Miguel River",
+                "Jiboa River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "El Salvador",
+        "country_code": "SLV",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "slv",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 2,
+        "passed": 3
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 370834,
+        "path": "backend/app/data/river_names/suriname/81d764e3de5c3a2272a2c3d5e2ed0228e9f0d2d2f2afe17ce74b44f6b02b3851.json",
+        "sha256": "81d764e3de5c3a2272a2c3d5e2ed0228e9f0d2d2f2afe17ce74b44f6b02b3851"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Suriname",
+      "country_code": "SUR",
+      "display_feature_count": 17,
+      "indexed_name_states": {
+        "ambiguous": 21,
+        "matched": 397
+      },
+      "indexed_reach_count": 418,
+      "manifest": "backend/app/data/river_names/suriname/manifest.json",
+      "not_evaluated_targets": [
+        "Coppename River",
+        "Corantijn River",
+        "Nickerie River",
+        "Saramacca River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/suriname/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Government of Suriname"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 370834,
+                "feature_count": 17,
+                "indexed_reach_count": 418,
+                "path": "81d764e3de5c3a2272a2c3d5e2ed0228e9f0d2d2f2afe17ce74b44f6b02b3851.json",
+                "sha256": "81d764e3de5c3a2272a2c3d5e2ed0228e9f0d2d2f2afe17ce74b44f6b02b3851"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 7,
+              "target_summary": {
+                "evaluated": 7,
+                "failed": 4,
+                "passed": 3
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Coppename River",
+                "Corantijn River",
+                "Nickerie River",
+                "Saramacca River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Suriname",
+        "country_code": "SUR",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "suriname",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 7,
+        "failed": 4,
+        "passed": 3
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 72989,
+        "path": "backend/app/data/river_names/tto/dc59b6f175d5947fbc0d782a165e0a27fb29f5361dcdcdaba0b22033011df76c.json",
+        "sha256": "dc59b6f175d5947fbc0d782a165e0a27fb29f5361dcdcdaba0b22033011df76c"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Trinidad and Tobago",
+      "country_code": "TTO",
+      "display_feature_count": 21,
+      "indexed_name_states": {},
+      "indexed_reach_count": 0,
+      "manifest": "backend/app/data/river_names/tto/manifest.json",
+      "not_evaluated_targets": [
+        "North Oropouche River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/tto/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Water and Sewerage Authority of Trinidad and Tobago"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 72989,
+                "feature_count": 21,
+                "indexed_reach_count": 0,
+                "path": "dc59b6f175d5947fbc0d782a165e0a27fb29f5361dcdcdaba0b22033011df76c.json",
+                "sha256": "dc59b6f175d5947fbc0d782a165e0a27fb29f5361dcdcdaba0b22033011df76c"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 5,
+                "passed": 0
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "unavailable",
+              "observed": "unavailable"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "North Oropouche River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Trinidad and Tobago",
+        "country_code": "TTO",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "unavailable",
+        "schema_version": 1
+      },
+      "slug": "tto",
+      "status": "unavailable",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 5,
+        "passed": 0
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 13069,
+        "path": "backend/app/data/river_names/ury/2cc46d69059fd9fb5b4422f1145c40a88a849d8b3fa9918491bef9c52c0afbae.json",
+        "sha256": "2cc46d69059fd9fb5b4422f1145c40a88a849d8b3fa9918491bef9c52c0afbae"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Uruguay",
+      "country_code": "URY",
+      "display_feature_count": 2,
+      "indexed_name_states": {
+        "ambiguous": 2,
+        "matched": 4
+      },
+      "indexed_reach_count": 6,
+      "manifest": "backend/app/data/river_names/ury/manifest.json",
+      "not_evaluated_targets": [
+        "Negro River",
+        "San Jose River",
+        "Santa Lucia Chico River",
+        "Santa Lucia River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/ury/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Ministerio de Ambiente de Uruguay"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 13069,
+                "feature_count": 2,
+                "indexed_reach_count": 6,
+                "path": "2cc46d69059fd9fb5b4422f1145c40a88a849d8b3fa9918491bef9c52c0afbae.json",
+                "sha256": "2cc46d69059fd9fb5b4422f1145c40a88a849d8b3fa9918491bef9c52c0afbae"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 4,
+                "passed": 1
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "partial",
+              "observed": "partial"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Negro River",
+                "San Jose River",
+                "Santa Lucia Chico River",
+                "Santa Lucia River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Uruguay",
+        "country_code": "URY",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "partial",
+        "schema_version": 1
+      },
+      "slug": "ury",
+      "status": "partial",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 4,
+        "passed": 1
+      }
+    },
+    {
+      "artifact": {
+        "byte_size": 5528,
+        "path": "backend/app/data/river_names/vct/b8ae67ead79f7a6a2b55d463068c26c5c9c4e284e5002180e066c43b8a376a0d.json",
+        "sha256": "b8ae67ead79f7a6a2b55d463068c26c5c9c4e284e5002180e066c43b8a376a0d"
+      },
+      "checks": {
+        "byte_size": true,
+        "content_addressed_name": true,
+        "country_code": true,
+        "country_status": true,
+        "etl_publication": true,
+        "etl_status": true,
+        "evaluation_counts": true,
+        "feature_count": true,
+        "geography": true,
+        "indexed_reach_count": true,
+        "name_states": true,
+        "runtime_dataset": true,
+        "runtime_manifest": true,
+        "sha256": true
+      },
+      "country": "Saint Vincent and the Grenadines",
+      "country_code": "VCT",
+      "display_feature_count": 4,
+      "indexed_name_states": {},
+      "indexed_reach_count": 0,
+      "manifest": "backend/app/data/river_names/vct/manifest.json",
+      "not_evaluated_targets": [
+        "Buccament River",
+        "Rabacca River",
+        "Richmond River",
+        "Wallilabou River"
+      ],
+      "packaged": true,
+      "profile": "backend/app/data/river_names/vct/build-profile.json",
+      "review": {
+        "checks": [
+          {
+            "evidence": {
+              "publisher": "Government of Saint Vincent and the Grenadines"
+            },
+            "id": "source_provenance",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "artifact": {
+                "byte_size": 5528,
+                "feature_count": 4,
+                "indexed_reach_count": 0,
+                "path": "b8ae67ead79f7a6a2b55d463068c26c5c9c4e284e5002180e066c43b8a376a0d.json",
+                "sha256": "b8ae67ead79f7a6a2b55d463068c26c5c9c4e284e5002180e066c43b8a376a0d"
+              }
+            },
+            "id": "artifact_integrity_metadata",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "target_count": 5,
+              "target_summary": {
+                "evaluated": 5,
+                "failed": 5,
+                "passed": 0
+              }
+            },
+            "id": "target_accounting",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "expected": "unavailable",
+              "observed": "unavailable"
+            },
+            "id": "country_status_consistency",
+            "status": "pass"
+          },
+          {
+            "evidence": {
+              "classification": "not_evaluated",
+              "targets": [
+                "Buccament River",
+                "Rabacca River",
+                "Richmond River",
+                "Wallilabou River"
+              ]
+            },
+            "id": "missing_source_objects",
+            "status": "pass_with_limitation"
+          }
+        ],
+        "country": "Saint Vincent and the Grenadines",
+        "country_code": "VCT",
+        "disposition": "accepted_with_limitations",
+        "observed_country_status": "unavailable",
+        "schema_version": 1
+      },
+      "slug": "vct",
+      "status": "unavailable",
+      "target_summary": {
+        "evaluated": 5,
+        "failed": 5,
+        "passed": 0
+      }
+    }
+  ],
+  "errors": [],
+  "etl_batch": {
+    "count": 21,
+    "published": 17,
+    "status_counts": {
+      "partial": 7,
+      "unavailable": 10,
+      "verified": 4
+    }
+  },
+  "evidence_fingerprints": [
+    {
+      "byte_size": 5088,
+      "path": "backend/app/data/river_names/country_registry.json",
+      "sha256": "fe594a267d62ba01369e72b6032a237a22b588cfec425d0a522312f608dc9596"
+    },
+    {
+      "byte_size": 34904,
+      "path": ".agents/state/verifications/georef-country-etl-hitl/unevaluated-21-etl.json",
+      "sha256": "b38a732c86e09a3e907c18967661c5e2ba90829b84f1bc235ca262b016bfc1f4"
+    },
+    {
+      "byte_size": 486,
+      "path": "backend/app/data/river_names/atg/build-profile.json",
+      "sha256": "5c7a52dacb6ed857167b2fb6e34408727ff404949755ddc206a3ce2a28b989ed"
+    },
+    {
+      "byte_size": 1392,
+      "path": "backend/app/data/river_names/belize/build-profile.json",
+      "sha256": "8f5b504ba103e632ae8e2fe3b3fdc5b91bcc0bcdb34ebd4a41c457d049701c29"
+    },
+    {
+      "byte_size": 3537,
+      "path": "backend/app/data/river_names/belize/manifest.json",
+      "sha256": "8f5bb04988685500edfd9f09987741dd270ef410a56d391c9bcec1a8448378cd"
+    },
+    {
+      "byte_size": 486,
+      "path": "backend/app/data/river_names/bhs/build-profile.json",
+      "sha256": "ffe57f9b0cac7225255443cee1a3f7d3790cd83aa9c35ddd6ee9728e6f6904f5"
+    },
+    {
+      "byte_size": 459,
+      "path": "backend/app/data/river_names/brb/build-profile.json",
+      "sha256": "7001373c17064632edb5b216802edf6d1dea88b30c886277caecf5b8c3eb47d8"
+    },
+    {
+      "byte_size": 1428,
+      "path": "backend/app/data/river_names/costa-rica/build-profile.json",
+      "sha256": "bfd965690d2410fb53b3b2011cc62fc448c04b39b5548648e359d483c9891cdc"
+    },
+    {
+      "byte_size": 3060,
+      "path": "backend/app/data/river_names/costa-rica/manifest.json",
+      "sha256": "74965eb3df75255cd3cc304f833667809de02b5fcb7b68bc752fe46ed1b3852c"
+    },
+    {
+      "byte_size": 1510,
+      "path": "backend/app/data/river_names/cub/build-profile.json",
+      "sha256": "79ad4a4120bf7ab1f544ac10162351baaa15d76b735e03b7bb5fb61d125877e3"
+    },
+    {
+      "byte_size": 2764,
+      "path": "backend/app/data/river_names/cub/manifest.json",
+      "sha256": "e2d9f04829d2cf4207a2d7e7061133d550cc2026e038a53384e91d686f5796dd"
+    },
+    {
+      "byte_size": 1277,
+      "path": "backend/app/data/river_names/dma/build-profile.json",
+      "sha256": "be6a439eb99de4b01e893b4c0be42ad93e7f75bd509878b3c8939b0cfa2206f9"
+    },
+    {
+      "byte_size": 2477,
+      "path": "backend/app/data/river_names/dma/manifest.json",
+      "sha256": "3f551a99589ca6f63f6a8b94a33dbf38fc4fc224cb7bea177a59681caa7dfd72"
+    },
+    {
+      "byte_size": 1721,
+      "path": "backend/app/data/river_names/dom/build-profile.json",
+      "sha256": "0fae388ea4dfa87242e6cb09a9721b40d34d036ed963dfa1734e9330d86675d7"
+    },
+    {
+      "byte_size": 2864,
+      "path": "backend/app/data/river_names/dom/manifest.json",
+      "sha256": "99f5fcfa643351b2fced849799a78cdae41c0375b363efdde39b5787ff69c43b"
+    },
+    {
+      "byte_size": 1557,
+      "path": "backend/app/data/river_names/ecu/build-profile.json",
+      "sha256": "f3feeb40f10ed8e84337e2eacd5715f2d0b93bf909fd9bbfaf2719bf65769192"
+    },
+    {
+      "byte_size": 2791,
+      "path": "backend/app/data/river_names/ecu/manifest.json",
+      "sha256": "6e885cfdd9de5f878ec7154cffb770d6f97c6c23c357eb076aaede6e1e5f2dc7"
+    },
+    {
+      "byte_size": 1884,
+      "path": "backend/app/data/river_names/grd/build-profile.json",
+      "sha256": "f393f97d915b441368091cb0cddc03cb20dcacd4d6db813d4c1287687acc2127"
+    },
+    {
+      "byte_size": 2957,
+      "path": "backend/app/data/river_names/grd/manifest.json",
+      "sha256": "441ca177ad9d817d916859742ac211f71b8b4e6e2ed53fee2c77337df2058939"
+    },
+    {
+      "byte_size": 1616,
+      "path": "backend/app/data/river_names/gtm/build-profile.json",
+      "sha256": "70e18e421c4c6c4b33253d3330854785dd5ef103c22f298e22428afa11d42fd4"
+    },
+    {
+      "byte_size": 2814,
+      "path": "backend/app/data/river_names/gtm/manifest.json",
+      "sha256": "5ddba3376eb82242d6fbb8a492cafa754ea15fac439dffd4912630373f699858"
+    },
+    {
+      "byte_size": 1625,
+      "path": "backend/app/data/river_names/guf/build-profile.json",
+      "sha256": "311c95fd32c6a575c5abf20b7f3984fc4abfcf3b292257ed138a4622d43ffe04"
+    },
+    {
+      "byte_size": 2803,
+      "path": "backend/app/data/river_names/guf/manifest.json",
+      "sha256": "1524e3b0808e08dab27977000bd23661d0003e7ebb4357838765e602368720c6"
+    },
+    {
+      "byte_size": 1566,
+      "path": "backend/app/data/river_names/guyana/build-profile.json",
+      "sha256": "038f3e502495e2cef008b1a7309436bf0796743ece1a4075d525fb5c30a3277b"
+    },
+    {
+      "byte_size": 2711,
+      "path": "backend/app/data/river_names/guyana/manifest.json",
+      "sha256": "b52801459854b2c854f081adbdcfd51bd4010cb2ba151dc1b19be2648a453dda"
+    },
+    {
+      "byte_size": 1549,
+      "path": "backend/app/data/river_names/hnd/build-profile.json",
+      "sha256": "849d2dc828bde23a6e973f972ddf50ecbb3032677cdfb40eabc3cece3d15dbde"
+    },
+    {
+      "byte_size": 2770,
+      "path": "backend/app/data/river_names/hnd/manifest.json",
+      "sha256": "8ccfb5de11482c1161916e32fa873de699bd45cff2b6f3d20137bfbeaba1150a"
+    },
+    {
+      "byte_size": 1340,
+      "path": "backend/app/data/river_names/hti/build-profile.json",
+      "sha256": "85dc097a5d9d4a9a3ff0dbf87ee5b14ea7b0bcd5d10178ed2725b416715ce483"
+    },
+    {
+      "byte_size": 2554,
+      "path": "backend/app/data/river_names/hti/manifest.json",
+      "sha256": "c277930daf2273fadfec84fbfc0995832ddec41f8b43f39c93c697bad9c8d895"
+    },
+    {
+      "byte_size": 934,
+      "path": "backend/app/data/river_names/jamaica/build-profile.json",
+      "sha256": "11cb62a91992c7aae9171c64d89149169c62d88de0bde2f6d8553e339834de2f"
+    },
+    {
+      "byte_size": 2815,
+      "path": "backend/app/data/river_names/jamaica/manifest.json",
+      "sha256": "4f78e68e6aaf530e9f1a2cce633a40806e61dddf69488f71c58772c05753e3d2"
+    },
+    {
+      "byte_size": 1144,
+      "path": "backend/app/data/river_names/kna/build-profile.json",
+      "sha256": "b3d8d834bc36905ff1a9415bdcb376cf9d20b396442c96d677b184069c5df54b"
+    },
+    {
+      "byte_size": 2286,
+      "path": "backend/app/data/river_names/kna/manifest.json",
+      "sha256": "fc9cf8ca361584e94c37bcea9764b953e4fbd26b349586478f9e5ddd4e209424"
+    },
+    {
+      "byte_size": 1318,
+      "path": "backend/app/data/river_names/lca/build-profile.json",
+      "sha256": "f8250fb4b83932e393dde9968c90b8256aa5aafb25a927abc823c4b19159fbc5"
+    },
+    {
+      "byte_size": 2471,
+      "path": "backend/app/data/river_names/lca/manifest.json",
+      "sha256": "d47a6c0e5d324d16224e29c0d0d3b3313d4d458854e265ae69215b0b2a026be7"
+    },
+    {
+      "byte_size": 1660,
+      "path": "backend/app/data/river_names/nic/build-profile.json",
+      "sha256": "a270e4589d542d526d564ba3c3e6543b22ada3c683360fe67da89f31dc941d7c"
+    },
+    {
+      "byte_size": 2783,
+      "path": "backend/app/data/river_names/nic/manifest.json",
+      "sha256": "5bf82fc56ac0da4d8ebad42f393da4686ec9471f041437bf215e91539e982cb7"
+    },
+    {
+      "byte_size": 1566,
+      "path": "backend/app/data/river_names/pan/build-profile.json",
+      "sha256": "17aa4af1dba5f77063f5d6f9394935c881d7e1fd9b9caf231805249d1e62f52b"
+    },
+    {
+      "byte_size": 2778,
+      "path": "backend/app/data/river_names/pan/manifest.json",
+      "sha256": "e960698393c066c38a04ffea4c1a696f8284f16c36503bfd41766a1b81ad77bc"
+    },
+    {
+      "byte_size": 1650,
+      "path": "backend/app/data/river_names/pry/build-profile.json",
+      "sha256": "98b5914b1082b1abd84f535378be32c65fda40e2ddd3da5b37b303e70d6975a3"
+    },
+    {
+      "byte_size": 1618,
+      "path": "backend/app/data/river_names/slv/build-profile.json",
+      "sha256": "54ae57ece07d12417b1f4d9c1dda2dc3901e4e3ee22f4de31aac6453f00f86bf"
+    },
+    {
+      "byte_size": 2777,
+      "path": "backend/app/data/river_names/slv/manifest.json",
+      "sha256": "0586f45d8eda889ecc9db8f27bdcf9e2229052cd562d677af871f405d6cc3af7"
+    },
+    {
+      "byte_size": 1418,
+      "path": "backend/app/data/river_names/suriname/build-profile.json",
+      "sha256": "15732214e74263b08838c1652608d96ccfc1d5d05423b3161fdba11925cb54be"
+    },
+    {
+      "byte_size": 3296,
+      "path": "backend/app/data/river_names/suriname/manifest.json",
+      "sha256": "e5c26609c45bc33972de753b3523b31df8ead76e08db44f42c085ad9845abf5d"
+    },
+    {
+      "byte_size": 1706,
+      "path": "backend/app/data/river_names/tto/build-profile.json",
+      "sha256": "047a1622ecbbd183b2215af69329a5db20a1c543214cd56f36a82e76dca58a90"
+    },
+    {
+      "byte_size": 2735,
+      "path": "backend/app/data/river_names/tto/manifest.json",
+      "sha256": "a2f2756940235761dcf1ada8b2b954e572a44fcdd536e97c6296cd5f18136a27"
+    },
+    {
+      "byte_size": 1656,
+      "path": "backend/app/data/river_names/ury/build-profile.json",
+      "sha256": "8e375b7a5e751504adc10eed63ccbe33f90c6f19f11b8c1dad3e9c4c8df17866"
+    },
+    {
+      "byte_size": 2795,
+      "path": "backend/app/data/river_names/ury/manifest.json",
+      "sha256": "ef5da7c38936ad51d0a5fda82dce546b8489dca6eb11aca333e509eda88c2913"
+    },
+    {
+      "byte_size": 1738,
+      "path": "backend/app/data/river_names/vct/build-profile.json",
+      "sha256": "3a933f80867f3e902b882ff79fb9b261720e68f5eab0d0984662e43a7e19bcd9"
+    },
+    {
+      "byte_size": 2728,
+      "path": "backend/app/data/river_names/vct/manifest.json",
+      "sha256": "c60e69cfe84bb4c1d8a84b674cbad0f6098b1a4d1b5c38fc4ab6415a5f9f969f"
+    },
+    {
+      "byte_size": 46866,
+      "path": ".agents/state/verifications/georef-recovery-calibration/guyana-benchmark.json",
+      "sha256": "46cc9b5b09d9406d97a70e9734dc84b0401a42eb09b168bda536dfef618559ef"
+    }
+  ],
+  "limitations": [
+    "Coverage classifications concern bounded river-name evaluation, not national completeness or Recovery support.",
+    "Guyana retains legacy passed status and review_required schema/provenance findings.",
+    "Source objects and display segments remain distinct; missing source objects remain not_evaluated.",
+    "CDN publication and live operational readiness are not audited; browser has no automatic CDN-to-local retry.",
+    "GeoParquet writer and Python tests exist; no committed country Parquet files, R execution, or complete PMTiles archive.",
+    "A pass means inventory/integrity audit passed; historical validation gaps remain explicit."
+  ],
+  "packaged_count": 22,
+  "registered_count": 26,
+  "schema_version": 1,
+  "status_counts": {
+    "partial": 10,
+    "passed": 1,
+    "unavailable": 10,
+    "verified": 5
+  },
+  "tracked_geoparquet_files": [],
+  "withheld_count": 4
+}

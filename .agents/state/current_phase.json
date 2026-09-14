@@ -1,45 +1,23 @@
 {
   "schema_version": 1,
-  "phase_id": "georef-studio-georef-integration",
-  "phase_name": "Phase 14: Studio–Georeferencer integration and inspection workspace",
+  "phase_id": "georef-program-closeout",
+  "phase_name": "Georeferencing program closeout",
   "status": "approved",
   "approved_by_human": true,
-  "human_approval": "2026-09-13: user approved Phase 14 and explicitly authorized using that approval for required human gates through phase completion, including baseline and scoped verification review.",
-  "baseline_commit": "f7c9875a8a1582205543d0ea8abcdbe91ab71eb0",
-  "branch": "codex/georef-phase-14",
+  "human_approval": "2026-09-14: User granted blanket authorization to complete this phase, referring phase gates to this authorization, similarly to Phase 14. Covers baseline and scoped verification/risk review, documentation, commit, push and draft PR. Advance authorization is not a claim of separate post-run human inspection.",
+  "baseline_commit": "b790c7f20ec53b704016f438df974f76e510ea8f",
+  "branch": "codex/georef-program-closeout",
   "protected_branches": [
     "main"
   ],
   "allowed_paths": [
     ".agents/state/current_phase.json",
     ".agents/state/georef_phase_roadmap.json",
-    ".agents/config/verification_commands_georef_phase_14.json",
-    ".agents/state/baselines/georef-studio-georef-integration/**",
-    ".agents/state/verifications/georef-studio-georef-integration/**",
-    "backend/app/routers/export.py",
-    "backend/app/routers/georef.py",
-    "backend/app/main.py",
-    "backend/app/models/georef_models.py",
-    "backend/app/services/georef_service.py",
-    "backend/app/services/studio_provenance.py",
-    "backend/app/services/georef_upload.py",
-    "backend/tests/test_georef*.py",
-    "backend/tests/test_studio_provenance.py",
-    "backend/tests/fixtures/georef_phase14_server.py",
-    "frontend/src/app/studio/page.tsx",
-    "frontend/src/app/georeference/page.tsx",
-    "frontend/src/app/globals.css",
-    "frontend/src/components/GeorefResults.tsx",
-    "frontend/src/components/GeorefMap.tsx",
-    "frontend/src/components/StudioReadiness.tsx",
-    "frontend/src/lib/api.ts",
-    "frontend/src/lib/georefApi.ts",
-    "frontend/src/lib/studioHandoff.ts",
-    "frontend/e2e/georef*.spec.ts",
-    "frontend/e2e/studio-handoff.spec.ts",
-    "frontend/e2e/mockStudioBackend.ts",
-    "frontend/e2e/studio-workspace.spec.ts",
-    "docs/GEOREFERENCING_PHASE_14_WALKTHROUGH.md"
+    ".agents/config/verification_commands_georef_program_closeout.json",
+    ".agents/state/baselines/georef-program-closeout/**",
+    ".agents/state/verifications/georef-program-closeout/**",
+    "docs/GEOREFERENCING_PROGRAM_CLOSEOUT.md",
+    "scripts/verify_georef_program_closeout.py"
   ],
   "scope_exempt_paths": [
     "work/**",
@@ -48,8 +26,9 @@
     ".agents/state/verifications/georef-release/**"
   ],
   "known_preexisting_changes": [
+    "work/**",
     ".agents/state/current_phase.json",
-    ".agents/config/verification_commands_georef_phase_14.json"
+    ".agents/config/verification_commands_georef_program_closeout.json"
   ],
   "excluded_paths": [
     "cloudbuild.yaml",
@@ -61,13 +40,12 @@
     "**/*.parquet"
   ],
   "approved_operations": [
-    "create_isolated_local_branch",
     "inspect",
     "run_baseline_tests",
     "record_phase_approval",
-    "implement_scoped_phase_14_after_baseline_approval",
+    "verify_local_artifacts",
+    "update_closeout_documentation_and_roadmap",
     "run_local_verification",
-    "prepare_draft_pr_content",
     "commit_scoped_changes",
     "push_focused_branch",
     "prepare_draft_pr"
@@ -87,9 +65,9 @@
     "recovery_algorithm_replacement",
     "delivery_architecture_change"
   ],
-  "verification_commands_file": ".agents/config/verification_commands_georef_phase_14.json",
-  "approved_baseline_file": ".agents/state/baselines/georef-studio-georef-integration/baseline_approved.json",
+  "verification_commands_file": ".agents/config/verification_commands_georef_program_closeout.json",
+  "approved_baseline_file": ".agents/state/baselines/georef-program-closeout/baseline_approved.json",
   "program_roadmap_file": ".agents/state/georef_phase_roadmap.json",
-  "next_phase_id": "georef-program-closeout",
-  "next_phase_gate": "No automatic next phase."
+  "next_phase_id": null,
+  "next_phase_gate": "Program audit concludes here; follow-on implementation requires its own scope."
 }
