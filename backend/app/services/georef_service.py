@@ -119,20 +119,31 @@ def build_manifest(clip, request, *, poster_id=None):
     )
 
 
-def decode_image(payload):
+def decode_image(payload, declared_type=None):
     if len(payload) > MAX_UPLOAD_BYTES:
         raise ValueError("Image exceeds the 25 MB upload limit")
     try:
         with Image.open(io.BytesIO(payload)) as im:
             if im.format not in ("PNG", "JPEG", "TIFF"):
                 raise ValueError("Upload a PNG, JPEG or TIFF poster")
+            actual_type = {"PNG": "image/png", "JPEG": "image/jpeg", "TIFF": "image/tiff"}[im.format]
+            if declared_type and declared_type.split(";")[0].lower() not in (actual_type, "application/octet-stream"):
+                raise ValueError("Image content does not match its declared file type")
+            if getattr(im, "n_frames", 1) != 1:
+                raise ValueError("Upload a single-frame poster image")
             if im.width * im.height > MAX_IMAGE_PIXELS or max(im.size) > 9000:
                 raise ValueError("Image exceeds the 40 megapixel / 9000 pixel limit")
             metadata = im.info.get("poster_manifest")
+            metadata_size = sum(len(value.encode("utf-8")) if isinstance(value, str) else len(value)
+                                for value in im.info.values() if isinstance(value, (str, bytes)))
+            if metadata_size > 65536:
+                raise ValueError("Embedded metadata exceeds 64 KB")
+            if metadata is not None and (not isinstance(metadata, str) or len(metadata.encode("utf-8")) > 65536):
+                raise ValueError("Embedded metadata exceeds 64 KB")
             image = im.convert("RGBA")
             image.load()
         return image, metadata
-    except (OSError, Image.DecompressionBombError) as exc:
+    except (OSError, SyntaxError, Image.DecompressionBombError) as exc:
         raise ValueError("Unable to decode the uploaded image") from exc
 
 

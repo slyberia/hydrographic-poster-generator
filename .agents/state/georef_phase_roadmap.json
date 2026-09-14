@@ -2,8 +2,8 @@
   "schema_version": 1,
   "program_id": "hps-geospatial-georeferencing",
   "purpose": "Authoritative sequencing for the georeferencing delivery and reusable data-product work.",
-  "current_phase_id": "georef-ui-ux-polish",
-      "current_phase_gate": "Phase 13 is closed after merge and closeout. Phase 14 is drafted but not approved for implementation.",
+  "current_phase_id": "georef-studio-georef-integration",
+      "current_phase_gate": "Phase 14 implementation and local verification complete; draft PR review precedes merge. No production deployment or automatic next phase.",
   "phase_gate_policy": "A planned phase is not approved for implementation until its scope, isolated branch, approved baseline, allowed paths, verification commands, and human approval are recorded in current_phase.json.",
   "phases": [
     {
@@ -138,7 +138,7 @@
       "phase_id": "georef-studio-georef-integration",
       "phase_number": 14,
       "name": "Studio–Georeferencer integration and inspection workspace",
-      "status": "planned_not_approved",
+      "status": "implementation_complete_review_pending",
       "depends_on": ["georef-ui-ux-polish"],
       "objective": "Make Studio-generated posters transferable directly into the Georeferencer, harden the external upload path, improve readiness and inspection UX, and establish a staged path toward a unified geospatial workspace.",
       "scope_notes": [

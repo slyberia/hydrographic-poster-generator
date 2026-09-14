@@ -135,7 +135,7 @@ export default function GeorefMap({ viewer, posterId }: { viewer: GeorefViewer; 
       {(Object.keys(STATUS) as RiverNameStatus[]).map(status => <span key={status}><span aria-hidden="true" style={{ color: STATUS[status].color }}>●</span> {STATUS[status].label}</span>)}
     </div>}
     <label className="georef-opacity"><span>Poster opacity <strong>{Math.round(opacity*100)}%</strong></span><input aria-label="Poster opacity" type="range" min="0" max="1" step="0.05" value={opacity} onChange={e=>setOpacity(Number(e.target.value))} /></label>
-    <div ref={host} className="relative z-0 w-full rounded" style={{ height: 420 }} aria-label="Georeferenced poster map" />
+    <div ref={host} className="relative z-0 w-full rounded" style={{ height: "clamp(440px, 70vh, 900px)" }} aria-label="Georeferenced poster map" />
     <div className="georef-map-actions"><button type="button" className="btn-primary" disabled={busy} onClick={loadRivers}>{busy ? "Loading rivers…" : "Load rivers in view"}</button>
       <button type="button" className="glass-input" onClick={()=>{request.current?.abort();setBusy(false);setRivers(null);setSelected(null);setMessage("");}}>Clear source overlay</button></div>
     <p role="status" className="break-words text-sm">{message}</p>

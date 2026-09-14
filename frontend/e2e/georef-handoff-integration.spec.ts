@@ -1,0 +1,37 @@
+import { test, expect } from "@playwright/test";
+import { installStudioMockBackend } from "./mockStudioBackend";
+
+test("real backend exports PNG and verifies transferred provenance through recovery", async ({ page }) => {
+  test.skip(!process.env.PHASE14_INTEGRATION, "Start backend/tests/fixtures/georef_phase14_server.py for local synthetic backend integration");
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  await installStudioMockBackend(page);
+  await page.route("**/export", route => route.continue());
+  await page.route("**/georef/**", route => route.continue());
+  await page.goto("/studio");
+  await page.getByLabel("Region", { exact: true }).selectOption("sa");
+  await page.getByLabel("Country", { exact: true }).selectOption("geo-guyana");
+  await expect(page.locator(".preview-svg svg")).toBeVisible();
+  await page.getByLabel("Size", { exact: true }).selectOption("custom");
+  await page.getByLabel("Width (px)", { exact: true }).fill("1200");
+  await page.getByLabel("Height (px)", { exact: true }).fill("1200");
+  let downloaded = false;
+  page.on("download", () => { downloaded = true; });
+  const exported = page.waitForResponse(response => response.url().endsWith("/export"));
+  await page.getByRole("button", { name: "Open in Georeferencer", exact: true }).click();
+  expect((await exported).status()).toBe(200);
+  await expect(page.getByText(/Studio poster loaded/)).toBeVisible();
+  expect(downloaded).toBe(false);
+  const recovered = page.waitForResponse(response => response.url().endsWith("/georef/recover"));
+  await page.getByRole("button", { name: "Analyze alignment" }).click();
+  const response = await recovered;
+  expect(response.status(), await response.text()).toBe(200);
+  expect((await response.json()).studio_provenance_status).toBe("verified_server_manifest");
+  await expect(page.getByText("Studio export integrity verified against the server manifest.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Alignment accepted under provisional criteria" })).toBeVisible();
+  await page.screenshot({ path: "../work/phase14-real-recovery.png", fullPage: true });
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download GeoTIFF" }).click();
+  expect((await download).suggestedFilename()).toMatch(/tif$/);
+  expect(errors).toEqual([]);
+});

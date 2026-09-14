@@ -51,14 +51,14 @@ test("completed exports retain a hidden poster ID and offer direct verification"
   await page.getByRole("button", { name: "Download" }).click();
   await downloadPromise;
 
-  const verification = page.getByRole("link", { name: "Verify in Georeferencer" });
-  await expect(verification).toHaveAttribute(
-    "href",
-    "/georeference?poster_id=00000000-0000-4000-8000-000000000001",
-  );
+  const verification = page.getByRole("button", { name: "Verify in Georeferencer" });
+  await expect(verification).toBeEnabled();
   expect(await page.evaluate(() => sessionStorage.getItem("hydro:last-poster-id"))).toBe(
     "00000000-0000-4000-8000-000000000001",
   );
+  await verification.click();
+  await expect(page).toHaveURL(/georeference\?handoff=/);
+  await expect(page.getByText(/Studio poster loaded/)).toBeVisible();
 });
 
 test("compact workspace uses a control drawer and keeps the canvas within the viewport", async ({ page }) => {

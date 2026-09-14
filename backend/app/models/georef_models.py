@@ -97,6 +97,7 @@ class AlignmentQcReport(BaseModel):
 class RecoveryOptions(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
     poster_id: UUID | None = None
+    studio_provenance: dict[str, Any] | None = None
     geography_id: str | None = None
     density_preset: str = "balanced"
     classification_preset: str = "standard"
